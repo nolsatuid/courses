@@ -6,4 +6,4 @@ class FormCourses(forms.ModelForm):
 
     class Meta:
         model = Courses
-        exclude = ("author",)
+        exclude = ("users",)

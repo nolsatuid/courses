@@ -21,13 +21,16 @@
                             <form action="" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
 
+                                {{ form.media }}
                                 {{ form.non_field_errors }}
                                 {% for field in form %}
                                     <div class="form-group col-md-12">
-                                        <label> {{ field.label }} </label>
-                                        {% render_field field|add_class:"form-control form-control-user"%}
-                                        <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        <small class="form-text text-danger">{{ field.errors }}</small>
+                                        <label class="col-md-12"> {{ field.label }} </label>
+                                        <div class="col-md-12">
+                                            {% render_field field|add_class:"form-control"%}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                            <small class="form-text text-danger">{{ field.errors }}</small>
+                                        </div>
                                     </div>
                                 {% endfor %}
 
