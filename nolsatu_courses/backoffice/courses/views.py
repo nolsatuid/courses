@@ -8,6 +8,7 @@ from nolsatu_courses.apps.courses.models import Courses
 @staff_member_required
 def index(request):
     context = {
-        'title': _('Daftar Kursus')
+        'title': _('Daftar Kursus'),
+        'courses': Courses.objects.all()
     }
     return render(request, 'backoffice/courses/index.html', context)

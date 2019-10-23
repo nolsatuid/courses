@@ -1,20 +1,46 @@
 {% extends 'backoffice/base-adminlte.html' %}
 
 {% block content %}
-<div class="col-md-12 card p-5">
-    <div class="col-md-12">
+<div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h4 class="pull-left">{{ title }}</h4>
+            <h4 class="float-left">{{ title }}</h4>
+            <a href="" class="btn btn-primary float-right">Tambah Kursus</a>
         </div>
         <div class="card-body">
-
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Judul</th>
+                    <th>Level</th>
+                    <th>Kategori</th>
+                    <th>Terlihat</th>
+                    <th>Diperbolehkan</th>
+                    <th>Author</th>
+                    <th>Aksi</th>
+                </thead>
+                <tbody>
+                    {% for courses in courses %}
+                        <tr>
+                            <td>{{ courses.title }}</td>
+                            <td>{{ courses.get_level_display }}</td>
+                            <td>{{ courses.category.all|join:", " }}</td>
+                            <td>{{ courses.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ courses.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ courses.author.name }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-pill btn-info" href="">Detail</a>
+                                <a class="btn btn-sm btn-pill btn-secondary" href="">Edit</a>
+                                <button class="btn btn-sm btn-primary btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="" data-name="{{ campus.name}}" >Hapus</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         <div class="card-footer">
 
         </div>
     </div>
-</div>
 </div>
 
 {% endblock %}
