@@ -47,8 +47,9 @@ INSTALLED_APPS = [
     # other apps
     'django_extensions',
     'taggit',
-    "ckeditor",
-    "ckeditor_uploader",
+    'ckeditor',
+    'ckeditor_uploader',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +67,7 @@ ROOT_URLCONF = 'nolsatu_courses.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
