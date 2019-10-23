@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'courses',
-    'upload_files',
+    'nolsatu_courses.apps.courses',
+    'nolsatu_courses.apps.upload_files',
 
     # other apps
     'django_extensions',
