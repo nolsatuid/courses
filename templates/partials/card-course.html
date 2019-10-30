@@ -1,7 +1,7 @@
 {% load static %}
 
 <div class="card">
-    <a href="{% url 'website:courses:details' course.id %}">
+    <a href="{% url 'website:courses:details' course.slug %}">
         <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
         <div class="card-body">
             <h4>{{ course.title }}</h4>
