@@ -44,6 +44,9 @@ class Courses(models.Model):
             self.slug = generate_unique_slug(Courses, self.title)
         super().save(*args, **kwargs)
 
+    def category_list(self):
+        return ", ".join(category.name for category in self.category.all())
+
 
 class Module(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
