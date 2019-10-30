@@ -1,0 +1,8 @@
+{% load static %}
+<div class="card">
+    <img class="card-img-top" src="{{ course.featured_image.url }}" alt="Card image cap">
+    <div class="card-body">
+        <h4>{{ course.title }}</h4>
+        {{ course.short_description|safe }}
+    </div>
+</div>

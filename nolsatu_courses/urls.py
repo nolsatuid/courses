@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('backoffice/', include('nolsatu_courses.backoffice.urls')),
+    path('', include('nolsatu_courses.website.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

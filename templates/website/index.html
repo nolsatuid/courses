@@ -1,0 +1,12 @@
+{% extends 'website/base-top-nav.html'%}
+
+{% block content %}
+<div class="row">
+    {% for course in courses %}
+        <div class="col-lg-3">
+            {% include 'partials/card-course.html' with course=course%}
+        </div>
+    {% endfor %}
+  </div>
+  <!-- /.row -->
+{% endblock %}
