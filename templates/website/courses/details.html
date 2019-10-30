@@ -1,0 +1,21 @@
+{% extends 'website/base-top-nav.html' %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-8">
+        <div class="card">
+            <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
+            <div class="card-body">
+                <h1>{{ course.title }}</h1>
+                {{ course.description|safe }}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {% include 'partials/sidebar-content.html' %}
+    </div>
+</div>
+  <!-- /.row -->
+{% endblock %}

@@ -11,7 +11,8 @@ from .forms import FormCourses
 def index(request):
     context = {
         'title': _('Daftar Kursus'),
-        'courses': Courses.objects.all()
+        'courses': Courses.objects.all(),
+        'sidebar': True
     }
     return render(request, 'backoffice/courses/index.html', context)
 
