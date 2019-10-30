@@ -12,6 +12,7 @@ class Courses(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
     short_description = RichTextField(_("Deskripsi Singkat"), config_name='basic_ckeditor')
     description = RichTextUploadingField(_("Deskripsi"))
+    featured_image = models.FileField(_("Gambar Unggulan"), upload_to="images/", blank=True)
     LEVEL = Choices(
         (1, 'beginner', _("Pemula")),
         (2, 'intermediate', _("Menengah")),

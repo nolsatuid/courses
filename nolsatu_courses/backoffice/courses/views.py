@@ -18,7 +18,7 @@ def index(request):
 
 @staff_member_required
 def add(request):
-    form = FormCourses(request.POST or None)
+    form = FormCourses(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
         course = form.save()
         messages.success(request, _(f"Berhasil Tambah Kursus {course.title}"))
