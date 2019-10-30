@@ -1,15 +1,19 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from model_utils import Choices
 from taggit.managers import TaggableManager
 
+from nolsatu_courses.apps.utils import generate_unique_slug
+
 
 class Courses(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
+    slug = models.SlugField(max_length=200, blank=True)
     short_description = RichTextField(_("Deskripsi Singkat"), config_name='basic_ckeditor')
     description = RichTextUploadingField(_("Deskripsi"))
     featured_image = models.FileField(_("Gambar Unggulan"), upload_to="images/", blank=True)
@@ -31,6 +35,14 @@ class Courses(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if self.slug:  # edit
+            if slugify(self.title) != self.slug:
+                self.slug = generate_unique_slug(Courses, self.title)
+        else:  # create
+            self.slug = generate_unique_slug(Courses, self.title)
+        super().save(*args, **kwargs)
 
 
 class Module(models.Model):
