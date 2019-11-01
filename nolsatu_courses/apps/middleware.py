@@ -9,6 +9,6 @@ class NolSatuAuthMiddleware(MiddlewareMixin):
         if not hasattr(request, "user") or request.user.is_anonymous:
             try:
                 data = requests.get(settings.NOLSATU_PROFILE_URL, cookies=request.COOKIES).json()
-                request.user = User(first_name=data['first_name']) # TODO: Mapping
+                request.user = User(first_name=data['first_name'])  # TODO: Mapping
             except Exception:
                 pass
