@@ -23,13 +23,15 @@ PROJECT_NAME = os.path.basename(PROJECT_ROOT)
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!^v*ep3_7h4*ul#a+62#1%(sgikhz%2n^t_+)v!xle_8sjzqh7'
+SECRET_KEY = 'n-@n7d!%na!&^cd4^%al(z4%2vq0umr+fy_m6gmc(0_4uxbuwx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+
+LOGIN_URL = "http://nol.satu:8000/accounts/login/" # TODO Change
 
 # Application definition
 
@@ -58,9 +60,12 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'nolsatu_courses.apps.middleware.NolSatuAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SESSION_ENGINE = 'redis_sessions.session'
 
 ROOT_URLCONF = 'nolsatu_courses.urls'
 
@@ -150,3 +155,7 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     },
 }
+
+SESSION_COOKIE_DOMAIN = '.nol.satu' # TODO: Change this to domain
+
+NOLSATU_PROFILE_URL = 'http://nol.satu:8000/profile'
