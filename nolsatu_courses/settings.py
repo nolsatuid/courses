@@ -23,13 +23,14 @@ PROJECT_NAME = os.path.basename(PROJECT_ROOT)
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!^v*ep3_7h4*ul#a+62#1%(sgikhz%2n^t_+)v!xle_8sjzqh7'
+SECRET_KEY = 'n-@n7d!%na!&^cd4^%al(z4%2vq0umr+fy_m6gmc(0_4uxbuwx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+LOGIN_URL = "https://www.nolsatu.id/accounts/login/"
 
 # Application definition
 
@@ -58,9 +59,12 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'nolsatu_courses.apps.middleware.NolSatuAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SESSION_ENGINE = 'redis_sessions.session'
 
 ROOT_URLCONF = 'nolsatu_courses.urls'
 
@@ -82,7 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nolsatu_courses.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -92,7 +95,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -112,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -125,7 +126,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -150,3 +150,12 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     },
 }
+
+SESSION_COOKIE_DOMAIN = '.nolsatu.id'
+
+NOLSATU_PROFILE_URL = 'https://www.nolsatu.id/profile'
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
