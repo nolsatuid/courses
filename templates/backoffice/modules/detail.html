@@ -1,0 +1,61 @@
+{% extends 'backoffice/base-adminlte.html' %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                {{ title }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <div class="tab-content">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td width="200px">
+                                        <label>Judul</label>
+                                    </td>
+                                    <td>
+                                        {{ module.title }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Deskripsi</label>
+                                    </td>
+                                    <td>
+                                        {{ module.description|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Urutan</label>
+                                    </td>
+                                    <td>
+                                        {{ module.order }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Kursus</label>
+                                    </td>
+                                    <td>
+                                        {{ module.course }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'backoffice:modules:index' module.course.id %}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Modul</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load static widget_tweaks %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                Form {{ title }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <h5>{{ title_extra }}</h5>
+                        <div class="tab-content">
+
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-8">
+                                    {{ form.media }}
+                                    {{ form.non_field_errors }}
+                                    {% for field in form %}
+                                        {% if field.name == "title" or field.name == "description" or field.name == "short_description" or field.name == "content" or field.name == "instruction" %}
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-12"> {{ field.label }} </label>
+                                            <div class="col-md-12">
+                                                {% render_field field|add_class:"form-control"%}
+                                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                <small class="form-text text-danger">{{ field.errors }}</small>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ form.media }}
+                                        {{ form.non_field_errors }}
+                                        {% for field in form %}
+                                            {% if field.name != "title" and field.name != "description" and field.name != "short_description" and field.name != "content" and field.name != "instruction" %}
+                                            <div class="form-group col-md-12">
+                                                <label class="col-md-12"> {{ field.label }} </label>
+                                                <div class="col-md-12">
+                                                    {% if field.field.widget.input_type == 'file' or field.field.widget.input_type == 'checkbox' %}
+                                                        {% render_field field%}
+                                                    {% else %}
+                                                        {% render_field field|add_class:"form-control" %}
+                                                    {% endif %}
+                                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                    <small class="form-text text-danger">{{ field.errors }}</small>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-user float-right">
+                                    {% if title_submit %} {{ title_submit }} {% else %} Submit {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+
+    </div>
+</div>
+{% endblock %}
