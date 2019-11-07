@@ -1,0 +1,109 @@
+{% extends 'backoffice/base-adminlte.html' %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                {{ title }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <div class="tab-content">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td width="200px">
+                                        <label>Judul</label>
+                                    </td>
+                                    <td>
+                                        {{ course.title }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Deskripsi Singkat</label>
+                                    </td>
+                                    <td>
+                                        {{ course.short_description|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Deskripsi</label>
+                                    </td>
+                                    <td>
+                                        {{ course.description|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Slug</label>
+                                    </td>
+                                    <td>
+                                        {{ course.slug }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Gambar</label>
+                                    </td>
+                                    <td>
+                                        <img width="100px" src="{{ course.featured_image.url }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Level</label>
+                                    </td>
+                                    <td>
+                                        {{ course.level }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Kategori</label>
+                                    </td>
+                                    <td>
+                                        {{ course.category.all|join:', ' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Terlihat</label>
+                                    </td>
+                                    <td>
+                                        {{ course.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Diperbolehkan</label>
+                                    </td>
+                                    <td>
+                                        {{ course.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Author</label>
+                                    </td>
+                                    <td>
+                                        {{ course.author }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'backoffice:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

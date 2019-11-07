@@ -4,34 +4,28 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h4 class="float-left">{{ title }}</h4>
-            <a href="{% url 'backoffice:courses:add' %}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Kursus</a>
+            <h4 class="float-left">Modul pada Kursus {{ course.title }}</h4>
+            <a href="{% url 'backoffice:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
                 <thead>
                     <th>Judul</th>
-                    <th>Level</th>
-                    <th>Kategori</th>
+                    <th>Urutan</th>
                     <th>Terlihat</th>
-                    <th>Diperbolehkan</th>
-                    <th>Author</th>
                     <th>Aksi</th>
                 </thead>
                 <tbody>
-                    {% for courses in courses %}
+                    {% for module in modules %}
                         <tr>
-                            <td>{{ courses.title }}</td>
-                            <td>{{ courses.get_level_display }}</td>
-                            <td>{{ courses.category.all|join:", " }}</td>
-                            <td>{{ courses.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ courses.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ courses.author.name }}</td>
+                            <td>{{ module.title }}</td>
+                            <td>{{ module.order }}</td>
+                            <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:courses:details' courses.id %}">Detail</a>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:courses:edit' courses.id %}">Edit</a>
-                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:courses:delete' courses.id %}" data-name="{{ courses.name}}" >Hapus</button> |
-                                <a class="btn btn-sm btn-pill btn-warning" href="{% url 'backoffice:modules:index' courses.id %}">Lihat Modul</a>
+                                <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:modules:details' module.id %}">Detail</a>
+                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:modules:edit' module.id %}">Edit</a>
+                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button> |
+                                <a class="btn btn-sm btn-pill btn-warning" href="{% url 'backoffice:sections:index' module.id %}">Lihat Seksi</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -39,7 +33,7 @@
             </table>
         </div>
         <div class="card-footer">
-
+            <a href="{% url 'backoffice:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
         </div>
     </div>
 </div>
