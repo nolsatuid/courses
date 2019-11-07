@@ -12,7 +12,7 @@ from .forms import FormSection, FormTaskSetting
 def index(request, id):
     module = get_object_or_404(Module, id=id)
     context = {
-        'title': _('Daftar Seksi'),
+        'title': _('Daftar Bab'),
         'sections': Section.objects.all(),
         'module': module,
         'sidebar': True
@@ -26,11 +26,11 @@ def add(request, id):
     form = FormSection(data=request.POST or None, files=request.FILES or None, module=module)
     if form.is_valid():
         section = form.save()
-        messages.success(request, _(f"Berhasil tambah seksi {section.title}"))
+        messages.success(request, _(f"Berhasil tambah bab {section.title}"))
         return redirect('backoffice:sections:index', id=id)
 
     context = {
-        'title': _('Tambah Seksi'),
+        'title': _('Tambah Bab'),
         'form': form,
         'title_submit': 'Simpan'
     }
@@ -43,11 +43,11 @@ def edit(request, id):
     form = FormSection(data=request.POST or None, files=request.FILES or None, instance=section)
     if form.is_valid():
         section = form.save()
-        messages.success(request, _(f"Berhasil ubah seksi {section.title}"))
+        messages.success(request, _(f"Berhasil ubah bab {section.title}"))
         return redirect('backoffice:sections:index', id=section.module.id)
 
     context = {
-        'title': _('Ubah Seksi'),
+        'title': _('Ubah Bab'),
         'form': form,
         'title_submit': 'Simpan'
     }
@@ -58,7 +58,7 @@ def edit(request, id):
 def delete(request, id):
     section = get_object_or_404(Section, id=id)
     section.delete()
-    messages.success(request, 'Berhasil hapus seksi')
+    messages.success(request, 'Berhasil hapus bab')
     return redirect('backoffice:sections:index', id=section.module.id)
 
 
@@ -67,7 +67,7 @@ def details(request, id):
     section = get_object_or_404(Section, id=id)
 
     context = {
-        'title': 'Detail Seksi',
+        'title': 'Detail Bab',
         'section': section,
         'task_setting': TaskUploadSettings.objects.filter(section=section).first()
     }
