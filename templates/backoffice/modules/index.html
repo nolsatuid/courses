@@ -25,7 +25,7 @@
                                 <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:modules:details' module.id %}">Detail</a>
                                 <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:modules:edit' module.id %}">Edit</a>
                                 <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button> |
-                                <a class="btn btn-sm btn-pill btn-warning" href="{% url 'backoffice:sections:index' module.id %}">Lihat Seksi</a>
+                                <a class="btn btn-sm btn-pill btn-warning" href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
                             </td>
                         </tr>
                     {% endfor %}

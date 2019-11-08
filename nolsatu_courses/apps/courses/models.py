@@ -13,7 +13,7 @@ from nolsatu_courses.apps.utils import generate_unique_slug
 
 class Courses(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
-    slug = models.SlugField(max_length=200, blank=True)
+    slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
     short_description = RichTextField(_("Deskripsi Singkat"), config_name='basic_ckeditor')
     description = RichTextUploadingField(_("Deskripsi"))
     featured_image = models.FileField(_("Gambar Unggulan"), upload_to="images/", blank=True)
