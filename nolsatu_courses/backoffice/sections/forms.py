@@ -5,7 +5,7 @@ from nolsatu_courses.apps.courses.models import Section, TaskUploadSettings
 class FormSection(forms.ModelForm):
     class Meta:
         model = Section
-        exclude = ("module","files",)
+        exclude = ("module", "files",)
 
     def __init__(self, module=None, *args, **kwargs):
         self.module = module
