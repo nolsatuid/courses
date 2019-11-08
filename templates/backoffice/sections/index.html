@@ -24,9 +24,9 @@
                             <td>{{ section.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>{{ section.is_task|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:sections:details' section.id %}">Detail</a>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:sections:edit' section.id %}">Edit</a>
-                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:sections:delete' section.id %}" data-name="{{ section.title}}" >Hapus</button> |
+                                <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:sections:details' section.id %}" data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i></a>
+                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:sections:edit' section.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i></a>
+                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:sections:delete' section.id %}" data-name="{{ section.title}}" data-toggle="tooltip" title="Hapus"><i class="fas fa-trash-alt"></i></button> |
                                 <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'backoffice:sections:task_setting' section.id %}"><i class="fas fa-cog"></i> Task Setting</a>
                             </td>
                         </tr>
