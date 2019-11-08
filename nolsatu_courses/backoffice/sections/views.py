@@ -13,7 +13,7 @@ def index(request, id):
     module = get_object_or_404(Module, id=id)
     context = {
         'title': _('Daftar Bab'),
-        'sections': Section.objects.all(),
+        'sections': module.sections.all(),
         'module': module,
         'sidebar': True
     }
