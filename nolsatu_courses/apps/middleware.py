@@ -30,5 +30,4 @@ def get_user(request):
 class NolSatuAuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if not hasattr(request, "user") or request.user.is_anonymous:
-            print("masuk process")
             request.user = SimpleLazyObject(partial(get_user, request))
