@@ -18,7 +18,10 @@ def get_user(request):
             first_name=data['first_name'],
             last_name=data['last_name'],
             username=data['username'],
-            email=data['email']
+            email=data['email'],
+            is_active=data['is_active'],
+            is_staff=data['is_staff'],
+            is_superuser=data['is_superuser']
         )
     except (RequestException, JSONDecodeError):
         return AnonymousUser()
@@ -27,4 +30,5 @@ def get_user(request):
 class NolSatuAuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if not hasattr(request, "user") or request.user.is_anonymous:
+            print("masuk process")
             request.user = SimpleLazyObject(partial(get_user, request))
