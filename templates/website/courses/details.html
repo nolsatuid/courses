@@ -8,7 +8,53 @@
             <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
             <div class="card-body">
                 <h1>{{ course.title }}</h1>
-                {{ course.description|safe }}
+                <small>Penulis: {{ course.author }}</small>
+                <small>level: {{ course.get_level_display }}</small>
+                <small>level: {{ course.category_list }}</small>
+
+                <nav class="mt-5">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <a class="nav-item nav-link active" id="nav-description-tab" data-toggle="tab" href="#nav-description" role="tab" aria-controls="nav-description" aria-selected="true">Deskripsi</a>
+                      <a class="nav-item nav-link" id="nav-module-tab" data-toggle="tab" href="#nav-module" role="tab" aria-controls="nav-profile" aria-selected="false">Modul</a>
+                    </div>
+                  </nav>
+                  <div class="tab-content pt-4" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
+                        {{ course.description|safe }}
+                    </div>
+
+                    <div class="tab-pane fade" id="nav-module" role="tabpanel" aria-labelledby="nav-module-tab">
+                        <h3>Daftar modul materi {{ course.title }}</h3>
+                        <ol>
+                            {% for module in course.modules.all %}
+                                <li>
+                                    {% if module.is_visible %} 
+                                        <a href="">{{ module.title }}</a>
+                                        <i class="float-right fa fa-eye"></i>
+                                    {% else %}
+                                        {{ module.title }}
+                                        <i class="float-right fa fa-eye-slash"></i>
+                                    {% endif %}
+                                    <ol>
+                                        {% for section in module.sections.all %}
+                                            <li>
+                                                {% if section.is_visible %} 
+                                                    <a href="">{{ section.title }}</a>
+                                                    <i class="float-right fa fa-eye"></i>
+                                                {% else %}
+                                                    {{ section.title }}
+                                                    <i class="float-right fa fa-eye-slash"></i>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ol>
+                                </li>
+                            {% endfor %}
+                        </ol>
+
+                    </div>
+                  </div>
+                
             </div>
         </div>
     </div>
