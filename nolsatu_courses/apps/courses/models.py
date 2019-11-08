@@ -82,7 +82,7 @@ class Section(models.Model):
 
 
 class TaskUploadSettings(models.Model):
-    section = models.OneToOneField("Section", on_delete=models.CASCADE)
+    section = models.OneToOneField("Section", on_delete=models.CASCADE, related_name='task_setting')
     instruction = RichTextField(_("Instruksi"), config_name='basic_ckeditor')
     allowed_extension = TaggableManager(
         _("Ekstensi yang diizinkan "),
