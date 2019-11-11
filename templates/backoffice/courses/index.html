@@ -30,7 +30,7 @@
                             <td>
                                 <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:courses:details' courses.id %}"data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i></a>
                                 <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:courses:edit' courses.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i></a>
-                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:courses:delete' courses.id %}" data-name="{{ courses.name}}" data-toggle="tooltip" title="Hapus"><i class="fas fa-trash-alt"></i></button> |
+                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:courses:delete' courses.id %}" data-name="{{ courses.title}}" data-toggle="tooltip" title="Hapus"><i class="fas fa-trash-alt"></i></button> |
                                 <a class="btn btn-sm btn-pill btn-warning" href="{% url 'backoffice:modules:index' courses.id %}">Lihat Modul</a>
                             </td>
                         </tr>
