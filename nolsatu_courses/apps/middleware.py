@@ -8,10 +8,15 @@ from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 from requests import RequestException
 
+LOGIN_CHECK_KEY = '_auth_user_id'
+
 
 def get_user(request):
     try:
         # Make it more faster? cache?
+        if LOGIN_CHECK_KEY not in request.session:
+            return AnonymousUser()
+
         data = requests.get(settings.NOLSATU_PROFILE_URL, cookies=request.COOKIES).json()
         return User(
             id=data['id'],
