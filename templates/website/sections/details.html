@@ -1,0 +1,75 @@
+{% extends 'website/base-top-nav.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'website:index' %}">Beranda</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'website:courses:details' section.module.course.slug %}">Kursus</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'website:modules:details' section.module.slug %}">Modul</a></li>
+            <li class="breadcrumb-item active">Section</li>
+        </ol>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h1>Materi {{ section.title }}</h1>
+
+                <div class="">
+                    <div class="card-header">                        
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        {{ section.content|safe }}
+                    </div>
+                    <!-- /.card-body -->
+                    
+                    <div class="card-header">
+                        {% if not section.is_visible %}   
+                        <button class="btn btn-outline-info">Sebelumnya</button>  
+                        <button class="btn btn-outline-info float-right">Selanjutnya</button> 
+                        {% endif %}                    
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <!-- DIRECT CHAT -->
+        <div class="card position-fixed w-25 direct-chat direct-chat-warning">
+            <div class="card-body">
+            <!-- Conversations are loaded here -->
+            <div class="direct-chat-messages" style="height:500px;">
+                <ul class="products-list product-list-in-card pl-2 pr-2">
+                    {% for mod in section.module.course.modules.all %}
+                        <li class="item">
+                            {% if mod.is_visible %}
+                            <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}><a href="{% url 'website:modules:details' mod.slug %}" class="text-info">{{ mod.title }}</a><i class="float-right fa fa-xs fa-eye"></i></h5>                            
+                            {% else %}
+                            <h5 class="text-muted">{{ mod.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h5>
+                            {% endif %}
+                        </li>
+                        {% for sect in mod.sections.all %}
+                        <li class="item">                            
+                            {% if sect.is_visible %}
+                            <h6 class="ml-3" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}><a href="{% url 'website:sections:details' sect.slug %}" class="text-info">{{ sect.title }}</a><i class="float-right fa fa-xs fa-eye"></i></h6>
+                            {% else %}
+                            <h6 class="ml-3 text-muted">{{ sect.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h6>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    {% endfor %}
+                    <li></li>
+                </ul>
+            </div>
+            <!--/.direct-chat-messages-->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!--/.direct-chat -->
+    </div>
+</div>
+  <!-- /.row -->
+{% endblock %}
