@@ -3,3 +3,4 @@ from django.conf import settings
 SESSION_COOKIE_DOMAIN = 'localhost'
 LOGIN_URL = "http://localhost:8000/accounts/login/"
 NOLSATU_PROFILE_URL = 'http://localhost:8000/profile'
+NOLSATU_PROFILE_PAGE_URL = 'http://localhost:8000/accounts/profile/'
