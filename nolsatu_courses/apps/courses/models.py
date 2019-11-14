@@ -59,6 +59,7 @@ class Module(models.Model):
     class Meta:
         verbose_name = _("module")
         verbose_name_plural = _("modules")
+        ordering = ['order']
 
     def __str__(self):
         return self.title
@@ -85,6 +86,7 @@ class Section(models.Model):
     class Meta:
         verbose_name = _("section")
         verbose_name_plural = _("sections")
+        ordering = ['order']
 
     def __str__(self):
         return self.title
