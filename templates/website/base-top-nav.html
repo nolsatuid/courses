@@ -89,10 +89,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- user profile-->
         <li class="nav-item dropdown">
           {% if user.is_authenticated %}
-          <a class="nav-link" href="#">
+          <a class="nav-link" data-toggle="dropdown" href="#">
               <img src="{% static 'adminlte/dist/img/user2-160x160.jpg' %}" style="max-height:100%" class="img-circle elevation-2" alt="User Image">
               {{ user.first_name }} {{ user.last_name }}
           </a>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <span class="dropdown-header">{{ user.first_name }} {{ user.last_name }}</span>
+            <div class="dropdown-divider"></div>
+            <a href="{{ nolsatu_profile_page_url }}" class="dropdown-item">
+                <i class="fas fa-user mr-2"></i> Profil
+                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-list mr-2"></i> Kursusmu
+                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
+            </a>
+            {% if user.is_superuser %}
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'backoffice:index' %}" class="dropdown-item">
+                <i class="fas fa-user-cog mr-2"></i> Backoffice
+                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
+            </a>
+            {% endif %}
+            <div class="dropdown-divider"></div>
+            <a href="" class="dropdown-item dropdown-footer">Keluar</a>
+        </div>
           {% endif %}
       </li>
       </ul>

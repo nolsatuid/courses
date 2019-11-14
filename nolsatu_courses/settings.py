@@ -79,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'nolsatu_courses.apps.context_processors.nolsatu_context',
             ],
         },
     },
@@ -154,6 +155,7 @@ CKEDITOR_CONFIGS = {
 SESSION_COOKIE_DOMAIN = '.nolsatu.id'
 
 NOLSATU_PROFILE_URL = 'https://www.nolsatu.id/profile'
+NOLSATU_PROFILE_PAGE_URL = 'https://www.nolsatu.id/accounts/profile/'
 
 try:
     from .local_settings import *
