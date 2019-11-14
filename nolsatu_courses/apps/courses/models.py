@@ -50,6 +50,7 @@ class Courses(models.Model):
 
 class Module(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
+    slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
     description = RichTextUploadingField(_("Deskripsi"))
     order = models.PositiveIntegerField(_("Urutan"))
     is_visible = models.BooleanField(_("Terlihat"), default=True)
@@ -62,9 +63,18 @@ class Module(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if self.slug:  # edit
+            if slugify(self.title) != self.slug:
+                self.slug = generate_unique_slug(Courses, self.title)
+        else:  # create
+            self.slug = generate_unique_slug(Courses, self.title)
+        super().save(*args, **kwargs)
+
 
 class Section(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
+    slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
     content = RichTextUploadingField(_("Deskripsi"))
     order = models.PositiveIntegerField(_("Urutan"))
     is_visible = models.BooleanField(_("Terlihat"), default=True)
@@ -79,6 +89,13 @@ class Section(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if self.slug:  # edit
+            if slugify(self.title) != self.slug:
+                self.slug = generate_unique_slug(Courses, self.title)
+        else:  # create
+            self.slug = generate_unique_slug(Courses, self.title)
+        super().save(*args, **kwargs)
 
 
 class TaskUploadSettings(models.Model):

@@ -6,4 +6,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('tes_login/', views.test_login, name='test_login'),
     path('courses/', include('nolsatu_courses.website.courses.urls')),
+    path('modules/', include('nolsatu_courses.website.modules.urls')),
+    path('sections/', include('nolsatu_courses.website.sections.urls')),
 ]

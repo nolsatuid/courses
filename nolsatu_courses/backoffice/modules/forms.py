@@ -6,7 +6,7 @@ class FormModule(forms.ModelForm):
 
     class Meta:
         model = Module
-        fields = ('title', 'description', 'order','is_visible')
+        exclude = ("course",)
 
     def __init__(self, course=None, *args, **kwargs):
         self.course = course
