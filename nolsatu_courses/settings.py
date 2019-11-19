@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'nolsatu_courses.apps.courses',
     'nolsatu_courses.apps.upload_files',
+    'nolsatu_courses.apps.accounts',
 
     # other apps
     'django_extensions',
