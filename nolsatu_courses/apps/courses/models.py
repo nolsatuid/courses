@@ -117,6 +117,7 @@ class TaskUploadSettings(models.Model):
 
 class Batch(models.Model):
     batch = models.CharField(max_length=20, unique=True)
+    course = models.ForeignKey(Courses, related_name='batchs', on_delete=models.CASCADE, null=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -126,7 +127,6 @@ class Batch(models.Model):
 
 
 class Enrollment(models.Model):
-    batch = models.ForeignKey(Batch, related_name='enrollments', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='enroll', on_delete=models.CASCADE)
     course = models.ForeignKey(Courses, related_name='enrolled', on_delete=models.CASCADE)
     STATUS = Choices(
@@ -139,4 +139,4 @@ class Enrollment(models.Model):
     finishing_date = models.DateField(_("Tanggal menyelesaikan"), blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user} - {self.course} - {self.batch}"
+        return f"{self.user} - {self.course}"

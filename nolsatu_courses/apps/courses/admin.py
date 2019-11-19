@@ -43,14 +43,14 @@ class AdminTaskUploadSettings(admin.ModelAdmin):
 
 @admin.register(Batch)
 class AdminBatch(admin.ModelAdmin):
-    list_display = ('batch', 'start_date', 'end_date', 'is_active')
+    list_display = ('batch', 'course', 'start_date', 'end_date', 'is_active')
     search_fields = ('batch',)
 
 
 @admin.register(Enrollment)
 class AdminEnrollment(admin.ModelAdmin):
     list_display = (
-        'batch', 'user', 'course', 'allowed_access', 'status',
+        'user', 'course', 'allowed_access', 'status',
         'date_enrollment', 'finishing_date'
     )
-    search_fields = ('batch', 'user', 'course')
+    search_fields = ('user', 'course')
