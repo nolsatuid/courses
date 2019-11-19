@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Courses, Module, Section, TaskUploadSettings
+from .models import (
+    Courses, Module, Section, TaskUploadSettings, Batch,
+    Enrollment
+)
 
 
 @admin.register(Courses)
@@ -36,3 +39,18 @@ class AdminTaskUploadSettings(admin.ModelAdmin):
 
     def allowed_extension_list(self, obj):
         return ", ".join(o.name for o in obj.allowed_extension.all())
+
+
+@admin.register(Batch)
+class AdminBatch(admin.ModelAdmin):
+    list_display = ('batch', 'course', 'start_date', 'end_date', 'is_active')
+    search_fields = ('batch',)
+
+
+@admin.register(Enrollment)
+class AdminEnrollment(admin.ModelAdmin):
+    list_display = (
+        'user', 'course', 'allowed_access', 'status',
+        'date_enrollment', 'finishing_date'
+    )
+    search_fields = ('user', 'course')

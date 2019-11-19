@@ -1,8 +1,8 @@
-<div class="card position-fixed" id="sticky-sidebar">
-    <div class="card-header">Sidebar</div>
+<div class="card position-sticky sticky-top" id="sticky-sidebar">
+    <h5><div class="card-header">Sidebar <i class="float-right fas fa-bookmark"></i></div></h5>
     <div class="card-body">
-        <p>Kategori: {{ course.category_list }}</p>
-        <p>Penulis: {{ course.author }}</p>
-        <a href="#" class="btn btn-primary">Daftar</a>
+        <p>Kategori:<strong class="text-info"> {{ course.category_list|capfirst }}</strong></p>
+        <p>Level:<strong class="text-info"> {{ course.get_level_display }}</strong></p>
+        <a href="#" class="btn btn-info" style="color:white;">Daftar kelas ini</a>
     </div>
 </div>
