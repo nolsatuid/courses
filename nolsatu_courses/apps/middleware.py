@@ -9,6 +9,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 from requests import RequestException
 
+from nolsatu_courses.apps.accounts.models import MemberNolsatu
 LOGIN_CHECK_KEY = '_auth_user_id'
 
 
@@ -41,9 +42,11 @@ def get_user(request):
             defaults={**defaults},
         )
 
-        if created:
-            # save other data from nolsatu to model UserNolsatu
-            pass
+        if created or not hasattr(user, 'nolsatu'):
+            # save other data from nolsatu to model MemberNolsatu
+            MemberNolsatu.objects.create(user=user, id_nolsatu=data["id"])
+
+        # TODO : update data from response
 
         # cache user data
         cache.set(cache_key, user)
