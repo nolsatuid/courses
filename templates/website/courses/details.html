@@ -8,9 +8,7 @@
             <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
             <div class="card-body">
                 <h1>{{ course.title }}</h1>
-                <small>Penulis: {{ course.author }}</small>
-                <small>level: {{ course.get_level_display }}</small>
-                <small>level: {{ course.category_list }}</small>
+                <small><i class="fas fa-user-edit"></i> {{ course.author|capfirst }}</small>
 
                 <nav class="mt-5">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -36,7 +34,7 @@
                                     <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{module.slug}}" class="" aria-expanded="true">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{module.slug}}" class="text-dark" aria-expanded="true">
                                             Modul {{ module.title }}
                                         </a>
                                         </h4>
@@ -51,13 +49,15 @@
                                         {% endif %}
                                     </div>
                                     <div id="collapse{{module.slug}}" class="panel-collapse in collapse show" style="">
+                                        {% if module.sections.all %}
                                         <div class="card-body">
                                             <ol class="todo-list">
                                                 {% for section in module.sections.all %}
                                                     <li>
                                                         {% if section.is_visible %} 
-                                                            <a href="{% url 'website:sections:details' section.slug %}">{{ forloop.counter }}. {{ section.title }}</a>
-                                                            <i class="float-right fa fa-eye"></i>
+                                                            <a class="text-dark" href="{% url 'website:sections:details' section.slug %}">{{ forloop.counter }}. {{ section.title }}
+                                                                <i class="float-right fa fa-eye"></i>
+                                                            </a>                                                            
                                                         {% else %}
                                                             {{ forloop.counter }}. {{ section.title }}
                                                             <i class="float-right fa fa-eye-slash"></i>
@@ -66,6 +66,7 @@
                                                 {% endfor %}
                                             </ol>
                                         </div>
+                                        {% endif %}
                                     </div>
                                     </div>
                                 {% endfor %}

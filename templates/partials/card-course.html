@@ -1,9 +1,11 @@
 {% load static %}
 
-<div class="card">
+<div class="card" style="width: 100%;height: 400px;overflow: hidden;">
     <a href="{% url 'website:courses:details' course.slug %}">
-        <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
-        <div class="card-body">
+        <div style="width: 100%;height: 200px;overflow: hidden;">
+            <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
+        </div>
+        <div class="card-body text-dark">
             <h4>{{ course.title }}</h4>
             {{ course.short_description|safe }}
         </div>
