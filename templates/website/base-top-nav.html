@@ -113,7 +113,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             {% endif %}
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item dropdown-footer">Keluar</a>
+            <a href="{% url 'website:logout' %}" class="dropdown-item dropdown-footer">Keluar</a>
         </div>
           {% endif %}
       </li>
