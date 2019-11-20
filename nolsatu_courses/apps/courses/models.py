@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.utils import timezone
 
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -46,6 +47,36 @@ class Courses(models.Model):
 
     def category_list(self):
         return ", ".join(category.name for category in self.category.all())
+
+    def is_started(self):
+        """
+        method ini digunakan untuk mengecek apakah kursus tersebut
+        sudah di mulai atau belom
+        """
+        batch = self.get_last_batch()
+        if not batch:
+            return False
+
+        now = timezone.now()
+        if now.date() >= batch.start_date and now.date() <= batch.end_date:
+            return True
+        else:
+            return False
+
+    def get_last_batch(self):
+        batch = self.batchs.order_by('batch').last()
+        return batch
+
+    def has_enrolled(self, user):
+        """
+        method ini digunakan untuk mengejek user tersebut
+        sudah terdaftar pada kursus yang diinginkan
+        """
+        course_ids = [enroll.course.id for enroll in user.enroll.all()]
+        if self.id in course_ids:
+            return True
+        else:
+            return False
 
 
 class Module(models.Model):
@@ -134,7 +165,7 @@ class Enrollment(models.Model):
         (2, 'finish', _('Selesai')),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.begin)
-    allowed_access = models.BooleanField(_("Akses diberikan"), default=True)
+    allowed_access = models.BooleanField(_("Akses diberikan"), default=False)
     date_enrollment = models.DateField(_("Tanggal mendaftar"), auto_now_add=True)
     finishing_date = models.DateField(_("Tanggal menyelesaikan"), blank=True, null=True)
 
