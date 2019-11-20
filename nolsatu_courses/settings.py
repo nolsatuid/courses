@@ -31,6 +31,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = "https://www.nolsatu.id/accounts/login/"
+LOGOUT_URL = "https://www.nolsatu.id/accounts/logout/"
+LOGOUT_REDIRECT_URL = "https://course.nolsatu.id/"
 
 # Application definition
 
