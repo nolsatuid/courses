@@ -72,6 +72,22 @@ class Module(models.Model):
             self.slug = generate_unique_slug(Courses, self.title)
         super().save(*args, **kwargs)
 
+    def get_next(self, slugs):        
+        index = list(slugs).index(self.slug)
+        try:
+            next_slug = slugs[index + 1]
+        except:
+            next_slug = None
+        return Module.objects.filter(slug=next_slug).first()
+
+    def get_prev(self, slugs):
+        index = list(slugs).index(self.slug)
+        try:
+            prev_slug = slugs[index - 1]
+        except:
+            prev_slug = None            
+        return Module.objects.filter(slug=prev_slug).first()
+
 
 class Section(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
@@ -98,6 +114,22 @@ class Section(models.Model):
         else:  # create
             self.slug = generate_unique_slug(Courses, self.title)
         super().save(*args, **kwargs)
+
+    def get_next(self, slugs):        
+        index = list(slugs).index(self.slug)
+        try:
+            next_slug = slugs[index + 1]
+        except:
+            next_slug = None
+        return Section.objects.filter(slug=next_slug).first()
+
+    def get_prev(self, slugs):
+        index = list(slugs).index(self.slug)
+        try:
+            prev_slug = slugs[index - 1]
+        except:
+            prev_slug = None            
+        return Section.objects.filter(slug=prev_slug).first()
 
 
 class TaskUploadSettings(models.Model):

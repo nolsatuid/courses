@@ -26,10 +26,10 @@
                     <div class="card-footer">
                         {% if is_authenticated %}   
                             {% if prev %}
-                                <a {% if prev_type == 'module' %} href="{% url 'website:modules:details' prev.slug %}" {% else %} href="{% url 'website:sections:details' prev.slug %}" {% endif %} class="btn btn-outline-info">Sebelumnya</a>  
+                                <a {% if prev_type == 'module' %} href="{% url 'website:modules:details' prev.slug %}" {% else %} href="{% url 'website:sections:details' prev.slug %}" {% endif %} class="btn bg-olive">Sebelumnya</a>  
                             {% endif %}
                             {% if next %}
-                                <a {% if next_type == 'module' %} href="{% url 'website:modules:details' next.slug %}" {% else %} href="{% url 'website:sections:details' next.slug %}" {% endif %} class="btn btn-outline-info float-right">Selanjutnya</a> 
+                                <a {% if next_type == 'module' %} href="{% url 'website:modules:details' next.slug %}" {% else %} href="{% url 'website:sections:details' next.slug %}" {% endif %} class="btn bg-olive float-right">Selanjutnya</a> 
                             {% endif %}
                         {% endif %}                    
                     </div>

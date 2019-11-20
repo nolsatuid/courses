@@ -6,22 +6,25 @@ from nolsatu_courses.apps.courses.models import Section, Module
 
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
-    next = Section.objects.filter(order__gt=section.order, module=section.module).first()
+    section_slugs = section.module.sections.values_list('slug', flat=True)
+    next_slug = section.get_next(section_slugs)
     next_type = 'section'
-    if not next:
-        next = Module.objects.filter(order__gt=section.module.order).first()
+    if not next_slug:
+        module_slugs = Module.objects.values_list('slug', flat=True)
+        next_slug = section.module.get_next(module_slugs)
         next_type = 'module'
-    prev = Section.objects.filter(order__lt=section.order, module=section.module).last()
+
+    prev_slug = section.get_prev(section_slugs)
     prev_type = 'section'
-    if not prev:
-        prev = Module.objects.filter(id=section.module.id).last()
+    if not prev_slug:
+        prev_slug = section.module
         prev_type = 'module'
 
     context = {
         'title': section.title,
         'section': section,
-        'prev': prev,
-        'next': next,
+        'prev': prev_slug,
+        'next': next_slug,
         'next_type': next_type,
         'prev_type': prev_type 
     }
