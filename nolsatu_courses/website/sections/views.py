@@ -19,13 +19,17 @@ def details(request, slug):
     if not prev_slug:
         prev_slug = section.module
         prev_type = 'module'
-
-    context = {
-        'title': section.title,
-        'section': section,
+    
+    pagination = {
         'prev': prev_slug,
         'next': next_slug,
         'next_type': next_type,
         'prev_type': prev_type 
+    }
+
+    context = {
+        'title': section.title,
+        'section': section,
+        'pagination': pagination
     }
     return render(request, 'website/sections/details.html', context)

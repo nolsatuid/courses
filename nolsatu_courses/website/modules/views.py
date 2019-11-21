@@ -19,13 +19,17 @@ def details(request, slug):
         if prev_slug.sections.last():
             prev_slug = prev_slug.sections.last()
             prev_type = "section"
-
-    context = {
-        'title': module.title,
-        'module': module,
+    
+    pagination = {
         'prev': prev_slug,
         'next': next_slug,
         'next_type': next_type,
         'prev_type': prev_type 
+    }
+
+    context = {
+        'title': module.title,
+        'module': module,
+        'pagination': pagination
     }
     return render(request, 'website/modules/details.html', context)
