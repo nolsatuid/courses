@@ -90,6 +90,7 @@ class Module(models.Model):
     class Meta:
         verbose_name = _("module")
         verbose_name_plural = _("modules")
+        ordering = ['order']
 
     def __str__(self):
         return self.title
@@ -101,6 +102,22 @@ class Module(models.Model):
         else:  # create
             self.slug = generate_unique_slug(Courses, self.title)
         super().save(*args, **kwargs)
+
+    def get_next(self, slugs):        
+        index = list(slugs).index(self.slug)
+        try:
+            next_slug = slugs[index + 1]
+        except:
+            next_slug = None
+        return Module.objects.filter(slug=next_slug).first()
+
+    def get_prev(self, slugs):
+        index = list(slugs).index(self.slug)
+        try:
+            prev_slug = slugs[index - 1]
+        except:
+            prev_slug = None            
+        return Module.objects.filter(slug=prev_slug).first()
 
 
 class Section(models.Model):
@@ -116,6 +133,7 @@ class Section(models.Model):
     class Meta:
         verbose_name = _("section")
         verbose_name_plural = _("sections")
+        ordering = ['order']
 
     def __str__(self):
         return self.title
@@ -127,6 +145,22 @@ class Section(models.Model):
         else:  # create
             self.slug = generate_unique_slug(Courses, self.title)
         super().save(*args, **kwargs)
+
+    def get_next(self, slugs):        
+        index = list(slugs).index(self.slug)
+        try:
+            next_slug = slugs[index + 1]
+        except:
+            next_slug = None
+        return Section.objects.filter(slug=next_slug).first()
+
+    def get_prev(self, slugs):
+        index = list(slugs).index(self.slug)
+        try:
+            prev_slug = slugs[index - 1]
+        except:
+            prev_slug = None            
+        return Section.objects.filter(slug=prev_slug).first()
 
 
 class TaskUploadSettings(models.Model):

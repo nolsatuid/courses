@@ -23,10 +23,14 @@
                     </div>
                     <!-- /.card-body -->
                     
-                    <div class="card-header">
-                        {% if not module.is_visible %}   
-                        <button class="btn btn-outline-info">Sebelumnya</button>  
-                        <button class="btn btn-outline-info float-right">Selanjutnya</button> 
+                    <div class="card-footer">
+                        {% if is_authenticated %}   
+                            {% if prev %}
+                                <a {% if prev_type == 'module' %} href="{% url 'website:modules:details' prev.slug %}" {% else %} href="{% url 'website:sections:details' prev.slug %}" {% endif %} class="btn bg-olive">Sebelumnya</a>  
+                            {% endif %}
+                            {% if next %}
+                                <a {% if next_type == 'module' %} href="{% url 'website:modules:details' next.slug %}" {% else %} href="{% url 'website:sections:details' next.slug %}" {% endif %} class="btn bg-olive float-right">Selanjutnya</a> 
+                            {% endif %}
                         {% endif %}                    
                     </div>
                 </div>
@@ -39,7 +43,7 @@
         <div class="card position-sticky sticky-top direct-chat direct-chat-warning">
             <div class="card-body">
             <!-- Conversations are loaded here -->
-            <div class="direct-chat-messages" style="height:500px;">
+            <div class="direct-chat-messages" style="height:400px;">
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     {% for mod in module.course.modules.all %}
                         <li class="item">
