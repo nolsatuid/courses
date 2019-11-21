@@ -113,7 +113,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             {% endif %}
             <div class="dropdown-divider"></div>
-            <a href="" class="dropdown-item dropdown-footer">Keluar</a>
+            <a href="{% url 'website:logout' %}" class="dropdown-item dropdown-footer">Keluar</a>
         </div>
           {% endif %}
       </li>
@@ -128,8 +128,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="content-header">
       <div class="container">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            
+          <div class="col-sm-12">
+              {% if messages %}
+              {% for message in messages %}
+              <div class="row">
+                  <div class="col-md-12">
+                      <div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible" {% endif %} >
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                          {{ message }}
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+              {% endif %}
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->

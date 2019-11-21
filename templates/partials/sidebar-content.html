@@ -1,8 +1,19 @@
 <div class="card position-sticky sticky-top" id="sticky-sidebar">
     <h5><div class="card-header">Sidebar <i class="float-right fas fa-bookmark"></i></div></h5>
     <div class="card-body">
-        <p>Kategori:<strong class="text-info"> {{ course.category_list|capfirst }}</strong></p>
-        <p>Level:<strong class="text-info"> {{ course.get_level_display }}</strong></p>
-        <a href="#" class="btn btn-info" style="color:white;">Daftar kelas ini</a>
+        <p>Kategori: <strong class="text-info"> {{ course.category_list|capfirst }}</strong></p>
+        <p>Level: <strong class="text-info"> {{ course.get_level_display }}</strong></p>
+        <p>Angkatan: <strong class="text-info"> {{ batch.batch }}</strong></p>
+        <p>Mulai: <strong class="text-info"> {{ batch.start_date }}</strong></p>
+        <p>Berakhir: <strong class="text-info"> {{ batch.end_date }}</strong></p>
+        {% if course.is_started %}
+            <a href="#" class="btn btn-secondary disabled" style="color:white;">Kelas sudah dimulai</a>
+        {% else %}
+            {% if has_enrolled %}
+                <a href="#" class="btn btn-secondary disabled" style="color:white;">Kamu sudah terdaftar dikelas ini</a>
+            {% else %}
+                <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Daftar kelas ini</a>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
