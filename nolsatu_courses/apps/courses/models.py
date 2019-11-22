@@ -107,7 +107,7 @@ class Module(models.Model):
         index = list(slugs).index(self.slug)
         try:
             next_slug = slugs[index + 1]
-        except:
+        except (AssertionError, IndexError):
             next_slug = None
         return Module.objects.filter(slug=next_slug).first()
 
@@ -115,7 +115,7 @@ class Module(models.Model):
         index = list(slugs).index(self.slug)
         try:
             prev_slug = slugs[index - 1]
-        except:
+        except (AssertionError, IndexError):
             prev_slug = None            
         return Module.objects.filter(slug=prev_slug).first()
 
@@ -150,7 +150,7 @@ class Section(models.Model):
         index = list(slugs).index(self.slug)
         try:
             next_slug = slugs[index + 1]
-        except:
+        except (AssertionError, IndexError):
             next_slug = None
         return Section.objects.filter(slug=next_slug).first()
 
@@ -158,7 +158,7 @@ class Section(models.Model):
         index = list(slugs).index(self.slug)
         try:
             prev_slug = slugs[index - 1]
-        except:
+        except (AssertionError, IndexError):
             prev_slug = None            
         return Section.objects.filter(slug=prev_slug).first()
 
