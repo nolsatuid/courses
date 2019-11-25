@@ -30,6 +30,11 @@ def user_courses(request):
 @login_required
 def enroll(request, slug):
     course = get_object_or_404(Courses, slug=slug)
+
+    if course.has_enrolled(request.user):
+        messages.success(request, _(f'Kamu sudah terdaftar di kelas {course.title}'))
+        return redirect('website:courses:details', course.slug)
+
     if course.is_started():
         messages.warning(
             request, _(f'Gagal mendaftar, kelas {course.title} sudah dimulai')

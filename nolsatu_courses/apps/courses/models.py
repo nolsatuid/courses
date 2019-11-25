@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -72,6 +72,9 @@ class Courses(models.Model):
         method ini digunakan untuk mengejek user tersebut
         sudah terdaftar pada kursus yang diinginkan
         """
+        if user == AnonymousUser():
+            return False
+            
         course_ids = [enroll.course.id for enroll in user.enroll.all()]
         if self.id in course_ids:
             return True
