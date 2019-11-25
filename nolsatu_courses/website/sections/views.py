@@ -19,14 +19,17 @@ def details(request, slug):
     if not prev_slug:
         prev_slug = section.module
         prev_type = 'module'
-    
+
+    # save activities user to section
+    if section.has_enrolled(request.user):
+        section.activities_section.get_or_create(user=request.user)
+
     pagination = {
         'prev': prev_slug,
         'next': next_slug,
         'next_type': next_type,
-        'prev_type': prev_type 
+        'prev_type': prev_type
     }
-
     context = {
         'title': section.title,
         'section': section,
