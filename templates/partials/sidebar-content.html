@@ -6,13 +6,17 @@
         <p>Angkatan: <strong class="text-info"> {{ batch.batch }}</strong></p>
         <p>Mulai: <strong class="text-info"> {{ batch.start_date }}</strong></p>
         <p>Berakhir: <strong class="text-info"> {{ batch.end_date }}</strong></p>
-        {% if course.is_started %}
-            <a href="#" class="btn btn-secondary disabled" style="color:white;">Kelas sudah dimulai</a>
+        {% if has_enrolled %}
+            <div class="alert alert-warning" >
+                Kamu sudah terdaftar dikelas ini, klik <a href="#" >disini</a> untuk memulai atau melanjutkan kelasmu
+            </div>
         {% else %}
-            {% if has_enrolled %}
-                <a href="#" class="btn btn-secondary disabled" style="color:white;">Kamu sudah terdaftar dikelas ini</a>
+            {% if course.is_started %}
+                <div class="alert alert-warning" >
+                    Maaf, Kelas sudah dimulai.
+                </div>
             {% else %}
-                <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Daftar kelas ini</a>
+            <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Daftar kelas ini</a>
             {% endif %}
         {% endif %}
     </div>

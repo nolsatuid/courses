@@ -74,7 +74,7 @@ class Courses(models.Model):
         """
         if user == AnonymousUser():
             return False
-            
+
         course_ids = [enroll.course.id for enroll in user.enroll.all()]
         if self.id in course_ids:
             return True
@@ -184,7 +184,7 @@ class TaskUploadSettings(models.Model):
 
 
 class Batch(models.Model):
-    batch = models.CharField(max_length=20, unique=True)
+    batch = models.CharField(max_length=20)
     course = models.ForeignKey(Courses, related_name='batchs', on_delete=models.CASCADE)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
