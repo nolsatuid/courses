@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Courses, Module, Section, TaskUploadSettings, Batch,
-    Enrollment
+    Enrollment, Activity
 )
 
 
@@ -54,3 +54,11 @@ class AdminEnrollment(admin.ModelAdmin):
         'date_enrollment', 'finishing_date'
     )
     search_fields = ('user', 'course')
+
+
+@admin.register(Activity)
+class AdminActivity(admin.ModelAdmin):
+    list_display = (
+        'user', 'module', 'section', 'created',
+    )
+    search_fields = ('user', 'module', 'section')
