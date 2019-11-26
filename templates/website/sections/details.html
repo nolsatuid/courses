@@ -1,4 +1,5 @@
 {% extends 'website/base-top-nav.html' %}
+{% load static widget_tweaks %}
 
 {% block content %}
 <div class="row">
@@ -28,7 +29,43 @@
 
                     </div>
                     <!-- /.card-body -->
-                    {% include 'partials/pagination.html' with pagination=pagination %}
+
+                    {% if section.is_task %}
+                    <hr>
+                    <div class="card">
+                        <div class="card-header">
+                          <h3 class="card-title">Form Upload Tugas</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            {{ form.media }}
+                            {{ form.non_field_errors }}
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="col-md-12">{{ section.task_setting.instruction|safe }}</label>
+                                    <div class="col-md-12">
+                                        {% render_field form.file %}
+                                        {% render_field form.name %}
+                                        <small class="form-text text-muted">{{ form.file.help_text }}</small>
+                                        <small class="form-text text-danger">{{ form.file.errors }}</small>
+                                    </div>
+                                    <small class="col-md-12 form-text text-muted">Maksimum file:<span class="text-danger"> {{ section.task_setting.max_size }} MB</span></small>
+                                    <small class="col-md-12 form-text text-muted">Ekstensi file:<span class="text-danger"> {{ section.task_setting.allowed_extension.all|join:', ' }} </span></small>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+            
+                            <div class="card-footer">
+                                <button type="submit" class="btn bg-olive">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    {% include 'partials/pagination.html' with pagination=pagination %}                    
                 </div>
 
             </div>

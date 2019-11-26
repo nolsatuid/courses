@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Courses, Module, Section, TaskUploadSettings, Batch,
-    Enrollment
+    Enrollment, CollectTask
 )
 
 
@@ -27,6 +27,12 @@ class AdminModule(admin.ModelAdmin):
 class AdminSection(admin.ModelAdmin):
     list_display = ('title', 'module', 'order', 'is_task', 'is_visible')
     search_fields = ('title',)
+
+
+@admin.register(CollectTask)
+class AdminCollectTask(admin.ModelAdmin):
+    list_display = ('user', 'section', 'file')
+    search_fields = ('user', 'section', )
 
 
 @admin.register(TaskUploadSettings)

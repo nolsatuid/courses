@@ -168,7 +168,7 @@ class TaskUploadSettings(models.Model):
     instruction = RichTextField(_("Instruksi"), config_name='basic_ckeditor')
     allowed_extension = TaggableManager(
         _("Ekstensi yang diizinkan "),
-        help_text=_("Extensi dipisahkan dengan koma dan tanpa titik di depan")
+        help_text=_("Extensi dipisahkan dengan koma dan menggunakan titik di depan")
     )
     max_size = models.IntegerField(_("Ukuran Maks"), help_text=_("Ukuran dalam MB"))
 
@@ -205,3 +205,12 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.course}"
+
+
+class CollectTask(models.Model):
+    user = models.ForeignKey(User, related_name='collect_task', on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, related_name='collect_task', on_delete=models.CASCADE)
+    file = models.OneToOneField("upload_files.UploadFile", blank=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} - {self.section}"
