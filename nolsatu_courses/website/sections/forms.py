@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django import forms
 from nolsatu_courses.apps.upload_files.models import UploadFile
 from nolsatu_courses.apps.courses.models import CollectTask, TaskUploadSettings
-import magic, os
+import os
 
 
 class FormUploadFile(forms.ModelForm):
