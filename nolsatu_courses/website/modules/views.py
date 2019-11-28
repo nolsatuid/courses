@@ -1,9 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required
 
 from nolsatu_courses.apps.courses.models import Module, Section, Activity
+from nolsatu_courses.apps.decorators import enroll_required
 
 
+@login_required
+@enroll_required
 def details(request, slug):
     module = get_object_or_404(Module, slug=slug)
     slugs = Module.objects.values_list('slug', flat=True)
