@@ -1,0 +1,32 @@
+{% extends 'website/base-top-nav.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'website:index' %}">Beranda</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'website:courses:details' module.course.slug %}">Kursus</a></li>
+            <li class="breadcrumb-item active">Modul</li>
+        </ol>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h1>Modul {{ module.title }}</h1>
+
+                <div class="">
+                    <div class="card-header">                        
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        {{ module.description|safe }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% include 'partials/preview-content-list.html' with module=module %}    
+</div>
+  <!-- /.row -->
+{% endblock %}

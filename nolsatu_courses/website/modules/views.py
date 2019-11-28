@@ -36,3 +36,14 @@ def details(request, slug):
         'pagination': pagination
     }
     return render(request, 'website/modules/details.html', context)
+
+
+def preview(request, slug):
+    module = get_object_or_404(Module, slug=slug)
+
+    context = {
+        'title': module.title,
+        'module': module,
+        'pagination': None
+    }
+    return render(request, 'website/modules/details.html', context)
