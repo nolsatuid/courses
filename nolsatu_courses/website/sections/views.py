@@ -1,15 +1,30 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
+
+from .forms import FormUploadFile
 from django.contrib.auth.decorators import login_required
 
 from nolsatu_courses.apps.decorators import enroll_required
-from nolsatu_courses.apps.courses.models import Section, Module
+from nolsatu_courses.apps.courses.models import Section, Module, CollectTask
 
 
 @login_required
 @enroll_required
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
+    collect_task = CollectTask.objects.filter(section=section, user=request.user).first()
+    form = FormUploadFile(
+        data=request.POST or None, 
+        files=request.FILES, section=section, 
+        user=request.user,
+        instance=None if not collect_task else collect_task.file
+    )
+    if form.is_valid():
+        upload_file = form.save(collect_task=collect_task)
+        messages.success(request, _(f"Berhasil mengupload tugas"))
+        return redirect('website:sections:details', slug)
+        
     section_slugs = section.module.sections.values_list('slug', flat=True)
     next_slug = section.get_next(section_slugs)
     next_type = 'section'
@@ -37,7 +52,8 @@ def details(request, slug):
     context = {
         'title': section.title,
         'section': section,
-        'pagination': pagination
+        'pagination': pagination,
+        'form': form,
     }
     return render(request, 'website/sections/details.html', context)
 
