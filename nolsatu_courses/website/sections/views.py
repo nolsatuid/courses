@@ -9,8 +9,12 @@ from .forms import FormUploadFile
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
     collect_task = CollectTask.objects.filter(section=section, user=request.user).first()
-    form = FormUploadFile(data=request.POST or None, files=request.FILES, section=section, user=request.user,
-            instance=None if not collect_task else collect_task.file)
+    form = FormUploadFile(
+            data=request.POST or None, 
+            files=request.FILES, section=section, 
+            user=request.user,
+            instance=None if not collect_task else collect_task.file
+        )
     if form.is_valid():
         upload_file = form.save(collect_task=collect_task)
         messages.success(request, _(f"Berhasil mengupload tugas"))
