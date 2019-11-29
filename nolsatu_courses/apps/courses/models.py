@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -72,11 +72,18 @@ class Courses(models.Model):
         method ini digunakan untuk mengejek user tersebut
         sudah terdaftar pada kursus yang diinginkan
         """
-        course_ids = [enroll.course.id for enroll in user.enroll.all()]
+        if user == AnonymousUser():
+            return False
+
+        course_ids = user.enroll.values_list('course__id', flat=True)
         if self.id in course_ids:
             return True
         else:
             return False
+
+    def get_first_module(self):
+        module = self.modules.first()
+        return module
 
 
 class Module(models.Model):
@@ -103,7 +110,7 @@ class Module(models.Model):
             self.slug = generate_unique_slug(Courses, self.title)
         super().save(*args, **kwargs)
 
-    def get_next(self, slugs):        
+    def get_next(self, slugs):
         index = list(slugs).index(self.slug)
         try:
             next_slug = slugs[index + 1]
@@ -118,6 +125,9 @@ class Module(models.Model):
         except (AssertionError, IndexError):
             prev_slug = None            
         return Module.objects.filter(slug=prev_slug).first()
+
+    def has_enrolled(self, user):
+        return self.course.has_enrolled(user)
 
 
 class Section(models.Model):
@@ -162,6 +172,9 @@ class Section(models.Model):
             prev_slug = None            
         return Section.objects.filter(slug=prev_slug).first()
 
+    def has_enrolled(self, user):
+        return self.module.course.has_enrolled(user)
+        
 
 class TaskUploadSettings(models.Model):
     section = models.OneToOneField("Section", on_delete=models.CASCADE, related_name='task_setting')
@@ -181,7 +194,7 @@ class TaskUploadSettings(models.Model):
 
 
 class Batch(models.Model):
-    batch = models.CharField(max_length=20, unique=True)
+    batch = models.CharField(max_length=20)
     course = models.ForeignKey(Courses, related_name='batchs', on_delete=models.CASCADE)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
@@ -220,3 +233,22 @@ class CollectTask(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.section}"
+
+        
+class Activity(models.Model):
+    user = models.ForeignKey(User, related_name='activities', on_delete=models.CASCADE)
+    module = models.ForeignKey(
+        Module, related_name='activities_module',
+        on_delete=models.CASCADE,
+        blank=True, null=True
+    )
+    section = models.ForeignKey(
+        Section, related_name='activities_section',
+        on_delete=models.CASCADE,
+        blank=True, null=True
+    )
+    created = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        state = self.section if self.section else self.module
+        return f"{self.user} - {state.title}"

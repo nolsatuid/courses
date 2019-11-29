@@ -2,10 +2,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 
-from nolsatu_courses.apps.courses.models import Section, Module, CollectTask
 from .forms import FormUploadFile
+from django.contrib.auth.decorators import login_required
+
+from nolsatu_courses.apps.decorators import enroll_required
+from nolsatu_courses.apps.courses.models import Section, Module, CollectTask
 
 
+@login_required
+@enroll_required
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
     collect_task = CollectTask.objects.filter(section=section, user=request.user).first()
@@ -33,14 +38,17 @@ def details(request, slug):
     if not prev_slug:
         prev_slug = section.module
         prev_type = 'module'
-    
+
+    # save activities user to section
+    if section.has_enrolled(request.user):
+        section.activities_section.get_or_create(user=request.user)
+
     pagination = {
         'prev': prev_slug,
         'next': next_slug,
         'next_type': next_type,
         'prev_type': prev_type
     }
-
     context = {
         'title': section.title,
         'section': section,
@@ -48,3 +56,14 @@ def details(request, slug):
         'form': form,
     }
     return render(request, 'website/sections/details.html', context)
+
+
+def preview(request, slug):
+    section = get_object_or_404(Section, slug=slug)
+
+    context = {
+        'title': section.title,
+        'section': section,
+        'pagination': None
+    }
+    return render(request, 'website/sections/preview.html', context)

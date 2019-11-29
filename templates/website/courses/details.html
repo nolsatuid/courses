@@ -39,7 +39,7 @@
                                         </a>
                                         </h4>
                                         {% if module.is_visible %} 
-                                            <a href="{% url 'website:modules:details' module.slug %}" class="float-right btn btn-xs btn-outline-info">
+                                            <a href="{% url 'website:modules:preview' module.slug %}" class="float-right btn btn-xs btn-outline-info">
                                                 Lihat Deskripsi
                                             </a>
                                         {% else %}
@@ -55,7 +55,7 @@
                                                 {% for section in module.sections.all %}
                                                     <li>
                                                         {% if section.is_visible %} 
-                                                            <a class="text-dark" href="{% url 'website:sections:details' section.slug %}">{{ forloop.counter }}. {{ section.title }}
+                                                            <a class="text-dark" href="{% url 'website:sections:preview' section.slug %}">{{ forloop.counter }}. {{ section.title }}
                                                                 <i class="float-right fa fa-eye"></i>
                                                             </a>                                                            
                                                         {% else %}
