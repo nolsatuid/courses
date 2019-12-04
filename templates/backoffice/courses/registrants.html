@@ -1,0 +1,81 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load static %}
+{% load tags_courses %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+<style>
+thead input {
+    width: 100%;
+}
+</style>
+{% endblock  %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Nama</th>
+                    <th>Username</th>
+                    <th>Kursus</th>
+                    <th>Status</th>
+                    <th>Email</th>
+                    <th>No. Ponsel</th>
+                </thead>
+                <tbody>
+                    {% for registrants in registrants %}
+                        <tr>
+                            <td>{{ registrants.user.first_name }} {{ registrants.user.last_name }}</td>
+                            <td>{{ registrants.user.username }}</td>                         
+                            <td>{{ registrants.course }}</td>                         
+                            <td>{{ registrants.status|enrollment_status_display:'True' }}</td>
+                            <td>{{ registrants.user.email }}</td>             
+                            <td>{{ registrants.user.nolsatu.phone_number|default_if_none:"-" }}</td>   
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Setup - add a text input to each footer cell
+        $('#datatable thead tr').clone(true).appendTo( '#datatable thead' );
+        $('#datatable thead tr:eq(1) th').each( function (i) {
+            var title = $(this).text();
+            if(title == "Nama" || title == "Username" || title == "Kursus"){
+                $(this).html( '<input type="text" placeholder="Cari '+title+'" />' );
+        
+                $( 'input', this ).on( 'keyup change', function () {
+                    if ( table.column(i).search() !== this.value ) {
+                        table
+                            .column(i)
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            }else{
+                $(this).html( '' );
+            }
+        } );
+    
+        var table = $('#datatable').DataTable( {
+            orderCellsTop: true,
+            fixedHeader: true
+        } );
+    })
+</script>
+{% endblock %}
