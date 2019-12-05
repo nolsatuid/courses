@@ -4,7 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
-from nolsatu_courses.apps.courses.models import Courses
+from nolsatu_courses.apps.courses.models import Courses, Enrollment
 from .forms import FormCourses
 
 
@@ -68,3 +68,12 @@ def details(request, id):
         'course': course
     }
     return render(request, 'backoffice/courses/detail.html', context)
+
+
+@staff_member_required
+def registrants(request):
+    context = {
+        'title': _('Pendaftar Kursus'),
+        'registrants': Enrollment.objects.all()
+    }
+    return render(request, 'backoffice/courses/registrants.html', context)

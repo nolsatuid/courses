@@ -208,7 +208,7 @@ class Enrollment(models.Model):
     user = models.ForeignKey(User, related_name='enroll', on_delete=models.CASCADE)
     course = models.ForeignKey(Courses, related_name='enrolled', on_delete=models.CASCADE)
     STATUS = Choices(
-        (1, 'begin', _('Begin')),
+        (1, 'begin', _('Mulai')),
         (2, 'finish', _('Selesai')),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.begin)
