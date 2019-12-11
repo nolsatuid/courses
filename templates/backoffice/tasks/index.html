@@ -1,0 +1,221 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load static %}
+{% load tags_courses %}
+{% load static widget_tweaks %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<style>
+thead input {
+    width: 100%;
+}
+</style>
+{% endblock  %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <!-- Filter form -->
+            <form method="GET" >
+                <div class="form-group row">
+                    {% for field in form %}
+                        <div class="form-group col-md-3">
+                            {% render_field field|add_class:"form-control"%}
+                            <span class="help_text">
+                                {{ field.errors }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary btn-pill">Menyaring</button>
+                    </div>
+                </div>
+            </form>
+            <!-- end filter form -->
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Nama</th>
+                    <th>Username</th>
+                    <th>File</th>
+                    <th>Aksi</th>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.user.first_name }} {{ task.user.last_name }}</td>
+                            <td>{{ task.user.username }}</td> 
+                            <td><a href="{{ task.file.file.url }}" target="_blank"> Lihat Tugas</td>       
+                            <td width="10px">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
+                                    <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}">
+                                        <a data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>
+                                    </label>
+                                    <label class="btn {% if task.status == 2 %} bg-maroon {% else %} btn-secondary {% endif %}">
+                                        <a data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>
+                                    </label>
+                                    <label class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}">
+                                        <a data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="3" data-url="" data-name="Lulus" >Lulus</a>
+                                    </label>
+                                </div>
+                            </td>  
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmStatus" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Apakah Anda yakin?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Mengubah status menjadi <strong><span id="confirmName"></span></strong>?</p>
+                <input type="hidden" id="task_id">
+                <input type="hidden" id="status_id">
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                <button class="btn btn-primary" onclick="changeStatus()">Ubah Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable();
+        filterSection();
+
+        $('#confirmStatus').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('url');
+            var name = button.data('name');
+            var id = button.data('id');
+            var status = button.data('status');
+
+            var modal = $(this);
+            //modal.find('#confirmButton').attr("href", url);
+            modal.find('#confirmName').html(name);
+            modal.find('#status_id').val(status);
+            modal.find('#task_id').val(id);
+        })
+    })
+
+    $('#id_course').on('change', function() {
+        filterSection();      
+    });
+
+    function filterSection(){
+        var id_section = $('#id_section').val();
+        var list_section = $('#id_section');
+        var course = $('#id_course').val();
+        $.ajax({
+            url: '{% url "backoffice:tasks:ajax_filter_section" %}',
+            data: {
+                'course': course
+            },
+            dataType: 'json',
+            success: function (data) {
+                list_section.html("");  
+                $.each(data.section, function(key,value) {
+                    if(id_section == value.id){
+                        list_section.append(
+                            '<option value="'+value.id+'" selected>'+value.name+'</option>'
+                        ); 
+                    }else{
+                        list_section.append(
+                            '<option value="'+value.id+'">'+value.name+'</option>'
+                        ); 
+                    }                      
+                });                      
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        }); 
+    }
+
+    function changeStatus(){
+        $('#confirmStatus').modal('hide');
+        var task_id = $('#task_id').val();
+        var status_id = $('#status_id').val();
+        var btn_status = $('#btn-status-'+task_id);
+        console.log(btn_status);
+        $.ajax({
+            url: "{% url 'backoffice:tasks:ajax_change_status' %}",
+            data: {
+                'task_id': task_id,
+                'status_id': status_id
+            },
+            dataType: 'json',
+            success: function (data) {
+                btn_status.html("");  
+                if(status_id == 1){
+                    btn_status.append(
+                        '<label class="btn btn-info">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>'+
+                        '</label>'+
+                        '<label class="btn btn-secondary">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>'+
+                        '</label>'+
+                        '<label class="btn btn-secondary">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" >Lulus</a>'+
+                        '</label>'
+                    ); 
+                }else if(status_id == 2){
+                    btn_status.append(
+                        '<label class="btn btn-secondary">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>'+
+                        '</label>'+
+                        '<label class="btn bg-maroon">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>'+
+                        '</label>'+
+                        '<label class="btn btn-secondary">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" >Lulus</a>'+
+                        '</label>'
+                    ); 
+                }else if(status_id == 3){
+                    btn_status.append(
+                        '<label class="btn btn-secondary">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>'+
+                        '</label>'+
+                        '<label class="btn btn-secondary">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>'+
+                        '</label>'+
+                        '<label class="btn bg-olive">'+
+                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" >Lulus</a>'+
+                        '</label>'
+                    ); 
+                }
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        }); 
+    }
+</script>
+{% endblock %}
