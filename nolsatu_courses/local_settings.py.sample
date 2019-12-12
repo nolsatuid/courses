@@ -1,8 +1,15 @@
 from django.conf import settings
 
 SESSION_COOKIE_DOMAIN = 'localhost'
-LOGIN_URL = "http://localhost:8000/accounts/login/"
-LOGOUT_URL = "http://localhost:8000/accounts/logout/"
-NOLSATU_PROFILE_URL = 'http://localhost:8000/profile'
-NOLSATU_PROFILE_PAGE_URL = 'http://localhost:8000/accounts/profile/'
-LOGOUT_REDIRECT_URL = "http://localhost:7000/"
+
+HOST = 'http://localhost:8080'
+NOLSATU_HOST = 'http://localhost:8000'
+
+LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/"
+LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
+LOGOUT_REDIRECT_URL = HOST
+
+NOLSATU_PROFILE_URL = f'{NOLSATU_HOST}/profile'
+NOLSATU_PROFILE_PAGE_URL = f'{NOLSATU_HOST}/accounts/profile/'
+LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/?navbar=hidden"
+LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"

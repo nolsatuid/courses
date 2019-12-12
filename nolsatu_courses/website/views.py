@@ -25,6 +25,11 @@ def logout(request):
 
 
 @login_required
+def login(request):
+    return redirect("website:index")
+
+
+@login_required
 def test_login(request):
     context = {
         'title': _('Kursus'),
