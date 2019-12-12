@@ -23,9 +23,11 @@ def index(request, id):
 @staff_member_required
 def add(request, id):
     module = get_object_or_404(Module, id=id)
-    form = FormSection(data=request.POST or None, files=request.FILES or None, module=module)
+    form = FormSection(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
-        section = form.save()
+        section = form.save(commit=False)
+        section.module = module
+        section.save()
         messages.success(request, _(f"Berhasil tambah bab {section.title}"))
         return redirect('backoffice:sections:index', id=id)
 

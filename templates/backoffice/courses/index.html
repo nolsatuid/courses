@@ -26,7 +26,7 @@
                             <td>{{ courses.category.all|join:", " }}</td>
                             <td>{{ courses.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>{{ courses.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ courses.author.name }}</td>
+                            <td>{{ courses.author }}</td>
                             <td>
                                 <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:courses:details' courses.id %}"data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i></a>
                                 <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:courses:edit' courses.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i></a>

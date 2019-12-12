@@ -9,17 +9,6 @@ class FormSection(forms.ModelForm):
         model = Section
         exclude = ("module", "files",)
 
-    def __init__(self, module=None, *args, **kwargs):
-        self.module = module
-        super().__init__(*args, **kwargs)
-
-    def save(self, *args, **kwargs):
-        section = super().save(commit=False)
-        if self.module:
-            section.module = self.module
-        section.save()
-        return section
-
 
 class FormTaskSetting(forms.ModelForm):
     class Meta:

@@ -23,9 +23,11 @@ def index(request, id):
 @staff_member_required
 def add(request, id):
     course = get_object_or_404(Courses, id=id)
-    form = FormModule(data=request.POST or None, files=request.FILES or None, course=course)
+    form = FormModule(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
-        module = form.save()
+        module = form.save(commit=False)
+        module.course = course
+        module.save()
         messages.success(request, _(f"Berhasil tambah modul {module.title}"))
         return redirect('backoffice:modules:index', id=id)
 
