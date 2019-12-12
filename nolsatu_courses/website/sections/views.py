@@ -13,7 +13,7 @@ from nolsatu_courses.apps.courses.models import Section, Module, CollectTask
 @enroll_required
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
-    collect_task = CollectTask.objects.filter(section=section, user=request.user).first()
+    collect_task = section.collect_task.filter(user=request.user).first()
     form = FormUploadFile(
         data=request.POST or None, 
         files=request.FILES, section=section, 
@@ -29,7 +29,7 @@ def details(request, slug):
     next_slug = section.get_next(section_slugs)
     next_type = 'section'
     if not next_slug:
-        module_slugs = Module.objects.values_list('slug', flat=True)
+        module_slugs = section.module.course.modules.values_list('slug', flat=True)
         next_slug = section.module.get_next(module_slugs)
         next_type = 'module'
 
