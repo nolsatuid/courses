@@ -30,9 +30,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-LOGIN_URL = "https://www.nolsatu.id/accounts/login/"
-LOGOUT_URL = "https://www.nolsatu.id/accounts/logout/"
-LOGOUT_REDIRECT_URL = "https://course.nolsatu.id/"
+HOST = 'https://course.nolsatu.id'
+NOLSATU_HOST = 'https://www.nolsatu.id'
+
+LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/"
+LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
+LOGOUT_REDIRECT_URL = HOST
+
+NOLSATU_PROFILE_URL = f'{NOLSATU_HOST}/profile'
+NOLSATU_PROFILE_PAGE_URL = f'{NOLSATU_HOST}/accounts/profile/'
+LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/?navbar=hidden"
+LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
 
 # Application definition
 
@@ -156,9 +164,6 @@ CKEDITOR_CONFIGS = {
 }
 
 SESSION_COOKIE_DOMAIN = '.nolsatu.id'
-
-NOLSATU_PROFILE_URL = 'https://www.nolsatu.id/profile'
-NOLSATU_PROFILE_PAGE_URL = 'https://www.nolsatu.id/accounts/profile/'
 
 try:
     from .local_settings import *
