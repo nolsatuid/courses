@@ -12,6 +12,7 @@ from .forms import FormSection, FormTaskSetting
 def index(request, id):
     module = get_object_or_404(Module, id=id)
     context = {
+        'menu_active': 'course',
         'title': _('Daftar Bab'),
         'sections': module.sections.all(),
         'module': module,
@@ -32,6 +33,7 @@ def add(request, id):
         return redirect('backoffice:sections:index', id=id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Tambah Bab'),
         'form': form,
         'title_submit': 'Simpan'
@@ -49,6 +51,7 @@ def edit(request, id):
         return redirect('backoffice:sections:index', id=section.module.id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Ubah Bab'),
         'form': form,
         'title_submit': 'Simpan'
@@ -69,6 +72,7 @@ def details(request, id):
     section = get_object_or_404(Section, id=id)
 
     context = {
+        'menu_active': 'course',
         'title': 'Detail Bab',
         'section': section,
         'task_setting': TaskUploadSettings.objects.filter(section=section).first()
@@ -90,6 +94,7 @@ def task_setting(request, id):
         return redirect('backoffice:sections:index', id=section.module.id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Pengaturan Tugas'),
         'form': form,
         'title_submit': 'Simpan'

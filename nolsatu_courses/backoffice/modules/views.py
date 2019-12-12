@@ -12,6 +12,7 @@ from .forms import FormModule
 def index(request, id):
     course = get_object_or_404(Courses, id=id)
     context = {
+        'menu_active': 'course',
         'title': _('Daftar Modul'),
         'modules': course.modules.all(),
         'course': course,
@@ -32,6 +33,7 @@ def add(request, id):
         return redirect('backoffice:modules:index', id=id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Tambah Modul'),
         'form': form,
         'title_submit': 'Simpan'
@@ -49,6 +51,7 @@ def edit(request, id):
         return redirect('backoffice:modules:index', id=module.course.id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Ubah Modul'),
         'form': form,
         'title_submit': 'Simpan'
@@ -69,6 +72,7 @@ def details(request, id):
     module = get_object_or_404(Module, id=id)
 
     context = {
+        'menu_active': 'course',
         'title': 'Detail Modul',
         'module': module
     }
