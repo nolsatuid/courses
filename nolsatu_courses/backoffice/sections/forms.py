@@ -18,11 +18,6 @@ class FormSection(forms.ModelForm):
         if self.module:
             section.module = self.module
         section.save()
-
-        if not hasattr(section, 'task_setting'):
-            task_setting = TaskUploadSettings(section=section, max_size="0")
-            task_setting.save()
-
         return section
 
 

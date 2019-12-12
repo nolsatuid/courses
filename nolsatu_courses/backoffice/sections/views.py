@@ -80,7 +80,10 @@ def task_setting(request, id):
     task_setting = TaskUploadSettings.objects.filter(section=section).first()
     form = FormTaskSetting(data=request.POST or None, instance=task_setting or None)
     if form.is_valid():
-        task_setting = form.save()
+        task_setting = form.save(commit=False)
+        task_setting.section = section
+        task_setting.save()
+        form.save_m2m()
         messages.success(request, _(f"Berhasil ubah pengaturan tugas"))
         return redirect('backoffice:sections:index', id=section.module.id)
 
