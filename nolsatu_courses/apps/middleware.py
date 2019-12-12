@@ -15,16 +15,17 @@ LOGIN_CHECK_KEY = '_auth_user_id'
 
 def get_user(request):
     try:
-        # key to cache user data use csrftoken
-        cache_key = request.COOKIES['csrftoken']
-        if LOGIN_CHECK_KEY not in request.session:
+        # key to cache user data use sessionid
+        cache_key = request.COOKIES.get('sessionid')
+        if cache_key and LOGIN_CHECK_KEY not in request.session:
             cache.delete(cache_key)
             return AnonymousUser()
 
         # get data user from cache
-        user_cache = cache.get(cache_key)
-        if user_cache:
-            return user_cache
+        if cache_key:
+            user_cache = cache.get(cache_key)
+            if user_cache:
+                return user_cache
 
         # get authentication from Nolsatu
         data = requests.get(settings.NOLSATU_PROFILE_URL, cookies=request.COOKIES).json()
@@ -49,7 +50,8 @@ def get_user(request):
         # TODO : update data from response
 
         # cache user data
-        cache.set(cache_key, user)
+        if cache_key:
+            cache.set(cache_key, user)
         return user
     except (RequestException, JSONDecodeError):
         return AnonymousUser()
