@@ -10,7 +10,7 @@ from nolsatu_courses.apps.decorators import enroll_required
 @enroll_required
 def details(request, slug):
     module = get_object_or_404(Module, slug=slug)
-    slugs = Module.objects.values_list('slug', flat=True)
+    slugs = module.course.modules.values_list('slug', flat=True)
     next_slug = module.sections.first()
     next_type = "section"
     if not next_slug:
