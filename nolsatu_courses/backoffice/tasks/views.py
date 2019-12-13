@@ -16,6 +16,7 @@ def index(request):
         tasks = form.get_data()
 
     context = {
+        'menu_active': 'task',
         'title': _('Pengumpulan Tugas'),
         'tasks': tasks,
         'form' : form

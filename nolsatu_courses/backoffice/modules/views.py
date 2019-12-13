@@ -12,6 +12,7 @@ from .forms import FormModule
 def index(request, id):
     course = get_object_or_404(Courses, id=id)
     context = {
+        'menu_active': 'course',
         'title': _('Daftar Modul'),
         'modules': course.modules.all(),
         'course': course,
@@ -23,13 +24,16 @@ def index(request, id):
 @staff_member_required
 def add(request, id):
     course = get_object_or_404(Courses, id=id)
-    form = FormModule(data=request.POST or None, files=request.FILES or None, course=course)
+    form = FormModule(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
-        module = form.save()
+        module = form.save(commit=False)
+        module.course = course
+        module.save()
         messages.success(request, _(f"Berhasil tambah modul {module.title}"))
         return redirect('backoffice:modules:index', id=id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Tambah Modul'),
         'form': form,
         'title_submit': 'Simpan'
@@ -47,6 +51,7 @@ def edit(request, id):
         return redirect('backoffice:modules:index', id=module.course.id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Ubah Modul'),
         'form': form,
         'title_submit': 'Simpan'
@@ -67,6 +72,7 @@ def details(request, id):
     module = get_object_or_404(Module, id=id)
 
     context = {
+        'menu_active': 'course',
         'title': 'Detail Modul',
         'module': module
     }

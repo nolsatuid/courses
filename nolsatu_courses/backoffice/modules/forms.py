@@ -7,14 +7,3 @@ class FormModule(forms.ModelForm):
     class Meta:
         model = Module
         exclude = ("course",)
-
-    def __init__(self, course=None, *args, **kwargs):
-        self.course = course
-        super().__init__(*args, **kwargs)
-
-    def save(self, *args, **kwargs):
-        module = super().save(commit=False)
-        if self.course:
-            module.course = self.course
-        module.save()
-        return module

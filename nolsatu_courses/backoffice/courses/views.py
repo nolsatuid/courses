@@ -11,6 +11,7 @@ from .forms import FormCourses
 @staff_member_required
 def index(request):
     context = {
+        'menu_active': 'course',
         'title': _('Daftar Kursus'),
         'courses': Courses.objects.all(),
         'sidebar': True
@@ -27,6 +28,7 @@ def add(request):
         return redirect('backoffice:courses:index')
 
     context = {
+        'menu_active': 'course',
         'title': _('Tambah Kursus'),
         'form': form,
         'title_submit': 'Simpan'
@@ -44,6 +46,7 @@ def edit(request, id):
         return redirect('backoffice:courses:index')
 
     context = {
+        'menu_active': 'course',
         'title': _('Ubah Kursus'),
         'form': form,
         'title_submit': 'Simpan'
@@ -64,6 +67,7 @@ def details(request, id):
     course = get_object_or_404(Courses, id=id)
 
     context = {
+        'menu_active': 'course',
         'title': 'Detail Kursus',
         'course': course
     }
@@ -73,6 +77,7 @@ def details(request, id):
 @staff_member_required
 def registrants(request):
     context = {
+        'menu_active': 'course',
         'title': _('Pendaftar Kursus'),
         'registrants': Enrollment.objects.all()
     }

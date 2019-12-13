@@ -12,6 +12,7 @@ from .forms import FormSection, FormTaskSetting
 def index(request, id):
     module = get_object_or_404(Module, id=id)
     context = {
+        'menu_active': 'course',
         'title': _('Daftar Bab'),
         'sections': module.sections.all(),
         'module': module,
@@ -23,13 +24,16 @@ def index(request, id):
 @staff_member_required
 def add(request, id):
     module = get_object_or_404(Module, id=id)
-    form = FormSection(data=request.POST or None, files=request.FILES or None, module=module)
+    form = FormSection(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
-        section = form.save()
+        section = form.save(commit=False)
+        section.module = module
+        section.save()
         messages.success(request, _(f"Berhasil tambah bab {section.title}"))
         return redirect('backoffice:sections:index', id=id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Tambah Bab'),
         'form': form,
         'title_submit': 'Simpan'
@@ -47,6 +51,7 @@ def edit(request, id):
         return redirect('backoffice:sections:index', id=section.module.id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Ubah Bab'),
         'form': form,
         'title_submit': 'Simpan'
@@ -67,6 +72,7 @@ def details(request, id):
     section = get_object_or_404(Section, id=id)
 
     context = {
+        'menu_active': 'course',
         'title': 'Detail Bab',
         'section': section,
         'task_setting': TaskUploadSettings.objects.filter(section=section).first()
@@ -80,11 +86,15 @@ def task_setting(request, id):
     task_setting = TaskUploadSettings.objects.filter(section=section).first()
     form = FormTaskSetting(data=request.POST or None, instance=task_setting or None)
     if form.is_valid():
-        task_setting = form.save()
+        task_setting = form.save(commit=False)
+        task_setting.section = section
+        task_setting.save()
+        form.save_m2m()
         messages.success(request, _(f"Berhasil ubah pengaturan tugas"))
         return redirect('backoffice:sections:index', id=section.module.id)
 
     context = {
+        'menu_active': 'course',
         'title': _('Pengaturan Tugas'),
         'form': form,
         'title_submit': 'Simpan'
