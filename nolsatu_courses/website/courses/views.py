@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 
-from nolsatu_courses.apps.decorators import enroll_required
 from nolsatu_courses.apps.courses.models import Courses, Enrollment
 
 
