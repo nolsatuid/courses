@@ -45,9 +45,15 @@ def get_user(request):
 
         if created or not hasattr(user, 'nolsatu'):
             # save other data from nolsatu to model MemberNolsatu
-            MemberNolsatu.objects.create(user=user, id_nolsatu=data["id"])
+            MemberNolsatu.objects.create(
+                user=user, id_nolsatu=data["id"],
+                avatar=data['avatar'], phone_number=data['phone']
+            )
 
-        # TODO : update data from response
+        # update data from response
+        user.nolsatu.avatar = data['avatar']
+        user.nolsatu.id_nolsatu = data['id']
+        user.nolsatu.phone_number = data['phone']
 
         # cache user data
         if cache_key:
