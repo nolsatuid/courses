@@ -174,7 +174,7 @@ class Section(models.Model):
 
     def has_enrolled(self, user):
         return self.module.course.has_enrolled(user)
-        
+
 
 class TaskUploadSettings(models.Model):
     section = models.OneToOneField("Section", on_delete=models.CASCADE, related_name='task_setting')
