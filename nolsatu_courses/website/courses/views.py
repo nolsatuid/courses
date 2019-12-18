@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
 
-from nolsatu_courses.apps.courses.models import Courses
+from nolsatu_courses.apps.courses.models import Courses, Enrollment
 
 
 def details(request, slug):
@@ -44,3 +45,14 @@ def enroll(request, slug):
     course.enrolled.create(course=course, user=request.user)
     messages.success(request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'))
     return redirect('website:courses:details', course.slug)
+
+
+@login_required
+def finish(request, slug):
+    # TODO: handle cek ketika belom menyelesaikan semua module dan bab makan redirect.
+    course = get_object_or_404(Courses, slug=slug)
+    enroll = Enrollment.objects.filter(course=course, user=request.user).first()
+    enroll.status = Enrollment.STATUS.finish
+    enroll.finishing_date = timezone.now().date()
+    enroll.save()
+    return redirect("website:courses:details", course.slug)

@@ -2,11 +2,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 
-from .forms import FormUploadFile
 from django.contrib.auth.decorators import login_required
 
 from nolsatu_courses.apps.decorators import enroll_required
-from nolsatu_courses.apps.courses.models import Section, Module, CollectTask
+from nolsatu_courses.apps.courses.models import (
+    Section, Module, CollectTask
+)
+
+from .forms import FormUploadFile
 
 
 @login_required
@@ -15,16 +18,16 @@ def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
     collect_task = section.collect_task.filter(user=request.user).first()
     form = FormUploadFile(
-        data=request.POST or None, 
-        files=request.FILES, section=section, 
+        data=request.POST or None,
+        files=request.FILES, section=section,
         user=request.user,
         instance=None if not collect_task else collect_task.file
     )
     if form.is_valid():
-        upload_file = form.save(collect_task=collect_task)
+        form.save(collect_task=collect_task)
         messages.success(request, _(f"Berhasil mengupload tugas"))
         return redirect('website:sections:details', slug)
-        
+
     section_slugs = section.module.sections.values_list('slug', flat=True)
     next_slug = section.get_next(section_slugs)
     next_type = 'section'
