@@ -113,7 +113,7 @@ class Courses(models.Model):
         count = self.activities_course.filter(user=user).count()
         return count
 
-    def progress_percentage(self, user, on_thousand=False):
+    def progress_percentage(self, user, on_thousand=True):
         """
         mendapatkan progres persentase pengerjaan
         """

@@ -22,9 +22,17 @@ def details(request, slug):
 @login_required
 def user_courses(request):
     enrolls = request.user.enroll.all()
+
     context = {
         'title': _('Daftar Kursusmu'),
-        'courses': [enroll.course for enroll in enrolls]
+        'courses': [{
+            "title": enroll.course.title,
+            "short_description": enroll.course.short_description,
+            "slug": enroll.course.slug,
+            "featured_image": enroll.course.featured_image,
+            "progress_precentage": int(enroll.course.progress_percentage(request.user))
+        } for enroll in enrolls],
+        'progress_bar': True
     }
     return render(request, 'website/index.html', context)
 
