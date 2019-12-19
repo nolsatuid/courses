@@ -13,7 +13,8 @@ def details(request, slug):
         'title': course.title,
         'course': course,
         'batch': course.get_last_batch(),
-        'has_enrolled': course.has_enrolled(request.user)
+        'has_enrolled': course.has_enrolled(request.user),
+        'enroll': course.get_enroll(request.user)
     }
     return render(request, 'website/courses/details.html', context)
 
