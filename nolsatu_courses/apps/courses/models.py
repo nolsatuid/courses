@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils.text import slugify
 from django.utils import timezone
+from django.db.models import Count
 
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -86,10 +87,44 @@ class Courses(models.Model):
         return module
 
     def get_enroll(self, user):
+        """
+        untuk mendapatkan data enroll berdasarkan user dan course
+        """
         if user == AnonymousUser():
             return None
         enroll = self.enrolled.filter(user=user).first()
         return enroll
+
+    def count_step(self):
+        """
+        untuk mendapatkan jumlah step dari suatu course
+        """
+        modules_count = self.modules.all().count()
+        sections_count = self.modules.aggregate(Count('sections'))['sections__count']
+        count = modules_count + sections_count
+        return count
+
+    def count_activity_step(self, user):
+        """
+        untuk mendapatkan jumlah step course dari activity user
+        """
+        if user == AnonymousUser():
+            return 0
+        count = self.activities_course.filter(user=user).count()
+        return count
+
+    def progress_percentage(self, user, on_thousand=True):
+        """
+        mendapatkan progres persentase pengerjaan
+        """
+        step_activity = self.count_activity_step(user)
+        step_course = self.count_step()
+        progress_on_decimal = step_activity / step_course
+        progress_on_thousand = progress_on_decimal * 100
+
+        if on_thousand:
+            return progress_on_thousand
+        return progress_on_decimal
 
 
 class Module(models.Model):
@@ -103,7 +138,7 @@ class Module(models.Model):
     class Meta:
         verbose_name = _("module")
         verbose_name_plural = _("modules")
-        ordering = ['order']
+        ordering = ['-order']
 
     def __str__(self):
         return self.title
@@ -149,7 +184,7 @@ class Section(models.Model):
     class Meta:
         verbose_name = _("section")
         verbose_name_plural = _("sections")
-        ordering = ['order']
+        ordering = ['-order']
 
     def __str__(self):
         return self.title
@@ -240,9 +275,14 @@ class CollectTask(models.Model):
     def __str__(self):
         return f"{self.user} - {self.section}"
 
-        
+
 class Activity(models.Model):
     user = models.ForeignKey(User, related_name='activities', on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Courses, related_name='activities_course',
+        on_delete=models.CASCADE,
+        blank=True, null=True
+    )
     module = models.ForeignKey(
         Module, related_name='activities_module',
         on_delete=models.CASCADE,
@@ -253,7 +293,7 @@ class Activity(models.Model):
         on_delete=models.CASCADE,
         blank=True, null=True
     )
-    created = models.DateField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         state = self.section if self.section else self.module

@@ -1,13 +1,21 @@
 {% load static %}
 
-<div class="card" style="width: 100%;height: 400px;overflow: hidden;">
+<div class="card" style="width: 100%;min-height: 400px;max-height: 450px;overflow: hidden;">
     <a href="{% url 'website:courses:details' course.slug %}">
         <div style="width: 100%;height: 200px;overflow: hidden;">
             <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
         </div>
+        {% if progress_bar %}
+        <div class="card-header text-dark">
+            <span class="">{{ course.progress_precentage }}% {% if course.progress_precentage == 100 %} materi selesai, Keren!{% else %} lagi selesai {% endif %}</span>
+            <div class="progress progress-xs">
+                <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{ course.progress_precentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ course.progress_precentage }}%"></div>
+            </div>
+        </div>
+        {% endif %}
         <div class="card-body text-dark">
             <h4>{{ course.title }}</h4>
-            {{ course.short_description|safe }}
+            {{ course.short_description|safe|truncatechars:100 }}
         </div>
     </a>
 </div>

@@ -11,7 +11,8 @@ from nolsatu_courses.apps.courses.models import Courses
 def index(request):
     context = {
         'title': _('Kursus'),
-        'courses': Courses.objects.all()
+        'courses': Courses.objects.all(),
+        'progress_bar': False
     }
     return render(request, 'website/index.html', context)
 

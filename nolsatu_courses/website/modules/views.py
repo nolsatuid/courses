@@ -26,7 +26,8 @@ def details(request, slug):
 
     # save activities user to module
     if module.has_enrolled(request.user):
-        module.activities_module.get_or_create(user=request.user)
+        module.activities_module.get_or_create(
+            user=request.user, course=module.course)
 
     pagination = {
         'prev': prev_slug,

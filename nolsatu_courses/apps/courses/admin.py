@@ -65,6 +65,6 @@ class AdminEnrollment(admin.ModelAdmin):
 @admin.register(Activity)
 class AdminActivity(admin.ModelAdmin):
     list_display = (
-        'user', 'module', 'section', 'created',
+        'user', 'course', 'module', 'section', 'created',
     )
     search_fields = ('user', 'module', 'section')
