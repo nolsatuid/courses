@@ -50,10 +50,16 @@ def enroll(request, slug):
 
 @login_required
 def finish(request, slug):
-    # TODO: handle cek ketika belom menyelesaikan semua module dan bab makan redirect.
     course = get_object_or_404(Courses, slug=slug)
+
+    # cek ketika belom menyelesaikan semua module dan bab.
+    if course.progress_percentage(request.user, on_thousand=True) != 100:
+        messages.warning(request, _(f'Kamu belom menyelesaikan semua materi {course.title}'))
+        return redirect("website:courses:details", course.slug)
+
     enroll = Enrollment.objects.filter(course=course, user=request.user).first()
     enroll.status = Enrollment.STATUS.finish
-    enroll.finishing_date = timezone.now().date()
+    if not enroll.finishing_date:
+        enroll.finishing_date = timezone.now().date()
     enroll.save()
     return redirect("website:courses:details", course.slug)
