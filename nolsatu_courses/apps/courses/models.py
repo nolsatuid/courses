@@ -85,6 +85,12 @@ class Courses(models.Model):
         module = self.modules.first()
         return module
 
+    def get_enroll(self, user):
+        if user == AnonymousUser():
+            return None
+        enroll = self.enrolled.filter(user=user).first()
+        return enroll
+
 
 class Module(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
