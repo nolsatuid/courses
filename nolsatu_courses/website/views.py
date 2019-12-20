@@ -22,7 +22,8 @@ def search(request):
     search_query = request.GET.get("q", "")
 
     context = {
-        'title': _('Pencarian Kursus'),
+        'title': _(f'Hasil Pencarian untuk "{search_query}"'),
+        'search_query': search_query,
         'courses': Courses.objects.filter(Q(title__contains=search_query) | Q(description__contains=search_query)),
         'progress_bar': False
     }
