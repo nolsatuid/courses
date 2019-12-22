@@ -77,7 +77,7 @@ def details(request, id):
 @staff_member_required
 def registrants(request):
     context = {
-        'menu_active': 'course',
+        'menu_active': 'registrants',
         'title': _('Pendaftar Kursus'),
         'registrants': Enrollment.objects.all()
     }

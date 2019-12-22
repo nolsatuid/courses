@@ -41,12 +41,6 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="{% url 'backoffice:courses:registrants' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Pendaftar Kursus</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="{% url 'backoffice:courses:index' %}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Daftar Kursus</p>
@@ -59,6 +53,12 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'backoffice:courses:registrants' %}" class="nav-link {% if menu_active == 'registrants' %}active{% endif %}">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>Pendaftar</p>
+                </a>
             </li>
             <li class="nav-item">
                 <a href="{% url 'backoffice:tasks:index' %}" class="nav-link {% if menu_active == 'task' %}active{% endif %}">
