@@ -23,8 +23,9 @@ thead input {
                     <th>Username</th>
                     <th>Kursus</th>
                     <th>Status</th>
-                    <th>Email</th>
-                    <th>No. Ponsel</th>
+                    <th>Tanggal Mendaftar</th>
+                    <th>Tanggal Menyelesaikan</th>
+                    <th>Akses</th>
                 </thead>
                 <tbody>
                     {% for registrants in registrants %}
@@ -32,9 +33,16 @@ thead input {
                             <td>{{ registrants.user.first_name }} {{ registrants.user.last_name }}</td>
                             <td>{{ registrants.user.username }}</td>                         
                             <td>{{ registrants.course }}</td>                         
-                            <td>{{ registrants.status|enrollment_status_display:'True' }}</td>
-                            <td>{{ registrants.user.email }}</td>             
-                            <td>{{ registrants.user.nolsatu.phone_number|default_if_none:"-" }}</td>   
+                            <td>{{ registrants.status|enrollment_status_display:'True' }}</td>                       
+                            <td>{{ registrants.date_enrollment }}</td>                               
+                            <td>{{ registrants.finishing_date|default_if_none:"-" }}</td>                               
+                            <td align="center">
+                                {% if registrants.allowed_access %}
+                                    <i class="fas fa-check"></i>
+                                {% else %}
+                                    <i class="fas fa-times"></i>
+                                {% endif %}
+                            </td>        
                         </tr>
                     {% endfor %}
                 </tbody>
