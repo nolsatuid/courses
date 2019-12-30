@@ -51,4 +51,4 @@ def preview(request, slug):
         'module': module,
         'pagination': None
     }
-    return render(request, 'website/modules/details.html', context)
+    return render(request, 'website/modules/preview.html', context)
