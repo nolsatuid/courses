@@ -11,7 +11,7 @@ from nolsatu_courses.apps.courses.models import Courses
 
 def index(request):
     context = {
-        'title': _('Kursus'),
+        'title': _('Daftar Materi'),
         'courses': Courses.objects.all(),
         'progress_bar': False
     }

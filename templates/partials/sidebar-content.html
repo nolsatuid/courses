@@ -7,7 +7,7 @@
         <p>Mulai: <strong class="text-info"> {{ batch.start_date }}</strong></p>
         <p>Berakhir: <strong class="text-info"> {{ batch.end_date }}</strong></p>
         {% if has_enrolled %}
-            {% if enroll %}
+            {% if enroll.finishing_date %}
                 <div class="alert alert-success" >
                     Yeey, kamu sudah menyelesaikan semua materi pada tanggal {{ enroll.finishing_date }}, klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk melihat semua materi.
                 </div>

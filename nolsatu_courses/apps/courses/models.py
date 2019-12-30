@@ -242,12 +242,16 @@ class Batch(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.batch
+        return f"{self.batch} {self.course.title}"
 
 
 class Enrollment(models.Model):
     user = models.ForeignKey(User, related_name='enroll', on_delete=models.CASCADE)
     course = models.ForeignKey(Courses, related_name='enrolled', on_delete=models.CASCADE)
+    batch = models.ForeignKey(
+        Batch, related_name='enrollments', on_delete=models.SET_NULL,
+        blank=True, null=True
+    )
     STATUS = Choices(
         (1, 'begin', _('Mulai')),
         (2, 'finish', _('Selesai')),

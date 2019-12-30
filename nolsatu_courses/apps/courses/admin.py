@@ -56,7 +56,7 @@ class AdminBatch(admin.ModelAdmin):
 @admin.register(Enrollment)
 class AdminEnrollment(admin.ModelAdmin):
     list_display = (
-        'user', 'course', 'allowed_access', 'status',
+        'user', 'batch', 'allowed_access', 'status',
         'date_enrollment', 'finishing_date'
     )
     search_fields = ('user', 'course')

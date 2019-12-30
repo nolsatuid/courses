@@ -24,7 +24,7 @@ def user_courses(request):
     enrolls = request.user.enroll.all()
 
     context = {
-        'title': _('Daftar Kursusmu'),
+        'title': _('Daftar Materimu'),
         'courses': [{
             "title": enroll.course.title,
             "short_description": enroll.course.short_description,
@@ -51,7 +51,7 @@ def enroll(request, slug):
         )
         return redirect('website:courses:details', course.slug)
 
-    course.enrolled.create(course=course, user=request.user)
+    course.enrolled.create(course=course, user=request.user, batch=course.batchs.last())
     messages.success(request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'))
     return redirect('website:courses:details', course.slug)
 

@@ -22,7 +22,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-dark navbar-danger border-bottom-0">
     <div class="container">
-      <a href="{% url 'website:index' %}" class="navbar-brand">
+      <a href="{{ nolsatu_home_page_url }}" class="navbar-brand">
           <img src="{% static 'website/images/logo/logo-polos.png' %}" alt="NOLSATU Logo" class="brand-image">
           <span class="brand-text font-weight-bold color-white">NOLSATU</span>
       </a>
@@ -66,7 +66,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <div class="dropdown-divider"></div>
             <a href="{% url 'website:courses:user_courses' %}" class="dropdown-item">
-                <i class="fas fa-list mr-2"></i> Kursusmu
+                <i class="fas fa-list mr-2"></i> Daftar Materimu
                 <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
             {% if user.is_superuser %}
