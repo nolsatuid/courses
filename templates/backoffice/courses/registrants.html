@@ -22,6 +22,7 @@ thead input {
                     <th>Nama</th>
                     <th>Username</th>
                     <th>Kursus</th>
+                    <th>Ankatan</th>
                     <th>Status</th>
                     <th>Tanggal Mendaftar</th>
                     <th>Tanggal Menyelesaikan</th>
@@ -32,7 +33,8 @@ thead input {
                         <tr>
                             <td>{{ registrants.user.first_name }} {{ registrants.user.last_name }}</td>
                             <td>{{ registrants.user.username }}</td>                         
-                            <td>{{ registrants.course }}</td>                         
+                            <td>{{ registrants.course }}</td>
+                            <td>{{ registrants.batch.batch }}</td>
                             <td>{{ registrants.status|enrollment_status_display:'True' }}</td>                       
                             <td>{{ registrants.date_enrollment }}</td>                               
                             <td>{{ registrants.finishing_date|default_if_none:"-" }}</td>                               
