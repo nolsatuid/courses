@@ -7,6 +7,8 @@
         <div class="col-lg-3">
             {% include 'partials/card-course.html' with course=course progress_bar=progress_bar %}
         </div>
+    {% empty %}
+            <div class="col-md-12 mb-3 card p-3"><h2 class="m-0 text-dark">Tidak ada kursus yang tersedia.</h2></div>
     {% endfor %}
   </div>
   <!-- /.row -->
