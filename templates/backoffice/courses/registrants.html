@@ -39,11 +39,10 @@ thead input {
                             <td>{{ registrants.date_enrollment }}</td>                               
                             <td>{{ registrants.finishing_date|default_if_none:"-" }}</td>                               
                             <td align="center">
-                                {% if registrants.allowed_access %}
-                                    <i class="fas fa-check"></i>
-                                {% else %}
-                                    <i class="fas fa-times"></i>
-                                {% endif %}
+                                <div class="custom-control custom-switch" id="btn-status-{{registrants.id}}">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch{{registrants.id}}" onchange="setAkses('{{registrants.id}}','{{registrants.allowed_access}}')" {% if registrants.allowed_access %} checked {% endif %}>
+                                    <label class="custom-control-label" for="customSwitch{{registrants.id}}"></label>
+                                </div>      
                             </td>        
                         </tr>
                     {% endfor %}
@@ -52,6 +51,28 @@ thead input {
         </div>
         <div class="card-footer">
 
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmAkses" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Apakah Anda yakin?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="unChangeStatus()">
+                <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Mengubah status menjadi <strong><span class="statusRegistrants"></span></strong>?</p>
+                <input type="hidden" id="idRegistrants">
+                <input type="hidden" id="statusRegistrants">
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="unChangeStatus()">Tutup</button>
+                <button class="btn btn-primary" onclick="changeStatus()">Ubah Status</button>
+            </div>
         </div>
     </div>
 </div>
@@ -85,5 +106,83 @@ thead input {
             fixedHeader: true
         } );
     })
+
+    function setAkses(id, status){
+        console.log(status);
+        $('#idRegistrants').val(id);
+        if(status == 'False'){
+            $('.statusRegistrants').html("Diijinkan");
+            $('#statusRegistrants').val("True");
+        }
+        else if(status == "True"){
+            $('.statusRegistrants').html("Tidak Diijinkan");
+            $('#statusRegistrants').val("False");
+        }
+        $('#confirmAkses').modal('show');
+    }
+
+    function changeStatus(){
+        $('#confirmAkses').modal('hide');
+        var id = $('#idRegistrants').val();
+        var status = $('#statusRegistrants').val();
+        var btn_status = $('#btn-status-'+id);
+        $.ajax({
+            url: "{% url 'backoffice:courses:ajax_change_status_registrants' %}",
+            data: {
+                'id': id,
+                'status': status
+            },
+            dataType: 'json',
+            success: function (data) {
+                btn_status.html("");  
+                if(status == "True"){
+                    btn_status.append(
+                        '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'True'"+')" checked>'+
+                        '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                    ); 
+                }else if(status == "False"){
+                    btn_status.append(
+                        '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'False'"+')">'+
+                        '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                    ); 
+                }
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    if(status == "True"){
+                        btn_status.append(
+                            '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'False'"+')">'+
+                            '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                        ); 
+                    }else if(status == "False"){
+                        btn_status.append(
+                            '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'True'"+')" checked>'+
+                            '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                        ); 
+                    }
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        }); 
+    }
+
+    function unChangeStatus(){
+        $('#confirmAkses').modal('hide');
+        var id = $('#idRegistrants').val();
+        var status = $('#statusRegistrants').val();
+        var btn_status = $('#btn-status-'+id);
+        btn_status.html("");  
+        if(status == "True"){
+            btn_status.append(
+                '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'False'"+')">'+
+                '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+            ); 
+        }else if(status == "False"){
+            btn_status.append(
+                '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'True'"+')" checked>'+
+                '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+            ); 
+        }
+    }
 </script>
 {% endblock %}
