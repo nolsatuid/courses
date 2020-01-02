@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 from nolsatu_courses.apps.courses.models import Courses, Enrollment
 from .forms import FormCourses
@@ -82,3 +83,15 @@ def registrants(request):
         'registrants': Enrollment.objects.all()
     }
     return render(request, 'backoffice/courses/registrants.html', context)
+
+
+@staff_member_required
+def ajax_change_status_registrants(request):
+    id = request.GET.get('id', None)
+    status = request.GET.get('status', None)
+    registrants = get_object_or_404(Enrollment, id=id)
+    registrants.allowed_access = status
+    registrants.save()
+
+    data = {}
+    return JsonResponse(data, status=200)
