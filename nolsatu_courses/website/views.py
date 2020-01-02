@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from nolsatu_courses.apps.courses.models import Courses
 
 
+@login_required()
 def index(request):
     context = {
         'title': _('Daftar Materi'),
@@ -18,6 +19,7 @@ def index(request):
     return render(request, 'website/index.html', context)
 
 
+@login_required()
 def search(request):
     search_query = request.GET.get("q", "")
 
