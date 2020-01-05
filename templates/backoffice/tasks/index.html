@@ -50,7 +50,7 @@ thead input {
                         <tr>
                             <td>{{ task.user.first_name }} {{ task.user.last_name }}</td>
                             <td>{{ task.user.username }}</td> 
-                            <td><a href="{{ task.file.file.url }}" target="_blank"> Lihat Tugas</td>       
+                            <td><a href="{{ task.file.file.url }}" download> Lihat Tugas</td>       
                             <td width="10px">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
                                     <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}">

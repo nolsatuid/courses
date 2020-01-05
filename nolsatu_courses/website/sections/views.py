@@ -58,6 +58,7 @@ def details(request, slug):
         'section': section,
         'pagination': pagination,
         'form': form,
+        'task': collect_task
     }
     return render(request, 'website/sections/details.html', context)
 
