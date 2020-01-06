@@ -4,33 +4,61 @@
     <hr>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Form Upload Tugas</h3>
+            <h3 class="card-title">Upload Tugas</h3>
         </div>
         <!-- /.card-header -->
-        <!-- form start -->
-        <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            {{ form.media }}
-            {{ form.non_field_errors }}
+        {% if task and task.status != 2 %}
+            {% if task.status == 1 %} <!-- status == diperiksa -->
             <div class="card-body">
-                <div class="form-group">
-                    <label class="col-md-12">{{ section.task_setting.instruction|safe }}</label>
-                    <div class="col-md-12">
-                        {% render_field form.file %}
-                        {% render_field form.name %}
-                        <small class="form-text text-muted">{{ form.file.help_text }}</small>
-                        <small class="form-text text-danger">{{ form.file.errors }}</small>
-                    </div>
-                    <small class="col-md-12 form-text text-muted">Maksimum file:<span class="text-danger"> {{ section.task_setting.max_size }} MB</span></small>
-                    <small class="col-md-12 form-text text-muted">Ekstensi file:<span class="text-danger"> {{ section.task_setting.allowed_extension.all|join:', ' }} </span></small>
+                <div class="alert alert-info alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-info"></i> Info!</h5>
+                    Yey, sekarang <a href="{{ task.file.file.url }}" download><strong>tugas kamu</strong></a> sedang <span class="badge badge-secondary" style="font-size:100%;">diperiksa</span>
                 </div>
             </div>
-            <!-- /.card-body -->
-
-            <div class="card-footer">
-                <button type="submit" class="btn bg-olive">Submit</button>
+            {% elif task.status == 3 %} <!-- status == lulus -->
+            <div class="card-body">
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-info"></i> Info!</h5>
+                    Yey, kamu <span class="badge badge-light" style="font-size:100%;">lulus</span> pada <a href="{{ task.file.file.url }}" download><strong>tugas ini</strong></a>. Semoga sukses di tugas-tugas selanjutnya.
+                </div>
             </div>
-        </form>
+            {% endif %}
+        {% else %}
+            <!-- form start -->
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}            
+                <div class="card-body">
+                    {% if task.status == 2 %} <!-- status == diperiksa -->
+                    <div class="card-body">
+                        <div class="alert alert-warning alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
+                            Yah, kamu harus <strong>mengulang</strong> pada tugas ini. Ayo kirim ulang tugas yang sudah diperbaiki!
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {{ form.media }}
+                    {{ form.non_field_errors }}
+                    <div class="form-group">
+                        <label class="col-md-12">{{ section.task_setting.instruction|safe }}</label>
+                        <div class="col-md-12">
+                            {% render_field form.file %}
+                            {% render_field form.name %}
+                            <small class="form-text text-muted">{{ form.file.help_text }}</small>
+                            <small class="form-text text-danger">{{ form.file.errors }}</small>
+                        </div>
+                        <small class="col-md-12 form-text text-muted">Maksimum file:<span class="text-danger"> {{ section.task_setting.max_size }} MB</span></small>
+                        <small class="col-md-12 form-text text-muted">Ekstensi file:<span class="text-danger"> {{ section.task_setting.allowed_extension.all|join:', ' }} </span></small>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="submit" class="btn bg-olive">Submit</button>
+                </div>
+            </form>
+        {% endif %}     
     </div>
-    {% endif %}
+{% endif %}
