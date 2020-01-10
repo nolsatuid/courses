@@ -1,9 +1,10 @@
 from django.template import Library
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from nolsatu_courses.apps.courses.models import Enrollment
+from nolsatu_courses.apps.courses.models import Enrollment, Module
 
 register = Library()
+
 
 @register.filter(name='enrollment_status_display')
 def status_to_display(status, styling=False):
@@ -20,3 +21,8 @@ def status_to_display(status, styling=False):
         return mark_safe('<span class="badge badge-%s">%s</span>' %
                          (class_bagde, status_display))
     return status_display
+
+
+@register.filter(name='on_activity')
+def on_activity(obj, user):
+    return obj.on_activity(user)

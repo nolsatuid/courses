@@ -164,11 +164,19 @@ class Module(models.Model):
         try:
             prev_slug = slugs[index - 1]
         except (AssertionError, IndexError):
-            prev_slug = None            
+            prev_slug = None
         return Module.objects.filter(slug=prev_slug).first()
 
     def has_enrolled(self, user):
         return self.course.has_enrolled(user)
+
+    def on_activity(self, user):
+        activity_ids = Activity.objects.filter(user=user, course=self.course) \
+            .values_list('module__id', flat=True)
+
+        if self.id in activity_ids:
+            return True
+        return False
 
 
 class Section(models.Model):
@@ -215,6 +223,14 @@ class Section(models.Model):
 
     def has_enrolled(self, user):
         return self.module.course.has_enrolled(user)
+
+    def on_activity(self, user):
+        activity_ids = Activity.objects.filter(user=user, course=self.module.course) \
+            .values_list('section__id', flat=True)
+
+        if self.id in activity_ids:
+            return True
+        return False
 
 
 class TaskUploadSettings(models.Model):
