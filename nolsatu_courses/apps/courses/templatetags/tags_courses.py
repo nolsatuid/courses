@@ -1,7 +1,7 @@
 from django.template import Library
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from nolsatu_courses.apps.courses.models import Enrollment, Module
+from nolsatu_courses.apps.courses.models import Enrollment
 
 register = Library()
 
