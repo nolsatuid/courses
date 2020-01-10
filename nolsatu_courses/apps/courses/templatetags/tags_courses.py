@@ -5,6 +5,7 @@ from nolsatu_courses.apps.courses.models import Enrollment
 
 register = Library()
 
+
 @register.filter(name='enrollment_status_display')
 def status_to_display(status, styling=False):
     if status == Enrollment.STATUS.begin:
@@ -20,3 +21,8 @@ def status_to_display(status, styling=False):
         return mark_safe('<span class="badge badge-%s">%s</span>' %
                          (class_bagde, status_display))
     return status_display
+
+
+@register.filter(name='on_activity')
+def on_activity(obj, user):
+    return obj.on_activity(user)

@@ -1,4 +1,4 @@
-{% load static %}
+{% load static tags_courses %}
 
 <div class="col-md-4">
     <!-- DIRECT CHAT -->
@@ -9,11 +9,19 @@
             <ul class="products-list product-list-in-card pl-2 pr-2">
                 {% for mod in module.course.modules.all %}
                     <li class="item">
-                        <h5 class="text-muted">{{ mod.title }}</h5>
+                        {% if mod|on_activity:user %}
+                            <h5 style="font-weight: bold;"><a href="{% url 'website:modules:details' mod.slug %}" class="text-info">{{ mod.title }}</a><i class="text-success float-right fa fa-xs fa-check"></i></h5>
+                        {% else %}
+                            <h5 class="text-muted">{{ mod.title }}</h5>
+                        {% endif %}
                     </li>
                     {% for sect in mod.sections.all %}
-                    <li class="item">                            
-                        <h6 class="ml-3 text-muted">{{ sect.title }}</h6>
+                    <li class="item"> 
+                        {% if sect|on_activity:user %}
+                            <h6 class="ml-3" style="font-weight: bold;"><a href="{% url 'website:sections:details' sect.slug %}" class="text-info">{{ sect.title }}</a><i class="text-success float-right fa fa-xs fa-check"></i></h6>
+                        {% else %}
+                            <h6 class="ml-3 text-muted">{{ sect.title }}</h6>
+                        {% endif %}
                     </li>
                     {% endfor %}
                 {% endfor %}
