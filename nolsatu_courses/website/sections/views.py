@@ -16,6 +16,8 @@ from .forms import FormUploadFile
 @enroll_required
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
+
+    # form untuk pengumpulan tugas
     collect_task = section.collect_task.filter(user=request.user).first()
     form = FormUploadFile(
         data=request.POST or None,
@@ -47,6 +49,11 @@ def details(request, slug):
         section.activities_section.get_or_create(
             user=request.user, course=section.module.course)
 
+    # jika next kosong berarti berada pada sesi terakhir
+    is_complete_tasks = None
+    if not next_slug:
+        is_complete_tasks = section.module.course.is_complete_tasks(request.user)
+
     pagination = {
         'prev': prev_slug,
         'next': next_slug,
@@ -58,8 +65,10 @@ def details(request, slug):
         'section': section,
         'pagination': pagination,
         'form': form,
-        'task': collect_task
+        'task': collect_task,
+        'is_complete_tasks': is_complete_tasks
     }
+
     return render(request, 'website/sections/details.html', context)
 
 

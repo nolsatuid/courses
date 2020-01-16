@@ -8,7 +8,11 @@
         {% if pagination.next %}
             <a {% if pagination.next_type == 'module' %} href="{% url 'website:modules:details' pagination.next.slug %}" {% else %} href="{% url 'website:sections:details' pagination.next.slug %}" {% endif %} class="btn bg-maroon float-right">Materi Selanjutnya <i class="fas fa-arrow-circle-right"></i></a> 
         {% else %}
-            <a href="{% url 'website:courses:finish' section.module.course.slug %}" class="btn bg-maroon float-right">Ye, Selesai <i class="fas fa-arrow-circle-right"></i></a> 
+            {% if is_complete_tasks %}
+                <a href="{% url 'website:courses:finish' section.module.course.slug %}" class="btn bg-maroon float-right">Ye, Selesai <i class="fas fa-arrow-circle-right"></i></a> 
+            {% else %}
+                <button class="btn bg-maroon float-right" disabled>Ye, Selesai <i class="fas fa-arrow-circle-right"></i></button> 
+            {% endif %}
         {% endif %}
     {% endif %}                     
 </div>
