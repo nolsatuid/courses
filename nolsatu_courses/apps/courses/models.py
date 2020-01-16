@@ -95,7 +95,7 @@ class Courses(models.Model):
         enroll = self.enrolled.filter(user=user).first()
         return enroll
 
-    def count_step(self):
+    def number_of_step(self):
         """
         untuk mendapatkan jumlah step dari suatu course
         """
@@ -104,7 +104,7 @@ class Courses(models.Model):
         count = modules_count + sections_count
         return count
 
-    def count_activity_step(self, user):
+    def number_of_activity_step(self, user):
         """
         untuk mendapatkan jumlah step course dari activity user
         """
@@ -117,14 +117,25 @@ class Courses(models.Model):
         """
         mendapatkan progres persentase pengerjaan
         """
-        step_activity = self.count_activity_step(user)
-        step_course = self.count_step()
+        step_activity = self.number_of_activity_step(user)
+        step_course = self.number_of_step()
         progress_on_decimal = step_activity / step_course
         progress_on_thousand = progress_on_decimal * 100
 
         if on_thousand:
             return progress_on_thousand
         return progress_on_decimal
+
+    def is_complete_tasks(self, user):
+        section_ids = self.modules.filter(
+            sections__is_task=True).values_list('id', flat=True)
+        collect_tasks = CollectTask.objects.filter(
+            section_id__in=section_ids, user=user
+        )
+
+        if len(section_ids) <= collect_tasks.count():
+            return True
+        return False
 
 
 class Module(models.Model):
@@ -205,7 +216,7 @@ class Section(models.Model):
             self.slug = generate_unique_slug(Courses, self.title)
         super().save(*args, **kwargs)
 
-    def get_next(self, slugs):        
+    def get_next(self, slugs):
         index = list(slugs).index(self.slug)
         try:
             next_slug = slugs[index + 1]
@@ -218,7 +229,7 @@ class Section(models.Model):
         try:
             prev_slug = slugs[index - 1]
         except (AssertionError, IndexError):
-            prev_slug = None            
+            prev_slug = None
         return Section.objects.filter(slug=prev_slug).first()
 
     def has_enrolled(self, user):
@@ -282,7 +293,7 @@ class Enrollment(models.Model):
 
 
 class CollectTask(models.Model):
-    user = models.ForeignKey(User, related_name='collect_task', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='collect_tasks', on_delete=models.CASCADE)
     section = models.ForeignKey(Section, related_name='collect_task', on_delete=models.CASCADE)
     file = models.OneToOneField("upload_files.UploadFile", blank=True, on_delete=models.CASCADE)
     STATUS = Choices(

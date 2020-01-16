@@ -25,8 +25,18 @@
                     </div>
                     <!-- /.card-body -->
 
+                    <!-- form pengumpulan tugas -->
                     {% include 'partials/form-task-upload.html' with form=form section=section task=task %}  
 
+                    <!-- alert pengumpulan semua tugas -->
+                    {% if not pagination.next and not is_complete_tasks %}
+                        <div class="alert alert-warning alert-dismissible">
+                            <h5><i class="icon fas fa-info"></i> Info!</h5>
+                            Untuk menyelesaikan materi ini kamu harus mengumpulkan semua tugas yang diberikan. Yuk cek lagi mungkin masih ada tugas yang belum kamu kumpulkan.
+                        </div>                   
+                    {% endif %}
+
+                    <!-- pagination -->
                     {% include 'partials/pagination.html' with pagination=pagination %}                    
                 </div>
 
