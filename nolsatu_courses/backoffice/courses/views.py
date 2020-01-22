@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
+from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Courses, Enrollment
 from .forms import FormCourses
 
@@ -92,6 +93,10 @@ def ajax_change_status_registrants(request):
     registrants = get_object_or_404(Enrollment, id=id)
     registrants.allowed_access = status
     registrants.save()
+
+    if status:
+        utils.post_inbox(registrants.user, f'Akses kelas {registrants.course.title} di berikan',
+                         f'Selamat, anda sudah dapat mengakses kelas {registrants.course.title}')
 
     data = {}
     return JsonResponse(data, status=200)

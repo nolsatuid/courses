@@ -1,3 +1,5 @@
+import requests
+from django.conf import settings
 from django.utils.text import slugify
 
 
@@ -16,3 +18,15 @@ def generate_unique_slug(klass, field):
         unique_slug = '%s-%d' % (origin_slug, numb)
         numb += 1
     return unique_slug
+
+
+def post_inbox(user, subject, content):
+    notif_endpoint = f'{settings.NOLSATU_HOST}/api/notifications'
+
+    data = {
+        'user': user.nolsatu.id_nolsatu,
+        'subject': subject,
+        'content': content
+    }
+
+    requests.post(notif_endpoint, data)

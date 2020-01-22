@@ -4,6 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
+from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Section, CollectTask
 from .forms import FormFilterTask
 
@@ -19,7 +20,7 @@ def index(request):
         'menu_active': 'task',
         'title': _('Pengumpulan Tugas'),
         'tasks': tasks,
-        'form' : form
+        'form': form
     }
     return render(request, 'backoffice/tasks/index.html', context)
 
@@ -49,6 +50,9 @@ def ajax_change_status(request):
     task = get_object_or_404(CollectTask, id=id)
     task.status = status_id
     task.save()
+
+    utils.post_inbox(request.user, f'Perubahan status tugas',
+                     f'Status tugas anda di ubah menjadi {CollectTask.STATUS[task.status]}')
 
     data = {}
     return JsonResponse(data, status=200)
