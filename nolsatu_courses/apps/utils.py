@@ -20,13 +20,14 @@ def generate_unique_slug(klass, field):
     return unique_slug
 
 
-def post_inbox(user, subject, content):
-    notif_endpoint = f'{settings.NOLSATU_HOST}/api/notifications'
+def post_inbox(request, user, subject, content):
+    notif_endpoint = f'{settings.NOLSATU_HOST}/api/notifications/inbox'
 
     data = {
         'user': user.nolsatu.id_nolsatu,
         'subject': subject,
-        'content': content
+        'content': content,
+        'session_key': request.COOKIES.get('sessionid')
     }
 
-    requests.post(notif_endpoint, data)
+    requests.post(notif_endpoint, data=data)

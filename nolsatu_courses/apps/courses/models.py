@@ -128,7 +128,7 @@ class Courses(models.Model):
 
     def is_complete_tasks(self, user):
         section_ids = self.modules.filter(
-            sections__is_task=True).values_list('id', flat=True)
+            sections__is_task=True).values_list('sections__id', flat=True)
         collect_tasks = CollectTask.objects.filter(
             section_id__in=section_ids, user=user
         )

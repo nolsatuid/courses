@@ -95,7 +95,7 @@ def ajax_change_status_registrants(request):
     registrants.save()
 
     if status:
-        utils.post_inbox(registrants.user, f'Akses kelas {registrants.course.title} di berikan',
+        utils.post_inbox(request, registrants.user, f'Akses kelas {registrants.course.title} di berikan',
                          f'Selamat, anda sudah dapat mengakses kelas {registrants.course.title}')
 
     data = {}

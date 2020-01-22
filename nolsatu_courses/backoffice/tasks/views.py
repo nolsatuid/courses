@@ -51,8 +51,8 @@ def ajax_change_status(request):
     task.status = status_id
     task.save()
 
-    utils.post_inbox(request.user, f'Perubahan status tugas',
-                     f'Status tugas anda di ubah menjadi {CollectTask.STATUS[task.status]}')
+    utils.post_inbox(request, request.user, f'Perubahan status tugas',
+                     f'Status tugas anda di ubah menjadi {CollectTask.STATUS[int(task.status)]}')
 
     data = {}
     return JsonResponse(data, status=200)
