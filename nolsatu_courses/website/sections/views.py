@@ -4,7 +4,7 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 
-from nolsatu_courses.apps.decorators import enroll_required
+from nolsatu_courses.apps.decorators import enroll_required, course_was_started
 from nolsatu_courses.apps.courses.models import (
     Section, Module, CollectTask
 )
@@ -14,6 +14,7 @@ from .forms import FormUploadFile
 
 @login_required
 @enroll_required
+@course_was_started
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
 
