@@ -32,3 +32,30 @@ def enroll_required(view_func):
         )
         return redirect('website:index')
     return _wrapped_view
+
+
+def course_was_started(view_func):
+    """
+    Decorator for views that checks that the course was started
+    """
+    @wraps(view_func, assigned=available_attrs(view_func))
+    def _wrapped_view(request, *args, **kwargs):
+        try:
+            obj = Module.objects.get(slug=kwargs['slug'])
+            course = obj.course
+            is_started = course.is_started()
+        except ObjectDoesNotExist:
+            obj = Section.objects.get(slug=kwargs['slug'])
+            course = obj.module.course
+            is_started = obj.module.course.is_started()
+
+        if is_started:
+            return view_func(request, *args, **kwargs)
+
+        messages.warning(
+            request,
+            _("Maaf ya, kursus belum dimulai, pastikan kamu memulai kelas sesuai"
+              " dengan tanggal <b>mulai</b> yang tertera.")
+        )
+        return redirect('website:courses:details', course.slug)
+    return _wrapped_view
