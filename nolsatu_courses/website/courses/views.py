@@ -46,6 +46,12 @@ def enroll(request, slug):
         messages.success(request, _(f'Kamu sudah terdaftar di kelas {course.title}'))
         return redirect('website:courses:details', course.slug)
 
+    if not course.get_last_batch():
+        messages.warning(
+            request, _(f'Kelas {course.title} belum membuka pendaftaran')
+        )
+        return redirect('website:courses:details', course.slug)
+
     if course.is_started():
         messages.warning(
             request, _(f'Gagal mendaftar, kelas {course.title} sudah dimulai')

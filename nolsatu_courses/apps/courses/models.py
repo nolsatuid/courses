@@ -280,8 +280,9 @@ class Enrollment(models.Model):
         blank=True, null=True
     )
     STATUS = Choices(
-        (1, 'begin', _('Mulai')),
-        (2, 'finish', _('Selesai')),
+        (1, 'register', _('Daftar')),
+        (2, 'begin', _('Mulai')),
+        (99, 'finish', _('Selesai')),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.begin)
     allowed_access = models.BooleanField(_("Akses diberikan"), default=False)
