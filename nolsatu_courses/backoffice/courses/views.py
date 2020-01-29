@@ -90,13 +90,14 @@ def registrants(request):
 def ajax_change_status_registrants(request):
     id = request.GET.get('id', None)
     status = request.GET.get('status', None)
-    registrants = get_object_or_404(Enrollment, id=id)
-    registrants.allowed_access = status
-    registrants.save()
+    enroll = get_object_or_404(Enrollment, id=id)
+    enroll.allowed_access = status
+    enroll.status = Enrollment.STATUS.begin
+    enroll.save()
 
     if status:
-        utils.post_inbox(request, registrants.user, f'Akses kelas {registrants.course.title} di berikan',
-                         f'Selamat, anda sudah dapat mengakses kelas {registrants.course.title}')
+        utils.post_inbox(request, enroll.user, f'Akses kelas {enroll.course.title} di berikan',
+                         f'Selamat, anda sudah dapat mengakses kelas {enroll.course.title}')
 
     data = {}
     return JsonResponse(data, status=200)

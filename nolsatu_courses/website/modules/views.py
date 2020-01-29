@@ -3,11 +3,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 
 from nolsatu_courses.apps.courses.models import Module, Section, Activity
-from nolsatu_courses.apps.decorators import enroll_required
+from nolsatu_courses.apps.decorators import enroll_required, course_was_started
 
 
 @login_required
 @enroll_required
+@course_was_started
 def details(request, slug):
     module = get_object_or_404(Module, slug=slug)
     slugs = module.course.modules.values_list('slug', flat=True)

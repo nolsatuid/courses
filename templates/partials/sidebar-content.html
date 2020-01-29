@@ -11,6 +11,10 @@
                 <div class="alert alert-success" >
                     Yeey, kamu sudah menyelesaikan semua materi pada tanggal {{ enroll.finishing_date }}, klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk melihat semua materi.
                 </div>
+            {% elif enroll.get_status_display == 'Daftar' %}
+                <div class="alert alert-success" >
+                    Kamu sudah terdaftar dikelas ini. Kami harus menyeleksi semua pendaftar yang masuk sebelum kelas dimulai. Tunggu info selanjutnya ya.
+                </div>
             {% else %}
                 <div class="alert alert-warning" >
                     Kamu sudah terdaftar dikelas ini, klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk memulai atau melanjutkan kelasmu
