@@ -17,12 +17,16 @@
                 </div>
             {% endif %}
         {% else %}
-            {% if course.is_started %}
-                <div class="alert alert-warning" >
-                    Maaf, Kelas sudah dimulai.
-                </div>
-            {% else %}
+            {% if batch and not course.is_started %}
                 <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Daftar kelas ini</a>
+            {% elif not course.is_started %}
+                <div class="alert alert-danger" >
+                    Maaf, kelas ini belum membuka pendafaran.
+                </div>
+            {% elif course.is_started %}
+                <div class="alert alert-warning" >
+                    Maaf, kelas sudah dimulai.
+                </div>
             {% endif %}
         {% endif %}
     </div>
