@@ -55,6 +55,7 @@ class Courses(models.Model):
         sudah di mulai atau belom
         """
         batch = self.get_last_batch()
+        print(batch)
         if not batch:
             return False
 
@@ -65,7 +66,7 @@ class Courses(models.Model):
             return False
 
     def get_last_batch(self):
-        batch = self.batchs.order_by('batch').last()
+        batch = self.batchs.filter(is_active=True).order_by('batch').last()
         return batch
 
     def has_enrolled(self, user):
