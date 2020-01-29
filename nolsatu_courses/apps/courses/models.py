@@ -55,7 +55,6 @@ class Courses(models.Model):
         sudah di mulai atau belom
         """
         batch = self.get_last_batch()
-        print(batch)
         if not batch:
             return False
 
