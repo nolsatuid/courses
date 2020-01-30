@@ -3,20 +3,20 @@ from django.conf import settings
 from django.utils.text import slugify
 
 
-def generate_unique_slug(klass, field):
+def generate_unique_slug(klass, field, id):
     """
-    return unique slug if origin slug is exist.
-    eg: `foo-bar` => `foo-bar-1`
-
-    :param `klass` is Class model.
-    :param `field` is specific field for title.
+    generate unique slug.
     """
     origin_slug = slugify(field)
     unique_slug = origin_slug
     numb = 1
-    while klass.objects.filter(slug=unique_slug).exists():
+    obj = klass.objects.filter(slug=unique_slug).first()
+    while obj:
+        if obj.id == id:
+            break
         unique_slug = '%s-%d' % (origin_slug, numb)
         numb += 1
+        obj = klass.objects.filter(slug=unique_slug).first()
     return unique_slug
 
 

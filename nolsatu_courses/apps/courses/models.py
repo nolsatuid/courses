@@ -44,11 +44,10 @@ class Courses(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.slug:  # edit
-            if slugify(self.title) != self.slug:
-                self.slug = generate_unique_slug(Courses, self.title)
-        else:  # create
-            self.slug = generate_unique_slug(Courses, self.title)
+        if self.slug:
+            self.slug = generate_unique_slug(Courses, self.slug, self.id)
+        else:
+            self.slug = generate_unique_slug(Courses, self.title, self.id)
         super().save(*args, **kwargs)
 
     def category_list(self):
@@ -160,11 +159,10 @@ class Module(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.slug:  # edit
-            if slugify(self.title) != self.slug:
-                self.slug = generate_unique_slug(Courses, self.title)
-        else:  # create
-            self.slug = generate_unique_slug(Courses, self.title)
+        if self.slug:
+            self.slug = generate_unique_slug(Module, self.slug, self.id)
+        else:
+            self.slug = generate_unique_slug(Module, self.title, self.id)
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):
@@ -214,11 +212,10 @@ class Section(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.slug:  # edit
-            if slugify(self.title) != self.slug:
-                self.slug = generate_unique_slug(Courses, self.title)
-        else:  # create
-            self.slug = generate_unique_slug(Courses, self.title)
+        if self.slug:
+            self.slug = generate_unique_slug(Module, self.slug, self.id)
+        else:
+            self.slug = generate_unique_slug(Module, self.title, self.id)
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):
