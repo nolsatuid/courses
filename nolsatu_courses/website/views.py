@@ -9,11 +9,17 @@ from django.utils.translation import ugettext_lazy as _
 from nolsatu_courses.apps.courses.models import Courses
 
 
-@login_required()
 def index(request):
+    if request.user and request.user.is_superuser:
+        courses = Courses.objects.all()
+    else:
+        courses = Courses.objects.filter(
+            is_visible=True, status=Courses.STATUS.publish
+        )
+
     context = {
         'title': _('Daftar Materi'),
-        'courses': Courses.objects.all(),
+        'courses': courses,
         'progress_bar': False
     }
     return render(request, 'website/index.html', context)

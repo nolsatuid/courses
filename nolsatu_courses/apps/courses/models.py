@@ -30,6 +30,11 @@ class Courses(models.Model):
     is_visible = models.BooleanField(_("Terlihat"), default=True)
     is_allowed = models.BooleanField(_("Diperbolehkan"), default=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="authors")
+    STATUS = Choices(
+        (1, 'draft', _("Konsep")),
+        (2, 'publish', _("Terbit")),
+    )
+    status = models.PositiveIntegerField(choices=STATUS, default=STATUS.publish)
 
     class Meta:
         verbose_name = _("course")

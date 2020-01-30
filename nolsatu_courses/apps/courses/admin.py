@@ -7,7 +7,7 @@ from .models import (
 
 @admin.register(Courses)
 class AdminCourses(admin.ModelAdmin):
-    list_display = ('title', 'level', 'category_list', 'is_visible', 'author')
+    list_display = ('title', 'level', 'category_list', 'is_visible', 'author', 'status')
     search_fields = ('title',)
 
     def get_queryset(self, request):
