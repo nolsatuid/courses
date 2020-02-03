@@ -5,9 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from nolsatu_courses.apps.decorators import enroll_required, course_was_started
-from nolsatu_courses.apps.courses.models import (
-    Section, Module, CollectTask
-)
+from nolsatu_courses.apps.courses.models import Section
 
 from .forms import FormUploadFile
 
@@ -45,15 +43,24 @@ def details(request, slug):
         prev_slug = section.module
         prev_type = 'module'
 
-    # save activities user to section
-    if section.has_enrolled(request.user):
-        section.activities_section.get_or_create(
-            user=request.user, course=section.module.course)
-
     # jika next kosong berarti berada pada sesi terakhir
     is_complete_tasks = None
     if not next_slug:
         is_complete_tasks = section.module.course.is_complete_tasks(request.user)
+
+    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
+    # jika page_type adalah section dan section memiliki tugas
+    if prev_type == 'section' and prev_slug.is_task:
+        if not prev_slug.collect_task.all():
+            messages.warning(
+                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev_slug.title}")
+            )
+            return redirect("website:sections:details", prev_slug.slug)
+
+    # save activities user to section
+    if section.has_enrolled(request.user):
+        section.activities_section.get_or_create(
+            user=request.user, course=section.module.course)
 
     pagination = {
         'prev': prev_slug,
