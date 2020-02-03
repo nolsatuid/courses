@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from nolsatu_courses.apps.courses.models import Module, Section, Activity
+from nolsatu_courses.apps.courses.models import Module
 from nolsatu_courses.apps.decorators import enroll_required, course_was_started
 
 
@@ -24,6 +25,15 @@ def details(request, slug):
         if prev_slug.sections.last():
             prev_slug = prev_slug.sections.last()
             prev_type = "section"
+
+    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
+    # jika page_type adalah section dan section memiliki tugas
+    if prev_type == 'section' and prev_slug.is_task:
+        if not prev_slug.collect_task.all():
+            messages.warning(
+                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev_slug.title}")
+            )
+            return redirect("website:sections:details", prev_slug.slug)
 
     # save activities user to module
     if module.has_enrolled(request.user):
