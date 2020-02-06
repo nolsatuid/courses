@@ -38,7 +38,7 @@
                                             Modul {{ module.title }}
                                         </a>
                                         </h4>
-                                        {% if module.is_visible %} 
+                                        {% if module.is_visible or user.is_superuser %} 
                                             <a href="{% url 'website:modules:preview' module.slug %}" class="float-right btn btn-xs btn-outline-info">
                                                 Lihat Deskripsi
                                             </a>
@@ -54,7 +54,7 @@
                                             <ol class="todo-list">
                                                 {% for section in module.sections.all %}
                                                     <li>
-                                                        {% if section.is_visible %} 
+                                                        {% if section.is_visible or user.is_superuser %} 
                                                             <a class="text-dark" href="{% url 'website:sections:preview' section.slug %}">{{ forloop.counter }}. {{ section.title }}
                                                                 <i class="float-right fa fa-eye"></i>
                                                             </a>                                                            
