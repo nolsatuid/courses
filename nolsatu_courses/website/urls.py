@@ -11,4 +11,5 @@ urlpatterns = [
     path('courses/', include('nolsatu_courses.website.courses.urls')),
     path('modules/', include('nolsatu_courses.website.modules.urls')),
     path('sections/', include('nolsatu_courses.website.sections.urls')),
+    path('api/', include('nolsatu_courses.api.urls', namespace='api')),
 ]

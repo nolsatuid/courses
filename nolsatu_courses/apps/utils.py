@@ -1,3 +1,5 @@
+import datetime
+
 import requests
 from django.conf import settings
 from django.utils.text import slugify
@@ -31,3 +33,21 @@ def post_inbox(request, user, subject, content):
     }
 
     requests.post(notif_endpoint, data=data)
+
+
+def call_internal_api(method, url, **kwargs):
+    method_map = {
+        'get': requests.get,
+        'post': requests.post,
+        'put': requests.put,
+        'patch': requests.patch,
+        'delete': requests.delete
+    }
+    headers = {
+        "authorization": {
+            'server_key': settings.SERVER_KEY,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
+        }
+    }
+
+    return method_map[method](url, headers=headers, **kwargs)

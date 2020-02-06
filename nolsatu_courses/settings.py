@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'widget_tweaks',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -164,6 +165,8 @@ CKEDITOR_CONFIGS = {
 }
 
 SESSION_COOKIE_DOMAIN = '.nolsatu.id'
+
+SERVER_KEY = "serverToServerAuthKeyKeepItVerySecret"
 
 try:
     from .local_settings import *
