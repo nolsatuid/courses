@@ -17,6 +17,10 @@
                     </div>
                 </div>
 
+                {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
+
+                {% include 'partials/pagination-preview.html' with pagination=pagination %}
+
             </div>
         </div>
     </div>

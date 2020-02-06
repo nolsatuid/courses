@@ -9,7 +9,7 @@
             <ul class="products-list product-list-in-card pl-2 pr-2">
                 {% for mod in module.course.modules.all %}
                     <li class="item">
-                        {% if mod.is_visible %}
+                        {% if mod.is_visible or user.is_superuser %}
                         <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}><a href="{% url 'website:modules:preview' mod.slug %}" class="text-info">{{ mod.title }}</a><i class="float-right fa fa-xs fa-eye"></i></h5>                            
                         {% else %}
                         <h5 class="text-muted">{{ mod.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h5>
@@ -17,7 +17,7 @@
                     </li>
                     {% for sect in mod.sections.all %}
                     <li class="item">                            
-                        {% if sect.is_visible %}
+                        {% if sect.is_visible or user.is_supseruser or user.is_superuser %}
                         <h6 class="ml-3" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}><a href="{% url 'website:sections:preview' sect.slug %}" class="text-info">{{ sect.title }}</a><i class="float-right fa fa-xs fa-eye"></i></h6>
                         {% else %}
                         <h6 class="ml-3 text-muted">{{ sect.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h6>

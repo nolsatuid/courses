@@ -12,6 +12,52 @@ from nolsatu_courses.apps.decorators import enroll_required, course_was_started
 @course_was_started
 def details(request, slug):
     module = get_object_or_404(Module, slug=slug)
+    pagination = get_pagination(request, module)
+    prev_type = pagination['prev_type']
+    prev = pagination['prev']
+
+    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
+    # jika page_type adalah section dan section memiliki tugas
+    if prev_type == 'section' and prev.is_task:
+        if not prev.collect_task.all():
+            messages.warning(
+                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}")
+            )
+            return redirect("website:sections:details", prev.slug)
+
+    context = {
+        'title': module.title,
+        'module': module,
+        'pagination': pagination
+    }
+
+    # save activities user to module
+    if module.has_enrolled(request.user):
+        module.activities_module.get_or_create(
+            user=request.user, course=module.course)
+
+    return render(request, 'website/modules/details.html', context)
+
+
+def preview(request, slug):
+    module = get_object_or_404(Module, slug=slug)
+    if request.user.is_superuser:
+        pagination = get_pagination(request, module)
+    else:
+        pagination = None
+
+    context = {
+        'title': module.title,
+        'module': module,
+        'pagination': pagination
+    }
+    return render(request, 'website/modules/preview.html', context)
+
+
+def get_pagination(request, module):
+    """
+    fungsi untuk mendapatkan pagination
+    """
     slugs = module.course.modules.values_list('slug', flat=True)
     next_slug = module.sections.first()
     next_type = "section"
@@ -26,40 +72,9 @@ def details(request, slug):
             prev_slug = prev_slug.sections.last()
             prev_type = "section"
 
-    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
-    # jika page_type adalah section dan section memiliki tugas
-    if prev_type == 'section' and prev_slug.is_task:
-        if not prev_slug.collect_task.all():
-            messages.warning(
-                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev_slug.title}")
-            )
-            return redirect("website:sections:details", prev_slug.slug)
-
-    # save activities user to module
-    if module.has_enrolled(request.user):
-        module.activities_module.get_or_create(
-            user=request.user, course=module.course)
-
-    pagination = {
+    return {
         'prev': prev_slug,
         'next': next_slug,
         'next_type': next_type,
         'prev_type': prev_type
     }
-    context = {
-        'title': module.title,
-        'module': module,
-        'pagination': pagination
-    }
-    return render(request, 'website/modules/details.html', context)
-
-
-def preview(request, slug):
-    module = get_object_or_404(Module, slug=slug)
-
-    context = {
-        'title': module.title,
-        'module': module,
-        'pagination': None
-    }
-    return render(request, 'website/modules/preview.html', context)
