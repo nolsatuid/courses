@@ -24,7 +24,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="container">
       <a href="{{ nolsatu_home_page_url }}" class="navbar-brand">
           <img src="{% static 'website/images/logo/logo-polos.png' %}" alt="NOLSATU Logo" class="brand-image">
-          <span class="brand-text font-weight-bold color-white">NOLSATU</span>
+          <span class="brand-text font-weight-bold color-white d-none d-md-flex">NOLSATU</span>
       </a>
 
       <!-- Left navbar links -->
@@ -55,7 +55,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           {% if user.is_authenticated %}
           <a class="nav-link" data-toggle="dropdown" href="#">
               <img src="{{ user.nolsatu.avatar }}" style="max-height:100%" class="img-circle elevation-2" alt="User Image">
-              {{ user.first_name }} {{ user.last_name }}
+              <span class="d-none d-md-inline">{{ user.first_name }} {{ user.last_name }}</span>
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <span class="dropdown-header">{{ user.first_name }} {{ user.last_name }}</span>
