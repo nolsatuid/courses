@@ -49,6 +49,7 @@ def ajax_change_status(request):
     status_id = request.GET.get('status_id', None)
     task = get_object_or_404(CollectTask, id=id)
     task.status = status_id
+    task.note = request.GET.get('note', None)
     task.save()
 
     utils.post_inbox(request, request.user, f'Perubahan status tugas',

@@ -305,6 +305,7 @@ class CollectTask(models.Model):
         (3, 'pass', _('Lulus')),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.review)
+    note = models.CharField(_("Catatan"), max_length=220, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} - {self.section}"
