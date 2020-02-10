@@ -51,24 +51,20 @@
                     {{ form.non_field_errors }}
                     <div class="form-group">
                         <label class="col-md-12">{{ section.task_setting.instruction|safe }}</label>
-                        {% if task %}
-                            <div class="col-md-12">
-                                {% render_field form.file %}
-                                {% render_field form.name %}
-                                <small class="form-text text-muted">{{ form.file.help_text }}</small>
-                                <small class="form-text text-danger">{{ form.file.errors }}</small>
-                            </div>
-                            <small class="col-md-12 form-text text-muted">Maksimum file:<span class="text-danger"> {{ section.task_setting.max_size }} MB</span></small>
-                            <small class="col-md-12 form-text text-muted">Ekstensi file:<span class="text-danger"> {{ section.task_setting.allowed_extension.all|join:', ' }} </span></small>
-                        {% endif %}
+                        <div class="col-md-12">
+                            {% render_field form.file %}
+                            {% render_field form.name %}
+                            <small class="form-text text-muted">{{ form.file.help_text }}</small>
+                            <small class="form-text text-danger">{{ form.file.errors }}</small>
+                        </div>
+                        <small class="col-md-12 form-text text-muted">Maksimum file:<span class="text-danger"> {{ section.task_setting.max_size }} MB</span></small>
+                        <small class="col-md-12 form-text text-muted">Ekstensi file:<span class="text-danger"> {{ section.task_setting.allowed_extension.all|join:', ' }} </span></small>
                     </div>
                 </div>
                 <!-- /.card-body -->
-                {% if task %}
                 <div class="card-footer">
                     <button type="submit" class="btn bg-olive">Submit</button>
                 </div>
-                {% endif %}
             </form>
         {% endif %}     
     </div>

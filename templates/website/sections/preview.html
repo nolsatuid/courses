@@ -17,7 +17,9 @@
                     </div>
                 </div>
 
-                {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
+                {% if user.is_superuser %}
+                    {% include 'partials/form-task-preview.html' %}
+                {% endif %}
 
                 {% include 'partials/pagination-preview.html' with pagination=pagination %}
 
