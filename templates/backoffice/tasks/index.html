@@ -53,8 +53,8 @@ thead input {
                         <tr>
                             <td>{{ task.user.first_name }} {{ task.user.last_name }}</td>
                             <td>{{ task.user.username }}</td> 
-                            <td>{{ task.section.module.course }}</td>
-                            <td>{{ task.section }}</td>
+                            <td>{{ task.section.module.course.title }}</td>
+                            <td>{{ task.section.title }}</td>
                             <td><a href="{{ task.file.file.url }}" download> Lihat Tugas</td>  
                             <td id="note-{{task.id}}">{{ task.note|default:'-' }}</td>     
                             <td width="10px">

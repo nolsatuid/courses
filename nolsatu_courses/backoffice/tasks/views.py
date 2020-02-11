@@ -53,7 +53,7 @@ def ajax_change_status(request):
     task.save()
 
     utils.post_inbox(request, task.user, f'Perubahan status tugas',
-                     f'Status tugas anda di ubah menjadi {CollectTask.STATUS[int(task.status)]}')
+                     f'Status tugas {task.section.title} Anda di ubah menjadi {CollectTask.STATUS[int(task.status)]}')
 
     data = {}
     return JsonResponse(data, status=200)
