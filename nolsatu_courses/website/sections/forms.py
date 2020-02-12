@@ -46,3 +46,6 @@ class FormUploadFile(forms.ModelForm):
 
         if not collect_task:
             CollectTask.objects.create(section=self.section, user=self.user, file=upload_file)
+        else:
+            collect_task.status = CollectTask.STATUS.review
+            collect_task.save()
