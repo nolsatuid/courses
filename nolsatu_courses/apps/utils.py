@@ -1,5 +1,6 @@
 import datetime
 
+import jwt
 import requests
 from django.conf import settings
 from django.utils.text import slugify
@@ -43,11 +44,14 @@ def call_internal_api(method, url, **kwargs):
         'patch': requests.patch,
         'delete': requests.delete
     }
+
+    payload = jwt.encode({
+        'server_key': settings.SERVER_KEY,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
+    }, settings.SECRET_KEY).decode('utf-8')
+
     headers = {
-        "authorization": {
-            'server_key': settings.SERVER_KEY,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
-        }
+        "authorization": f'Server {payload}'
     }
 
     return method_map[method](url, headers=headers, **kwargs)
