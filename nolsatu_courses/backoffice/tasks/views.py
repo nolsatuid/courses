@@ -32,7 +32,7 @@ def ajax_filter_section(request):
         'section': []
     }
     if course:
-        section = Section.objects.filter(module__course=course)
+        section = Section.objects.filter(module__course=course, is_task=True)
         data['section'] = [
             {
                 'id': s.id,
