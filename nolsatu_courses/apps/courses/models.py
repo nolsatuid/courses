@@ -269,6 +269,7 @@ class Batch(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
+    link_group = models.URLField(blank=True, max_length=255)
 
     def __str__(self):
         return f"{self.batch} {self.course.title}"
