@@ -63,7 +63,7 @@ class Courses(models.Model):
             return False
 
         now = timezone.now()
-        if now.date() >= batch.start_date and now.date() <= batch.end_date:
+        if now.date() >= batch.start_date:
             return True
         else:
             return False
