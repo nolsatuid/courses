@@ -60,7 +60,7 @@ def enroll(request, slug):
 
     course.enrolled.create(course=course, user=request.user, batch=course.batchs.last())
     messages.success(request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'))
-    utils.post_inbox(request, request.user, f'Kamu berhasil mendaftar di kelas {course.title}',
+    utils.send_notification(request.user, f'Kamu berhasil mendaftar di kelas {course.title}',
                      f'Saat ini kamu sudah berhasil mendaftar pada kelas {course.title}. Tunggu info selanjutnya ya.')
     return redirect('website:courses:details', course.slug)
 
@@ -78,7 +78,7 @@ def finish(request, slug):
     enroll.status = Enrollment.STATUS.finish
     if not enroll.finishing_date:
         enroll.finishing_date = timezone.now().date()
-        utils.post_inbox(request, request.user, f'Selamat!',
+        utils.send_notification(request.user, f'Selamat!',
                          f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
 
     enroll.save()

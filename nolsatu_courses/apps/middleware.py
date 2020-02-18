@@ -1,23 +1,22 @@
 from functools import partial
 from json import JSONDecodeError
 
-import requests
-from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
-from django.contrib.auth.models import User, AnonymousUser
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 from requests import RequestException
 
-from nolsatu_courses.apps.accounts.models import MemberNolsatu
-LOGIN_CHECK_KEY = '_auth_user_id'
+from nolsatu_courses.apps.utils import update_user
+
+SESSION_USER_ID = '_auth_user_id'
 
 
 def get_user(request):
     try:
         # key to cache user data use sessionid
         cache_key = request.COOKIES.get('sessionid')
-        if cache_key and LOGIN_CHECK_KEY not in request.session:
+        if cache_key and SESSION_USER_ID not in request.session:
             cache.delete(cache_key)
             return AnonymousUser()
 
@@ -27,33 +26,7 @@ def get_user(request):
             if user_cache:
                 return user_cache
 
-        # get authentication from Nolsatu
-        data = requests.get(settings.NOLSATU_PROFILE_URL, cookies=request.COOKIES).json()
-        defaults = {
-            'first_name': data['first_name'],
-            'last_name': data['last_name'],
-            'is_active': data['is_active'],
-            'is_staff': data['is_staff'],
-            'is_superuser': data['is_superuser']
-        }
-        # get or create user
-        user, created = User.objects.get_or_create(
-            username=data['username'],
-            email=data['email'],
-            defaults={**defaults},
-        )
-
-        if created or not hasattr(user, 'nolsatu'):
-            # save other data from nolsatu to model MemberNolsatu
-            MemberNolsatu.objects.create(
-                user=user, id_nolsatu=data["id"],
-                avatar=data['avatar'], phone_number=data['phone']
-            )
-
-        # update data from response
-        user.nolsatu.avatar = data['avatar']
-        user.nolsatu.id_nolsatu = data['id']
-        user.nolsatu.phone_number = data['phone']
+        user = update_user(request.session.get(SESSION_USER_ID))
 
         # cache user data
         if cache_key:

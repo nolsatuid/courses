@@ -96,12 +96,12 @@ def ajax_change_status_registrants(request):
     enroll.save()
 
     if status == "True":
-        utils.post_inbox(request, enroll.user, f'Akses kelas {enroll.course.title} di berikan',
+        utils.send_notification(enroll.user, f'Akses kelas {enroll.course.title} di berikan',
                         f'Selamat, Anda sudah dapat mengakses kelas {enroll.course.title}. \
                             Silahkan gabung ke grup telegram menggunakan link berikut <a href="{ enroll.batch.link_group }">\
                             { enroll.batch.link_group }</a> untuk mendapatkan informasi lebih lanjut.')
     else:
-        utils.post_inbox(request, enroll.user, f'Akses kelas {enroll.course.title} dibatalkan',
+        utils.send_notification(enroll.user, f'Akses kelas {enroll.course.title} dibatalkan',
                         f'Maaf, Akses belajar pada kelas {enroll.course.title} Anda dibatalkan.')
 
     data = {}

@@ -1,13 +1,18 @@
+from json import JSONDecodeError
+
 import jwt
 from django.conf import settings
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils.translation import ugettext_lazy as _
 from jwt import InvalidTokenError
+from requests import RequestException
 from rest_framework import HTTP_HEADER_ENCODING
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
+
+from nolsatu_courses.apps.utils import update_user
 
 
 class InternalAPIAuthentication(BaseAuthentication):
@@ -101,14 +106,12 @@ class UserAPIServiceAuthentication(InternalAPIAuthentication):
         except KeyError:
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
-        try:
-            user = User.objects.filter(nolsatu__id_nolsatu=user_id).get()
-        except User.DoesNotExist:
-            # TODO: Try to get user from academy
-            # Saat ini user adacemy hanya akan dimasukkan ke database course saat login melalui website
-            # Jika user belum pernah login course di website maka data user di course tidak ada
-            # nantinya akan menggunakan fungsi call_internal_api
-            return AnonymousUser()
+        user = User.objects.filter(nolsatu__id_nolsatu=user_id).first()
+        if not user:
+            try:
+                return update_user(user_id)
+            except (RequestException, JSONDecodeError):
+                return AnonymousUser()
 
         return user
 
