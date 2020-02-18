@@ -52,7 +52,7 @@ def ajax_change_status(request):
     task.note = request.GET.get('note', None)
     task.save()
 
-    utils.post_inbox(request, task.user, f'Perubahan status tugas',
+    utils.send_notification(task.user, f'Perubahan status tugas',
                      f'Status tugas {task.section.title} Anda di ubah menjadi {CollectTask.STATUS[int(task.status)]}')
 
     data = {}
