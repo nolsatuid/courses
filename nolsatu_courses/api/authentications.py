@@ -1,13 +1,14 @@
 from json import JSONDecodeError
 
 import jwt
+import requests
 from django.conf import settings
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils.translation import ugettext_lazy as _
 from jwt import InvalidTokenError
 from requests import RequestException
-from rest_framework import HTTP_HEADER_ENCODING
-from rest_framework.authentication import BaseAuthentication
+from rest_framework import HTTP_HEADER_ENCODING, exceptions
+from rest_framework.authentication import BaseAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
@@ -116,6 +117,40 @@ class UserAPIServiceAuthentication(InternalAPIAuthentication):
         return user
 
 
+class BasicNolSatuAuthentication(BasicAuthentication):
+    """
+    Basic Authentication for API, it will use Academy API Auth.
+    """
+
+    def authenticate_credentials(self, userid, password, request=None):
+        credentials = {
+            'username': userid,
+            'password': password
+        }
+
+        response = requests.post(f'{settings.NOLSATU_HOST}/api/auth/login', data=credentials)
+        if response.status_code == 200:
+            user_id = response.json()['user']['id']
+
+            user = User.objects.filter(nolsatu__id_nolsatu=user_id).first()
+            if not user:
+                try:
+                    return update_user(user_id), None
+                except (RequestException, JSONDecodeError):
+                    raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
+            return user, None
+        else:
+            raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
+
+
+class BasicApiDocAuthentication(BasicAuthentication):
+    def authenticate_credentials(self, userid, password, request=None):
+        if userid == settings.API_DOC_USERNAME and password == settings.API_DOC_PASSWORD:
+            return User(), None
+        else:
+            raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
+
+
 class UserAuthAPIView(APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (UserAPIServiceAuthentication,)
+    authentication_classes = (BasicNolSatuAuthentication, UserAPIServiceAuthentication,)

@@ -1,4 +1,5 @@
 from django.conf import settings
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from nolsatu_courses.apps.utils import call_internal_api
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 @authentication_classes([UserAPIServiceAuthentication])
 @permission_classes([IsAuthenticated])
+@swagger_auto_schema(tags=['Demo'], operation_description="Just Simple API Demo")
 def demo_view(request):
     # Calling internal API
     response_get = call_internal_api('get', url=settings.NOLSATU_HOST + '/api/internal/demo').json()
