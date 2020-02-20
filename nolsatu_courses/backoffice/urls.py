@@ -8,4 +8,5 @@ urlpatterns = [
     path('modules/', include('nolsatu_courses.backoffice.modules.urls')),
     path('sections/', include('nolsatu_courses.backoffice.sections.urls')),
     path('tasks/', include('nolsatu_courses.backoffice.tasks.urls')),
+    path('graduates/', include('nolsatu_courses.backoffice.graduates.urls')),
 ]

@@ -66,7 +66,26 @@
                     <p>Periksa Tugas</p>
                 </a>
             </li>
-
+            <li class="nav-item {% if menu_active == 'graduate' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'graduate' %}active{% endif %}">
+                    <i class="nav-icon fas fa-user-graduate"></i>
+                    <p>Lulusan<i class="right right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:graduates:candidate' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Kandidat</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:graduates:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Data Lulusan</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item">
                 <a href="" class="nav-link {% if menu_active == '' %}active{% endif %}">
                     <i class="nav-icon fas fa-sign-out-alt"></i>
