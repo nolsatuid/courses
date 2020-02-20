@@ -8,13 +8,13 @@ from nolsatu_courses.api.authentications import UserAPIServiceAuthentication
 from nolsatu_courses.apps.utils import call_internal_api
 
 
+@swagger_auto_schema(methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], auto_schema=None)
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 @authentication_classes([UserAPIServiceAuthentication])
 @permission_classes([IsAuthenticated])
-@swagger_auto_schema(tags=['Demo'], operation_description="Just Simple API Demo")
 def demo_view(request):
     # Calling internal API
-    response_get = call_internal_api('get', url=settings.NOLSATU_HOST + '/api/internal/demo').json()
+    response_get = call_internal_api('get', url=settings.NOLSATU_HOST + '/api/internal/demo/').json()
 
     request_data = {
         'user_id': 120,
@@ -23,7 +23,7 @@ def demo_view(request):
 
     response_post = call_internal_api(
         'post',
-        url=settings.NOLSATU_HOST + '/api/internal/demo',
+        url=settings.NOLSATU_HOST + '/api/internal/demo/',
         data=request_data
     ).json()
 
