@@ -11,7 +11,7 @@ from .forms import FormFilterStudent
 
 @staff_member_required
 def index(request):
-    graduates = Enrollment.objects.filter(status = Enrollment.STATUS.graduate)
+    graduates = Enrollment.objects.filter(status=Enrollment.STATUS.graduate)
     form = FormFilterStudent(request.GET or None)
     if form.is_valid():
         graduates = form.get_data(students=graduates)
