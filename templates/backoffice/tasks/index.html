@@ -143,7 +143,7 @@ thead input {
             },
             dataType: 'json',
             success: function (data) {
-                list_section.html("");  
+                list_section.html("'<option value=''>Pilih Bab</option>'");  
                 $.each(data.section, function(key,value) {
                     if(id_section == value.id){
                         list_section.append(

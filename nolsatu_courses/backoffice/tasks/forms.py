@@ -12,6 +12,7 @@ class FormFilterTask(forms.Form):
         queryset=Section.objects.all(), empty_label="Pilih Bab", required=False
     )
     STATUS = Choices(
+        ('', '', _('Pilih Status')),
         (1, 'review', _('Diperiksa')),
         (2, 'repeat', _('Ulangi')),
         (3, 'pass', _('Lulus')),

@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils.text import slugify
 from django.utils import timezone
-from django.db.models import Count
+from django.db.models import When, Case, Count, IntegerField
 
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -136,7 +136,7 @@ class Courses(models.Model):
         collect_tasks = CollectTask.objects.filter(
             section_id__in=section_ids, user=user
         )
-
+        
         if len(section_ids) <= collect_tasks.count():
             return True
         return False
@@ -286,6 +286,7 @@ class Enrollment(models.Model):
         (1, 'register', _('Daftar')),
         (2, 'begin', _('Mulai')),
         (99, 'finish', _('Selesai')),
+        (100, 'graduate', _('Lulus'))
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.begin)
     allowed_access = models.BooleanField(_("Akses diberikan"), default=False)
@@ -295,6 +296,20 @@ class Enrollment(models.Model):
     def __str__(self):
         return f"{self.user} - {self.course}"
 
+    def get_count_task_status(self):
+        section_ids = CollectTask.objects.values_list('section__id', flat=True)
+        count_status = self.user.collect_tasks.filter(section_id__in=section_ids).aggregate(
+            graduated=Count(
+                Case(When(status=CollectTask.STATUS.graduated, then=1),
+                     output_field=IntegerField())
+            ),
+            repeat=Count(
+                Case(When(status=CollectTask.STATUS.repeat, then=1),
+                     output_field=IntegerField())
+            )
+        )
+        return count_status
+
 
 class CollectTask(models.Model):
     user = models.ForeignKey(User, related_name='collect_tasks', on_delete=models.CASCADE)
@@ -303,7 +318,7 @@ class CollectTask(models.Model):
     STATUS = Choices(
         (1, 'review', _('Diperiksa')),
         (2, 'repeat', _('Ulangi')),
-        (3, 'pass', _('Lulus')),
+        (3, 'graduated', _('Lulus')),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.review)
     note = models.CharField(_("Catatan"), max_length=220, blank=True, null=True)
