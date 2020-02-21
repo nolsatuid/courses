@@ -165,6 +165,14 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': []
+}
+
+# Setup support for proxy headers
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 SESSION_COOKIE_DOMAIN = '.nolsatu.id'
 
 SERVER_KEY = "serverToServerAuthKeyKeepItVerySecret"
