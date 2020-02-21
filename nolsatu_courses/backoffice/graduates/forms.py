@@ -12,10 +12,6 @@ class FormFilterStudent(forms.Form):
         queryset=Batch.objects.all(), empty_label="Pilih Angkatan", required=False
     )
 
-    def __init__(self, *args, **kwargs):
-        self.graduate = None
-        super().__init__(*args, **kwargs)
-
     def get_data(self, students):
         course = self.cleaned_data['course']
         batch = self.cleaned_data['batch']
@@ -26,5 +22,4 @@ class FormFilterStudent(forms.Form):
         if batch:
             students = students.filter(batch=batch)
 
-        self.students = students
-        return self.students
+        return students
