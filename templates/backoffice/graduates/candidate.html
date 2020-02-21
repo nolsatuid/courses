@@ -47,7 +47,7 @@
                 <tbody>
                     {% for candidate in candidate %}
                         <tr>
-                            <td>{{ candidate.enroll.user.first_name }} {{ candidate.enroll.user.last_name }}</td>
+                            <td>{{ candidate.enroll.user.get_full_name }}</td>
                             <td>{{ candidate.enroll.user.username }}</td> 
                             <td>{{ candidate.enroll.course.title }}</td>
                             <td>Angkatan {{ candidate.enroll.batch.batch }}</td>
@@ -56,7 +56,7 @@
                             <td>{{ candidate.task.graduated }}</td>
                             <td>{{ candidate.task.repeat }}</td>
                             <td>
-                                <button class="btn bg-olive btn-pill" data-toggle="modal" data-target="#confirmModal" data-url="{% url 'backoffice:graduates:candidate_to_graduate' candidate.enroll.id %}" data-name="{{ candidate.enroll.user.username }}" data-toggle="tooltip" title="Luluskan">Luluskan</button>
+                                <button class="btn bg-olive btn-pill" data-toggle="modal" data-target="#confirmModal" data-url="{% url 'backoffice:graduates:candidate_to_graduate' candidate.enroll.id %}" data-name="{{ candidate.enroll.user.get_full_name }}" data-toggle="tooltip" title="Luluskan">Luluskan</button>
                             </td>
                         </tr>
                     {% endfor %}

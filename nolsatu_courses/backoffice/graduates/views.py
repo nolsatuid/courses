@@ -53,7 +53,7 @@ def candidate_to_graduate(request, id):
     enroll = get_object_or_404(Enrollment, id=id)
     enroll.status = Enrollment.STATUS.graduate
     enroll.save()
-    messages.success(request, f'Berhasil mengubah status {enroll.user.username} menjadi lulusan')
+    messages.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan')
     return redirect('backoffice:graduates:candidate')
 
 
