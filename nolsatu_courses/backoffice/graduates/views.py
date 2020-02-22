@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 
+from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Enrollment, Batch
 from nolsatu_courses.apps.utils import call_internal_api
 from .forms import FormFilterStudent
@@ -63,6 +64,9 @@ def candidate_to_graduate(request, id):
     if response.status_code == 200:
         enroll.status = Enrollment.STATUS.graduate
         enroll.save()
+        utils.send_notification(enroll.user, f'Selamat! Anda lulus',
+                         f'Selamat, Anda telah berhasil menyelesaikan persyaratan yang diperlukan untuk mendapatkan \
+                             Sertifikasi kelulusan NolSatu pada kelas {enroll.course.title}.')
         messages.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan')
     else:
         messages.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan')
