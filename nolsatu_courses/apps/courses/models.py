@@ -322,6 +322,17 @@ class Enrollment(models.Model):
         )
         return count_status
 
+    def generate_certificate_number(self):
+        batch = str(self.batch.batch)
+        batch = "0" + batch if len(batch) == 1 else batch
+
+        user_id = str(self.user_id)
+        user_id = "0" + user_id if len(user_id) == 1 else user_id
+
+        date = self.finishing_date.strftime("%Y-%m%d")
+        certificate_number = f"NS-DEV-{batch}{user_id}-{date}"
+        return certificate_number
+
 
 class CollectTask(models.Model):
     user = models.ForeignKey(User, related_name='collect_tasks', on_delete=models.CASCADE)

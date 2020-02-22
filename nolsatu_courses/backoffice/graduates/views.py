@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
@@ -5,7 +6,9 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 
+from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Enrollment, Batch
+from nolsatu_courses.apps.utils import call_internal_api
 from .forms import FormFilterStudent
 
 
@@ -51,9 +54,23 @@ def candidate(request):
 @staff_member_required
 def candidate_to_graduate(request, id):
     enroll = get_object_or_404(Enrollment, id=id)
-    enroll.status = Enrollment.STATUS.graduate
-    enroll.save()
-    messages.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan')
+    data = {
+        "title": enroll.course.title,
+        "certificate_number": enroll.generate_certificate_number(),
+        "user_id": enroll.user_id,
+        "created": enroll.finishing_date.strftime("%d-%m-%Y")
+    }
+    response = call_internal_api('post', url=settings.NOLSATU_HOST + '/api/internal/generate-certificate/', data=data)
+    if response.status_code == 200:
+        enroll.status = Enrollment.STATUS.graduate
+        enroll.save()
+        utils.send_notification(enroll.user, f'Selamat! Anda lulus',
+                         f'Selamat, Anda telah berhasil menyelesaikan persyaratan yang diperlukan untuk mendapatkan \
+                             Sertifikasi kelulusan NolSatu pada kelas {enroll.course.title}.')
+        messages.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan')
+    else:
+        messages.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan')
+        
     return redirect('backoffice:graduates:candidate')
 
 
