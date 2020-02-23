@@ -57,7 +57,7 @@ def candidate_to_graduate(request, id):
     data = {
         "title": enroll.course.title,
         "certificate_number": enroll.generate_certificate_number(),
-        "user_id": enroll.user_id,
+        "user_id": enroll.user.nolsatu.id_nolsatu,
         "created": enroll.finishing_date.strftime("%d-%m-%Y")
     }
     response = call_internal_api('post', url=settings.NOLSATU_HOST + '/api/internal/generate-certificate/', data=data)
