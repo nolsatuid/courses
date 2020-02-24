@@ -27,7 +27,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Courses
-        exclude = ['users', 'slug', 'short_description', 'is_visible']
+        exclude = ['users', 'short_description', 'is_visible']
 
 
 class EnrollDetailSerializer(serializers.ModelSerializer):
