@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer
 )
+from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.apps.courses.models import Courses
@@ -61,7 +62,10 @@ class EnrollCourseView(UserAuthAPIView):
 
     @swagger_auto_schema(
         tags=['Courses'], operation_description="To Enroll Course",
-        responses={200: "{message: 'Kamu berhasil terdaftar pada kelas .....'}"}
+        responses={
+            200: MessageSuccesSerializer(),
+            400: ErrorMessageSerializer()
+        }
     )
     def get(self, request, slug):
         course = get_object_or_404(Courses, slug=slug)
