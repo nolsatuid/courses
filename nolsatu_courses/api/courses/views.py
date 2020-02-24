@@ -67,8 +67,8 @@ class EnrollCourseView(UserAuthAPIView):
             400: ErrorMessageSerializer()
         }
     )
-    def get(self, request, slug):
-        course = get_object_or_404(Courses, slug=slug)
+    def get(self, request, id):
+        course = get_object_or_404(Courses, id=id)
 
         if course.has_enrolled(request.user):
             return ErrorResponse(error_message=_(f'Kamu sudah terdaftar di kelas {course.title}'))
