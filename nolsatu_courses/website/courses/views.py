@@ -60,8 +60,11 @@ def enroll(request, slug):
 
     course.enrolled.create(course=course, user=request.user, batch=course.batchs.last())
     messages.success(request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'))
-    utils.send_notification(request.user, f'Kamu berhasil mendaftar di kelas {course.title}',
-                     f'Saat ini kamu sudah berhasil mendaftar pada kelas {course.title}. Tunggu info selanjutnya ya.')
+    utils.send_notification(
+        request.user,
+        f'Kamu berhasil mendaftar di kelas {course.title}',
+        f'Saat ini kamu sudah berhasil mendaftar pada kelas {course.title}. Tunggu info selanjutnya ya.'
+    )
     return redirect('website:courses:details', course.slug)
 
 
