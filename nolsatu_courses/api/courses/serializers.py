@@ -67,4 +67,18 @@ class CoursePreviewListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Courses
-        fields = ['id', 'title', 'slug', 'modules']
+        fields = ['modules']
+
+
+class ModulePreviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Module
+        fields = ['title', 'description']
+
+
+class SectionPreviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Section
+        fields = ['title', 'content']
