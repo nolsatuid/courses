@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from django.utils.translation import ugettext_lazy as _
 
 from nolsatu_courses.api.courses.serializers import (
-    CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer
+    CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
@@ -86,3 +86,14 @@ class EnrollCourseView(UserAuthAPIView):
             f'Saat ini kamu sudah berhasil mendaftar pada kelas {course.title}. Tunggu info selanjutnya ya.'
         )
         return Response({'message': _(f'Kamu berhasil terdaftar pada kelas {course.title}')})
+
+
+class CoursePreviewListView(APIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get Preview Course List", responses={
+        200: CoursePreviewListSerializer()
+    })
+    def get(self, request, id):
+        course = get_object_or_404(Courses, id=id)
+        serializer = CoursePreviewListSerializer(course)
+        return Response(serializer.data)

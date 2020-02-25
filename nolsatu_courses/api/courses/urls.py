@@ -7,4 +7,5 @@ urlpatterns = [
     path('detail/<int:id>', views.CourseDetailView.as_view(), name='detail'),
     path('detail/<int:id>/enroll/', views.CourseEnrollDetailView.as_view(), name='detail_enroll'),
     path('<int:id>/enroll/', views.EnrollCourseView.as_view(), name='enroll'),
+    path('preview-list/<int:id>', views.CoursePreviewListView.as_view(), name='preview_list'),
 ]
