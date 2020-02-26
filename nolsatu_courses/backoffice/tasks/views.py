@@ -55,7 +55,7 @@ def ajax_change_status(request):
     utils.send_notification(
         task.user,
         f'Perubahan status tugas',
-        f'Status tugas {task.section.title} Anda di ubah menjadi {CollectTask.STATUS.graduated}'
+        f'Status tugas {task.section.title} Anda di ubah menjadi {CollectTask.STATUS[int(task.status)]}'
     )
 
     data = {}
