@@ -99,10 +99,8 @@ class SectionSerializer(serializers.ModelSerializer):
 
 
 class PaginationSerializer(serializers.Serializer):
-    next_slug = serializers.CharField()
-    next_type = serializers.CharField()
-    prev_slug = serializers.CharField()
-    prev_type = serializers.CharField()
+    next_page = serializers.CharField()
+    prev_page = serializers.CharField()
 
 
 class ModuleDetailSerializer(serializers.Serializer):

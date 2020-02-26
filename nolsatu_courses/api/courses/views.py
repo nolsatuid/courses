@@ -148,10 +148,8 @@ class ModuleDetailView(UserAuthAPIView):
         data = {
             'module': module,
             'pagination': {
-                'next_slug': pagination['next'].slug if pagination['next'] else "",
-                'prev_slug': pagination['prev'].slug if pagination['prev'] else "",
-                'next_type': pagination['next_type'],
-                'prev_type': pagination['prev_type']
+                'next_page': pagination['next'].api_detail_url() if pagination['next'] else "",
+                'prev_page': pagination['prev'].api_detail_url() if pagination['prev'] else "",
             }
         }
         return Response(ModuleDetailSerializer(data).data)
@@ -181,10 +179,8 @@ class SectionDetailView(UserAuthAPIView):
         data = {
             'section': section,
             'pagination': {
-                'next_slug': pagination['next'].slug if pagination['next'] else "",
-                'prev_slug': pagination['prev'].slug if pagination['prev'] else "",
-                'next_type': pagination['next_type'],
-                'prev_type': pagination['prev_type']
+                'next_page': pagination['next'].api_detail_url() if pagination['next'] else "",
+                'prev_page': pagination['prev'].api_detail_url() if pagination['prev'] else "",
             }
         }
         return Response(SectionDetailSerializer(data).data)
