@@ -7,14 +7,15 @@ from django.utils.translation import ugettext_lazy as _
 
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
-    ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer
+    ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.apps.courses.models import Courses, Module, Section
 from nolsatu_courses.apps import utils
-from nolsatu_courses.website.modules.views import get_pagination
+from nolsatu_courses.website.modules.views import get_pagination as get_pagination_module
+from nolsatu_courses.website.sections.views import get_pagination as get_pagination_section
 
 
 class CourseListView(APIView):
@@ -130,7 +131,7 @@ class ModuleDetailView(UserAuthAPIView):
     })
     def get(self, request, id):
         module = get_object_or_404(Module, id=id)
-        pagination = get_pagination(request, module)
+        pagination = get_pagination_module(request, module)
 
         # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
         # jika page_type adalah section dan section memiliki tugas
@@ -154,3 +155,36 @@ class ModuleDetailView(UserAuthAPIView):
             }
         }
         return Response(ModuleDetailSerializer(data).data)
+
+
+class SectionDetailView(UserAuthAPIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get Section Detail", responses={
+        200: SectionDetailSerializer()
+    })
+    def get(self, request, id):
+        section = get_object_or_404(Section, id=id)
+        pagination = get_pagination_section(request, section)
+
+        # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
+        # jika page_type adalah section dan section memiliki tugas
+        if pagination['prev_type'] == 'section' and pagination['prev'].is_task:
+            if not pagination['prev'].collect_task.all():
+                return ErrorResponse(
+                    error_message=_(f"Kamu harus mengumpulkan tugas pada sesi {pagination['prev'].title}"))
+
+        # save activities user to module
+        if section.has_enrolled(request.user):
+            section.activities_section.get_or_create(
+                user=request.user, course=section.module.course)
+
+        data = {
+            'section': section,
+            'pagination': {
+                'next_slug': pagination['next'].slug if pagination['next'] else "",
+                'prev_slug': pagination['prev'].slug if pagination['prev'] else "",
+                'next_type': pagination['next_type'],
+                'prev_type': pagination['prev_type']
+            }
+        }
+        return Response(SectionDetailSerializer(data).data)

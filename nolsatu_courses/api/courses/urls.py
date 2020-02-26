@@ -11,4 +11,5 @@ urlpatterns = [
     path('module/preview/<int:id>', views.ModulePreviewView.as_view(), name='module_preview'),
     path('section/preview/<int:id>', views.SectionPreviewView.as_view(), name='section_preview'),
     path('module/detail/<int:id>', views.ModuleDetailView.as_view(), name='module_detail'),
+    path('section/detail/<int:id>', views.SectionDetailView.as_view(), name='section_detail'),
 ]

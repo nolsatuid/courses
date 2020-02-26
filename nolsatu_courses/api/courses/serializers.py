@@ -91,6 +91,13 @@ class ModuleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SectionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Section
+        fields = '__all__'
+
+
 class PaginationSerializer(serializers.Serializer):
     next_slug = serializers.CharField()
     next_type = serializers.CharField()
@@ -100,4 +107,9 @@ class PaginationSerializer(serializers.Serializer):
 
 class ModuleDetailSerializer(serializers.Serializer):
     module = ModuleSerializer()
+    pagination = PaginationSerializer()
+
+
+class SectionDetailSerializer(serializers.Serializer):
+    section = SectionSerializer()
     pagination = PaginationSerializer()
