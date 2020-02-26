@@ -1,3 +1,4 @@
+from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -13,7 +14,7 @@ from nolsatu_courses.api.courses.serializers import (
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
-from nolsatu_courses.apps.courses.models import Courses, Module, Section
+from nolsatu_courses.apps.courses.models import Courses, Module, Section, Enrollment
 from nolsatu_courses.apps import utils
 from nolsatu_courses.website.modules.views import get_pagination as get_pagination_module
 from nolsatu_courses.website.sections.views import get_pagination as get_pagination_section
@@ -196,3 +197,28 @@ class CourseTrackingListView(UserAuthAPIView):
         course = get_object_or_404(Courses, id=id)
         serializer = CourseTrackingListSerializer(course, user=request.user)
         return Response(serializer.data)
+
+
+class FinishCourseView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['Courses'], operation_description="Finish Course", responses={
+        200: MessageSuccesSerializer(),
+        400: ErrorMessageSerializer()
+    })
+    def get(self, request, id):
+        course = get_object_or_404(Courses, id=id)
+        enroll = Enrollment.objects.filter(course=course, user=request.user).first()
+
+        if not enroll:
+            return ErrorResponse(error_message=_(f'Kamu belum mendaftar di {course.title}'))
+
+        # cek ketika belom menyelesaikan semua module dan bab.
+        if course.progress_percentage(request.user, on_thousand=True) != 100:
+            return ErrorResponse(error_message=_(f'Kamu belom menyelesaikan semua materi {course.title}'))
+
+        enroll.status = Enrollment.STATUS.finish
+        if not enroll.finishing_date:
+            enroll.finishing_date = timezone.now().date()
+            utils.send_notification(request.user, f'Selamat!',
+                                    f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
+
+        return Response({'message': _(f'Kamu berhasil menyelesaikan kelas {enroll.course.title}')})
