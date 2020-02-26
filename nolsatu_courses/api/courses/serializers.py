@@ -116,6 +116,11 @@ class SectionDetailSerializer(serializers.Serializer):
     pagination = PaginationSerializer()
 
 
+class CollectTaskSerializer(serializers.Serializer):
+    message = serializers.CharField()
+    status = serializers.IntegerField()
+
+    
 class SectionTrackingListSerializer(serializers.ModelSerializer):
     url_detail = serializers.CharField(source='api_detail_url')
     on_activity = serializers.SerializerMethodField()
