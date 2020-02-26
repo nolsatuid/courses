@@ -190,14 +190,14 @@ class SectionDetailView(UserAuthAPIView):
 
 class CollectTaskView(UserAuthAPIView):
 
-    @swagger_auto_schema(tags=['Courses'], operation_description="Collect Task", responses={
+    @swagger_auto_schema(tags=['Enrollment'], operation_description="Collect Task", responses={
         200: CollectTaskSerializer()
     })
     def get(self, request, section_id):
         task = CollectTask.objects.filter(section_id = section_id, user=request.user).first()
         data = {
             'message': '',
-            'status': ''
+            'status': 0
         }
         if task:
             if task.status == CollectTask.STATUS.review:
@@ -205,18 +205,18 @@ class CollectTaskView(UserAuthAPIView):
                     </a> sedang <span class='badge badge-secondary' style='font-size:100%;'>diperiksa</span>"
                 if task.note:
                     data['message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
-                data['status'] = "review"
+                data['status'] = CollectTask.STATUS.review
             elif task.status == CollectTask.STATUS.repeat:
                 data['message'] = f"Yah, kamu harus <strong>mengulang</strong> pada <a href='{settings.HOST}{task.file.file.url}'> \
                     <strong>tugas ini</strong></a>. Ayo kirim ulang tugas yang sudah diperbaiki!"
                 if task.note:
                     data['message'] += f"<br><br>Ini nih catatan dari instruktur kamu: <br><strong>{task.note}</strong>"
-                data['status'] = "repeat"
+                data['status'] = CollectTask.STATUS.repeat
             elif task.status == CollectTask.STATUS.graduated:
                 data['message'] = f"Yey, kamu <span class='badge badge-light' style='font-size:100%;'>lulus</span> pada \
                     <a href='{settings.HOST}{task.file.file.url}'><strong> tugas ini</strong></a>. Semoga sukses di tugas-tugas selanjutnya."
                 if task.note:
                     data['message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
-                data['status'] = "graduated"
+                data['status'] = CollectTask.STATUS.graduated
 
         return Response(CollectTaskSerializer(data).data)

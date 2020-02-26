@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module, CollectTask
+from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module
 
 
 class BatchDetailSerializer(serializers.ModelSerializer):
@@ -115,4 +115,4 @@ class SectionDetailSerializer(serializers.Serializer):
 
 class CollectTaskSerializer(serializers.Serializer):
     message = serializers.CharField()
-    status = serializers.CharField()
+    status = serializers.IntegerField()
