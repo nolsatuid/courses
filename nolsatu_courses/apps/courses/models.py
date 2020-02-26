@@ -207,6 +207,9 @@ class Module(models.Model):
     def api_detail_url(self):
         return settings.HOST + reverse("api:courses:module_detail", args=[self.id])
 
+    def api_preview_url(self):
+        return settings.HOST + reverse("api:courses:module_preview", args=[self.id])
+
 
 class Section(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
@@ -262,6 +265,9 @@ class Section(models.Model):
 
     def api_detail_url(self):
         return settings.HOST + reverse("api:courses:section_detail", args=[self.id])
+
+    def api_preview_url(self):
+        return settings.HOST + reverse("api:courses:section_preview", args=[self.id])
 
 
 class TaskUploadSettings(models.Model):

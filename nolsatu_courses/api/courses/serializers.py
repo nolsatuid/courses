@@ -49,17 +49,20 @@ class CourseEnrollSerializer(serializers.Serializer):
 
 
 class SectionPreviewListSerializer(serializers.ModelSerializer):
+    url_preview = serializers.CharField(source='api_preview_url')
+
     class Meta:
         model = Section
-        fields = ['id', 'title', 'slug', 'is_visible']
+        fields = ['id', 'title', 'url_preview', 'is_visible']
 
 
 class ModulePreviewListSerializer(serializers.ModelSerializer):
+    url_preview = serializers.CharField(source='api_preview_url')
     sections = SectionPreviewListSerializer(many=True)
 
     class Meta:
         model = Module
-        fields = ['id', 'title', 'slug', 'is_visible', 'sections']
+        fields = ['id', 'title', 'url_preview', 'is_visible', 'sections']
 
 
 class CoursePreviewListSerializer(serializers.ModelSerializer):
@@ -116,3 +119,50 @@ class SectionDetailSerializer(serializers.Serializer):
 class CollectTaskSerializer(serializers.Serializer):
     message = serializers.CharField()
     status = serializers.IntegerField()
+
+    
+class SectionTrackingListSerializer(serializers.ModelSerializer):
+    url_detail = serializers.CharField(source='api_detail_url')
+    on_activity = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Section
+        fields = ['id', 'title', 'on_activity', 'url_detail']
+
+    def __init__(self, user=None, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def get_on_activity(self, obj):
+        return obj.on_activity(self.user)
+
+
+class ModuleTrackingListSerializer(serializers.ModelSerializer):
+    url_detail = serializers.CharField(source='api_detail_url')
+    on_activity = serializers.SerializerMethodField()
+    sections = None
+
+    class Meta:
+        model = Module
+        fields = ['id', 'title', 'on_activity', 'url_detail', 'sections']
+
+    def __init__(self, user=None, *args, **kwargs):
+        self.user = user
+        self.fields['sections'] = SectionTrackingListSerializer(many=True, user=self.user)
+        super().__init__(*args, **kwargs)
+
+    def get_on_activity(self, obj):
+        return obj.on_activity(self.user)
+
+
+class CourseTrackingListSerializer(serializers.ModelSerializer):
+    modules = None
+
+    class Meta:
+        model = Courses
+        fields = ['modules']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.fields['modules'] = ModuleTrackingListSerializer(many=True, user=self.user)
+        super().__init__(*args, **kwargs)
