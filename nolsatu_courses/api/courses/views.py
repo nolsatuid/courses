@@ -4,15 +4,17 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
-    ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer
+    ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
+    CollectTaskSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
-from nolsatu_courses.apps.courses.models import Courses, Module, Section
+from nolsatu_courses.apps.courses.models import Courses, Module, Section, CollectTask
 from nolsatu_courses.apps import utils
 from nolsatu_courses.website.modules.views import get_pagination as get_pagination_module
 from nolsatu_courses.website.sections.views import get_pagination as get_pagination_section
@@ -184,3 +186,37 @@ class SectionDetailView(UserAuthAPIView):
             }
         }
         return Response(SectionDetailSerializer(data).data)
+
+
+class CollectTaskView(UserAuthAPIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Collect Task", responses={
+        200: CollectTaskSerializer()
+    })
+    def get(self, request, section_id):
+        task = CollectTask.objects.filter(section_id = section_id, user=request.user).first()
+        data = {
+            'message': '',
+            'status': ''
+        }
+        if task:
+            if task.status == CollectTask.STATUS.review:
+                data['message'] = f"Yey, sekarang <a href='{settings.HOST}{task.file.file.url}'><strong>tugas kamu</strong> \
+                    </a> sedang <span class='badge badge-secondary' style='font-size:100%;'>diperiksa</span>"
+                if task.note:
+                    data['message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
+                data['status'] = "review"
+            elif task.status == CollectTask.STATUS.repeat:
+                data['message'] = f"Yah, kamu harus <strong>mengulang</strong> pada <a href='{settings.HOST}{task.file.file.url}'> \
+                    <strong>tugas ini</strong></a>. Ayo kirim ulang tugas yang sudah diperbaiki!"
+                if task.note:
+                    data['message'] += f"<br><br>Ini nih catatan dari instruktur kamu: <br><strong>{task.note}</strong>"
+                data['status'] = "repeat"
+            elif task.status == CollectTask.STATUS.graduated:
+                data['message'] = f"Yey, kamu <span class='badge badge-light' style='font-size:100%;'>lulus</span> pada \
+                    <a href='{settings.HOST}{task.file.file.url}'><strong> tugas ini</strong></a>. Semoga sukses di tugas-tugas selanjutnya."
+                if task.note:
+                    data['message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
+                data['status'] = "graduated"
+
+        return Response(CollectTaskSerializer(data).data)

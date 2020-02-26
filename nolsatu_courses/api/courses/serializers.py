@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module
+from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module, CollectTask
 
 
 class BatchDetailSerializer(serializers.ModelSerializer):
@@ -111,3 +111,8 @@ class ModuleDetailSerializer(serializers.Serializer):
 class SectionDetailSerializer(serializers.Serializer):
     section = SectionSerializer()
     pagination = PaginationSerializer()
+
+
+class CollectTaskSerializer(serializers.Serializer):
+    message = serializers.CharField()
+    status = serializers.CharField()

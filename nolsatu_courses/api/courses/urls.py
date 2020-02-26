@@ -12,4 +12,5 @@ urlpatterns = [
     path('section/preview/<int:id>', views.SectionPreviewView.as_view(), name='section_preview'),
     path('module/detail/<int:id>', views.ModuleDetailView.as_view(), name='module_detail'),
     path('section/detail/<int:id>', views.SectionDetailView.as_view(), name='section_detail'),
+    path('task/<int:section_id>', views.CollectTaskView.as_view(), name='collect_task'),
 ]
