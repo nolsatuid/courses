@@ -49,17 +49,20 @@ class CourseEnrollSerializer(serializers.Serializer):
 
 
 class SectionPreviewListSerializer(serializers.ModelSerializer):
+    url_preview = serializers.CharField(source='api_preview_url')
+
     class Meta:
         model = Section
-        fields = ['id', 'title', 'slug', 'is_visible']
+        fields = ['id', 'title', 'url_preview', 'is_visible']
 
 
 class ModulePreviewListSerializer(serializers.ModelSerializer):
+    url_preview = serializers.CharField(source='api_preview_url')
     sections = SectionPreviewListSerializer(many=True)
 
     class Meta:
         model = Module
-        fields = ['id', 'title', 'slug', 'is_visible', 'sections']
+        fields = ['id', 'title', 'url_preview', 'is_visible', 'sections']
 
 
 class CoursePreviewListSerializer(serializers.ModelSerializer):
