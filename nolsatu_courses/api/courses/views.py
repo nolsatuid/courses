@@ -7,13 +7,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
-    ModulePreviewSerializer, SectionPreviewSerializer
+    ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.apps.courses.models import Courses, Module, Section
 from nolsatu_courses.apps import utils
+from nolsatu_courses.website.modules.views import get_pagination
 
 
 class CourseListView(APIView):
@@ -120,3 +121,36 @@ class SectionPreviewView(APIView):
         section = get_object_or_404(Section, id=id)
         serializer = SectionPreviewSerializer(section)
         return Response(serializer.data)
+
+
+class ModuleDetailView(UserAuthAPIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get Module Detail", responses={
+        200: ModuleDetailSerializer()
+    })
+    def get(self, request, id):
+        module = get_object_or_404(Module, id=id)
+        pagination = get_pagination(request, module)
+
+        # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
+        # jika page_type adalah section dan section memiliki tugas
+        if pagination['prev_type'] == 'section' and pagination['prev'].is_task:
+            if not pagination['prev'].collect_task.all():
+                return ErrorResponse(
+                    error_message=_(f"Kamu harus mengumpulkan tugas pada sesi {pagination['prev'].title}"))
+
+        # save activities user to module
+        if module.has_enrolled(request.user):
+            module.activities_module.get_or_create(
+                user=request.user, course=module.course)
+
+        data = {
+            'module': module,
+            'pagination': {
+                'next_slug': pagination['next'].slug if pagination['next'] else "",
+                'prev_slug': pagination['prev'].slug if pagination['prev'] else "",
+                'next_type': pagination['next_type'],
+                'prev_type': pagination['prev_type']
+            }
+        }
+        return Response(ModuleDetailSerializer(data).data)
