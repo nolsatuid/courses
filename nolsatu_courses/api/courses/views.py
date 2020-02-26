@@ -48,51 +48,6 @@ class CourseDetailView(APIView):
         return Response(serializer.data)
 
 
-class CourseEnrollDetailView(UserAuthAPIView):
-
-    @swagger_auto_schema(tags=['Courses'], operation_description="Enroll Detail", responses={
-        200: CourseEnrollSerializer()
-    })
-    def get(self, request, id):
-        course = get_object_or_404(Courses, id=id)
-        data = {
-            'has_enrolled': course.has_enrolled(request.user),
-            'enroll': course.get_enroll(request.user)
-        }
-        serializer = CourseEnrollSerializer(data)
-        return Response(serializer.data)
-
-
-class EnrollCourseView(UserAuthAPIView):
-
-    @swagger_auto_schema(
-        tags=['Courses'], operation_description="To Enroll Course",
-        responses={
-            200: MessageSuccesSerializer(),
-            400: ErrorMessageSerializer()
-        }
-    )
-    def get(self, request, id):
-        course = get_object_or_404(Courses, id=id)
-
-        if course.has_enrolled(request.user):
-            return ErrorResponse(error_message=_(f'Kamu sudah terdaftar di kelas {course.title}'))
-
-        if not course.get_last_batch():
-            return ErrorResponse(error_message=_(f'Kelas {course.title} belum membuka pendaftaran'))
-
-        if course.is_started():
-            return ErrorResponse(error_message=_(f'Gagal mendaftar, kelas {course.title} sudah dimulai'))
-
-        course.enrolled.create(course=course, user=request.user, batch=course.batchs.last())
-        utils.send_notification(
-            request.user,
-            f'Kamu berhasil mendaftar di kelas {course.title}',
-            f'Saat ini kamu sudah berhasil mendaftar pada kelas {course.title}. Tunggu info selanjutnya ya.'
-        )
-        return Response({'message': _(f'Kamu berhasil terdaftar pada kelas {course.title}')})
-
-
 class CoursePreviewListView(APIView):
 
     @swagger_auto_schema(tags=['Courses'], operation_description="Get Course Preview List", responses={
@@ -106,7 +61,7 @@ class CoursePreviewListView(APIView):
 
 class ModulePreviewView(APIView):
 
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Module Preview", responses={
+    @swagger_auto_schema(tags=['Module'], operation_description="Get Module Preview", responses={
         200: ModulePreviewSerializer()
     })
     def get(self, request, id):
@@ -115,20 +70,9 @@ class ModulePreviewView(APIView):
         return Response(serializer.data)
 
 
-class SectionPreviewView(APIView):
-
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Section Preview", responses={
-        200: SectionPreviewSerializer()
-    })
-    def get(self, request, id):
-        section = get_object_or_404(Section, id=id)
-        serializer = SectionPreviewSerializer(section)
-        return Response(serializer.data)
-
-
 class ModuleDetailView(UserAuthAPIView):
 
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Module Detail", responses={
+    @swagger_auto_schema(tags=['Module'], operation_description="Get Module Detail", responses={
         200: ModuleDetailSerializer()
     })
     def get(self, request, id):
@@ -157,9 +101,20 @@ class ModuleDetailView(UserAuthAPIView):
         return Response(ModuleDetailSerializer(data).data)
 
 
+class SectionPreviewView(APIView):
+
+    @swagger_auto_schema(tags=['Section'], operation_description="Get Section Preview", responses={
+        200: SectionPreviewSerializer()
+    })
+    def get(self, request, id):
+        section = get_object_or_404(Section, id=id)
+        serializer = SectionPreviewSerializer(section)
+        return Response(serializer.data)
+
+
 class SectionDetailView(UserAuthAPIView):
 
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Section Detail", responses={
+    @swagger_auto_schema(tags=['Section'], operation_description="Get Section Detail", responses={
         200: SectionDetailSerializer()
     })
     def get(self, request, id):
@@ -188,9 +143,54 @@ class SectionDetailView(UserAuthAPIView):
         return Response(SectionDetailSerializer(data).data)
 
 
+class CourseEnrollDetailView(UserAuthAPIView):
+
+    @swagger_auto_schema(tags=['Enrolment'], operation_description="Enroll Detail", responses={
+        200: CourseEnrollSerializer()
+    })
+    def get(self, request, id):
+        course = get_object_or_404(Courses, id=id)
+        data = {
+            'has_enrolled': course.has_enrolled(request.user),
+            'enroll': course.get_enroll(request.user)
+        }
+        serializer = CourseEnrollSerializer(data)
+        return Response(serializer.data)
+
+
+class EnrollCourseView(UserAuthAPIView):
+
+    @swagger_auto_schema(
+        tags=['Enrolment'], operation_description="To Enroll Course",
+        responses={
+            200: MessageSuccesSerializer(),
+            400: ErrorMessageSerializer()
+        }
+    )
+    def get(self, request, id):
+        course = get_object_or_404(Courses, id=id)
+
+        if course.has_enrolled(request.user):
+            return ErrorResponse(error_message=_(f'Kamu sudah terdaftar di kelas {course.title}'))
+
+        if not course.get_last_batch():
+            return ErrorResponse(error_message=_(f'Kelas {course.title} belum membuka pendaftaran'))
+
+        if course.is_started():
+            return ErrorResponse(error_message=_(f'Gagal mendaftar, kelas {course.title} sudah dimulai'))
+
+        course.enrolled.create(course=course, user=request.user, batch=course.batchs.last())
+        utils.send_notification(
+            request.user,
+            f'Kamu berhasil mendaftar di kelas {course.title}',
+            f'Saat ini kamu sudah berhasil mendaftar pada kelas {course.title}. Tunggu info selanjutnya ya.'
+        )
+        return Response({'message': _(f'Kamu berhasil terdaftar pada kelas {course.title}')})
+
+
 class CourseTrackingListView(UserAuthAPIView):
 
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Tracking Materi", responses={
+    @swagger_auto_schema(tags=['Enrolment'], operation_description="Get Tracking Materi", responses={
         200: CourseTrackingListSerializer()
     })
     def get(self, request, id):
@@ -200,7 +200,7 @@ class CourseTrackingListView(UserAuthAPIView):
 
 
 class FinishCourseView(UserAuthAPIView):
-    @swagger_auto_schema(tags=['Courses'], operation_description="Finish Course", responses={
+    @swagger_auto_schema(tags=['Enrolment'], operation_description="Finish Course", responses={
         200: MessageSuccesSerializer(),
         400: ErrorMessageSerializer()
     })
