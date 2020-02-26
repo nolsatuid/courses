@@ -7,7 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
-    ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer
+    ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
+    CourseTrackingListSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
@@ -184,3 +185,14 @@ class SectionDetailView(UserAuthAPIView):
             }
         }
         return Response(SectionDetailSerializer(data).data)
+
+
+class CourseTrackingListView(UserAuthAPIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get Tracking Materi", responses={
+        200: CourseTrackingListSerializer()
+    })
+    def get(self, request, id):
+        course = get_object_or_404(Courses, id=id)
+        serializer = CourseTrackingListSerializer(course, user=request.user)
+        return Response(serializer.data)
