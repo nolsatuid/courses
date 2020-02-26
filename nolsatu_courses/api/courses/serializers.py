@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment
+from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module
 
 
 class BatchDetailSerializer(serializers.ModelSerializer):
@@ -46,3 +46,39 @@ class CourseDetailMergeSerializer(serializers.Serializer):
 class CourseEnrollSerializer(serializers.Serializer):
     has_enrolled = serializers.BooleanField()
     enroll = EnrollDetailSerializer()
+
+
+class SectionPreviewListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ['id', 'title', 'slug', 'is_visible']
+
+
+class ModulePreviewListSerializer(serializers.ModelSerializer):
+    sections = SectionPreviewListSerializer(many=True)
+
+    class Meta:
+        model = Module
+        fields = ['id', 'title', 'slug', 'is_visible', 'sections']
+
+
+class CoursePreviewListSerializer(serializers.ModelSerializer):
+    modules = ModulePreviewListSerializer(many=True)
+
+    class Meta:
+        model = Courses
+        fields = ['modules']
+
+
+class ModulePreviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Module
+        fields = ['title', 'description']
+
+
+class SectionPreviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Section
+        fields = ['title', 'content']

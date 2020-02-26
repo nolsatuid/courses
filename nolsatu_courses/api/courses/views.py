@@ -6,12 +6,13 @@ from rest_framework.views import APIView
 from django.utils.translation import ugettext_lazy as _
 
 from nolsatu_courses.api.courses.serializers import (
-    CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer
+    CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
+    ModulePreviewSerializer, SectionPreviewSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
-from nolsatu_courses.apps.courses.models import Courses
+from nolsatu_courses.apps.courses.models import Courses, Module, Section
 from nolsatu_courses.apps import utils
 
 
@@ -86,3 +87,36 @@ class EnrollCourseView(UserAuthAPIView):
             f'Saat ini kamu sudah berhasil mendaftar pada kelas {course.title}. Tunggu info selanjutnya ya.'
         )
         return Response({'message': _(f'Kamu berhasil terdaftar pada kelas {course.title}')})
+
+
+class CoursePreviewListView(APIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get Course Preview List", responses={
+        200: CoursePreviewListSerializer()
+    })
+    def get(self, request, id):
+        course = get_object_or_404(Courses, id=id)
+        serializer = CoursePreviewListSerializer(course)
+        return Response(serializer.data)
+
+
+class ModulePreviewView(APIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get Module Preview", responses={
+        200: ModulePreviewSerializer()
+    })
+    def get(self, request, id):
+        module = get_object_or_404(Module, id=id)
+        serializer = ModulePreviewSerializer(module)
+        return Response(serializer.data)
+
+
+class SectionPreviewView(APIView):
+
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get Section Preview", responses={
+        200: SectionPreviewSerializer()
+    })
+    def get(self, request, id):
+        section = get_object_or_404(Section, id=id)
+        serializer = SectionPreviewSerializer(section)
+        return Response(serializer.data)
