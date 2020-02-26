@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User, AnonymousUser
-from django.utils.text import slugify
+from django.urls import reverse
 from django.utils import timezone
 from django.db.models import When, Case, Count, IntegerField
 
@@ -148,7 +148,7 @@ class Courses(models.Model):
         collect_tasks = CollectTask.objects.filter(
             section_id__in=section_ids, user=user
         )
-        
+
         if len(section_ids) <= collect_tasks.count():
             return True
         return False
@@ -204,6 +204,9 @@ class Module(models.Model):
             return True
         return False
 
+    def api_detail_url(self):
+        return settings.HOST + reverse("api:courses:module_detail", args=[self.id])
+
 
 class Section(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
@@ -256,6 +259,9 @@ class Section(models.Model):
         if self.id in activity_ids:
             return True
         return False
+
+    def api_detail_url(self):
+        return settings.HOST + reverse("api:courses:section_detail", args=[self.id])
 
 
 class TaskUploadSettings(models.Model):
