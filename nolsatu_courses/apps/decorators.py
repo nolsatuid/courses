@@ -44,12 +44,14 @@ def course_was_started(view_func):
             obj = Module.objects.get(slug=kwargs['slug'])
             course = obj.course
             is_started = course.is_started()
+            user_batch = obj.course.get_enroll(request.user).batch
         except ObjectDoesNotExist:
             obj = Section.objects.get(slug=kwargs['slug'])
             course = obj.module.course
             is_started = obj.module.course.is_started()
-
-        if is_started:
+            user_batch = obj.module.course.get_enroll(request.user).batch
+            
+        if is_started or (user_batch.start_date < course.get_last_batch().start_date):
             return view_func(request, *args, **kwargs)
 
         messages.warning(
