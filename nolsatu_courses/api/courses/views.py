@@ -1,6 +1,7 @@
 from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -21,14 +22,18 @@ from nolsatu_courses.website.modules.views import get_pagination as get_paginati
 from nolsatu_courses.website.sections.views import get_pagination as get_pagination_section
 
 
-class CourseListView(APIView):
+class CourseListView(UserAuthAPIView):
+    permission_classes = (AllowAny,)
 
     @swagger_auto_schema(tags=['Courses'], operation_description="Get Course List", responses={
         200: CourseSerializer(many=True)
     })
     def get(self, request):
-        courses = Courses.objects.filter(is_visible=True).all()
-        serializer = CourseSerializer(courses, many=True)
+        courses = Courses.objects.filter(is_visible=True, status=Courses.STATUS.publish).all()
+
+        serializer = CourseSerializer(courses, many=True, context={
+            "user": request.user
+        })
         return Response(serializer.data)
 
 

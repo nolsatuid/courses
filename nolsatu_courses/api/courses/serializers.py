@@ -4,7 +4,6 @@ from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Sect
 
 
 class BatchDetailSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Batch
         fields = ('batch', 'start_date', 'end_date')
@@ -14,10 +13,25 @@ class CourseSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author_name')
     featured_image = serializers.CharField(source='featured_image_with_host')
     level = serializers.CharField(source='get_level_display')
+    can_register = serializers.SerializerMethodField()
+    has_enrolled = serializers.SerializerMethodField()
+
+    def get_can_register(self, obj) -> bool:
+        user = self.context['user']
+        if not user.is_authenticated:
+            return False
+
+        if obj.has_enrolled(user):
+            return False
+
+        return bool(obj.get_last_batch()) and not obj.is_started()
+
+    def get_has_enrolled(self, obj) -> bool:
+        return obj.has_enrolled(self.context['user'])
 
     class Meta:
         model = Courses
-        exclude = ['users', 'slug', 'description', 'is_visible']
+        exclude = ['users', 'slug', 'description', 'is_visible', 'status']
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
@@ -40,7 +54,7 @@ class EnrollDetailSerializer(serializers.ModelSerializer):
 
 class CourseDetailMergeSerializer(serializers.Serializer):
     course = CourseDetailSerializer()
-    batch = BatchDetailSerializer()
+    batch = BatchDetailSerializer(required=False)
 
 
 class CourseEnrollSerializer(serializers.Serializer):
@@ -74,28 +88,24 @@ class CoursePreviewListSerializer(serializers.ModelSerializer):
 
 
 class ModulePreviewSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Module
         fields = ['title', 'description']
 
 
 class SectionPreviewSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Section
         fields = ['title', 'content']
 
 
 class ModuleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Module
         fields = '__all__'
 
 
 class SectionSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Section
         fields = '__all__'
@@ -120,7 +130,7 @@ class CollectTaskSerializer(serializers.Serializer):
     message = serializers.CharField()
     status = serializers.IntegerField()
 
-    
+
 class SectionTrackingListSerializer(serializers.ModelSerializer):
     url_detail = serializers.CharField(source='api_detail_url')
     on_activity = serializers.SerializerMethodField()
