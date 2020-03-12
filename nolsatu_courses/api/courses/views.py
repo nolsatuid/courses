@@ -100,8 +100,10 @@ class ModuleDetailView(UserAuthAPIView):
         data = {
             'module': module,
             'pagination': {
-                'next_page': pagination['next'].api_detail_url() if pagination['next'] else "",
-                'prev_page': pagination['prev'].api_detail_url() if pagination['prev'] else "",
+                'next_id': pagination['next'].id if pagination['next'] else None,
+                'next_type': pagination['next_type'],
+                'prev_id': pagination['prev'].id if pagination['prev'] else None,
+                'prev_type': pagination['prev_type'],
             }
         }
         return Response(ModuleDetailSerializer(data).data)
@@ -142,8 +144,10 @@ class SectionDetailView(UserAuthAPIView):
         data = {
             'section': section,
             'pagination': {
-                'next_page': pagination['next'].api_detail_url() if pagination['next'] else "",
-                'prev_page': pagination['prev'].api_detail_url() if pagination['prev'] else "",
+                'next_id': pagination['next'].id if pagination['next'] else None,
+                'next_type': pagination['next_type'],
+                'prev_id': pagination['prev'].id if pagination['prev'] else None,
+                'prev_type': pagination['prev_type']
             }
         }
         return Response(SectionDetailSerializer(data).data)
@@ -155,7 +159,7 @@ class CollectTaskView(UserAuthAPIView):
         200: CollectTaskSerializer()
     })
     def get(self, request, section_id):
-        task = CollectTask.objects.filter(section_id = section_id, user=request.user).first()
+        task = CollectTask.objects.filter(section_id=section_id, user=request.user).first()
         data = {
             'message': '',
             'status': 0
@@ -165,10 +169,12 @@ class CollectTaskView(UserAuthAPIView):
                 data['message'] = f"Yey, sekarang <a href='{settings.HOST}{task.file.file.url}'><strong>tugas kamu</strong> \
                     </a> sedang <span class='badge badge-secondary' style='font-size:100%;'>diperiksa</span>"
                 if task.note:
-                    data['message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
+                    data[
+                        'message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
                 data['status'] = CollectTask.STATUS.review
             elif task.status == CollectTask.STATUS.repeat:
-                data['message'] = f"Yah, kamu harus <strong>mengulang</strong> pada <a href='{settings.HOST}{task.file.file.url}'> \
+                data[
+                    'message'] = f"Yah, kamu harus <strong>mengulang</strong> pada <a href='{settings.HOST}{task.file.file.url}'> \
                     <strong>tugas ini</strong></a>. Ayo kirim ulang tugas yang sudah diperbaiki!"
                 if task.note:
                     data['message'] += f"<br><br>Ini nih catatan dari instruktur kamu: <br><strong>{task.note}</strong>"
@@ -177,12 +183,13 @@ class CollectTaskView(UserAuthAPIView):
                 data['message'] = f"Yey, kamu <span class='badge badge-light' style='font-size:100%;'>lulus</span> pada \
                     <a href='{settings.HOST}{task.file.file.url}'><strong> tugas ini</strong></a>. Semoga sukses di tugas-tugas selanjutnya."
                 if task.note:
-                    data['message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
+                    data[
+                        'message'] += f"<br><br>Wah ada catatan nih dari instruktur kamu: <br><strong>{task.note}</strong>"
                 data['status'] = CollectTask.STATUS.graduated
 
         return Response(CollectTaskSerializer(data).data)
 
-        
+
 class CourseEnrollDetailView(UserAuthAPIView):
 
     @swagger_auto_schema(tags=['Enrolment'], operation_description="Enroll Detail", responses={

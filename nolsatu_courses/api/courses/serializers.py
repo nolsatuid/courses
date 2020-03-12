@@ -49,20 +49,18 @@ class CourseEnrollSerializer(serializers.Serializer):
 
 
 class SectionPreviewListSerializer(serializers.ModelSerializer):
-    url_preview = serializers.CharField(source='api_preview_url')
 
     class Meta:
         model = Section
-        fields = ['id', 'title', 'url_preview', 'is_visible']
+        fields = ['id', 'title', 'is_visible']
 
 
 class ModulePreviewListSerializer(serializers.ModelSerializer):
-    url_preview = serializers.CharField(source='api_preview_url')
     sections = SectionPreviewListSerializer(many=True)
 
     class Meta:
         model = Module
-        fields = ['id', 'title', 'url_preview', 'is_visible', 'sections']
+        fields = ['id', 'title', 'is_visible', 'sections']
 
 
 class CoursePreviewListSerializer(serializers.ModelSerializer):
@@ -98,8 +96,10 @@ class SectionSerializer(serializers.ModelSerializer):
 
 
 class PaginationSerializer(serializers.Serializer):
-    next_page = serializers.CharField()
-    prev_page = serializers.CharField()
+    next_id = serializers.IntegerField()
+    next_type = serializers.CharField()
+    prev_id = serializers.IntegerField()
+    prev_type = serializers.CharField()
 
 
 class ModuleDetailSerializer(serializers.Serializer):
@@ -118,12 +118,11 @@ class CollectTaskSerializer(serializers.Serializer):
 
 
 class SectionTrackingListSerializer(serializers.ModelSerializer):
-    url_detail = serializers.CharField(source='api_detail_url')
     on_activity = serializers.SerializerMethodField()
 
     class Meta:
         model = Section
-        fields = ['id', 'title', 'on_activity', 'url_detail']
+        fields = ['id', 'title', 'on_activity']
 
     def __init__(self, user=None, *args, **kwargs):
         self.user = user
@@ -134,13 +133,12 @@ class SectionTrackingListSerializer(serializers.ModelSerializer):
 
 
 class ModuleTrackingListSerializer(serializers.ModelSerializer):
-    url_detail = serializers.CharField(source='api_detail_url')
     on_activity = serializers.SerializerMethodField()
     sections = None
 
     class Meta:
         model = Module
-        fields = ['id', 'title', 'on_activity', 'url_detail', 'sections']
+        fields = ['id', 'title', 'on_activity', 'sections']
 
     def __init__(self, user=None, *args, **kwargs):
         self.user = user
