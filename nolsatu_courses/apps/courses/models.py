@@ -84,6 +84,15 @@ class Courses(models.Model):
         batch = self.batchs.filter(is_active=True).order_by('batch').last()
         return batch
 
+    def can_register(self, user):
+        if not user.is_authenticated:
+            return False
+
+        if self.has_enrolled(user):
+            return False
+
+        return bool(self.get_last_batch()) and not self.is_started()
+
     def has_enrolled(self, user):
         """
         method ini digunakan untuk mengejek user tersebut

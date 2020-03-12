@@ -13,21 +13,6 @@ class CourseSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author_name')
     featured_image = serializers.CharField(source='featured_image_with_host')
     level = serializers.CharField(source='get_level_display')
-    can_register = serializers.SerializerMethodField()
-    has_enrolled = serializers.SerializerMethodField()
-
-    def get_can_register(self, obj) -> bool:
-        user = self.context['user']
-        if not user.is_authenticated:
-            return False
-
-        if obj.has_enrolled(user):
-            return False
-
-        return bool(obj.get_last_batch()) and not obj.is_started()
-
-    def get_has_enrolled(self, obj) -> bool:
-        return obj.has_enrolled(self.context['user'])
 
     class Meta:
         model = Courses
@@ -58,6 +43,7 @@ class CourseDetailMergeSerializer(serializers.Serializer):
 
 
 class CourseEnrollSerializer(serializers.Serializer):
+    can_register = serializers.BooleanField()
     has_enrolled = serializers.BooleanField()
     enroll = EnrollDetailSerializer()
 
@@ -143,7 +129,7 @@ class SectionTrackingListSerializer(serializers.ModelSerializer):
         self.user = user
         super().__init__(*args, **kwargs)
 
-    def get_on_activity(self, obj):
+    def get_on_activity(self, obj) -> bool:
         return obj.on_activity(self.user)
 
 
@@ -161,7 +147,7 @@ class ModuleTrackingListSerializer(serializers.ModelSerializer):
         self.fields['sections'] = SectionTrackingListSerializer(many=True, user=self.user)
         super().__init__(*args, **kwargs)
 
-    def get_on_activity(self, obj):
+    def get_on_activity(self, obj) -> bool:
         return obj.on_activity(self.user)
 
 

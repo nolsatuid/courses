@@ -151,7 +151,7 @@ class SectionDetailView(UserAuthAPIView):
 
 class CollectTaskView(UserAuthAPIView):
 
-    @swagger_auto_schema(tags=['Enrollment'], operation_description="Collect Task", responses={
+    @swagger_auto_schema(tags=['Enrolment'], operation_description="Collect Task", responses={
         200: CollectTaskSerializer()
     })
     def get(self, request, section_id):
@@ -191,6 +191,7 @@ class CourseEnrollDetailView(UserAuthAPIView):
     def get(self, request, id):
         course = get_object_or_404(Courses, id=id)
         data = {
+            'can_register': course.can_register(request.user),
             'has_enrolled': course.has_enrolled(request.user),
             'enroll': course.get_enroll(request.user)
         }
