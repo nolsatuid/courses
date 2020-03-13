@@ -22,8 +22,7 @@ from nolsatu_courses.website.modules.views import get_pagination as get_paginati
 from nolsatu_courses.website.sections.views import get_pagination as get_pagination_section
 
 
-class CourseListView(UserAuthAPIView):
-    permission_classes = (AllowAny,)
+class CourseListView(APIView):
 
     @swagger_auto_schema(tags=['Courses'], operation_description="Get Course List", responses={
         200: CourseSerializer(many=True)
@@ -31,9 +30,7 @@ class CourseListView(UserAuthAPIView):
     def get(self, request):
         courses = Courses.objects.filter(is_visible=True, status=Courses.STATUS.publish).all()
 
-        serializer = CourseSerializer(courses, many=True, context={
-            "user": request.user
-        })
+        serializer = CourseSerializer(courses, many=True)
         return Response(serializer.data)
 
 

@@ -13,6 +13,7 @@ class CourseSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author_name')
     featured_image = serializers.CharField(source='featured_image_with_host')
     level = serializers.CharField(source='get_level_display')
+    categories = serializers.CharField(source='category_list')
 
     class Meta:
         model = Courses
@@ -23,6 +24,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author_name')
     featured_image = serializers.CharField(source='featured_image_with_host')
     level = serializers.CharField(source='get_level_display')
+    categories = serializers.CharField(source='category_list')
 
     class Meta:
         model = Courses
