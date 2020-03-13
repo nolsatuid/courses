@@ -98,12 +98,13 @@ class ModuleDetailView(UserAuthAPIView):
                 user=request.user, course=module.course)
 
         data = {
+            'is_complete_tasks': module.course.is_complete_tasks(request.user),
             'module': module,
             'pagination': {
                 'next_id': pagination['next'].id if pagination['next'] else None,
-                'next_type': pagination['next_type'],
+                'next_type': pagination['next_type'] if pagination['next'] else None,
                 'prev_id': pagination['prev'].id if pagination['prev'] else None,
-                'prev_type': pagination['prev_type'],
+                'prev_type': pagination['prev_type'] if pagination['prev'] else None,
             }
         }
         return Response(ModuleDetailSerializer(data).data)
@@ -142,12 +143,13 @@ class SectionDetailView(UserAuthAPIView):
                 user=request.user, course=section.module.course)
 
         data = {
+            'is_complete_tasks': section.module.course.is_complete_tasks(request.user),
             'section': section,
             'pagination': {
                 'next_id': pagination['next'].id if pagination['next'] else None,
-                'next_type': pagination['next_type'],
+                'next_type': pagination['next_type'] if pagination['next'] else None,
                 'prev_id': pagination['prev'].id if pagination['prev'] else None,
-                'prev_type': pagination['prev_type']
+                'prev_type': pagination['prev_type'] if pagination['prev'] else None
             }
         }
         return Response(SectionDetailSerializer(data).data)

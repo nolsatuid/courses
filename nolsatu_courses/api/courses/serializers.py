@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module
+from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module, TaskUploadSettings
 
 
 class BatchDetailSerializer(serializers.ModelSerializer):
@@ -49,7 +49,6 @@ class CourseEnrollSerializer(serializers.Serializer):
 
 
 class SectionPreviewListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Section
         fields = ['id', 'title', 'is_visible']
@@ -89,7 +88,15 @@ class ModuleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TaskSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskUploadSettings
+        fields = '__all__'
+
+
 class SectionSerializer(serializers.ModelSerializer):
+    task_setting = TaskSettingSerializer(required=False)
+
     class Meta:
         model = Section
         fields = '__all__'
@@ -103,11 +110,13 @@ class PaginationSerializer(serializers.Serializer):
 
 
 class ModuleDetailSerializer(serializers.Serializer):
+    is_complete_tasks = serializers.BooleanField()
     module = ModuleSerializer()
     pagination = PaginationSerializer()
 
 
 class SectionDetailSerializer(serializers.Serializer):
+    is_complete_tasks = serializers.BooleanField()
     section = SectionSerializer()
     pagination = PaginationSerializer()
 
