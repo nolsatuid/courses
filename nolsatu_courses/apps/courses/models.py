@@ -321,7 +321,7 @@ class Enrollment(models.Model):
         (99, 'finish', _('Selesai')),
         (100, 'graduate', _('Lulus'))
     )
-    status = models.PositiveIntegerField(choices=STATUS, default=STATUS.begin)
+    status = models.PositiveIntegerField(choices=STATUS, default=STATUS.register)
     allowed_access = models.BooleanField(_("Akses diberikan"), default=False)
     date_enrollment = models.DateField(_("Tanggal mendaftar"), auto_now_add=True)
     finishing_date = models.DateField(_("Tanggal menyelesaikan"), blank=True, null=True)
