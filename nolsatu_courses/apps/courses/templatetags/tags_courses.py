@@ -14,6 +14,9 @@ def status_to_display(status, styling=False):
     elif status == Enrollment.STATUS.finish:
         status_display = _('Selesai')
         class_bagde = 'secondary'
+    elif status == Enrollment.STATUS.register:
+        status_display = _('Daftar')
+        class_bagde = 'danger'
     else:
         return '-'
 
