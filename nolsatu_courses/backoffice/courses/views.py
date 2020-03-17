@@ -91,15 +91,15 @@ def ajax_change_status_registrants(request):
     id = request.GET.get('id', None)
     status = request.GET.get('status', None)
     enroll = get_object_or_404(Enrollment, id=id)
-    if enroll.batch != enroll.course.batchs.last():
-        enroll.batch = enroll.course.batchs.last()
-    if not enroll.batch.link_group:
+    if not enroll.course.batchs.last().link_group:
         data = {
             'status':False, 
             'message':f'Link grup pada batch {enroll.batch} belum diisi', 
             'batch':enroll.batch.batch
         }
         return JsonResponse(data, status=200)
+    if enroll.batch != enroll.course.batchs.last():
+        enroll.batch = enroll.course.batchs.last()
     enroll.allowed_access = status
     enroll.status = Enrollment.STATUS.begin
     enroll.save()
