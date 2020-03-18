@@ -10,7 +10,7 @@
             {% if enroll.finishing_date %}
                 <div class="alert alert-success" >
                     Yeey, kamu sudah menyelesaikan semua materi pada tanggal {{ enroll.finishing_date }}. 
-                    Tetap pantau tugas kamu ya, pastikan kamu lulus disemua tugas supaya bisa dapat sertifikat.<br><br>
+                    Tetap pantau tugas kamu ya, pastikan kamu lulus disemua tugas supaya bisa dapat sertifikat.<br><br> 
                     Klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk melihat semua materi.
                 </div>
             {% elif enroll.get_status_display == 'Daftar' %}
