@@ -28,7 +28,7 @@ class FormFilterTask(forms.Form):
         section = self.cleaned_data['section']
         status = self.cleaned_data['status']
 
-        tasks = CollectTask.objects.all()
+        tasks = CollectTask.objects.select_related('section', 'user').all()
         if course:
             tasks = tasks.filter(section__module__course=course)
 

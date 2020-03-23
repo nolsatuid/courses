@@ -6,10 +6,10 @@ from nolsatu_courses.apps.courses.models import Courses, Batch
 
 class FormFilterStudent(forms.Form):
     course = forms.ModelChoiceField(
-        queryset=Courses.objects.all(), empty_label="Pilih Kursus", required=False
+        queryset=Courses.objects.all(), empty_label=_("Pilih Kursus"), required=False
     )
     batch = forms.ModelChoiceField(
-        queryset=Batch.objects.all(), empty_label="Pilih Angkatan", required=False
+        queryset=Batch.objects.all(), empty_label=_("Pilih Angkatan"), required=False
     )
 
     def get_data(self, students):
