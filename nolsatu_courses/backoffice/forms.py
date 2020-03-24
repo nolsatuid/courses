@@ -13,7 +13,8 @@ class FormFilter(FormFilterStudent):
 
     def get_data(self):
         enrolls = Enrollment.objects.select_related('course', 'user').filter(
-            course=self.cleaned_data['course'], batch=self.cleaned_data['batch']
+            course=self.cleaned_data['course'], batch=self.cleaned_data['batch'],
+            status__gte=Enrollment.STATUS.begin
         )
 
         data = []
