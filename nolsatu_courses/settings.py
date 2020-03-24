@@ -43,8 +43,8 @@ LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/?navbar=hidden"
 LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
 
 IMG_LOGO = ""
-BRAND = "NolDua"
-COLOR_THEME = "warning"
+BRAND = "NolSatu"
+COLOR_THEME = "danger"
 
 # Application definition
 
