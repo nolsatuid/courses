@@ -152,9 +152,7 @@ class Courses(models.Model):
 
         # progress dari semuanya
         all_progress = (progress_on_decimal + collect_tasks_on_decimal) / 2
-        print(all_progress)
         if on_thousand:
-            print(all_progress * 100)
             return all_progress * 100
         return all_progress
 
