@@ -1,4 +1,4 @@
-{% load static %}
+{% load static tags_courses %}
 
 <div class="card" style="width: 100%;min-height: 400px;max-height: 450px;overflow: hidden;">
     <a href="{% url 'website:courses:details' course.slug %}">
@@ -10,10 +10,11 @@
         </div>
         {% if progress_bar %}
         <div class="card-header text-dark">
-            <span class="">{{ course.progress_precentage }}% {% if course.progress_precentage == 100 %} materi selesai, Keren!{% else %} lagi selesai {% endif %}</span>
+            <span class="">Progress {{ course.progress_precentage }}% {% if course.progress_precentage == 100 %}, Keren! {% endif %}</span>
             <div class="progress progress-xs">
                 <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{ course.progress_precentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ course.progress_precentage }}%"></div>
             </div>
+            {{ course.status_enroll|enrollment_status_display:'True' }}
         </div>
         {% endif %}
         <div class="card-body text-dark">
