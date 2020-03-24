@@ -1,3 +1,5 @@
+from operator import itemgetter, attrgetter
+
 from nolsatu_courses.backoffice.graduates.forms import FormFilterStudent
 from nolsatu_courses.apps.courses.models import Enrollment
 

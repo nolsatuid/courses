@@ -91,14 +91,15 @@
             </div>
 
             <div class="col-md-12"> <p>Daftar peserta <b>10</b> teratas</p> </div>
-            <table class="table table-striped">
+            <table class="table table-bordered">
                 <thead>
                     <th>No</th>
                     <th>Nama</th>
                     <th>Progress</th>
                     <th>Modul & sesi</th>
-                    <th>Tugas Lulus</th>
-                    <th>Tugas Mengulang</th>
+                    <th>Diperiksa</th>
+                    <th>Lulus</th>
+                    <th>Mengulang</th>
                 </thead>
                 <tbody>
                     {% for data in statistics.data %}
@@ -107,6 +108,7 @@
                             <td>{{ data.user }}</td>
                             <td>{{ data.progress|floatformat:-2 }} %</td>
                             <td>{{ data.number_of_activity_step }} diselesaikan</td>
+                            <td>{{ data.task.review }}</td>
                             <td>{{ data.task.graduated }}</td>
                             <td>{{ data.task.repeat }}</td>
                         </tr>

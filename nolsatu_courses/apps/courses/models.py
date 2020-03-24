@@ -140,32 +140,50 @@ class Courses(models.Model):
 
     def progress_percentage(self, user, on_thousand=True):
         """
-        mendapatkan progres persentase pengerjaan
+        mendapatkan progres persentase pengerjaan dan penyelesaian tugas
         """
+        # persetase dari jumlah step
         step_activity = self.number_of_activity_step(user)
         step_course = self.number_of_step()
         progress_on_decimal = step_activity / step_course
-        progress_on_thousand = progress_on_decimal * 100
+
+        # persentasi dari pengerjaan tugas
+        collect_tasks_on_decimal = self.progress_tasks(user)
+
+        # progress dari semuanya
+        all_progress = (progress_on_decimal + collect_tasks_on_decimal) / 2
 
         if on_thousand:
-            return progress_on_thousand
-        return progress_on_decimal
+            return all_progress * 100
+        return all_progress
+
+    def progress_tasks(self, user):
+        section_ids = self.total_tasks(raw_data=True)
+        collect_tasks = self.total_collect_tasks(user, section_ids)
+        try:
+            return len(section_ids) / collect_tasks
+        except ZeroDivisionError:
+            return 0
 
     def is_complete_tasks(self, user):
-        section_ids = self.modules.filter(
-            sections__is_task=True).values_list('sections__id', flat=True)
-        collect_tasks = CollectTask.objects.filter(
-            section_id__in=section_ids, user=user
-        )
+        section_ids = self.total_tasks(raw_data=True)
+        collect_tasks = self.total_collect_tasks(user, section_ids)
 
-        if len(section_ids) <= collect_tasks.count():
+        if len(section_ids) <= collect_tasks:
             return True
         return False
 
-    def total_tasks(self):
+    def total_tasks(self, raw_data=False):
         section_ids = self.modules.filter(
             sections__is_task=True).values_list('sections__id', flat=True)
+        if raw_data:
+            return section_ids
         return len(section_ids)
+
+    def total_collect_tasks(self, user, section_ids):
+        return CollectTask.objects.filter(
+            section_id__in=section_ids, user=user
+        ).count()
 
 
 class Module(models.Model):
@@ -343,6 +361,10 @@ class Enrollment(models.Model):
             ),
             repeat=Count(
                 Case(When(status=CollectTask.STATUS.repeat, then=1),
+                     output_field=IntegerField())
+            ),
+            review=Count(
+                Case(When(status=CollectTask.STATUS.review, then=1),
                      output_field=IntegerField())
             )
         )
