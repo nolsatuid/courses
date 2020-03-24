@@ -93,6 +93,7 @@
             <div class="col-md-12"> <p>Daftar peserta <b>10</b> teratas</p> </div>
             <table class="table table-striped">
                 <thead>
+                    <th>No</th>
                     <th>Nama</th>
                     <th>Progress</th>
                     <th>Modul & sesi</th>
@@ -102,6 +103,7 @@
                 <tbody>
                     {% for data in statistics.data %}
                         <tr>
+                            <td>{{ forloop.counter }}</td>
                             <td>{{ data.user }}</td>
                             <td>{{ data.progress|floatformat:-2 }} %</td>
                             <td>{{ data.number_of_activity_step }} diselesaikan</td>
