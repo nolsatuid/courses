@@ -10,7 +10,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>{{ title }} | Nolsatu </title>
+  <title>{{ title }} | {{ brand }} </title>
   <link rel="shortcut icon" href="{% static 'website/images/nolsatu.ico' %}">
   {% include 'partials/css.html' %}
   <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
@@ -20,11 +20,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <div class="wrapper">
 
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-dark navbar-danger border-bottom-0">
+  <nav class="main-header navbar navbar-expand navbar-dark navbar-{{ color_theme }} border-bottom-0">
     <div class="container">
       <a href="{{ nolsatu_home_page_url }}" class="navbar-brand">
-          <img src="{% static 'website/images/logo/logo-polos.png' %}" alt="NOLSATU Logo" class="brand-image">
-          <span class="brand-text font-weight-bold color-white d-none d-md-flex">NOLSATU</span>
+          <img src="{% static 'website/images/logo/logo-polos.png' %}" alt="{{ brand }} Logo" class="brand-image">
+          <span class="brand-text font-weight-bold color-white d-none d-md-flex">{{ brand }}</span>
       </a>
 
       <!-- Left navbar links -->
