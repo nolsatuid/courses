@@ -11,7 +11,7 @@ from .forms import FormFilterTask
 
 @staff_member_required
 def index(request):
-    tasks = CollectTask.objects.all()
+    tasks = CollectTask.objects.select_related('section', 'user').all()
     form = FormFilterTask(request.GET or None)
     if form.is_valid():
         tasks = form.get_data()
