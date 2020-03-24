@@ -31,7 +31,8 @@ def user_courses(request):
             "short_description": enroll.course.short_description,
             "slug": enroll.course.slug,
             "featured_image": enroll.course.featured_image,
-            "progress_precentage": int(enroll.course.progress_percentage(request.user))
+            "progress_precentage": int(enroll.course.progress_percentage(request.user)),
+            "status_enroll": enroll.status
         } for enroll in enrolls],
         'progress_bar': True
     }
