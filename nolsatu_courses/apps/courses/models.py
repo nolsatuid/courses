@@ -152,8 +152,9 @@ class Courses(models.Model):
 
         # progress dari semuanya
         all_progress = (progress_on_decimal + collect_tasks_on_decimal) / 2
-
+        print(all_progress)
         if on_thousand:
+            print(all_progress * 100)
             return all_progress * 100
         return all_progress
 
@@ -161,7 +162,7 @@ class Courses(models.Model):
         section_ids = self.total_tasks(raw_data=True)
         collect_tasks = self.total_collect_tasks(user, section_ids)
         try:
-            return len(section_ids) / collect_tasks
+            return collect_tasks / len(section_ids)
         except ZeroDivisionError:
             return 0
 
