@@ -4,6 +4,7 @@ from nolsatu_courses.apps.courses.models import Enrollment
 
 class FormFilter(FormFilterStudent):
     def __init__(self, *args, **kwargs):
+        self.progresses = []
         super().__init__(*args, **kwargs)
         self.fields['batch'].required = True
         self.fields['course'].required = True
@@ -15,12 +16,19 @@ class FormFilter(FormFilterStudent):
 
         data = []
         for enroll in enrolls:
+            progress = self.cleaned_data['course'].progress_percentage(enroll.user)
+            self.progresses.append(progress)
             data.append({
                 'user': enroll.user,
-                'progress': self.cleaned_data['course'].progress_percentage(enroll.user),
-                'number_of_step': self.cleaned_data['course'].number_of_step(),
+                'progress': progress,
                 'number_of_activity_step': self.cleaned_data['course'].number_of_activity_step(enroll.user),
                 'task': enroll.get_count_task_status()
             })
 
         return sorted(data, key=lambda value: value['progress'], reverse=True)
+
+    def global_progress(self):
+        try:
+            return sum(self.progresses) / len(self.progresses)
+        except ZeroDivisionError:
+            return 0

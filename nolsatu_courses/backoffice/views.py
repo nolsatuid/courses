@@ -6,15 +6,23 @@ from .forms import FormFilter
 
 @staff_member_required
 def index(request):
-    statistic = None
+    statistics = None
+
     form = FormFilter(request.GET or None)
     if form.is_valid():
-        statistic = form.get_data()
+        data = form.get_data()
+        course = form.cleaned_data['course']
+        statistics = {
+            'total_registrant': len(data),
+            'course': course,
+            'data': data[:10],
+            'global_progress': form.global_progress()
+        }
 
     context = {
         'menu_active': 'dashboard',
         'title': _('Dashboard'),
-        'statistic': statistic,
+        'statistics': statistics,
         'form': form,
     }
     return render(request, 'backoffice/index.html', context)

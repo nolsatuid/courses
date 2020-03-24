@@ -162,6 +162,11 @@ class Courses(models.Model):
             return True
         return False
 
+    def total_tasks(self):
+        section_ids = self.modules.filter(
+            sections__is_task=True).values_list('sections__id', flat=True)
+        return len(section_ids)
+
 
 class Module(models.Model):
     title = models.CharField(_("Judul"), max_length=220)

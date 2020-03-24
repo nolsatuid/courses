@@ -22,28 +22,96 @@
             </form>
         </div>
         <div class="card-body">
+            {% if statistics %}
+            <div class="container-fluid">
+                <!-- Info boxes -->
+                <div class="row">
+                <div class="col-md-12 mb-4"><h3> Statistik Materi {{ statistics.course.title }} </h3></div>
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-percentage"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Progress keseluruhan</span>
+                        <span class="info-box-number">
+                        {{ statistics.global_progress|floatformat:-2 }}
+                        <small>%</small>
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-list"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Modul & Sesi</span>
+                        <span class="info-box-number">{{ statistics.course.number_of_step }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+                <!-- fix for small devices only -->
+                <div class="clearfix hidden-md-up"></div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-tasks"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Tugas</span>
+                        <span class="info-box-number"> {{ statistics.course.total_tasks }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Peserta</span>
+                        <span class="info-box-number">{{ statistics.total_registrant }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+
+            <div class="col-md-12"> <p>Daftar peserta <b>10</b> teratas</p> </div>
             <table class="table table-striped">
                 <thead>
                     <th>Nama</th>
-                    <th>Persentase</th>
-                    <th>Jumlah Step</th>
-                    <th>Step Saat ini</th>
+                    <th>Progress</th>
+                    <th>Modul & sesi</th>
                     <th>Tugas Mengulang</th>
                     <th>Tugas Lulus</th>
                 </thead>
                 <tbody>
-                    {% for data in statistic %}
+                    {% for data in statistics.data %}
                         <tr>
                             <td>{{ data.user }}</td>
-                            <td>{{ data.progress }}</td> 
-                            <td>{{ data.number_of_step }}</td>
-                            <td>{{ data.number_of_activity_step }}</td>
+                            <td>{{ data.progress|floatformat:-2 }} %</td>
+                            <td>{{ data.number_of_activity_step }} diselesaikan</td>
                             <td>{{ data.task.graduated }}</td>
                             <td>{{ data.task.repeat }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            {% endif %}
         </div>
         <div class="card-footer">
 
