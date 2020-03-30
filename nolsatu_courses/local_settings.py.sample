@@ -13,3 +13,9 @@ NOLSATU_PROFILE_URL = f'{NOLSATU_HOST}/profile'
 NOLSATU_PROFILE_PAGE_URL = f'{NOLSATU_HOST}/accounts/profile/'
 LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/?navbar=hidden"
 LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
+
+# sentry on development
+sentry_sdk.init(
+    dsn="",
+    integrations=[]
+)

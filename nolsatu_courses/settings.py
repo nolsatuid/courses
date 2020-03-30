@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -180,6 +182,16 @@ SERVER_KEY = "serverToServerAuthKeyKeepItVerySecret"
 # API Docs
 API_DOC_USERNAME = "nolsatu"
 API_DOC_PASSWORD = "nolsatumantap"
+
+# sentry
+sentry_sdk.init(
+    dsn="https://c9d0bc987f354c69bd0ebdb0b72e1c6b@sentry.io/5179627",
+    integrations=[DjangoIntegration()],
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
 
 try:
     from .local_settings import *
