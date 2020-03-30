@@ -1,12 +1,12 @@
 {% load static %}
 
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar elevation-4 sidebar-light-danger">
+<aside class="main-sidebar elevation-4 sidebar-light-{{ color_theme }}">
     <!-- Brand Logo -->
     <!-- Brand Logo -->
     <a href="{% url 'website:index' %}" class="brand-link">
-      <img src="{% static 'website/images/logo/logo-polos-warna-30.png' %}" alt="NOLSATU Logo" class="brand-image">
-      <span class="brand-text font-weight-bold color-white">NOLSATU</span>
+      <img src="{% static 'website/images/logo/logo-polos-warna-30.png' %}" alt="{{ brand }} Logo" class="brand-image">
+      <span class="brand-text font-weight-bold color-white">{{ brand }}</span>
     </a>
 
     <!-- Sidebar -->

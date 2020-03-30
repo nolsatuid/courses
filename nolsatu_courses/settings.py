@@ -44,6 +44,10 @@ NOLSATU_PROFILE_PAGE_URL = f'{NOLSATU_HOST}/accounts/profile/'
 LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/?navbar=hidden"
 LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
 
+IMG_LOGO = ""
+BRAND = "NolSatu"
+COLOR_THEME = "danger"
+
 # Application definition
 
 INSTALLED_APPS = [
