@@ -31,6 +31,10 @@ class SittingFilterTitleMixin(object):
 class QuizListView(ListView):
     model = Quiz
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
     def get_queryset(self):
         queryset = super(QuizListView, self).get_queryset()
         return queryset.filter(draft=False)
@@ -39,6 +43,10 @@ class QuizListView(ListView):
 class QuizDetailView(DetailView):
     model = Quiz
     slug_field = 'url'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -53,11 +61,16 @@ class QuizDetailView(DetailView):
 class CategoriesListView(ListView):
     model = Category
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class ViewQuizListByCategory(ListView):
     model = Quiz
     template_name = 'view_quiz_category.html'
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.category = get_object_or_404(
             Category,
@@ -138,6 +151,7 @@ class QuizTake(FormView):
     result_template_name = 'result.html'
     single_complete_template_name = 'single_complete.html'
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
