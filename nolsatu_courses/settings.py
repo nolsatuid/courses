@@ -47,6 +47,7 @@ LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
 IMG_LOGO = ""
 BRAND = "NolSatu"
 COLOR_THEME = "danger"
+SIDEBAR_COLOR = "light"
 
 # Application definition
 

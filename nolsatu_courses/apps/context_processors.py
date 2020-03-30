@@ -9,4 +9,5 @@ def nolsatu_context(request):
         'image_logo': settings.IMG_LOGO,
         'brand': settings.BRAND,
         'color_theme': settings.COLOR_THEME,
+        'sidebar_color': settings.SIDEBAR_COLOR,
     }
