@@ -70,7 +70,13 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'widget_tweaks',
     'rest_framework',
-    'drf_yasg'
+    'drf_yasg',
+
+    # quiz
+    'quiz',
+    'multichoice',
+    'true_false',
+    'essay',
 ]
 
 MIDDLEWARE = [
