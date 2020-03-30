@@ -30,4 +30,5 @@ urlpatterns = [
     path('', include('nolsatu_courses.website.urls')),
     path('api/', include('nolsatu_courses.api.urls')),
     path('sentry-debug/', trigger_error),
+    path('quiz/', include('quiz.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
