@@ -75,7 +75,7 @@
     {% for question in questions %}
 
       <p class="lead">
-		{{ question.content }}
+      {{ question.content }}
 	  </p>
 
 	  {% correct_answer_for_all question %}
@@ -84,7 +84,9 @@
       <p>{% trans "Your answer" %}: {{ question|answer_choice_to_string:question.user_answer }}</p>
       {% endif %}
 
-	  <p><strong>{% trans "Explanation" %}:</strong></p>
+    <div class="alert alert-warning">
+      <p><strong>{% trans "Explanation" %}:</strong></p>
+    </div?
 	  <div class="well " style="background-color: #fcf8e3;">
 		<p>{{ question.explanation|safe }}</p>
 	  </div>

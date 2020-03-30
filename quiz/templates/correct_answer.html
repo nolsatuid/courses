@@ -1,4 +1,3 @@
-{% extends 'website/base-quiz.html' %}
 {% load i18n %}
 {% if previous.answers %}
 
@@ -12,7 +11,7 @@
     <tbody>
   	  {% for answer in previous.answers %}
         {% if answer.correct %}
-  	    <tr class="success">
+  	    <tr class="table-success">
   		  <td>{{ answer.content }}</td>
   		  <td><strong>{% trans "This is the correct answer" %}</strong></td>
         {% else %}
