@@ -44,10 +44,8 @@ NOLSATU_PROFILE_PAGE_URL = f'{NOLSATU_HOST}/accounts/profile/'
 LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/?navbar=hidden"
 LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
 
-IMG_LOGO = ""
-BRAND = "NolSatu"
-COLOR_THEME = "danger"
-SIDEBAR_COLOR = "light"
+# get apperance from academy
+KEY_CACHE_APPERANCE = "setting-apperance"
 
 # Application definition
 
@@ -203,6 +201,18 @@ sentry_sdk.init(
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
 )
+
+# cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'TIMEOUT': 3699 * 24 * 3,  # 3 day
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+        }
+    }
+}
 
 try:
     from .local_settings import *

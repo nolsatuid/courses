@@ -19,7 +19,3 @@ sentry_sdk.init(
     dsn="",
     integrations=[]
 )
-
-SIDEBAR_COLOR = "" # dark, light
-COLOR_THEME = "" # dark, danger, warning, info, success
-BRAND = "" # your brand
