@@ -13,4 +13,6 @@ def nolsatu_context(request):
         'brand': apperance.get('site_name', 'NolSatu'),
         'color_theme': apperance.get('color_theme', 'danger'),
         'sidebar_color': apperance.get('sidebar_color', 'light'),
+        'footer_title': apperance.get('footer_title', 'PT. Boer Technology (Btech)'),
+        'footer_url': apperance.get('footer_url', 'https://btech.id/'),
     }
