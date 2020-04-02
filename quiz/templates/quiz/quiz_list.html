@@ -3,41 +3,51 @@
 {% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
-<h2>{% trans "List of quizzes" %}</h2>
-    {% if quiz_list %}
-		<table class="table table-bordered table-striped">
+<div class="row">
+  <div class="col-sm-12">
+		<div class="card">
+			<div class="card-header">
+				<h2>{% trans "List of quizzes" %}</h2>
+			</div>
+			<div class="card-body">
+				{% if quiz_list %}
+					<table class="table table-bordered table-striped">
 
-		  <thead>
-			<tr>
-			  <th>{% trans "Title" %}</th>
-			  <th>{% trans "Category" %}</th>
-			  <th>{% trans "Exam" %}</th>
-			  <th>{% trans "Single attempt" %}</th>
-			  <th></th>
-			</tr>
-		  </thead>
+					<thead>
+						<tr>
+						<th>{% trans "Title" %}</th>
+						<th>{% trans "Category" %}</th>
+						<th>{% trans "Exam" %}</th>
+						<th>{% trans "Single attempt" %}</th>
+						<th></th>
+						</tr>
+					</thead>
 
-		  <tbody>
+					<tbody>
 
-        {% for quiz in quiz_list %}
+					{% for quiz in quiz_list %}
 
-  			<tr>
-			  <td>{{ quiz.title }}</td>
-			  <td>{{ quiz.category }}</td>
-			  <td>{{ quiz.exam_paper }}</td>
-			  <td>{{ quiz.single_attempt }}</td>
-			  <td>
-				<a href="{% url 'quiz_start_page' slug=quiz.url %}">
-				  {% trans "View details" %}
-				</a>
-			</tr>
+						<tr>
+						<td>{{ quiz.title }}</td>
+						<td>{{ quiz.category }}</td>
+						<td>{% if quiz.exam_paper %}<i class="fas fa-check text-success text-lg"></i>{% else %}<i class="fas fa-times text-danger text-lg"></i>{% endif %}</td>
+						<td>{% if quiz.single_attempt %}<i class="fas fa-check text-success text-lg"></i>{% else %}<i class="fas fa-times text-danger text-lg"></i>{% endif %}</td>
+						<td>
+							<a href="{% url 'quiz_start_page' slug=quiz.url %}" class="btn btn-info">
+								<i class="fas fa-eye"></i> {% trans "View details" %}
+							</a>
+						</tr>
 
-        {% endfor %}
-		  </tbody>
+					{% endfor %}
+					</tbody>
 
-		</table>
+					</table>
 
-	{% else %}
-        <p>{% trans "There are no available quizzes" %}.</p>
-    {% endif %}
+				{% else %}
+					<p>{% trans "There are no available quizzes" %}.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}
