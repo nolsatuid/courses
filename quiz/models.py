@@ -101,6 +101,11 @@ class Quiz(models.Model):
                     " Answers displayed at the end."),
         verbose_name=_("Answers at end"))
 
+    show_correct_answer = models.BooleanField(
+        blank=False, default=False,
+        help_text=_("If yes, the correct answer will displayed."),
+        verbose_name=_("Show correct answer"))
+
     exam_paper = models.BooleanField(
         blank=False, default=False,
         help_text=_("If yes, the result of each"

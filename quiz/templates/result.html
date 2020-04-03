@@ -55,7 +55,7 @@
               <div class="info-box bg-light">
                 <div class="info-box-content">
                   <span class="info-box-text text-center text-muted">{% trans "Incorrect Answer" %}</span>
-                  <h4 class="info-box-number text-center text-muted mb-0">{{ incorrect_score }} <h4>
+                  <h4 class="info-box-number text-center text-muted mb-0">{{ incorrect_score }}</h4>
                 </div>
               </div>
             </div>
@@ -86,17 +86,6 @@
           </div>
           <div class="card-body">
             {% correct_answer_for_all question %}
-            <br>
-            {% if question.user_answer %}
-            <p><strong>{% trans "Your answer" %}:</strong></p>
-            <div class="attachment-block clearfix">
-              <p>{{ question|answer_choice_to_string:question.user_answer }}</p>
-            </div>
-            {% endif %}
-            <p><strong>{% trans "Explanation" %}:</strong></p>
-            <div class="attachment-block clearfix">
-              <p>{{ question.explanation|safe }}</p>
-            </div>
           </div>
         </div>
       {% endfor %}

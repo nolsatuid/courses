@@ -65,16 +65,6 @@
 				</div>
 				<!-- /.card-header -->
 				<div class="card-body" style="display: block;">
-				{% if previous.previous_outcome %}
-					<div class="alert alert-success">
-				{% else %}
-					<div class="alert alert-danger">
-				{% endif %}
-						{% trans "Your answer was" %} 
-						<strong>
-						{{ previous.previous_outcome|yesno:"BENAR,SALAH" }}
-						</strong>
-					</div>
 					<div class="card">
 						<div class="card-header">
 							<h5 class="lead">{{ previous.previous_question }}</h5>
@@ -84,11 +74,6 @@
 						</div>
 						<div class="card-body">
 							{% include 'correct_answer.html' %}
-							<br>
-							<p><strong>{% trans "Explanation" %}:</strong></p>
-								<div class="attachment-block clearfix">
-							<p>{{ previous.previous_question.explanation }}</p>
-							</div>
 						</div>
 					</div>
 				</div>

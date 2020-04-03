@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-03 13:04+0700\n"
+"POT-Creation-Date: 2020-04-03 14:59+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: admin.py:31 admin.py:33 models.py:589
+#: admin.py:31 admin.py:33 models.py:594
 msgid "Questions"
 msgstr "Pertanyaan"
 
-#: models.py:32 models.py:39 models.py:55 models.py:85 models.py:556
-#: templates/progress.html:19 templates/quiz/quiz_detail.html:20
-#: templates/quiz/quiz_list.html:19 templates/quiz/sitting_detail.html:10
+#: models.py:32 models.py:39 models.py:55 models.py:85 models.py:561
+#: templates/progress.html:26 templates/quiz/quiz_detail.html:20
+#: templates/quiz/quiz_list.html:19 templates/quiz/sitting_detail.html:16
 msgid "Category"
 msgstr "Kategori"
 
@@ -32,7 +32,7 @@ msgstr "Kategori"
 msgid "Categories"
 msgstr "Kategori"
 
-#: models.py:50 models.py:60 models.py:562
+#: models.py:50 models.py:60 models.py:567
 msgid "Sub-Category"
 msgstr "Sub-Kategori"
 
@@ -88,16 +88,24 @@ msgid "Answers at end"
 msgstr "Jawaban diakhir"
 
 #: models.py:106
+msgid "If yes, the correct answer will displayed."
+msgstr "Jika iya, jawaban yang benar akan ditampilkan"
+
+#: models.py:107
+msgid "Show correct answer"
+msgstr "Tampilkan jawaban salah"
+
+#: models.py:111
 msgid ""
 "If yes, the result of each attempt by a user will be stored. Necessary for "
 "marking."
 msgstr "Jika iya, hasil ujian akan disimpan. Perlu ditandai."
 
-#: models.py:109
+#: models.py:114
 msgid "Exam Paper"
 msgstr "Kumpulan Hasil Ujian"
 
-#: models.py:113
+#: models.py:118
 msgid ""
 "If yes, only one attempt by a user will be permitted. Non users cannot sit "
 "this exam."
@@ -105,39 +113,39 @@ msgstr ""
 "Jika iya, hanya satu pengguna yang dapat melakukakan ujian. Pengguna lain "
 "tidak bisa."
 
-#: models.py:116
+#: models.py:121
 msgid "Single Attempt"
 msgstr "Satu Kali Percobaan"
 
-#: models.py:120
+#: models.py:125
 msgid "Pass Mark"
 msgstr "Syarat kelulusan"
 
-#: models.py:121
+#: models.py:126
 msgid "Percentage required to pass exam."
 msgstr "Persentase yang dibutuhkan untuk lulus ujian."
 
-#: models.py:125
+#: models.py:130
 msgid "Displayed if user passes."
 msgstr "Ditampilkan jika pengguna lulus."
 
-#: models.py:126
+#: models.py:131
 msgid "Success Text"
 msgstr "Pesan Sukses"
 
-#: models.py:129
+#: models.py:134
 msgid "Fail Text"
 msgstr "Pesan Gagal"
 
-#: models.py:130
+#: models.py:135
 msgid "Displayed if user fails."
 msgstr "Ditampilkan jika pengguna gagal."
 
-#: models.py:134
+#: models.py:139
 msgid "Draft"
 msgstr "Draf"
 
-#: models.py:135
+#: models.py:140
 msgid ""
 "If yes, the quiz is not displayed in the quiz list and can only be taken by "
 "users who can edit quizzes."
@@ -145,96 +153,96 @@ msgstr ""
 "Jika ya, kuis tidak akan ditampilkan dalam daftar kuis. Hanya dapat diakses "
 "oleh pengguna yang dapat mengedit kuis."
 
-#: models.py:155 models.py:376 models.py:552
-#: templates/quiz/sitting_list.html:14
+#: models.py:160 models.py:381 models.py:557
+#: templates/quiz/sitting_list.html:24
 msgid "Quiz"
 msgstr "Kuis"
 
-#: models.py:156
+#: models.py:161
 msgid "Quizzes"
 msgstr "Kuis"
 
-#: models.py:195 models.py:374 templates/quiz/sitting_detail.html:13
-#: templates/quiz/sitting_list.html:13
+#: models.py:200 models.py:379 templates/quiz/sitting_detail.html:22
+#: templates/quiz/sitting_list.html:23
 msgid "User"
 msgstr "Pengguna"
 
-#: models.py:198 templates/progress.html:60
-#: templates/quiz/sitting_detail.html:15 templates/quiz/sitting_list.html:16
+#: models.py:203 templates/progress.html:69
+#: templates/quiz/sitting_detail.html:26 templates/quiz/sitting_list.html:26
 #: templates/result.html:41
 msgid "Score"
 msgstr "Skor"
 
-#: models.py:204
+#: models.py:209
 msgid "User Progress"
 msgstr "Kemajuan "
 
-#: models.py:205
+#: models.py:210
 msgid "User progress records"
 msgstr "Catatan kemajuan pengguna."
 
-#: models.py:265 tests.py:170
+#: models.py:270 tests.py:170
 msgid "error"
 msgstr ""
 
-#: models.py:265
+#: models.py:270
 msgid "category does not exist or invalid score"
 msgstr "Kategori tidak ada atau skor tidak valid"
 
-#: models.py:380
+#: models.py:385
 msgid "Question Order"
 msgstr "Urutan Pertanyaan"
 
-#: models.py:385
+#: models.py:390
 msgid "Question List"
 msgstr "Daftar Pertanyaan"
 
-#: models.py:391
+#: models.py:396
 msgid "Incorrect questions"
 msgstr "Pertanyaan yang salah"
 
-#: models.py:394
+#: models.py:399
 msgid "Current Score"
 msgstr "Skor Saat Ini"
 
-#: models.py:397
+#: models.py:402
 msgid "Complete"
 msgstr "Selesai"
 
-#: models.py:400
+#: models.py:405
 msgid "User Answers"
 msgstr "Jawaban Pengguna"
 
-#: models.py:403
+#: models.py:408
 msgid "Start"
 msgstr "Mulai"
 
-#: models.py:405
+#: models.py:410
 msgid "End"
 msgstr "Berakhir"
 
-#: models.py:410
+#: models.py:415
 msgid "Can see completed exams."
 msgstr "Dapat melihat ujian yang diselesaikan."
 
-#: models.py:570
+#: models.py:575
 msgid "Figure"
 msgstr "Gambar"
 
-#: models.py:574
+#: models.py:579
 msgid "Enter the question text that you want displayed"
 msgstr "Masukkan pertanyaan yang ingin ditampilkan"
 
-#: models.py:576 models.py:588 templates/question.html:18
-#: templates/quiz/sitting_detail.html:21
+#: models.py:581 models.py:593 templates/question.html:18
+#: templates/quiz/sitting_detail.html:33
 msgid "Question"
 msgstr "Pertanyaan"
 
-#: models.py:580
+#: models.py:585
 msgid "Explanation to be shown after the question has been answered."
 msgstr "Penjelasan akan ditampilkan setelah pertanyaan dijawab."
 
-#: models.py:583 templates/question.html:88 templates/result.html:96
+#: models.py:588 templates/correct_answer.html:40
 msgid "Explanation"
 msgstr "Penjelasan"
 
@@ -244,51 +252,55 @@ msgstr "Contoh Halaman Kuis"
 
 #: templates/correct_answer.html:6
 msgid "You answered the above question incorrectly"
-msgstr "Jawaban kamu SALAH"
+msgstr "Jawaban SALAH"
 
-#: templates/correct_answer.html:16
+#: templates/correct_answer.html:10
+msgid "You answered the above question correctly"
+msgstr "Jawaban BENAR"
+
+#: templates/correct_answer.html:20
 msgid "This is the correct answer"
 msgstr "Jawaban yang benar"
 
-#: templates/correct_answer.html:23
+#: templates/correct_answer.html:27 templates/correct_answer.html:30
 msgid "This was your answer."
 msgstr "Jawaban kamu"
 
-#: templates/progress.html:6
+#: templates/progress.html:7
 msgid "Progress Page"
 msgstr "Halaman Kemajuan"
 
-#: templates/progress.html:7
+#: templates/progress.html:8
 msgid "User Progress Page"
 msgstr "Halaman Kemajuan Pengguna"
 
-#: templates/progress.html:13
+#: templates/progress.html:20
 msgid "Question Category Scores"
 msgstr "Skor Kategori Pertanyaan"
 
-#: templates/progress.html:20
+#: templates/progress.html:27
 msgid "Correctly answererd"
 msgstr "Jawaban benar"
 
-#: templates/progress.html:21
+#: templates/progress.html:28
 msgid "Incorrect"
 msgstr "Jawaban salah"
 
-#: templates/progress.html:50
+#: templates/progress.html:58
 msgid "Previous exam papers"
 msgstr "Ujian sebelumnya"
 
-#: templates/progress.html:52
+#: templates/progress.html:60
 msgid "Below are the results of exams that you have sat."
 msgstr "Dibawah ini adalah hasil ujian yang telah kamu ikuti"
 
-#: templates/progress.html:59
+#: templates/progress.html:68
 msgid "Quiz Title"
 msgstr "Judul Kuis"
 
-#: templates/progress.html:61
+#: templates/progress.html:70
 msgid "Possible Score"
-msgstr "Kemungkinan Skor"
+msgstr "Skor Maksimal"
 
 #: templates/question.html:18
 msgid "of"
@@ -306,12 +318,8 @@ msgstr "Cek"
 msgid "The previous question"
 msgstr "Pertanyaan sebelumnya"
 
-#: templates/question.html:73
-msgid "Your answer was"
-msgstr "Jawaban kamu "
-
 #: templates/quiz/category_list.html:3 templates/quiz/quiz_list.html:3
-#: templates/quiz/sitting_list.html:3
+#: templates/quiz/sitting_list.html:4
 msgid "All Quizzes"
 msgstr "Semua kuis"
 
@@ -344,7 +352,7 @@ msgstr "Ujian"
 msgid "Single attempt"
 msgstr "Satu kali percobaan"
 
-#: templates/quiz/quiz_list.html:37 templates/quiz/sitting_list.html:42
+#: templates/quiz/quiz_list.html:37 templates/quiz/sitting_list.html:52
 msgid "View details"
 msgstr "Lihat detail"
 
@@ -360,39 +368,39 @@ msgstr "Hasil dari"
 msgid "for"
 msgstr "untuk"
 
-#: templates/quiz/sitting_detail.html:9
-msgid "Quiz title"
-msgstr "Judul kuis"
-
-#: templates/quiz/sitting_detail.html:14 templates/quiz/sitting_list.html:15
+#: templates/quiz/sitting_detail.html:24 templates/quiz/sitting_list.html:25
 msgid "Completed"
 msgstr "Selesai"
 
-#: templates/quiz/sitting_detail.html:22
+#: templates/quiz/sitting_detail.html:34
 msgid "User answer"
 msgstr "Jawaban pengguna"
 
-#: templates/quiz/sitting_detail.html:41
+#: templates/quiz/sitting_detail.html:35
+msgid "Status"
+msgstr "Status"
+
+#: templates/quiz/sitting_detail.html:51
 msgid "incorrect"
 msgstr "Jawaban salah"
 
-#: templates/quiz/sitting_detail.html:43
+#: templates/quiz/sitting_detail.html:53
 msgid "Correct"
 msgstr "Jawaban benar"
 
-#: templates/quiz/sitting_detail.html:49
+#: templates/quiz/sitting_detail.html:59
 msgid "Toggle whether correct"
-msgstr "Mengubah hasil jawaban"
+msgstr "Mengubah status jawaban"
 
-#: templates/quiz/sitting_list.html:6
+#: templates/quiz/sitting_list.html:15
 msgid "List of complete exams"
-msgstr "Daftar ujian yang selesai"
+msgstr "Daftar ujian yang sudah selesai"
 
-#: templates/quiz/sitting_list.html:28
+#: templates/quiz/sitting_list.html:38
 msgid "Filter"
 msgstr "Saring"
 
-#: templates/quiz/sitting_list.html:52
+#: templates/quiz/sitting_list.html:62
 msgid "There are no matching quizzes"
 msgstr "Tidak ada kuis yang sesuai"
 
@@ -444,10 +452,6 @@ msgstr "Skor sesi kamu adalah"
 msgid "out of a possible"
 msgstr "keluar dari kemungkinan"
 
-#: templates/result.html:91
-msgid "Your answer"
-msgstr "Jawaban kamu"
-
 #: templates/single_complete.html:13
 msgid "You have already sat this exam and only one sitting is permitted"
 msgstr ""
@@ -472,6 +476,15 @@ msgstr "kategori"
 #: templates/view_quiz_category.html:20
 msgid "There are no quizzes"
 msgstr "Tidak ada kuis"
+
+#~ msgid "Quiz title"
+#~ msgstr "Judul kuis"
+
+#~ msgid "Your answer was"
+#~ msgstr "Jawaban kamu "
+
+#~ msgid "Your answer"
+#~ msgstr "Jawaban kamu"
 
 #~ msgid "Welcome to our page"
 #~ msgstr "Selamat datang dihalaman kami"
