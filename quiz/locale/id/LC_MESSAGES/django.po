@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-02 23:48+0700\n"
+"POT-Creation-Date: 2020-04-03 13:04+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -325,10 +325,8 @@ msgid "List of quizzes"
 msgstr "Daftar kuis"
 
 #: templates/quiz/quiz_detail.html:12
-#, fuzzy
-#| msgid "Quiz title"
 msgid "Quiz Detail"
-msgstr "Judul kuis"
+msgstr "Detail Kuis"
 
 #: templates/quiz/quiz_detail.html:25
 msgid "You will only get one attempt at this quiz"
@@ -403,10 +401,8 @@ msgid "Exam Results for"
 msgstr "Hasil ujian dari"
 
 #: templates/result.html:14
-#, fuzzy
-#| msgid "Quizzes"
 msgid "Quiz result"
-msgstr "Kuis"
+msgstr "Hasil Kuis"
 
 #: templates/result.html:20
 msgid "Exam results"
@@ -421,16 +417,16 @@ msgid "Not Pass"
 msgstr "Tidak Lulus"
 
 #: templates/result.html:49
-#, fuzzy
-#| msgid "Correctly answererd"
 msgid "Correct Answer"
-msgstr "Jawaban benar"
+msgstr "Jawaban Benar"
 
 #: templates/result.html:57
-#, fuzzy
-#| msgid "Incorrect"
 msgid "Incorrect Answer"
-msgstr "Jawaban salah"
+msgstr "Jawaban Salah"
+
+#: templates/result.html:64
+msgid "Note"
+msgstr "Catatan"
 
 #: templates/result.html:65
 msgid ""
