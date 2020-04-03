@@ -17,7 +17,9 @@ def correct_answer_for_all(context, question):
         user_was_incorrect = False
 
     return {'previous': {'answers': answers},
-            'user_was_incorrect': user_was_incorrect}
+            'user_was_incorrect': user_was_incorrect,
+            'user_answer': question.user_answer,
+            'explanation': question.explanation}
 
 
 @register.filter

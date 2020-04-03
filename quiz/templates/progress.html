@@ -1,4 +1,5 @@
 {% extends 'website/base-quiz.html' %}
+{% load static %}
 {% load i18n %}
 
 {% load quiz_tags %}
@@ -6,81 +7,101 @@
 {% block title %} {% trans "Progress Page" %} {% endblock %}
 {% block description %} {% trans "User Progress Page" %} {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+{% endblock  %}
+
 {% block content %}
+<div class="row">
+	<div class="col-md-12">
+		{% if cat_scores %}
+			<div class="card">
+				<div class="card-header">
+					<h1>{% trans "Question Category Scores" %}</h1>
+				</div>
+				<div class="card-body">
+					<table class="table table-bordered table-striped" id="table-skor-category">
+						<thead>
+						<tr>
+							<th>{% trans "Category" %}</th>
+							<th>{% trans "Correctly answererd" %}</th>
+							<th>{% trans "Incorrect" %}</th>
+							<th>%</th>
+						</tr>
+						</thead>
+					
+						<tbody>
+					
+					
+						{% for cat, value in cat_scores.items %}
+						<tr>
+							<td>{{ cat }}</td>
+							<td>{{ value.0 }}</td>
+							<td>{{ value.1 }}</td>
+							<td>{{ value.2 }}</td>
+						</tr>
+					
+						{% endfor %}
+					
+						</tbody>
+					
+					</table>
+				</div>
+			</div>
+		{% endif %}
 
-  {% if cat_scores %}
+		{% if exams %}
+		<hr>
 
-  <h1>{% trans "Question Category Scores" %}</h1>
+		<div class="card">
+			<div class="card-header">		
+				<h1>{% trans "Previous exam papers" %}</h1>
+				<p class="lead">
+				{% trans "Below are the results of exams that you have sat." %}
+				</p>
+			</div>
+			<div class="card-body">
+				<table class="table table-bordered table-striped" id="table-exam">
 
-  <table class="table table-bordered table-striped">
+					<thead>
+					<tr>
+						<th>{% trans "Quiz Title" %}</th>
+						<th>{% trans "Score" %}</th>
+						<th>{% trans "Possible Score" %}</th>
+						<th>%</th>
+					</tr>
+					</thead>
+				
+					<tbody>
+				
+					{% for exam in exams %}
+				
+					<tr>
+						<td>{{ exam.quiz.title }}</td>
+						<td>{{ exam.current_score }}</td>
+						<td>{{ exam.get_max_score }}</td>
+						<td>{{ exam.get_percent_correct }}</td>
+					</tr>
+				
+					{% endfor %}
+				
+					</tbody>
+				
+				</table>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+</div>
 
-	<thead>
-	  <tr>
-		<th>{% trans "Category" %}</th>
-		<th>{% trans "Correctly answererd" %}</th>
-		<th>{% trans "Incorrect" %}</th>
-		<th>%</th>
-	  </tr>
-	</thead>
+{% endblock %}
 
-	<tbody>
-
-
-	  {% for cat, value in cat_scores.items %}
-	  <tr>
-		<td>{{ cat }}</td>
-		<td>{{ value.0 }}</td>
-		<td>{{ value.1 }}</td>
-		<td>{{ value.2 }}</td>
-	  </tr>
-
-	  {% endfor %}
-
-	</tbody>
-
-  </table>
-
-
-  {% endif %}
-
-  {% if exams %}
-
-  <hr>
-
-  <h1>{% trans "Previous exam papers" %}</h1>
-  <p class="lead">
-	{% trans "Below are the results of exams that you have sat." %}
-  </p>
-
-  <table class="table table-bordered table-striped">
-
-	<thead>
-	  <tr>
-		<th>{% trans "Quiz Title" %}</th>
-		<th>{% trans "Score" %}</th>
-		<th>{% trans "Possible Score" %}</th>
-		<th>%</th>
-	  </tr>
-	</thead>
-
-	<tbody>
-
-	  {% for exam in exams %}
-
-	  <tr>
-		<td>{{ exam.quiz.title }}</td>
-		<td>{{ exam.current_score }}</td>
-		<td>{{ exam.get_max_score }}</td>
-		<td>{{ exam.get_percent_correct }}</td>
-	  </tr>
-
-	  {% endfor %}
-
-	</tbody>
-
-  </table>
-
-  {% endif %}
-
-
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#table-skor-category').DataTable();
+        $('#table-exam').DataTable();
+	});
+</script>
 {% endblock %}

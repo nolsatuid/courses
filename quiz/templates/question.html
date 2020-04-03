@@ -8,75 +8,78 @@
 
 {% block content %}
 
-{% if previous.answers %}
+<div class="row">
+	<div class="col-sm-12">
+		{% if question %}
 
-  <p class="muted"><small>{% trans "The previous question" %}:</small></p>
-  <p>{{ previous.previous_question }}</p>
+		<div style="background-color:#e9ecef; padding:0.75rem 1rem 0.15rem 1rem; margin-bottom:1rem;">
+			{% if progress %}
+			<div class="float-right">
+				{% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
+			</div>
+			{% endif %}
 
-  {% if previous.previous_outcome %}
-	<div class="alert alert-success">
-  {% else %}
-	<div class="alert alert-warning">
-  {% endif %}
-  	  <p><small>
-		{% trans "Your answer was" %} </small>
-		<strong>
-		  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
-		</strong>
-	  </p>
+			<p>
+				<span class="muted">{% trans "Question category" %}:</span>
+				<strong>{{ question.category }}</strong>
+			</p>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				<h5 class="lead">{{ question.content }}</h5>
+				{% if question.figure %}
+					<img src="{{ question.figure.url }}" alt="{{ question.content }}" />
+				{% endif %}
+			</div>
+			<form action="" method="POST">{% csrf_token %}
+				<div class="card-body">
+					<input type=hidden name="question_id" value="{{ question.id }}">
+					<ul class="list-group">
+						{% for answer in form.answers %}
+						<li class="list-group-item">
+							{{ answer }}
+						</li>
+						{% endfor %}
+					</ul>			
+				</div>
+				<div class="card-footer">
+					<input type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
+				</div>
+			</form>
+		</div>
+		{% endif %}
 
+		{% if previous.answers %}
+			<br>
+			<hr>
+			<br>
+			<div class="card">
+				<div class="card-header">
+				<h3 class="card-title">{% trans "The previous question" %}</h3>
+
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+					</button>
+				</div>
+				<!-- /.card-tools -->
+				</div>
+				<!-- /.card-header -->
+				<div class="card-body" style="display: block;">
+					<div class="card">
+						<div class="card-header">
+							<h5 class="lead">{{ previous.previous_question }}</h5>
+							{% if question.figure %}
+								<img src="{{ question.figure.url }}" alt="{{ question.content }}" />
+							{% endif %}
+						</div>
+						<div class="card-body">
+							{% include 'correct_answer.html' %}
+						</div>
+					</div>
+				</div>
+				<!-- /.card-body -->
+			</div>
+		{% endif %}
 	</div>
-
-	{% include 'correct_answer.html' %}
-
-	<p><strong>{% trans "Explanation" %}:</strong></p>
-	<div class="well " style="background-color: #fcf8e3;">
-	  <p>{{ previous.previous_question.explanation }}</p>
-	</div>
-
-	<hr>
-
-{% endif %}
-
-<br />
-
-{% if question %}
-
-{% if progress %}
-<div style="float: right;">
-{% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
 </div>
-{% endif %}
-
-<p>
-  <small class="muted">{% trans "Question category" %}:</small>
-  <strong>{{ question.category }}</strong>
-</p>
-
-<p class="lead">{{ question.content }}</p>
-
-{% if question.figure %}
-    <img src="{{ question.figure.url }}" alt="{{ question.content }}" />
-{% endif %}
-
-<form action="" method="POST">{% csrf_token %}
-  <input type=hidden name="question_id" value="{{ question.id }}">
-
-  <ul class="list-group">
-
-	{% for answer in form.answers %}
-	  <li class="list-group-item">
-	    {{ answer }}
-	  </li>
-	{% endfor %}
-
-  </ul>
-  <input type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
-</form>
-
-{% endif %}
-
-<hr>
-
-
 {% endblock %}

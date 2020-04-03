@@ -5,15 +5,33 @@
 {% endblock %}
 
 {% block content %}
-<h2>{{ quiz.title }}</h2>
-<h3>{% trans "Category" %}: {{ quiz.category }}</h3>
-{% if quiz.single_attempt %}
-  <h4>{% trans "You will only get one attempt at this quiz" %}.</h4>
-{% endif %}
-<p>{{ quiz.description }}</p>
-<p>
-  <a href="{% url 'quiz_question' quiz_name=quiz.url %}">
-	{% trans "Start quiz" %}
-  </a>
-</p>
+<div class="row">
+  <div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'quiz_index' %}">{% trans "List of quizzes" %}</a></li>
+        <li class="breadcrumb-item active">{% trans "Quiz Detail" %}</li>
+    </ol>
+
+    <div class="card">
+      <div class="card-body">
+        <h2>{{ quiz.title }}</h2>
+        <br>
+        <div class="callout callout-info">
+          <h5><i class="fas fa-tags"></i> {% trans "Category" %}: {{ quiz.category }}</h5>
+          {{ quiz.description }}
+          {% if quiz.single_attempt %}   
+            <hr class="mt-4">     
+            <div class="alert alert-warning">
+              <h5><i class="icon fas fa-exclamation"></i> {% trans "You will only get one attempt at this quiz" %}.</h5>
+            </div>
+          {% endif %}
+        </div>
+    
+        <a href="{% url 'quiz_question' quiz_name=quiz.url %}" class="btn btn-block bg-info btn-flat btn-lg">
+          {% trans "Start quiz" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -247,6 +247,7 @@ class QuizTake(FormView):
             'quiz': self.quiz,
             'score': self.sitting.get_current_score,
             'max_score': self.sitting.get_max_score,
+            'incorrect_score': self.sitting.get_max_score-self.sitting.get_current_score,
             'percent': self.sitting.get_percent_correct,
             'sitting': self.sitting,
             'previous': self.previous,
