@@ -26,8 +26,13 @@
                     <!-- /.card-body -->
 
                     <!-- form pengumpulan tugas -->
-                    {% include 'partials/form-task-upload.html' with form=form section=section task=task %}  
-
+                    {% if file_not_found is None %}
+                        {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
+                    {% elif file_not_found is True %}
+                        {% include 'partials/form-task-reupload.html' with form=form section=section task=task %}
+                    {% elif file_not_found is False %}
+                        {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
+                    {% endif %}
                     <!-- alert pengumpulan semua tugas -->
                     {% if not pagination.next and not is_complete_tasks %}
                         <div class="alert alert-warning alert-dismissible">
