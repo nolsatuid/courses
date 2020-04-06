@@ -15,15 +15,30 @@ from .forms import FormUploadFile
 @course_was_started
 def details(request, slug):
     section = get_object_or_404(Section, slug=slug)
+    file_not_found = None
 
     # form untuk pengumpulan tugas
     collect_task = section.collect_task.filter(user=request.user).first()
+
+    # jika ada file
+    if hasattr(collect_task, 'file'):
+        # cek apakah objek file bisa mengambil file pada direktorinya
+        try:
+            collect_task.file.file.file
+            file_not_found = False
+        except (FileNotFoundError, AttributeError):
+            # jika tidak bisa, kosongkan field file
+            collect_task.file = None
+            collect_task.save(update_fields=['file'])
+            file_not_found = True
+
     form = FormUploadFile(
         data=request.POST or None,
         files=request.FILES, section=section,
         user=request.user,
         instance=None if not collect_task else collect_task.file
     )
+
     if form.is_valid():
         form.save(collect_task=collect_task)
         messages.success(request, _(f"Berhasil mengupload tugas"))
@@ -55,7 +70,8 @@ def details(request, slug):
         'pagination': pagination,
         'form': form,
         'task': collect_task,
-        'is_complete_tasks': is_complete_tasks
+        'is_complete_tasks': is_complete_tasks,
+        'file_not_found': file_not_found
     }
 
     # save activities user to section

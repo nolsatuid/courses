@@ -37,7 +37,8 @@ class FormUploadFile(forms.ModelForm):
         ext = upload_file.file.name.split('.')[-1]
         initial_path = upload_file.file.path
         section_name = str(self.section).lower().replace(" ","")
-        upload_file.file.name = f'uploads/{self.user.username}_{section_name}.{ext}'
+        module_id = self.section.module.id
+        upload_file.file.name = f'uploads/{self.user.username}_{module_id}_{section_name}.{ext}'
         new_path = settings.MEDIA_ROOT + '/' + upload_file.file.name
         os.rename(initial_path, new_path)
 
@@ -47,5 +48,7 @@ class FormUploadFile(forms.ModelForm):
         if not collect_task:
             CollectTask.objects.create(section=self.section, user=self.user, file=upload_file)
         else:
-            collect_task.status = CollectTask.STATUS.review
+            if collect_task.status != CollectTask.STATUS.graduated:
+                collect_task.status = CollectTask.STATUS.review
+            collect_task.file = upload_file
             collect_task.save()

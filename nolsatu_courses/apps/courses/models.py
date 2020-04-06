@@ -384,7 +384,7 @@ class Enrollment(models.Model):
 class CollectTask(models.Model):
     user = models.ForeignKey(User, related_name='collect_tasks', on_delete=models.CASCADE)
     section = models.ForeignKey(Section, related_name='collect_task', on_delete=models.CASCADE)
-    file = models.OneToOneField("upload_files.UploadFile", blank=True, on_delete=models.CASCADE)
+    file = models.OneToOneField("upload_files.UploadFile", blank=True, null=True, on_delete=models.CASCADE)
     STATUS = Choices(
         (1, 'review', _('Diperiksa')),
         (2, 'repeat', _('Ulangi')),
