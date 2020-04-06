@@ -11,7 +11,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <title>{{ title }} | {{ brand }} </title>
-  <link rel="shortcut icon" href="{% static 'website/images/nolsatu.ico' %}">
+  <link rel="shortcut icon" href="{{brand_favicon}}">
   {% include 'partials/css.html' %}
   <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
   {% block extra_css %}{% endblock  %}

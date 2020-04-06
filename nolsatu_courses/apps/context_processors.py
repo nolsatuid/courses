@@ -10,6 +10,7 @@ def nolsatu_context(request):
         'brand_logo': settings.NOLSATU_HOST + apperance.get('logo', ''),
         'brand_logo_light': settings.NOLSATU_HOST + apperance.get('logo_light', ''),
         'brand_logo_dark': settings.NOLSATU_HOST + apperance.get('logo_dark', ''),
+        'brand_favicon': settings.NOLSATU_HOST + apperance.get('brand_favicon', ''),
         'brand': apperance.get('site_name', 'NolSatu'),
         'color_theme': apperance.get('color_theme', 'danger'),
         'sidebar_color': apperance.get('sidebar_color', 'light'),
