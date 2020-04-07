@@ -4,10 +4,10 @@
 <aside class="main-sidebar elevation-4 sidebar-{{ sidebar_color }}-{{ color_theme }}">
     <!-- Brand Logo -->
     <!-- Brand Logo -->
-    <a href="" class="brand-link">
+    <a href="{% url 'website:index' %}" class="brand-link">
       <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image"
            style="opacity: .8">
-      <span class="brand-text font-weight-bold color-white">{{ brand }}</span>
+      <span class="brand-text font-weight-bold color-white" style="font-size:88%">{{ brand }}</span>
     </a>
 
     <!-- Sidebar -->
@@ -25,8 +25,6 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class
-                with font-awesome or any other icon font library -->
             <li class="nav-item">
                 <a href="{% url 'backoffice:index' %}" class="nav-link {% if menu_active == 'dashboard' %}active{% endif %}">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -90,6 +88,14 @@
                 <a href="" class="nav-link {% if menu_active == '' %}active{% endif %}">
                     <i class="nav-icon fas fa-sign-out-alt"></i>
                     <p>Keluar</p>
+                </a>
+            </li>
+
+            <li class="nav-header">Admin Panel</li>
+            <li class="nav-item">
+                <a href="{{ nolsatu_home_page_url }}/backoffice" class="nav-link {% if menu_active == '' %}active{% endif %}">
+                    <i class="nav-icon fas fa-user-cog"></i>
+                    <p>Backoffice Academy</p>
                 </a>
             </li>
 
