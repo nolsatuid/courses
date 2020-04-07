@@ -5,28 +5,45 @@
     
     <div class="col-md-8">
         <div class="card">
-            <div class="card-body">
+            <div class="card-header">
                 <h1>Materi {{ section.title }}</h1>
+            </div>
 
-                <div class="">
-                    <div class="card-header">                        
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        {{ section.content|safe }}
-                    </div>
-                </div>
+            <div class="card-body">
+                {{ section.content|safe }}
 
                 {% if user.is_superuser %}
                     {% include 'partials/form-task-preview.html' %}
                 {% endif %}
+            </div>
 
+            <div class="card-footer">
                 {% include 'partials/pagination-preview.html' with pagination=pagination %}
-
             </div>
         </div>
     </div>
     {% include 'partials/preview-content-list.html' with module=section.module %}    
 </div>
   <!-- /.row -->
+{% endblock %}
+
+{% block extra_js %}
+    <script language="JavaScript">
+        document.addEventListener("contextmenu", function(e){
+            e.preventDefault();
+        }, false);
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        #course-content {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
 {% endblock %}

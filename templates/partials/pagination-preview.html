@@ -1,12 +1,10 @@
 {% load static %}
 
-<div class="card-header">
-    {% if user.is_authenticated %}   
-        {% if pagination.prev %}
-            <a {% if pagination.prev_type == 'module' %} href="{% url 'website:modules:preview' pagination.prev.slug %}" {% else %} href="{% url 'website:sections:preview' pagination.prev.slug %}" {% endif %} class="btn bg-maroon"><i class="fas fa-arrow-circle-left"></i> Materi Sebelumnya</a>  
-        {% endif %}
-        {% if pagination.next %}
-            <a {% if pagination.next_type == 'module' %} href="{% url 'website:modules:preview' pagination.next.slug %}" {% else %} href="{% url 'website:sections:preview' pagination.next.slug %}" {% endif %} class="btn bg-maroon float-right">Materi Selanjutnya <i class="fas fa-arrow-circle-right"></i></a> 
-        {% endif %}
-    {% endif %}                     
-</div>
+{% if user.is_authenticated %}   
+    {% if pagination.prev %}
+        <a {% if pagination.prev_type == 'module' %} href="{% url 'website:modules:preview' pagination.prev.slug %}" {% else %} href="{% url 'website:sections:preview' pagination.prev.slug %}" {% endif %} class="btn bg-maroon"><i class="fas fa-arrow-circle-left"></i> Materi Sebelumnya</a>  
+    {% endif %}
+    {% if pagination.next %}
+        <a {% if pagination.next_type == 'module' %} href="{% url 'website:modules:preview' pagination.next.slug %}" {% else %} href="{% url 'website:sections:preview' pagination.next.slug %}" {% endif %} class="btn bg-maroon float-right">Materi Selanjutnya <i class="fas fa-arrow-circle-right"></i></a> 
+    {% endif %}
+{% endif %}                     

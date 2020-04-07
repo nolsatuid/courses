@@ -12,43 +12,57 @@
     </div>
     <div class="col-md-8">
         <div class="card">
-            <div class="card-body">
+            <div class="card-header">
                 <h1>Materi {{ section.title }}</h1>
+            </div>
+            <div class="card-body" id="course-content">
+                {{ section.content|safe }}
+            
+                <!-- form pengumpulan tugas -->
+                {% if file_not_found is None %}
+                    {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
+                {% elif file_not_found is True %}
+                    {% include 'partials/form-task-reupload.html' with form=form section=section task=task %}
+                {% elif file_not_found is False %}
+                    {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
+                {% endif %}
+                <!-- alert pengumpulan semua tugas -->
+                {% if not pagination.next and not is_complete_tasks %}
+                    <div class="alert alert-warning alert-dismissible">
+                        <h5><i class="icon fas fa-info"></i> Info!</h5>
+                        Untuk menyelesaikan materi ini kamu harus mengumpulkan semua tugas yang diberikan. Yuk cek lagi mungkin masih ada tugas yang belum kamu kumpulkan.
+                    </div>                   
+                {% endif %}
+            </div>
 
-                <div class="">
-                    <div class="card-header">                        
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        {{ section.content|safe }}
-
-                    </div>
-                    <!-- /.card-body -->
-
-                    <!-- form pengumpulan tugas -->
-                    {% if file_not_found is None %}
-                        {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
-                    {% elif file_not_found is True %}
-                        {% include 'partials/form-task-reupload.html' with form=form section=section task=task %}
-                    {% elif file_not_found is False %}
-                        {% include 'partials/form-task-upload.html' with form=form section=section task=task %}
-                    {% endif %}
-                    <!-- alert pengumpulan semua tugas -->
-                    {% if not pagination.next and not is_complete_tasks %}
-                        <div class="alert alert-warning alert-dismissible">
-                            <h5><i class="icon fas fa-info"></i> Info!</h5>
-                            Untuk menyelesaikan materi ini kamu harus mengumpulkan semua tugas yang diberikan. Yuk cek lagi mungkin masih ada tugas yang belum kamu kumpulkan.
-                        </div>                   
-                    {% endif %}
-
-                    <!-- pagination -->
-                    {% include 'partials/pagination.html' with pagination=pagination section=section task=task %}                    
-                </div>
-
+            <div class="card-footer">
+                <!-- pagination -->
+                {% include 'partials/pagination.html' with pagination=pagination section=section task=task %}                    
             </div>
         </div>
     </div>
     {% include 'partials/content-list.html' with module=section.module %}    
 </div>
   <!-- /.row -->
+{% endblock %}
+
+{% block extra_js %}
+    <script language="JavaScript">
+        document.addEventListener("contextmenu", function(e){
+            e.preventDefault();
+        }, false);
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        #course-content {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
 {% endblock %}
