@@ -11,24 +11,41 @@
     </div>
     <div class="col-md-8">
         <div class="card">
-            <div class="card-body">
+            <div class="card-header">
                 <h1>Modul {{ module.title }}</h1>
+            </div>
+                
+            <div class="card-body" id="course-content">
+                {{ module.description|safe }}
+            </div>
 
-                <div class="">
-                    <div class="card-header">                        
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body"  oncopy="return false" oncut="return false" onpaste="return false">
-                        {{ module.description|safe }}
-                    </div>
-                    <!-- /.card-body -->                    
-                    {% include 'partials/pagination.html' with pagination=pagination %}
-                </div>
-
+            <div class="card-footer">
+                {% include 'partials/pagination.html' with pagination=pagination %}
             </div>
         </div>
     </div>
     {% include 'partials/content-list.html' with module=module %}    
 </div>
   <!-- /.row -->
+{% endblock %}
+
+{% block extra_js %}
+    <script language="JavaScript">
+        document.addEventListener("contextmenu", function(e){
+            e.preventDefault();
+        }, false);
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        #course-content {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
 {% endblock %}
