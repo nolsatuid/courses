@@ -1,6 +1,14 @@
 {% extends 'backoffice/base-adminlte.html' %}
 
 {% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:courses:index'%}">Kursus</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:modules:index' section.module.course.id%}">Modul</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:sections:index' section.module.id %}">Bab</a></li>
+        <li class="breadcrumb-item active">Detail Bab</li>
+    </ol>
+</div>
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
