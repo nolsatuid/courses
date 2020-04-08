@@ -25,9 +25,13 @@
                                 {{ form.non_field_errors }}
                                 {% for field in form %}
                                     <div class="form-group col-md-12">
-                                        <label class="col-md-12"> {{ field.label }} </label>
+                                        <label class="col-md-12"> {{ field.label }} {{ field.value }}</label>
                                         <div class="col-md-12">
-                                            {% render_field field|add_class:"form-control"%}
+                                            {% if field.field.widget.input_type == 'checkbox' %}
+                                                {% render_field field%}
+                                            {% else %}
+                                                {% render_field field|add_class:"form-control" %}
+                                            {% endif %}
                                             <small class="form-text text-muted">{{ field.help_text }}</small>
                                             <small class="form-text text-danger">{{ field.errors }}</small>
                                         </div>
