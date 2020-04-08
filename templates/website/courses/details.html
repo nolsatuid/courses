@@ -5,7 +5,9 @@
 
     <div class="col-md-8">
         <div class="card">
-            <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
+            {% if course.featured_image %}
+                <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
+            {% endif %}
             <div class="card-body">
                 <h1>{{ course.title }}</h1>
                 <small><i class="fas fa-user-edit"></i> {{ course.author|capfirst }}</small>

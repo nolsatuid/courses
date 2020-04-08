@@ -6,7 +6,9 @@
             {% if course.status == 1 %}
                 <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 10px;">{{ course.get_status_display }}</span>
             {% endif %}
-            <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
+            {% if course.featured_image %}
+                <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
+            {% endif %}
         </div>
         {% if progress_bar %}
         <div class="card-header text-dark">
