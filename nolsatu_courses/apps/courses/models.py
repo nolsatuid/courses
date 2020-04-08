@@ -262,9 +262,9 @@ class Section(models.Model):
 
     def save(self, *args, **kwargs):
         if self.slug:
-            self.slug = generate_unique_slug(Module, self.slug, self.id)
+            self.slug = generate_unique_slug(Section, self.slug, self.id)
         else:
-            self.slug = generate_unique_slug(Module, self.title, self.id)
+            self.slug = generate_unique_slug(Section, self.title, self.id)
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):

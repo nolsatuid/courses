@@ -13,7 +13,7 @@ class FormSection(forms.ModelForm):
 class FormTaskSetting(forms.ModelForm):
     class Meta:
         model = TaskUploadSettings
-        fields = ("instruction","allowed_extension","max_size")
+        fields = ("instruction", "allowed_extension", "max_size")
 
     def clean(self):
         cleaned_data = super().clean()
