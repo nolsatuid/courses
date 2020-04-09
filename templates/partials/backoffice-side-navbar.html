@@ -85,8 +85,14 @@
                 </ul>
             </li>
             <li class="nav-item">
+                <a href="{% url 'backoffice:quizzes:index' %}" class="nav-link {% if menu_active == 'quiz' %}active{% endif %}">
+                    <i class="nav-icon fas fa-tasks"></i>
+                    <p>Hasil Kuis</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{% url 'backoffice:batchs:index' %}" class="nav-link {% if menu_active == 'batch' %}active{% endif %}">
-                    <i class="nav-icon fas fa-circle"></i>
+                    <i class="nav-icon fas fa-bookmark"></i>
                     <p>Angkatan</p>
                 </a>
             </li>
