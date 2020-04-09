@@ -1,0 +1,46 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+{% endblock  %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Kursus</th>
+                    <th style="width:10%">Aksi</th>
+                </thead>
+                <tbody>
+                    {% for quiz in quizzes %}
+                        <tr>
+                            <td>{{ quiz.title }}</td> 
+                            <td>
+                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:detail_result' quiz.id %}"><i class="fas fa-eye"></i> Lihat Hasil</a>
+                            </td>  
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable();
+    })
+</script>
+{% endblock %}
