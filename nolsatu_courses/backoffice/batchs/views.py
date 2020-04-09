@@ -22,7 +22,7 @@ def index(request):
 
 @staff_member_required
 def add(request):
-    form = FormBatch(data=request.POST or None, files=request.FILES or None)
+    form = FormBatch(data=request.POST or None)
     if form.is_valid():
         batch = form.save()
         messages.success(request, _(f"Berhasil tambah angkatan {batch.batch}"))
@@ -40,7 +40,7 @@ def add(request):
 @staff_member_required
 def edit(request, id):
     batch = get_object_or_404(Batch, id=id)
-    form = FormBatch(data=request.POST or None, files=request.FILES or None, instance=batch)
+    form = FormBatch(data=request.POST or None, instance=batch)
     if form.is_valid():
         batch = form.save()
         messages.success(request, _(f"Berhasil ubah angkatan {batch.batch}"))

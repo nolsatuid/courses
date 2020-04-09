@@ -25,7 +25,7 @@
                                 {{ form.non_field_errors }}
                                 {% for field in form %}
                                     <div class="form-group col-md-12">
-                                        <label class="col-md-12"> {{ field.label }} {{ field.value }}</label>
+                                        <label class="col-md-12"> {{ field.label }}</label>
                                         <div class="col-md-12">
                                             {% if field.field.widget.input_type == 'checkbox' %}
                                                 {% render_field field%}
