@@ -7,7 +7,7 @@ from django.http import JsonResponse
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Courses, Enrollment
-from .forms import FormCourses
+from .forms import FormCourses, FormFilterRegistrants
 
 
 @staff_member_required
@@ -78,10 +78,37 @@ def details(request, id):
 
 @staff_member_required
 def registrants(request):
+    registrants = Enrollment.objects.all()
+    form = FormFilterRegistrants(request.GET or None)
+    if form.is_valid():
+        registrants = form.get_data(registrants=registrants)
+
+    if request.POST:
+        data = request.POST
+        for id in data.getlist('checkMark'):
+            enroll = get_object_or_404(Enrollment, id=id)
+            if not enroll.course.batchs.last().link_group:
+                messages.error(request, _(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi'))
+            else:
+                if enroll.batch != enroll.course.batchs.last():
+                    enroll.batch = enroll.course.batchs.last()
+                enroll.allowed_access = True
+                enroll.status = Enrollment.STATUS.begin
+                enroll.save()
+                
+                utils.send_notification(
+                    enroll.user, f'Akses kelas {enroll.course.title} di berikan',
+                    f'Selamat, Anda sudah dapat mengakses kelas {enroll.course.title}. \
+                        Silahkan gabung ke grup telegram menggunakan link berikut <a href="{ enroll.batch.link_group }">\
+                        { enroll.batch.link_group }</a> untuk mendapatkan informasi lebih lanjut.'
+                )
+                messages.success(request, _(f'Berhasil mengubah status <strong>{enroll}</strong>'))
+
     context = {
         'menu_active': 'registrants',
         'title': _('Pendaftar Kursus'),
-        'registrants': Enrollment.objects.all()
+        'registrants': registrants,
+        'form': form
     }
     return render(request, 'backoffice/courses/registrants.html', context)
 
