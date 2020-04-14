@@ -83,10 +83,11 @@ def details(request, slug):
 
 
 def preview(request, slug):
-    section = get_object_or_404(Section, slug=slug)
     if request.user.is_superuser:
+        section = get_object_or_404(Section, slug=slug)
         pagination = get_pagination(request, section)
     else:
+        section = get_object_or_404(Section, slug=slug, is_visible=True)
         pagination = None
 
     context = {

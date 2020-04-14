@@ -9,7 +9,11 @@ from nolsatu_courses.apps.courses.models import Courses, Enrollment
 
 
 def details(request, slug):
-    course = get_object_or_404(Courses, slug=slug)
+    if request.user.is_superuser:
+        course = get_object_or_404(Courses, slug=slug)
+    else:
+        course = get_object_or_404(Courses, slug=slug, status=Courses.STATUS.publish)
+
     context = {
         'title': course.title,
         'course': course,

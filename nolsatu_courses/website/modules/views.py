@@ -40,7 +40,11 @@ def details(request, slug):
 
 
 def preview(request, slug):
-    module = get_object_or_404(Module, slug=slug)
+    if request.user.is_superuser:
+        module = get_object_or_404(Module, slug=slug)
+    else:
+        module = get_object_or_404(Module, slug=slug, is_visible=True)
+
     if request.user.is_superuser:
         pagination = get_pagination(request, module)
     else:
