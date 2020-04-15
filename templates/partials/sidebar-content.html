@@ -24,7 +24,7 @@
             {% endif %}
         {% else %}
             {% if batch and not course.is_started %}
-                <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Daftar kelas ini</a>
+                <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Ikuti kelas ini</a>
             {% elif not course.is_started %}
                 <div class="alert alert-danger" >
                     Maaf, kelas ini belum membuka pendafaran.

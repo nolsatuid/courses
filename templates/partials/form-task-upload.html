@@ -23,6 +23,17 @@
             <div class="card-body">
                 <div class="alert alert-success alert-dismissible">
                     <h5><i class="icon fas fa-info"></i> Info!</h5>
+                    Maaf, kamu <span class="badge badge-light" style="font-size:100%;">tidak lulus</span> pada <a href="{{ task.file.file.url }}" download><strong>tugas ini</strong></a>. Semoga sukses di tugas-tugas selanjutnya.
+                    <br><br>                   
+                    {% if task.note %}
+                    Catatan dari instruktur kamu: <br><strong>{{ task.note }}</strong>
+                    {% endif %}
+                </div>
+            </div>
+            {% elif task.status == 4 %} <!-- status == tidak lulus -->
+            <div class="card-body">
+                <div class="alert alert-danger alert-dismissible">
+                    <h5><i class="icon fas fa-info"></i> Info!</h5>
                     Yey, kamu <span class="badge badge-light" style="font-size:100%;">lulus</span> pada <a href="{{ task.file.file.url }}" download><strong>tugas ini</strong></a>. Semoga sukses di tugas-tugas selanjutnya.
                     <br><br>                   
                     {% if task.note %}
