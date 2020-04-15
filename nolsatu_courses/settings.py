@@ -214,6 +214,8 @@ CACHES = {
     }
 }
 
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 try:
     from .local_settings import *
 except ImportError:
