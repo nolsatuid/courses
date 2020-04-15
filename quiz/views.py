@@ -2,7 +2,7 @@ import random
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
 
@@ -33,6 +33,8 @@ class QuizListView(ListView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        if not self.request.user.is_superuser:
+            return redirect("website:index")
         return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
