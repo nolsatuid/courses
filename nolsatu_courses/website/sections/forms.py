@@ -23,9 +23,10 @@ class FormUploadFile(forms.ModelForm):
         cleaned_data = super().clean()
         upload_setting = TaskUploadSettings.objects.filter(section=self.section).first()
         if cleaned_data:
-            if cleaned_data['file'].size > upload_setting.max_size*1048576:
+            file = cleaned_data['file']
+            if file.size > upload_setting.max_size*1048576:
                 self.add_error('file', _(f"Ukuran file lebih dari {upload_setting.max_size}MB"))
-            file_extension = os.path.splitext(str(cleaned_data['file']))[1]
+            file_extension = os.path.splitext(str(file))[1]
             if str(file_extension) not in str(upload_setting.allowed_extension.all()):
                 self.add_error('file', _(f"Ekstensi file tidak sesuai"))                
         return cleaned_data
