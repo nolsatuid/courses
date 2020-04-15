@@ -59,17 +59,17 @@ thead input {
                             <td id="note-{{task.id}}">{{ task.note|default:'-' }}</td>     
                             <td width="10px">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
-                                    <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}">
-                                        <a data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>
+                                    <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa">
+                                        Diperiksa
                                     </label>
-                                    <label class="btn {% if task.status == 2 %} btn-warning {% else %} btn-secondary {% endif %}">
-                                        <a data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>
+                                    <label class="btn {% if task.status == 2 %} btn-warning {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="2" data-url="" data-name="Mengulang">
+                                        Mengulang
                                     </label>
-                                    <label class="btn {% if task.status == 4 %} bg-maroon {% else %} btn-secondary {% endif %}">
-                                        <a data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="4" data-url="" data-name="Tidak Lulus" >Tidak Lulus</a>
+                                    <label class="btn {% if task.status == 4 %} bg-maroon {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="4" data-url="" data-name="Tidak Lulus">
+                                        Tidak Lulus
                                     </label>
-                                    <label class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}">
-                                        <a data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="3" data-url="" data-name="Lulus" >Lulus</a>
+                                    <label class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}"  data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="3" data-url="" data-name="Lulus">
+                                        Lulus
                                     </label>
                                 </div>
                             </td>  
@@ -188,62 +188,62 @@ thead input {
                 document.getElementById("note").value = "" 
                 if(status_id == 1){
                     btn_status.append(
-                        '<label class="btn btn-info">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>'+
+                        '<label class="btn btn-info" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
+                            'Diperiksa'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
+                            'Mengulang'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" >Tidak Lulus</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
+                            'Tidak Lulus'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" >Lulus</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
+                            'Lulus'+
                         '</label>'
                     ); 
                 }else if(status_id == 2){
                     btn_status.append(
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
+                            'Diperiksa'+
                         '</label>'+
-                        '<label class="btn btn-warning">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>'+
+                        '<label class="btn btn-warning" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
+                            'Mengulang'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" >Tidak Lulus</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
+                            'Tidak Lulus'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" >Lulus</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
+                            'Lulus'+
                         '</label>'
                     ); 
                 }else if(status_id == 3){
                     btn_status.append(
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
+                            'Diperiksa'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
+                            'Mengulang'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" >Tidak Lulus</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
+                            'Tidak Lulus'+
                         '</label>'+
-                        '<label class="btn bg-olive">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" >Lulus</a>'+
+                        '<label class="btn bg-olive" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
+                            'Lulus'+
                         '</label>'
                     ); 
                 }else if(status_id == 4){
                     btn_status.append(
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" >Diperiksa</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
+                            'Diperiksa'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >Mengulang</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
+                            'Mengulang'+
                         '</label>'+
-                        '<label class="btn bg-maroon">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" >Tidak Lulus</a>'+
+                        '<label class="btn bg-maroon" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
+                            'Tidak Lulus'+
                         '</label>'+
-                        '<label class="btn btn-secondary">'+
-                            '<a data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" >Lulus</a>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
+                            'Lulus'+
                         '</label>'
                     ); 
                 }
