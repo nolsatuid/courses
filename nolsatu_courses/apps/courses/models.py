@@ -389,6 +389,7 @@ class CollectTask(models.Model):
         (1, 'review', _('Diperiksa')),
         (2, 'repeat', _('Ulangi')),
         (3, 'graduated', _('Lulus')),
+        (4, 'not_pass', _('Tidak Lulus')),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.review)
     note = models.CharField(_("Catatan"), max_length=220, blank=True, null=True)
