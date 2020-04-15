@@ -1,5 +1,5 @@
 {% extends 'backoffice/base-adminlte.html' %}
-{% load static %}
+{% load static tags_courses %}
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
@@ -22,7 +22,9 @@
                 <thead>
                     <th>Nama</th>
                     <th>Username</th>
-                    <th>Tanggal Selesai</th>
+                    <th>Mulai</th>
+                    <th>Selesai</th>
+                    <th>Durasi</th>
                     <th>Skor(%)</th>
                     <th style="width:10%">Aksi</th>
                 </thead>
@@ -31,7 +33,9 @@
                         <tr>
                             <td>{{ result.user.get_full_name }}</td>
                             <td>{{ result.user.username }}</td>
+                            <td>{{ result.start }}</td>
                             <td>{{ result.end }}</td>
+                            <td>{{ result.get_duration|sectoduration }}</td>
                             <td>{{ result.get_percent_correct }}</td>
                             <td>
                                 <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:participant_result' result.id %}"><i class="fas fa-eye"></i> Lihat Detail</a>

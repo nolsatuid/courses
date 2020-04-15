@@ -1,7 +1,5 @@
 {% extends 'backoffice/base-adminlte.html' %}
-{% load static %}
-{% load i18n %}
-{% load quiz_tags %}
+{% load static i18n quiz_tags tags_courses %}
 
 {% block content %}
 <div class="col-sm-12">
@@ -17,8 +15,12 @@
             <dl class="row">
                 <dt class="col-sm-1">Partisipan</dt>
                 <dd class="col-sm-11">{{ sitting.user }}</dd>
-                <dt class="col-sm-1">Tanggal Selesai</dt>
+                <dt class="col-sm-1">Mulai</dt>
+                <dd class="col-sm-11">{{ sitting.start }}</dd>
+                <dt class="col-sm-1">Selesai</dt>
                 <dd class="col-sm-11">{{ sitting.end }}</dd>
+                <dt class="col-sm-1">Durasi</dt>
+                <dd class="col-sm-11">{{ sitting.get_duration|sectoduration }}</dd>
                 <dt class="col-sm-1">{% trans "Score" %}</dt>
                 <dd class="col-sm-11">{{ sitting.get_percent_correct }}%</dd>
             </dl>

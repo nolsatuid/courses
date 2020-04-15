@@ -545,6 +545,11 @@ class Sitting(models.Model):
         total = self.get_max_score
         return answered, total
 
+    @property
+    def get_duration(self):
+        delta = self.end - self.start
+        return delta.total_seconds()
+
 
 @python_2_unicode_compatible
 class Question(models.Model):
