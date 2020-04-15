@@ -1,0 +1,51 @@
+<div class="card-header">
+    <h3 class="card-title">Daftar pratayang modul materi {{ course.title }}</h3>
+</div>
+<!-- /.card-header -->
+<div class="card-body">
+    <p>Berikut ini adalah daftar judul modul dan bab dari {{ course.title }}, <b>untuk memiliki akses materi secara penuh</b>, silahkan <b>ikuti kelas ini.</b></p>
+    <div id="accordion">
+    <!-- we are adding the .class so bootstrap.js collapse plugin detects it -->
+    {% for module in course.modules.all %} 
+        <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{module.slug}}" class="text-dark" aria-expanded="true">
+                Modul {{ module.title }}
+            </a>
+            </h4>
+            {% if module.is_visible or user.is_superuser %} 
+                <a href="{% url 'website:modules:preview' module.slug %}" class="float-right btn btn-xs btn-outline-info">
+                    Lihat Deskripsi
+                </a>
+            {% else %}
+                <button class="float-right btn btn-xs btn-outline-secondary" disabled>
+                    Lihat Deskripsi
+                </button>
+            {% endif %}
+        </div>
+        <div id="collapse{{module.slug}}" class="panel-collapse in collapse show" style="">
+            {% if module.sections.all %}
+            <div class="card-body">
+                <ol class="todo-list">
+                    {% for section in module.sections.all %}
+                        <li>
+                            {% if section.is_visible or user.is_superuser %} 
+                                <a class="text-dark" href="{% url 'website:sections:preview' section.slug %}">{{ forloop.counter }}. {{ section.title }}
+                                    <i class="float-right fa fa-eye"></i>
+                                </a>                                                            
+                            {% else %}
+                                {{ forloop.counter }}. {{ section.title }}
+                                <i class="float-right fa fa-eye-slash"></i>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+            {% endif %}
+        </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<!-- /.card-body -->
