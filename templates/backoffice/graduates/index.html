@@ -40,6 +40,7 @@
                     <th>Angkatan</th>
                     <th>Tanggal Mendaftar</th>
                     <th>Tanggal Menyelesaikan</th>
+                    <th>Aksi</th>
                 </thead>
                 <tbody>
                     {% for graduate in graduates %}
@@ -49,7 +50,10 @@
                             <td>{{ graduate.course.title }}</td>
                             <td>Angkatan {{ graduate.batch.batch }}</td>
                             <td>{{ graduate.date_enrollment }}</td>  
-                            <td>{{ graduate.finishing_date }}</td>    
+                            <td>{{ graduate.finishing_date }}</td>   
+                            <td>
+                                <a class="btn btn-sm btn-pill bg-navy" href="{% url 'backoffice:graduates:regenerate_certificate' graduate.user.id %}">Perbarui Sertifikat</a>
+                            </td> 
                         </tr>
                     {% endfor %}
                 </tbody>
