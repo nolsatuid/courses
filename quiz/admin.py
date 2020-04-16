@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.translation import ugettext_lazy as _
 
+from nolsatu_courses.apps.courses.models import Courses
 from .models import Quiz, Category, SubCategory, Progress, Question, Sitting
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
@@ -33,16 +34,28 @@ class QuizAdminForm(forms.ModelForm):
             verbose_name=_("Questions"),
             is_stacked=False))
 
+    courses = forms.ModelMultipleChoiceField(
+        queryset=Courses.objects.all().select_subclasses(),
+        required=False,
+        label=_("Courses"),
+        widget=FilteredSelectMultiple(
+            verbose_name=_("Courses"),
+            is_stacked=False))
+
     def __init__(self, *args, **kwargs):
         super(QuizAdminForm, self).__init__(*args, **kwargs)
         if self.instance.pk:
             self.fields['questions'].initial =\
                 self.instance.question_set.all().select_subclasses()
 
+            self.fields['courses'].initial = \
+                self.instance.courses_set.all().select_subclasses()
+
     def save(self, commit=True):
         quiz = super(QuizAdminForm, self).save(commit=False)
         quiz.save()
         quiz.question_set.set(self.cleaned_data['questions'])
+        quiz.courses_set.set(self.cleaned_data['courses'])
         self.save_m2m()
         return quiz
 
