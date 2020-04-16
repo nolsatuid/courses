@@ -80,9 +80,9 @@ def candidate_to_graduate(request, id):
 def regenerate_certificate(request, user_id):
     response = call_internal_api('get', url=settings.NOLSATU_HOST + f'/api/internal/regenerate-certificate/{user_id}')
     if response.status_code == 200:
-        messages.success(request, f'Berhasil perbarui sertifikat')
+        messages.success(request, 'Berhasil perbarui sertifikat')
     else:
-        messages.error(request, f'Gagal perbarui sertifikat')
+        messages.error(request, 'Gagal perbarui sertifikat')
 
     return redirect('backoffice:graduates:index')
 
