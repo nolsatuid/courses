@@ -45,6 +45,10 @@
                             {% else %}
                                 {% include 'partials/module-section-list.html' %}
                             {% endif %}
+
+                            {% if user.is_superuser %}
+                                {% include 'partials/module-section-list.html' %}
+                            {% endif %}
                           </div>
                     </div>
                   </div>                
