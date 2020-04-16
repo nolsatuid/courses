@@ -209,6 +209,9 @@ class Progress(models.Model):
         verbose_name = _("User Progress")
         verbose_name_plural = _("User progress records")
 
+    def __str__(self):
+        return f"{self.user} - {self.score}"
+
     @property
     def list_all_cat_scores(self):
         """
@@ -413,6 +416,8 @@ class Sitting(models.Model):
 
     class Meta:
         permissions = (("view_sittings", _("Can see completed exams.")),)
+        verbose_name = _("Sitting a quiz")
+        verbose_name_plural = _("Sitting quizzes")
 
     def get_first_question(self):
         """
