@@ -190,7 +190,7 @@ class Module(models.Model):
     slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
     description = RichTextUploadingField(_("Deskripsi"))
     order = models.PositiveIntegerField(_("Urutan"))
-    is_visible = models.BooleanField(_("Terlihat"), default=True)
+    is_visible = models.BooleanField(_("Terlihat"), default=False)
     course = models.ForeignKey("Courses", on_delete=models.CASCADE, related_name="modules")
 
     class Meta:
@@ -393,6 +393,8 @@ class CollectTask(models.Model):
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.review)
     note = models.CharField(_("Catatan"), max_length=220, blank=True, null=True)
+    create_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    update_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user} - {self.section}"
