@@ -15,7 +15,7 @@ class FormFilter(FormFilterStudent):
         enrolls = Enrollment.objects.select_related('course', 'user').filter(
             course=self.cleaned_data['course'], batch=self.cleaned_data['batch'],
             status__gte=Enrollment.STATUS.begin
-        )
+        ).exclude(user__is_superuser=True)
 
         data = []
         for enroll in enrolls:
