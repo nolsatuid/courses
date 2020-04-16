@@ -9,6 +9,7 @@ from django.db.models import When, Case, Count, IntegerField
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from model_utils import Choices
+from model_utils.managers import InheritanceManager
 from taggit.managers import TaggableManager
 
 from nolsatu_courses.apps.utils import generate_unique_slug
@@ -36,6 +37,9 @@ class Courses(models.Model):
         (2, 'publish', _("Terbit")),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.publish)
+    quizzes = models.ManyToManyField('quiz.Quiz', verbose_name='Quiz')
+
+    objects = InheritanceManager()
 
     class Meta:
         verbose_name = _("course")
