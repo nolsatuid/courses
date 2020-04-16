@@ -36,6 +36,7 @@ class Courses(models.Model):
         (2, 'publish', _("Terbit")),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.publish)
+    quizzes = models.ManyToManyField('quiz.Quiz', verbose_name='Quiz')
 
     class Meta:
         verbose_name = _("course")

@@ -7,6 +7,7 @@ from .models import (
 
 @admin.register(Courses)
 class AdminCourses(admin.ModelAdmin):
+    filter_horizontal = ('quizzes', )
     list_display = ('title', 'level', 'category_list', 'is_visible', 'author', 'status')
     search_fields = ('title',)
 
