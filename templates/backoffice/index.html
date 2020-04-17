@@ -89,9 +89,9 @@
                 </div>
                 <!-- /.row -->
             </div>
-
-            <div class="col-md-12"> <p>Daftar peserta <b>10</b> teratas</p> </div>
-            <table class="table table-bordered">
+            <br>
+            
+            <table class="table table-bordered" id="datatable-progress">
                 <thead>
                     <th>No</th>
                     <th>Nama</th>
@@ -128,6 +128,7 @@
 {% block extra_js %}
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#datatable-progress').DataTable();
         filterBatch();
     })
 

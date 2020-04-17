@@ -15,7 +15,7 @@ def index(request):
         statistics = {
             'total_registrant': len(data),
             'course': course,
-            'data': data[:10],
+            'data': data,
             'global_progress': form.global_progress()
         }
 
