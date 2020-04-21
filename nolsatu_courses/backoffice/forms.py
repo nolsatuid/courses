@@ -35,3 +35,50 @@ class FormFilter(FormFilterStudent):
             return sum(self.progresses) / len(self.progresses)
         except ZeroDivisionError:
             return 0
+
+    def get_quiz_stats(self):
+        course = self.cleaned_data['course']
+        quiz_stats = []
+
+        for quiz in course.quizzes.prefetch_related('sitting_set'):
+            sitting_stats = []
+            count_pass = []
+            count_not_pass = []
+            perfect_score = []
+            for sit in quiz.sitting_set.all():
+                sitting_stats.append({
+                    'sitting': sit,
+                    'score': sit.get_percent_correct
+                })
+
+                # untuk mendapatkan jumlah lulus dan tidak lulus
+                if sit.check_if_passed:
+                    count_pass.append(sit.id)
+                else:
+                    count_not_pass.append(sit.id)
+
+                # untuk mendapatkan peserta dengan nilai sempurta
+                if sit.get_percent_correct == 100:
+                    perfect_score.append(sit.id)
+
+            # mendapatkan nilai tertinggi perserta dari quiz
+            stats = max(sitting_stats, key=lambda s: s['score'])
+
+            # tambahkan jumlah lulus tidak lulus
+            stats.update({
+                'pass': len(count_pass),
+                'not_pass': len(count_pass),
+                'perfect_score': len(perfect_score)
+            })
+            quiz_stats.append(stats)
+
+        # tambahkan total lulus, tidak lulus, nilai sempurna
+        sum_pass = sum(q['pass'] for q in quiz_stats)
+        sum_not_pass = sum(q['not_pass'] for q in quiz_stats)
+        sum_perfect_score = sum(q['perfect_score'] for q in quiz_stats)
+        return {
+            'detail_stats': quiz_stats,
+            'sum_pass': sum_pass,
+            'sum_not_pass': sum_not_pass,
+            'sum_perfect_score': sum_perfect_score
+        }

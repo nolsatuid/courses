@@ -88,29 +88,111 @@
                 <!-- /.col -->
                 </div>
                 <!-- /.row -->
+
+                <table class="table table-bordered" id="datatable-progress">
+                    <thead>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Progress</th>
+                        <th>Modul & sesi</th>
+                        <th>Diperiksa</th>
+                        <th>Lulus</th>
+                        <th>Mengulang</th>
+                    </thead>
+                    <tbody>
+                        {% for data in statistics.data %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ data.user }}</td>
+                                <td>{{ data.progress|floatformat:-2 }} %</td>
+                                <td>{{ data.number_of_activity_step }} diselesaikan</td>
+                                <td>{{ data.task.review }}</td>
+                                <td>{{ data.task.graduated }}</td>
+                                <td>{{ data.task.repeat }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <br>
-            
-            <table class="table table-bordered" id="datatable-progress">
+        
+            <hr>
+            <h3 class="mt-3 mb-3">Statistik Kuis {{ statistics.course.title }}</h3>
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-tasks"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Kuis</span>
+                            <span class="info-box-number">
+                            {{ statistics.course.quizzes.count }}
+                            <small></small>
+                            </span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Lulus</span>
+                            <span class="info-box-number">{{ quiz_stats.sum_pass }}</span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Tidak Lulus</span>
+                            <span class="info-box-number">{{ quiz_stats.sum_not_pass }}</span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Nilai Sempurna</span>
+                            <span class="info-box-number">{{ quiz_stats.sum_perfect_score }}</span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+            </div>
+
+            <table class="table table-bordered">
                 <thead>
                     <th>No</th>
-                    <th>Nama</th>
-                    <th>Progress</th>
-                    <th>Modul & sesi</th>
-                    <th>Diperiksa</th>
+                    <th>Kuis</th>
+                    <th>Nilai Tertinggi</th>
                     <th>Lulus</th>
-                    <th>Mengulang</th>
+                    <th>Tidak Lulus</th>
                 </thead>
                 <tbody>
-                    {% for data in statistics.data %}
+                    {% for data in quiz_stats.detail_stats  %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ data.user }}</td>
-                            <td>{{ data.progress|floatformat:-2 }} %</td>
-                            <td>{{ data.number_of_activity_step }} diselesaikan</td>
-                            <td>{{ data.task.review }}</td>
-                            <td>{{ data.task.graduated }}</td>
-                            <td>{{ data.task.repeat }}</td>
+                            <td>
+                                <a href="{% url 'backoffice:quizzes:detail_result' data.sitting.quiz.id %}">{{ data.sitting.quiz }}</a>
+                            </td>
+                            <td>{{ data.score }} a.n <a href="{% url 'backoffice:quizzes:participant_result' data.sitting.id %}">{{ data.sitting.user }}</a></td>
+                            <td>{{ data.pass }}</td>
+                            <td>{{ data.not_pass }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

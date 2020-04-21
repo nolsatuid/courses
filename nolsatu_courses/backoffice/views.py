@@ -7,6 +7,7 @@ from .forms import FormFilter
 @staff_member_required
 def index(request):
     statistics = None
+    quiz_stats = None
 
     form = FormFilter(request.GET or None)
     if form.is_valid():
@@ -18,11 +19,13 @@ def index(request):
             'data': data,
             'global_progress': form.global_progress()
         }
+        quiz_stats = form.get_quiz_stats()
 
     context = {
         'menu_active': 'dashboard',
         'title': _('Dashboard'),
         'statistics': statistics,
         'form': form,
+        'quiz_stats': quiz_stats,
     }
     return render(request, 'backoffice/index.html', context)
