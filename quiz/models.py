@@ -552,6 +552,8 @@ class Sitting(models.Model):
 
     @property
     def get_duration(self):
+        if not self.end or not self.start:
+            return 0
         delta = self.end - self.start
         return delta.total_seconds()
 

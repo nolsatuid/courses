@@ -62,7 +62,10 @@ class FormFilter(FormFilterStudent):
                     perfect_score.append(sit.id)
 
             # mendapatkan nilai tertinggi perserta dari quiz
-            stats = max(sitting_stats, key=lambda s: s['score'])
+            if sitting_stats:
+                stats = max(sitting_stats, key=lambda s: s['score'])
+            else:
+                continue
 
             # tambahkan jumlah lulus tidak lulus
             stats.update({
