@@ -17,13 +17,14 @@ def enroll_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
         try:
             obj = Module.objects.get(slug=kwargs['slug'])
-            allowed_access = obj.course.get_enroll(request.user).allowed_access
+            enroll = obj.course.get_enroll(request.user)
         except ObjectDoesNotExist:
             obj = Section.objects.get(slug=kwargs['slug'])
-            allowed_access = obj.module.course.get_enroll(request.user).allowed_access
+            enroll = obj.module.course.get_enroll(request.user)
 
-        if obj.has_enrolled(request.user) and allowed_access:
-            return view_func(request, *args, **kwargs)
+        if obj.has_enrolled(request.user):
+            if enroll.allowed_access:
+                return view_func(request, *args, **kwargs)
 
         messages.warning(
             request,
