@@ -70,7 +70,7 @@ class FormFilter(FormFilterStudent):
             # tambahkan jumlah lulus tidak lulus
             stats.update({
                 'pass': len(count_pass),
-                'not_pass': len(count_pass),
+                'not_pass': len(count_not_pass),
                 'perfect_score': len(perfect_score)
             })
             quiz_stats.append(stats)
