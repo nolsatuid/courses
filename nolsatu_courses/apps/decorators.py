@@ -22,7 +22,7 @@ def enroll_required(view_func):
             obj = Section.objects.get(slug=kwargs['slug'])
             enroll = obj.module.course.get_enroll(request.user)
 
-        if obj.has_enrolled(request.user):
+        if obj.has_enrolled(request.user) and enroll:
             if enroll.allowed_access:
                 return view_func(request, *args, **kwargs)
 
