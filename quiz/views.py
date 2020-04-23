@@ -9,6 +9,7 @@ from django.views.generic import DetailView, ListView, TemplateView, FormView
 from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
+from .decorators import quiz_access_required
 
 
 class QuizMarkerMixin(object):
@@ -47,6 +48,7 @@ class QuizDetailView(DetailView):
     slug_field = 'url'
 
     @method_decorator(login_required)
+    @method_decorator(quiz_access_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
@@ -153,7 +155,8 @@ class QuizTake(FormView):
     result_template_name = 'result.html'
     single_complete_template_name = 'single_complete.html'
 
-    @method_decorator(login_required)
+    @method_decorator(login_required)    
+    @method_decorator(quiz_access_required)
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
