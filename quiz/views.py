@@ -155,7 +155,7 @@ class QuizTake(FormView):
     result_template_name = 'result.html'
     single_complete_template_name = 'single_complete.html'
 
-    @method_decorator(login_required)    
+    @method_decorator(login_required)
     @method_decorator(quiz_access_required)
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
