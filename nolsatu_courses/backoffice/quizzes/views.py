@@ -7,7 +7,7 @@ from quiz.models import Quiz, Sitting
 
 
 @staff_member_required
-def index(request):
+def results(request):
     quizzes = Quiz.objects.all()
 
     context = {
@@ -15,7 +15,7 @@ def index(request):
         'title': _('Hasil Kuis'),
         'quizzes': quizzes
     }
-    return render(request, 'backoffice/quizzes/index.html', context)
+    return render(request, 'backoffice/quizzes/results.html', context)
 
 
 @staff_member_required

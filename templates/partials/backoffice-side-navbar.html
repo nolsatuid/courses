@@ -84,11 +84,25 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <a href="{% url 'backoffice:quizzes:index' %}" class="nav-link {% if menu_active == 'quiz' %}active{% endif %}">
+            <li class="nav-item {% if menu_active == 'quiz' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'graduate' %}active{% endif %}">
                     <i class="nav-icon fas fa-tasks"></i>
-                    <p>Hasil Kuis</p>
+                    <p>Kuis<i class="right right fas fa-angle-left"></i></p>
                 </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:quizzes:results' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Hasil Kuis</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:quizzes:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Daftar Kuis</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item">
                 <a href="{% url 'backoffice:batchs:index' %}" class="nav-link {% if menu_active == 'batch' %}active{% endif %}">
