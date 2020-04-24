@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 from quiz.models import Quiz, Sitting
-from quiz.admin import QuizAdminForm
+from .forms import FormQuiz
 
 
 @staff_member_required
@@ -21,7 +21,7 @@ def index(request):
 
 @staff_member_required
 def add(request):
-    form = QuizAdminForm(data=request.POST or None)
+    form = FormQuiz(data=request.POST or None)
     if form.is_valid():
         quiz = form.save()
         messages.success(request, _(f"Berhasil tambah kuis {quiz.title}"))
@@ -39,7 +39,7 @@ def add(request):
 @staff_member_required
 def edit(request, id):
     quiz = get_object_or_404(Quiz, id=id)
-    form = QuizAdminForm(data=request.POST or None, instance=quiz)
+    form = FormQuiz(data=request.POST or None, instance=quiz)
     if form.is_valid():
         quiz = form.save()
         messages.success(request, _(f"Berhasil ubah kursus {quiz.title}"))

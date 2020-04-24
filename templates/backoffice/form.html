@@ -1,6 +1,18 @@
 {% extends 'backoffice/base-adminlte.html' %}
 {% load static widget_tweaks %}
 
+{% block extra_css %}
+<style>
+    .selector h2 {
+        font-size: 1rem;
+        margin: 0px;
+    }
+    .selector .selector-filter {
+        font-size: 1rem !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="col-md-12">
     <div class="card">
@@ -18,24 +30,24 @@
                         </div>
                         <div class=" col-md-12 col-lg-12 ">
                             <div class="tab-content">
-                                    {% csrf_token %}
+                                {% csrf_token %}
 
-                                    {{ form.media }}
-                                    {{ form.non_field_errors }}
-                                    {% for field in form %}
-                                        <div class="form-group row">
-                                            <label class="col-md-2"> {{ field.label }}</label>
-                                            <div class="col-md-10">
-                                                {% if field.field.widget.input_type == 'checkbox' %}
-                                                    {% render_field field%}
-                                                {% else %}
-                                                    {% render_field field|add_class:"form-control" %}
-                                                {% endif %}
-                                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                                                <small class="form-text text-danger">{{ field.errors }}</small>
-                                            </div>
+                                {{ form.media }}
+                                {{ form.non_field_errors }}
+                                {% for field in form %}
+                                    <div class="form-group row">
+                                        <label class="col-md-2"> {{ field.label }}</label>
+                                        <div class="col-md-10">
+                                            {% if field.field.widget.input_type == 'checkbox' %}
+                                                {% render_field field%}
+                                            {% else %}
+                                                {% render_field field|add_class:"form-control" %}
+                                            {% endif %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                            <small class="form-text text-danger">{{ field.errors }}</small>
                                         </div>
-                                    {% endfor %}                                
+                                    </div>
+                                {% endfor %}                                
                             </div>
                         </div>
                     </div>
