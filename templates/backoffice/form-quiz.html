@@ -34,28 +34,53 @@
 
                                 {{ form.media }}
                                 {{ form.non_field_errors }}
-                                {% for field in form %}
-                                    <div class="form-group row">
-                                        <label class="col-md-2"> {{ field.label }}</label>
-                                        <div class="col-md-10">
-                                            {% if field.field.widget.input_type == 'checkbox' %}
-                                                {% render_field field%}
-                                            {% else %}
-                                                {% if field.name == 'questions' %}
-                                                <select id="sub-category" class="form-control" onchange="getQuestions()">
-                                                    <option value="">---------</option>
-                                                </select>
-                                                <small class="form-text text-muted">Saring pertanyaan berdasarkan sub-category</small>
-                                                <br>
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        {% for field in form %}
+                                            <div class="form-group" {% if field.name == 'questions' %} style="display: grid;" {% endif %}>
+                                                {% if field.field.widget.input_type != 'checkbox' %}
+                                                    <label class=""> {{ field.label }}</label>
+
+                                                    <div class="mb-4">
+                                                        {% if field.name == 'questions' %}
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <p>Sub Kategori</p>
+                                                                    <select id="sub-category" class="form-control" onchange="getQuestions()">
+                                                                        <option value="">---------</option>
+                                                                    </select>
+                                                                    <small class="form-text text-muted">Saring pertanyaan berdasarkan sub kategori</small>
+                                                                    <br>
+                                                                    {% render_field field|add_class:"form-control" %}
+                                                                </div>
+                                                            </div>
+                                                        {% else %}                                                            
+                                                            {% render_field field|add_class:"form-control" %}
+                                                        {% endif %}
+                                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                        <small class="form-text text-danger">{{ field.errors }}</small>
+                                                    </div>
                                                 {% endif %}
-                                                {% render_field field|add_class:"form-control" %}
-                                            {% endif %}
-                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                            <small class="form-text text-danger">{{ field.errors }}</small>
-                                        </div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                    <br>
-                                {% endfor %}                                
+                                    <div class="offset-md-1"></div>
+                                    <div class="col-md-4">
+                                        {% for field in form %}
+                                            <div class="form-group">
+                                                {% if field.field.widget.input_type == 'checkbox' %}
+                                                    <label class=""> {{ field.label }}</label>
+
+                                                    <div class="mb-4">  
+                                                        {% render_field field%}
+                                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                        <small class="form-text text-danger">{{ field.errors }}</small>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>                                
                             </div>
                         </div>
                     </div>
