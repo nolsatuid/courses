@@ -1,6 +1,18 @@
 {% extends 'backoffice/base-adminlte.html' %}
 {% load static widget_tweaks %}
 
+{% block extra_css %}
+<style>
+    .selector h2 {
+        font-size: 1rem;
+        margin: 0px;
+    }
+    .selector .selector-filter {
+        font-size: 1rem !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="col-md-12">
     <div class="card">
@@ -9,24 +21,23 @@
                 {{ title }}
             </h4>
         </div>
-        <div class="card-body">
-            <div class="row-fluid">
-                <div class="row">
-                    <div class=" col-md-12 col-lg-12 ">
-                        <h5>{{ title_extra }}</h5>
-                    </div>
-                    <div class=" col-md-12 col-lg-12 ">
-                        <div class="tab-content">
-
-                            <form action="" method="post" enctype="multipart/form-data">
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="card-body">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class=" col-md-12 col-lg-12 ">
+                            <h5>{{ title_extra }}</h5>
+                        </div>
+                        <div class=" col-md-12 col-lg-12 ">
+                            <div class="tab-content">
                                 {% csrf_token %}
 
                                 {{ form.media }}
                                 {{ form.non_field_errors }}
                                 {% for field in form %}
-                                    <div class="form-group col-md-12">
-                                        <label class="col-md-12"> {{ field.label }}</label>
-                                        <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="col-md-2"> {{ field.label }}</label>
+                                        <div class="col-md-10">
                                             {% if field.field.widget.input_type == 'checkbox' %}
                                                 {% render_field field%}
                                             {% else %}
@@ -36,20 +47,18 @@
                                             <small class="form-text text-danger">{{ field.errors }}</small>
                                         </div>
                                     </div>
-                                {% endfor %}
-
-                                <button type="submit" class="btn btn-success btn-user btn-block">
-                                    {% if title_submit %} {{ title_submit }} {% else %} Submit {% endif %}
-                                </button>
-
-                            </form>
+                                {% endfor %}                                
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card-footer"></div>
-
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success btn-user float-right">
+                    {% if title_submit %} {{ title_submit }} {% else %} Submit {% endif %}
+                </button>
+            </div>
+    </form>
     </div>
 </div>
 {% endblock %}

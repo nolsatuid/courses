@@ -48,7 +48,7 @@ def edit(request, id):
 
     context = {
         'menu_active': 'batch',
-        'title': _('Ubah Angakatn'),
+        'title': _('Ubah Angkatan'),
         'form': form,
         'title_submit': 'Simpan'
     }

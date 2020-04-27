@@ -1,29 +1,29 @@
 {% extends 'backoffice/base-adminlte.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+{% endblock  %}
 
 {% block content %}
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
             <h4 class="float-left">{{ title }}</h4>
-            <a href="{% url 'backoffice:quizzes:add' %}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Kuis</a>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
                 <thead>
-                    <th>Judul</th>
-                    <th>Kategori</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
+                    <th>Kursus</th>
+                    <th style="width:10%">Aksi</th>
                 </thead>
                 <tbody>
                     {% for quiz in quizzes %}
                         <tr>
-                            <td>{{ quiz.title }}</td>
-                            <td>{{ quiz.category }}</td>
-                            <td>{{ quiz.draft|yesno:"<span class='badge badge-danger'>Konsep</span>, <span class='badge badge-success'>Terbit</span>"|safe }}</td>
+                            <td>{{ quiz.title }}</td> 
                             <td>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:edit' quiz.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i> Edit</a>
-                            </td>
+                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:detail_result' quiz.id %}"><i class="fas fa-eye"></i> Lihat Hasil</a>
+                            </td>  
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -37,6 +37,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $('#datatable').DataTable();
