@@ -3,8 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
-from quiz.models import Quiz, Sitting
+from quiz.models import Quiz, Sitting, Question, SubCategory
 from .forms import FormQuiz
 
 
@@ -33,7 +34,7 @@ def add(request):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form.html', context)
+    return render(request, 'backoffice/form-quiz.html', context)
 
 
 @staff_member_required
@@ -51,7 +52,7 @@ def edit(request, id):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form.html', context)
+    return render(request, 'backoffice/form-quiz.html', context)
 
 
 @staff_member_required
@@ -91,3 +92,39 @@ def participant_result(request, id):
         'questions': sitting.get_questions(with_answers=True)
     }
     return render(request, 'backoffice/quizzes/participant-results.html', context)
+
+
+@staff_member_required
+def ajax_filter_sub_category(request):
+    category = request.GET.get('category', None)
+    data = {
+        'sub_category': []
+    }
+    if category:
+        sub_category = SubCategory.objects.filter(category=category)
+        data['sub_category'] = [
+            {
+                'id': s.id,
+                'name': s.sub_category
+            } for s in sub_category
+        ]
+
+    return JsonResponse(data, status=200)
+
+
+@staff_member_required
+def ajax_filter_questions(request):
+    sub_category = request.GET.get('sub_category', None)
+    data = {
+        'questions': []
+    }
+    if sub_category:
+        questions = Question.objects.filter(sub_category=sub_category)
+        data['questions'] = [
+            {
+                'id': s.id,
+                'name': s.content
+            } for s in questions
+        ]
+
+    return JsonResponse(data, status=200)
