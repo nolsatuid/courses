@@ -107,6 +107,12 @@
         getSubCategory();
     });
 
+    $(document).on('click',
+        '#id_questions_add_all_link, #id_questions_add_link, '+
+        '#id_questions_remove_link, #id_questions_remove_all_link',function(e) {
+        getQuestions();
+    });
+
     function getSubCategory(){
         category = $('#id_category').val();
         list_sub_category = $('#sub-category');
@@ -135,6 +141,12 @@
     function getQuestions(){
         sub_category = $('#sub-category').val();
         list_questions = $('#id_questions_from');
+
+        var toValues = [];
+        $('#id_questions_to option').each(function() {
+            toValues.push($(this).val());
+        });
+        
         $.ajax({
             url: '{% url "backoffice:quizzes:ajax_filter_questions" %}',
             data: {
@@ -144,9 +156,11 @@
             success: function (data) {
                 list_questions.html('');
                 $.each(data.questions, function(key,value) {
-                    list_questions.append(
-                        '<option value="'+value.id+'" title="'+value.name+'">'+value.name+'</option>'
-                    );                   
+                    if(toValues.indexOf(String(value.id)) === -1){
+                        list_questions.append(
+                            '<option value="'+value.id+'" title="'+value.name+'">'+value.name+'</option>'
+                        );
+                    }                   
                 });                      
             },
             error: function (data) {
