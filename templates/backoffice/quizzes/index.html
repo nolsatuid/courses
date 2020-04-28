@@ -13,6 +13,7 @@
                     <th>Judul</th>
                     <th>Kategori</th>
                     <th>Status</th>
+                    <th>Jadwal</th>
                     <th>Aksi</th>
                 </thead>
                 <tbody>
@@ -21,6 +22,7 @@
                             <td>{{ quiz.title }}</td>
                             <td>{{ quiz.category }}</td>
                             <td>{{ quiz.draft|yesno:"<span class='badge badge-danger'>Konsep</span>, <span class='badge badge-success'>Terbit</span>"|safe }}</td>
+                            <td>{{ quiz.start_time.date }} <br> {{ quiz.start_time|date:"H:i" }} - {{ quiz.end_time|date:"H:i" }}</td>
                             <td>
                                 <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:edit' quiz.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i> Edit</a>
                             </td>
