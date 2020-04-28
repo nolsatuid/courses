@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-03 14:59+0700\n"
+"POT-Creation-Date: 2020-04-28 14:50+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: admin.py:31 admin.py:33 models.py:594
+#: admin.py:32 admin.py:34 models.py:641
 msgid "Questions"
 msgstr "Pertanyaan"
 
-#: models.py:32 models.py:39 models.py:55 models.py:85 models.py:561
+#: admin.py:40 admin.py:42
+msgid "Courses"
+msgstr "Kurus"
+
+#: decorators.py:26
+#, python-brace-format
+msgid "{quiz.title} hasn't started yet"
+msgstr "{quiz.title} belum dimulai"
+
+#: decorators.py:32
+#, python-brace-format
+msgid "{quiz.title} is over"
+msgstr "{quiz.title} sudah selesai"
+
+#: decorators.py:43
+#, python-brace-format
+msgid "You are not registered on the quiz <strong> {quiz.title} </strong>"
+msgstr "Kamu tidak terdaftar pada kuis <strong> {quiz.title} </strong>"
+
+#: models.py:32 models.py:39 models.py:55 models.py:85 models.py:608
 #: templates/progress.html:26 templates/quiz/quiz_detail.html:20
 #: templates/quiz/quiz_list.html:19 templates/quiz/sitting_detail.html:16
 msgid "Category"
@@ -32,7 +51,7 @@ msgstr "Kategori"
 msgid "Categories"
 msgstr "Kategori"
 
-#: models.py:50 models.py:60 models.py:567
+#: models.py:50 models.py:60 models.py:614
 msgid "Sub-Category"
 msgstr "Sub-Kategori"
 
@@ -153,96 +172,132 @@ msgstr ""
 "Jika ya, kuis tidak akan ditampilkan dalam daftar kuis. Hanya dapat diakses "
 "oleh pengguna yang dapat mengedit kuis."
 
-#: models.py:160 models.py:381 models.py:557
+#: models.py:146
+msgid "Start Time"
+msgstr "Waktu mulai"
+
+#: models.py:147
+msgid "Start time is used to determine when this quiz starts"
+msgstr "Waktu mulai digunakan untuk menentukan kapan kuis ini dimulai"
+
+#: models.py:151
+msgid "End Time"
+msgstr "Waktu akhir"
+
+#: models.py:152
+msgid "End time is used to determine when the quiz ends"
+msgstr "Waktu akhir digunakan untuk menentukan kapan kuis berakhir"
+
+#: models.py:170 models.py:407 models.py:604
 #: templates/quiz/sitting_list.html:24
 msgid "Quiz"
 msgstr "Kuis"
 
-#: models.py:161
+#: models.py:171
 msgid "Quizzes"
 msgstr "Kuis"
 
-#: models.py:200 models.py:379 templates/quiz/sitting_detail.html:22
+#: models.py:223 models.py:405 templates/quiz/sitting_detail.html:22
 #: templates/quiz/sitting_list.html:23
 msgid "User"
 msgstr "Pengguna"
 
-#: models.py:203 templates/progress.html:69
+#: models.py:226 templates/progress.html:69
 #: templates/quiz/sitting_detail.html:26 templates/quiz/sitting_list.html:26
 #: templates/result.html:41
 msgid "Score"
 msgstr "Skor"
 
-#: models.py:209
+#: models.py:232
 msgid "User Progress"
-msgstr "Kemajuan "
+msgstr "Kemajuan"
 
-#: models.py:210
+#: models.py:233
 msgid "User progress records"
 msgstr "Catatan kemajuan pengguna."
 
-#: models.py:270 tests.py:170
+#: models.py:296 tests.py:170
 msgid "error"
-msgstr ""
+msgstr "galat"
 
-#: models.py:270
+#: models.py:296
 msgid "category does not exist or invalid score"
 msgstr "Kategori tidak ada atau skor tidak valid"
 
-#: models.py:385
+#: models.py:411
 msgid "Question Order"
 msgstr "Urutan Pertanyaan"
 
-#: models.py:390
+#: models.py:416
 msgid "Question List"
 msgstr "Daftar Pertanyaan"
 
-#: models.py:396
+#: models.py:422
 msgid "Incorrect questions"
 msgstr "Pertanyaan yang salah"
 
-#: models.py:399
+#: models.py:425
 msgid "Current Score"
 msgstr "Skor Saat Ini"
 
-#: models.py:402
+#: models.py:428
 msgid "Complete"
 msgstr "Selesai"
 
-#: models.py:405
+#: models.py:431
 msgid "User Answers"
 msgstr "Jawaban Pengguna"
 
-#: models.py:408
+#: models.py:434
 msgid "Start"
 msgstr "Mulai"
 
-#: models.py:410
+#: models.py:436
 msgid "End"
 msgstr "Berakhir"
 
-#: models.py:415
+#: models.py:439
+msgid "Finish"
+msgstr "Selesai"
+
+#: models.py:440
+msgid "Out Time"
+msgstr "Waktu habis"
+
+#: models.py:442 templates/quiz/sitting_detail.html:35
+msgid "Status"
+msgstr "Status"
+
+#: models.py:447
 msgid "Can see completed exams."
 msgstr "Dapat melihat ujian yang diselesaikan."
 
-#: models.py:575
+#: models.py:448
+msgid "Sitting a quiz"
+msgstr "Memulai kuis"
+
+#: models.py:449
+msgid "Sitting quizzes"
+msgstr "Daftar kuis"
+
+#: models.py:622
 msgid "Figure"
 msgstr "Gambar"
 
-#: models.py:579
+#: models.py:626
 msgid "Enter the question text that you want displayed"
 msgstr "Masukkan pertanyaan yang ingin ditampilkan"
 
-#: models.py:581 models.py:593 templates/question.html:18
+#: models.py:628 models.py:640 templates/question.html:22
 #: templates/quiz/sitting_detail.html:33
 msgid "Question"
 msgstr "Pertanyaan"
 
-#: models.py:585
+#: models.py:632
 msgid "Explanation to be shown after the question has been answered."
 msgstr "Penjelasan akan ditampilkan setelah pertanyaan dijawab."
 
-#: models.py:588 templates/correct_answer.html:40
+#: models.py:635 templates/correct_answer.html:40
 msgid "Explanation"
 msgstr "Penjelasan"
 
@@ -302,19 +357,23 @@ msgstr "Judul Kuis"
 msgid "Possible Score"
 msgstr "Skor Maksimal"
 
-#: templates/question.html:18
+#: templates/question.html:14
+msgid "Remaining time"
+msgstr "Waktu tersisa"
+
+#: templates/question.html:22
 msgid "of"
 msgstr "dari"
 
-#: templates/question.html:23
+#: templates/question.html:27
 msgid "Question category"
 msgstr "Kategori pertanyaan"
 
-#: templates/question.html:46
+#: templates/question.html:50
 msgid "Check"
 msgstr "Cek"
 
-#: templates/question.html:58
+#: templates/question.html:62
 msgid "The previous question"
 msgstr "Pertanyaan sebelumnya"
 
@@ -336,11 +395,11 @@ msgstr "Daftar kuis"
 msgid "Quiz Detail"
 msgstr "Detail Kuis"
 
-#: templates/quiz/quiz_detail.html:25
+#: templates/quiz/quiz_detail.html:33
 msgid "You will only get one attempt at this quiz"
 msgstr "Kamu hanya dapat melakukan satu kali percobaan pada kuis ini"
 
-#: templates/quiz/quiz_detail.html:31
+#: templates/quiz/quiz_detail.html:39
 msgid "Start quiz"
 msgstr "Memulai kuis"
 
@@ -352,11 +411,15 @@ msgstr "Ujian"
 msgid "Single attempt"
 msgstr "Satu kali percobaan"
 
-#: templates/quiz/quiz_list.html:37 templates/quiz/sitting_list.html:52
+#: templates/quiz/quiz_list.html:22
+msgid "Schedule"
+msgstr "Jadwal"
+
+#: templates/quiz/quiz_list.html:39 templates/quiz/sitting_list.html:52
 msgid "View details"
 msgstr "Lihat detail"
 
-#: templates/quiz/quiz_list.html:47
+#: templates/quiz/quiz_list.html:49
 msgid "There are no available quizzes"
 msgstr "Tidak ada kuis yang tersedia"
 
@@ -375,10 +438,6 @@ msgstr "Selesai"
 #: templates/quiz/sitting_detail.html:34
 msgid "User answer"
 msgstr "Jawaban pengguna"
-
-#: templates/quiz/sitting_detail.html:35
-msgid "Status"
-msgstr "Status"
 
 #: templates/quiz/sitting_detail.html:51
 msgid "incorrect"
@@ -477,6 +536,10 @@ msgstr "kategori"
 msgid "There are no quizzes"
 msgstr "Tidak ada kuis"
 
+#: templatetags/quiz_tags.py:31
+msgid "not answered"
+msgstr "Jawaban kamu"
+
 #~ msgid "Quiz title"
 #~ msgstr "Judul kuis"
 
@@ -491,9 +554,6 @@ msgstr "Tidak ada kuis"
 
 #~ msgid "Exam title"
 #~ msgstr "Judul ujian"
-
-#~ msgid "You answered"
-#~ msgstr "Jawaban kamu"
 
 #~ msgid "questions correctly out of"
 #~ msgstr "pertanyaan yang benar dari"

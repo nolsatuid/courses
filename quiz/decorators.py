@@ -23,13 +23,13 @@ def quiz_access_required(view_func):
         if quiz.any_schedule():
             if timezone.now() < quiz.start_time:
                 messages.warning(
-                    request, _(f"{quiz.title} belum dimulai")
+                    request, _(f"{quiz.title} hasn't started yet")
                 )
                 return redirect('website:index')
             elif timezone.now() > quiz.end_time:
                 finish_out_time(quiz, request.user)
                 messages.warning(
-                    request, _(f"{quiz.title} sudah berakhir")
+                    request, _(f"{quiz.title} is over")
                 )
                 return redirect('website:index')
 
@@ -40,7 +40,7 @@ def quiz_access_required(view_func):
 
         messages.warning(
             request,
-            _(f"Kamu tidak terdaftar pada kuis <strong> {quiz.title} </strong>")
+            _(f"You are not registered on the quiz <strong> {quiz.title} </strong>")
         )
         return redirect('website:index')
     return _wrapped_view
