@@ -220,6 +220,10 @@ class QuizTake(FormView):
             context['previous'] = self.previous
         if hasattr(self, 'progress'):
             context['progress'] = self.progress
+        # jika memiliki waktu selesai
+        if self.quiz.any_schedule():
+            context['end_time'] = self.quiz.end_time
+
         return context
 
     def form_valid_user(self, form):
