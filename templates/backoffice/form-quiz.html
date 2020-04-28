@@ -101,6 +101,24 @@
     $(document).ready(function() {
         getSubCategory();
         getQuestions();
+
+        startTime = $("#id_start_time").val();
+        endTime = $("#id_end_time").val();
+
+        flatpickr("#id_start_time", {
+            enableTime: true,
+            dateFormat: "d-m-Y H:i",
+            time_24hr: true,
+            defaultDate: startTime
+        });
+
+        flatpickr("#id_end_time", {
+            enableTime: true,
+            dateFormat: "d-m-Y H:i",
+            time_24hr: true,
+            defaultDate: endTime
+        });
+        console.log(startTime, endTime);
 	});
 
     $("#id_category").change(function() {

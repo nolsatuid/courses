@@ -20,23 +20,23 @@
         <div class="card-body">
             <table id="datatable" class="table table-striped">
                 <thead>
-                    <th>Nama</th>
                     <th>Username</th>
                     <th>Mulai</th>
                     <th>Selesai</th>
                     <th>Durasi</th>
                     <th>Skor(%)</th>
+                    <th>Status</th>
                     <th style="width:10%">Aksi</th>
                 </thead>
                 <tbody>
                     {% for result in results %}
                         <tr>
-                            <td>{{ result.user.get_full_name }}</td>
                             <td>{{ result.user.username }}</td>
                             <td>{{ result.start }}</td>
                             <td>{{ result.end }}</td>
                             <td>{{ result.get_duration|sectoduration }}</td>
                             <td>{{ result.get_percent_correct }}</td>
+                            <td>{{ result.get_status_display }}</td>
                             <td>
                                 <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:participant_result' result.id %}"><i class="fas fa-eye"></i> Lihat Detail</a>
                             </td>  

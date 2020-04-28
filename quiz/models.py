@@ -142,6 +142,16 @@ class Quiz(models.Model):
                     " taken by users who can edit"
                     " quizzes."))
 
+    start_time = models.DateTimeField(
+        verbose_name=_("Start Time"), blank=True, null=True,
+        help_text=_("Start time is used to determine when this quiz starts")
+    )
+
+    end_time = models.DateTimeField(
+        verbose_name=_("End Time"), blank=True, null=True,
+        help_text=_("End time is used to determine when the quiz ends")
+    )
+
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         self.url = re.sub('\s+', '-', self.url).lower()
 
@@ -178,6 +188,19 @@ class Quiz(models.Model):
 
     def anon_q_data(self):
         return str(self.id) + "_data"
+
+    def on_schedule(self):
+        if not self.start_time or not self.end_time:
+            return None
+
+        if now() >= self.start_time and now() <= self.end_time:
+            return True
+        return False
+
+    def any_schedule(self):
+        if self.start_time and self.end_time:
+            return True
+        return False
 
 
 class ProgressManager(models.Manager):
@@ -412,6 +435,12 @@ class Sitting(models.Model):
 
     end = models.DateTimeField(null=True, blank=True, verbose_name=_("End"))
 
+    STATUS = (
+        ('finish', _("Finish")),
+        ('out_time', _("Out Time")),
+    )
+    status = models.CharField(verbose_name=_("Status"), max_length=50,
+                              choices=STATUS, default=STATUS[0][0])
     objects = SittingManager()
 
     class Meta:
@@ -468,9 +497,11 @@ class Sitting(models.Model):
         else:
             return 0
 
-    def mark_quiz_complete(self):
+    def mark_quiz_complete(self, out_time=False):
         self.complete = True
         self.end = now()
+        if out_time:
+            self.status = self.STATUS[1][0]
         self.save()
 
     def add_incorrect_question(self, question):
@@ -527,7 +558,10 @@ class Sitting(models.Model):
         if with_answers:
             user_answers = json.loads(self.user_answers)
             for question in questions:
-                question.user_answer = user_answers[str(question.id)]
+                try:
+                    question.user_answer = user_answers[str(question.id)]
+                except KeyError:
+                    question.user_answer = None
 
         return questions
 

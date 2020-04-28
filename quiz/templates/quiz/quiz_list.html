@@ -19,6 +19,7 @@
 						<th>{% trans "Category" %}</th>
 						<th>{% trans "Exam" %}</th>
 						<th>{% trans "Single attempt" %}</th>
+						<th>{% trans "Schedule" %}</th>
 						<th></th>
 						</tr>
 					</thead>
@@ -32,6 +33,7 @@
 						<td>{{ quiz.category }}</td>
 						<td>{% if quiz.exam_paper %}<i class="fas fa-check text-success text-lg"></i>{% else %}<i class="fas fa-times text-danger text-lg"></i>{% endif %}</td>
 						<td>{% if quiz.single_attempt %}<i class="fas fa-check text-success text-lg"></i>{% else %}<i class="fas fa-times text-danger text-lg"></i>{% endif %}</td>
+						<td>{{ quiz.start_time.date }} <br> {{ quiz.start_time|date:"H:i" }} - {{ quiz.end_time|date:"H:i" }}</td>
 						<td>
 							<a href="{% url 'quiz_start_page' slug=quiz.url %}" class="btn btn-info">
 								<i class="fas fa-eye"></i> {% trans "View details" %}
