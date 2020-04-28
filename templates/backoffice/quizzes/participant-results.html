@@ -14,7 +14,7 @@
         <div class="card-body">
             <dl class="row">
                 <dt class="col-sm-1">Partisipan</dt>
-                <dd class="col-sm-11">{{ sitting.user }}</dd>
+                <dd class="col-sm-11">{{ sitting.user.get_full_name }} ({{ sitting.user }})</dd>
                 <dt class="col-sm-1">Mulai</dt>
                 <dd class="col-sm-11">{{ sitting.start }}</dd>
                 <dt class="col-sm-1">Selesai</dt>
