@@ -118,13 +118,15 @@ def ajax_filter_questions(request):
     data = {
         'questions': []
     }
+    questions = Question.objects.all()
     if sub_category:
-        questions = Question.objects.filter(sub_category=sub_category)
-        data['questions'] = [
-            {
-                'id': s.id,
-                'name': s.content
-            } for s in questions
-        ]
+        questions = questions.filter(sub_category=sub_category)
+
+    data['questions'] = [
+        {
+            'id': s.id,
+            'name': s.content
+        } for s in questions
+    ]
 
     return JsonResponse(data, status=200)
