@@ -18,6 +18,14 @@
         <br>
         <div class="callout callout-info">
           <h5><i class="fas fa-tags"></i> {% trans "Category" %}: {{ quiz.category }}</h5>
+          
+            <h5>
+              <i class="fas fa-calendar"></i>
+              {% if quiz.any_schedule %}
+                {{ quiz.start_time.date }}, {{ quiz.start_time|date:"H:i" }} - {{ quiz.end_time|date:"H:i" }}
+              {% endif %}
+            </h5>
+          
           {{ quiz.description }}
           {% if quiz.single_attempt %}   
             <hr class="mt-4">     

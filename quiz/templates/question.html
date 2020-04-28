@@ -10,6 +10,10 @@
 
 <div class="row">
 	<div class="col-sm-12">
+		{% if quiz.any_schedule %}
+			<h3>Sisa waktu 12:00</h3>
+		{% endif %}
+
 		{% if question %}
 
 		<div style="background-color:#e9ecef; padding:0.75rem 1rem 0.15rem 1rem; margin-bottom:1rem;">
