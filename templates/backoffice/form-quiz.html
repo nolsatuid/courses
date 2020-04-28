@@ -101,6 +101,20 @@
     $(document).ready(function() {
         getSubCategory();
         getQuestions();
+
+        flatpickr("#id_start_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            locale: "id",
+            time_24hr: true,
+        });
+
+        flatpickr("#id_end_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            locale: "id",
+            time_24hr: true,
+        });
 	});
 
     $("#id_category").change(function() {

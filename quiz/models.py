@@ -142,6 +142,16 @@ class Quiz(models.Model):
                     " taken by users who can edit"
                     " quizzes."))
 
+    start_time = models.DateTimeField(
+        verbose_name=_("Start Time"), blank=True, null=True,
+        help_text=_("Start time is used to determine when this quiz starts")
+    )
+
+    end_time = models.DateTimeField(
+        verbose_name=_("End Time"), blank=True, null=True,
+        help_text=_("End time is used to determine when the quiz ends")
+    )
+
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         self.url = re.sub('\s+', '-', self.url).lower()
 
