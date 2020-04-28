@@ -8,6 +8,11 @@ class FormQuiz(QuizAdminForm):
         css = {'all': ('admin/css/widgets.css',)}
         js = ('admin/jquery.js', '/admin/jsi18n/')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['start_time'].input_formats = ["%d-%m-%Y %H:%M"]
+        self.fields['end_time'].input_formats = ["%d-%m-%Y %H:%M"]
+
     def clean(self):
         cleaned_data = super().clean()
         start_time = cleaned_data['start_time']
