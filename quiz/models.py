@@ -559,7 +559,6 @@ class Sitting(models.Model):
             user_answers = json.loads(self.user_answers)
             for question in questions:
                 try:
-                    print(user_answers[str(question.id)])
                     question.user_answer = user_answers[str(question.id)]
                 except KeyError:
                     question.user_answer = None
