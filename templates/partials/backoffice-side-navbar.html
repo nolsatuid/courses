@@ -5,9 +5,18 @@
     <!-- Brand Logo -->
     <!-- Brand Logo -->
     <a href="{% url 'website:index' %}" class="brand-link">
-      <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image"
+        {% if not hide_logo %}   
+            <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image"
            style="opacity: .8">
-      <span class="brand-text font-weight-bold color-white" style="font-size:88%">{{ brand }}</span>
+        {% endif %}
+        
+      <span class="brand-text font-weight-bold color-white" style="font-size:88%">
+        {% if not hide_site_name %}
+            {{ site_name }}
+        {% else %}
+            &nbsp;
+        {% endif %}
+      </span>
     </a>
 
     <!-- Sidebar -->
