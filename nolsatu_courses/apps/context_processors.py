@@ -4,6 +4,16 @@ from django.core.cache import cache
 
 def nolsatu_context(request):
     apperance = cache.get(settings.KEY_CACHE_APPERANCE, {})
+    if settings.TOP_NAV_BG:
+        bg_top_nav = settings.TOP_NAV_BG
+    else:
+        bg_top_nav = apperance.get('color_theme', 'danger')
+
+    if settings.TOP_NAV_COLOR:
+        color_text_top_nav = settings.TOP_NAV_COLOR
+    else:
+        color_text_top_nav = "dark"
+
     return {
         'nolsatu_profile_page_url': settings.NOLSATU_PROFILE_PAGE_URL,
         'nolsatu_home_page_url': settings.NOLSATU_HOST,
@@ -18,4 +28,6 @@ def nolsatu_context(request):
         'footer_url': apperance.get('footer_url', 'https://btech.id/'),
         'hide_logo': apperance.get('hide_logo', False),
         'hide_site_name': apperance.get('hide_site_name', False),
+        'color_text_top_nav': color_text_top_nav,
+        'bg_top_nav': bg_top_nav
     }

@@ -216,6 +216,10 @@ CACHES = {
 
 FILE_UPLOAD_PERMISSIONS = 0o644
 
+# appearance
+TOP_NAV_BG = ""
+TOP_NAV_COLOR = ""
+
 try:
     from .local_settings import *
 except ImportError:
