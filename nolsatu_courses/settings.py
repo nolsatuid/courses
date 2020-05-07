@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'multichoice',
     'true_false',
     'essay',
+    'markdownx'
 ]
 
 MIDDLEWARE = [
@@ -219,6 +220,11 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 # appearance
 TOP_NAV_BG = ""
 TOP_NAV_COLOR = ""
+
+# FEATURE_TOGGLE
+FEATURE = {
+    "MARKDOWN_CONTENT": False
+}
 
 try:
     from .local_settings import *

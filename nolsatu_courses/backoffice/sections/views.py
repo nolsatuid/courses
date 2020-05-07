@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
@@ -38,7 +39,12 @@ def add(request, id):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form-editor.html', context)
+
+    template = 'backoffice/form-editor.html'
+    if settings.FEATURE["MARKDOWN_CONTENT"]:
+        template = 'backoffice/form-editor-markdown.html'
+
+    return render(request, template, context)
 
 
 @staff_member_required
@@ -56,7 +62,12 @@ def edit(request, id):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form-editor.html', context)
+
+    template = 'backoffice/form-editor.html'
+    if settings.FEATURE["MARKDOWN_CONTENT"]:
+        template = 'backoffice/form-editor-markdown.html'
+
+    return render(request, template, context)
 
 
 @staff_member_required
@@ -99,4 +110,9 @@ def task_setting(request, id):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form-editor.html', context)
+
+    template = 'backoffice/form-editor.html'
+    if settings.FEATURE["MARKDOWN_CONTENT"]:
+        template = 'backoffice/form-editor-markdown.html'
+
+    return render(request, template, context)
