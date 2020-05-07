@@ -3,22 +3,25 @@
 <div class="col-md-4">
     <!-- DIRECT CHAT -->
     <div class="card position-sticky sticky-top direct-chat direct-chat-warning" id="accordion">
-        <div class="card-body">
+
         <!-- Conversations are loaded here -->
-        <div class="direct-chat-messages" style="height:auto;">
-            <ul class="products-list product-list-in-card pl-2 pr-2">
+        <div style="height:auto;">
+            <ul class="products-list product-list-in-card">
                 {% for mod in module.course.modules.all %}
-                    <li class="item" id="heading_{{mod.id}}">
+                    <li class="item p-3 {%if mod.slug == module.slug and not section %}bg-maroon text-white{% endif %}" id="heading_{{mod.id}}">
                         <div class="card-tools row">
                             {% if mod.sections.all %}
                             <!-- Collapse Button -->
-                            <button type="button" class="btn btn-tool btn-sm col-md-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas fa-plus"></i></button>
+                            <button type="button" class="btn btn-tool btn-sm col-md-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas  {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
                             {% else %}
                             <div class="offset-md-1"></div>
                             {% endif %}
                             <div class="col-md-11">
                                 {% if mod.is_visible or user.is_superuser %}
-                                <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}><a href="{% url 'website:modules:preview' mod.slug %}" class="text-info">{{ mod.title }}</a><i class="float-right fa fa-xs fa-eye"></i></h5>                            
+                                <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
+                                    <a href="{% url 'website:modules:preview' mod.slug %}" class="{%if mod.slug == module.slug and not section %}text-white{% else %}text-info{% endif %}">{{ mod.title }}</a>
+                                    <i class="float-right fa fa-xs fa-eye"></i>
+                                </h5>                            
                                 {% else %}
                                 <h5 class="text-muted">{{ mod.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h5>
                                 {% endif %}
@@ -26,13 +29,23 @@
                         </div>
                     </li>
                     {% if mod.sections.all %}
-                        <div id="collapse_{{mod.id}}" class="collapse" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">                        
+                        <div id="collapse_{{mod.id}}" class="collapse {%if section.module.slug == mod.slug or mod.slug == module.slug %}show{% endif %}" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">                        
                         {% for sect in mod.sections.all %}
-                        <li class="item">                            
+                        <li class="item p-3 {%if sect.slug == section.slug %}bg-maroon text-white{% endif %}">                            
                             {% if sect.is_visible or user.is_supseruser or user.is_superuser %}
-                            <h6 class="ml-5" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}><a href="{% url 'website:sections:preview' sect.slug %}" class="text-info">{{ sect.title }}</a><i class="float-right fa fa-xs fa-eye"></i></h6>
+                            <div class="row">
+                                <span class="offset-md-2"></span>
+                                <h6 class="col-md-9" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}>
+                                    <a href="{% url 'website:sections:preview' sect.slug %}" class="{%if sect.slug == section.slug and section %}text-white{% else %}text-info{% endif %}">{{ sect.title }}</a>
+                                </h6>
+                                <h5 class="col-md-1"><i class="float-right fa fa-xs fa-eye"></i></h5>
+                            </div>
                             {% else %}
-                            <h6 class="ml-5 text-muted">{{ sect.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h6>
+                            <div class="row">
+                                <span class="offset-md-2"></span>
+                                <h6 class="col-md-9 text-muted">{{ sect.title }}</h6>
+                                <h5 class="col-md-1"><i class="float-right fa fa-xs fa-eye-slash"></i></h5>
+                            </div>
                             {% endif %}
                         </li>
                         {% endfor %}                    
@@ -44,8 +57,6 @@
         </div>
         <!--/.direct-chat-messages-->
 
-        </div>
-        <!-- /.card-body -->
     </div>
     <!--/.direct-chat -->
 </div>
