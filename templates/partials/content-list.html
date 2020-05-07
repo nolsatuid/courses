@@ -16,14 +16,16 @@
                                 {% else %}
                                 <div class="offset-md-1"></div>
                                 {% endif %}
-                                {% if mod|on_activity:user %}
-                                    <h5 style="font-weight: bold;" class="col-md-11">
-                                        <a href="{% url 'website:modules:details' mod.slug %}" class="text-info">{{ mod.title }}</a>
-                                        <i class="text-success float-right fa fa-xs fa-check"></i>
-                                    </h5>
-                                {% else %}
-                                    <h5 class="text-muted">{{ mod.title }}</h5>
-                                {% endif %}
+                                <div class="col-md-11">
+                                    {% if mod|on_activity:user %}
+                                        <h5 style="font-weight: bold;">
+                                            <a href="{% url 'website:modules:details' mod.slug %}" class="text-info">{{ mod.title }}</a>
+                                            <i class="text-success float-right fa fa-xs fa-check"></i>
+                                        </h5>
+                                    {% else %}
+                                        <h5 class="text-muted">{{ mod.title }}</h5>
+                                    {% endif %}
+                                </div>
                             </div>
                         </li>
                         {% if mod.sections.all %}
