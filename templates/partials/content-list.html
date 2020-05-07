@@ -2,33 +2,50 @@
 
 <div class="col-md-4">
     <!-- DIRECT CHAT -->
-    <div class="card position-sticky sticky-top direct-chat direct-chat-warning">
-        <div class="card-body">
-        <!-- Conversations are loaded here -->
-        <div class="direct-chat-messages" style="height:auto;">
-            <ul class="products-list product-list-in-card pl-2 pr-2">
-                {% for mod in module.course.modules.all %}
-                    <li class="item">
-                        {% if mod|on_activity:user %}
-                            <h5 style="font-weight: bold;"><a href="{% url 'website:modules:details' mod.slug %}" class="text-info">{{ mod.title }}</a><i class="text-success float-right fa fa-xs fa-check"></i></h5>
-                        {% else %}
-                            <h5 class="text-muted">{{ mod.title }}</h5>
+    <div class="card position-sticky sticky-top direct-chat direct-chat-warning" id="accordion">
+        <div class="">
+            <!-- Conversations are loaded here -->
+            <div class="direct-chat-messages" style="height:auto;">
+                <ul class="products-list product-list-in-card pl-2 pr-2">
+                    {% for mod in module.course.modules.all %}
+                        <li class="item" id="heading_{{mod.id}}">
+                            <div class="card-tools row">
+                                {% if mod.sections.all %}
+                                <!-- Collapse Button -->
+                                <button type="button" class="btn btn-tool btn-sm col-md-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas fa-plus"></i></button>
+                                {% else %}
+                                <div class="offset-md-1"></div>
+                                {% endif %}
+                                {% if mod|on_activity:user %}
+                                    <h5 style="font-weight: bold;" class="col-md-11">
+                                        <a href="{% url 'website:modules:details' mod.slug %}" class="text-info">{{ mod.title }}</a>
+                                        <i class="text-success float-right fa fa-xs fa-check"></i>
+                                    </h5>
+                                {% else %}
+                                    <h5 class="text-muted">{{ mod.title }}</h5>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% if mod.sections.all %}
+                        <div id="collapse_{{mod.id}}" class="collapse" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">
+                        {% for sect in mod.sections.all %}
+                        <li class="item"> 
+                            <div class="card-body">
+                                {% if sect|on_activity:user %}
+                                    <h6 class="ml-5" style="font-weight: bold;"><a href="{% url 'website:sections:details' sect.slug %}" class="text-info">{{ sect.title }}</a><i class="text-success float-right fa fa-xs fa-check"></i></h6>
+                                {% else %}
+                                    <h6 class="ml-5 text-muted">{{ sect.title }}</h6>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                        </div>
                         {% endif %}
-                    </li>
-                    {% for sect in mod.sections.all %}
-                    <li class="item"> 
-                        {% if sect|on_activity:user %}
-                            <h6 class="ml-3" style="font-weight: bold;"><a href="{% url 'website:sections:details' sect.slug %}" class="text-info">{{ sect.title }}</a><i class="text-success float-right fa fa-xs fa-check"></i></h6>
-                        {% else %}
-                            <h6 class="ml-3 text-muted">{{ sect.title }}</h6>
-                        {% endif %}
-                    </li>
                     {% endfor %}
-                {% endfor %}
-                <li></li>
-            </ul>
-        </div>
-        <!--/.direct-chat-messages-->
+                    <li></li>
+                </ul>
+            </div>
+            <!--/.direct-chat-messages-->
 
         </div>
         <!-- /.card-body -->

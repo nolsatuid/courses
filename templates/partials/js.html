@@ -16,4 +16,11 @@
     document.addEventListener("contextmenu", function(e){
         e.preventDefault();
     }, false);
+
+    $('.btn-collapse').click(function(){
+        $(this).find('i').toggleClass('fa-plus fa-minus')
+    });
+    $('.btn-collapse').blur(function(){
+        $(this).find('i').toggleClass('fa-plus fa-minus')
+    });
 </script>
