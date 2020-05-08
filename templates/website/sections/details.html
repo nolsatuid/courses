@@ -10,6 +10,9 @@
             <li class="breadcrumb-item active">Section</li>
         </ol>
     </div>
+    <div class="col-md-4">
+        {% include 'partials/content-list.html' with module=section.module %}  
+    </div> 
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
@@ -40,8 +43,7 @@
                 {% include 'partials/pagination.html' with pagination=pagination section=section task=task %}                    
             </div>
         </div>
-    </div>
-    {% include 'partials/content-list.html' with module=section.module %}    
+    </div> 
 </div>
   <!-- /.row -->
 {% endblock %}
