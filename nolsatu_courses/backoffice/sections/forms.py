@@ -8,7 +8,7 @@ from nolsatu_courses.apps.courses.models import Section, TaskUploadSettings
 class FormSection(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if settings.FEATURE['MARKDOWN_CONTENT']:
+        if settings.FEATURE['MARKDOWN_BACKOFFICE_EDITOR']:
             self.fields.pop("content")
         else:
             self.fields.pop("content_md")
@@ -21,7 +21,7 @@ class FormSection(forms.ModelForm):
 class FormTaskSetting(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if settings.FEATURE['MARKDOWN_CONTENT']:
+        if settings.FEATURE['MARKDOWN_BACKOFFICE_EDITOR']:
             self.fields.pop("instruction")
         else:
             self.fields.pop("instruction_md")

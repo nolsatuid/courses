@@ -41,7 +41,7 @@ def add(request, id):
     }
 
     template = 'backoffice/form-editor.html'
-    if settings.FEATURE["MARKDOWN_CONTENT"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template = 'backoffice/form-editor-markdown.html'
 
     return render(request, template, context)
@@ -64,7 +64,7 @@ def edit(request, id):
     }
 
     template = 'backoffice/form-editor.html'
-    if settings.FEATURE["MARKDOWN_CONTENT"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template = 'backoffice/form-editor-markdown.html'
 
     return render(request, template, context)
@@ -112,7 +112,7 @@ def task_setting(request, id):
     }
 
     template = 'backoffice/form-editor.html'
-    if settings.FEATURE["MARKDOWN_CONTENT"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template = 'backoffice/form-editor-markdown.html'
 
     return render(request, template, context)

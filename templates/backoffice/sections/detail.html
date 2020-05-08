@@ -35,7 +35,7 @@
                                         <label>Deskripsi</label>
                                     </td>
                                     <td>
-                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                        {% if "MARKDOWN_BACKOFFICE_EDITOR"|get_toggle %}
                                             {{ section.content_md|show_markdown|safe }}
                                         {% else %}
                                             {{ section.content|safe }}
@@ -87,7 +87,7 @@
                                         <label>Instruksi</label>
                                     </td>
                                     <td>
-                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                        {% if "MARKDOWN_BACKOFFICE_EDITOR"|get_toggle %}
                                             {{ task_setting.instruction_md|show_markdown|safe }}
                                         {% else %}
                                             {{ task_setting.instruction|safe }}

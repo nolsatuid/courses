@@ -46,7 +46,7 @@
                                         <label>Deskripsi</label>
                                     </td>
                                     <td>
-                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                        {% if "MARKDOWN_BACKOFFICE_EDITOR"|get_toggle %}
                                             {{ course.description_md|show_markdown|safe }}
                                         {% else %}
                                             {{ course.description|safe }}

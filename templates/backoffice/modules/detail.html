@@ -34,7 +34,7 @@
                                         <label>Deskripsi</label>
                                     </td>
                                     <td>
-                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                        {% if "MARKDOWN_BACKOFFICE_EDITOR"|get_toggle %}
                                             {{ module.description_md|show_markdown|safe }}
                                         {% else %}
                                             {{ module.description|safe }}

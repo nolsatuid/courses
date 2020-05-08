@@ -8,7 +8,7 @@ class FormModule(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if settings.FEATURE['MARKDOWN_CONTENT']:
+        if settings.FEATURE['MARKDOWN_BACKOFFICE_EDITOR']:
             self.fields.pop("description")
         else:
             self.fields.pop("description_md")
