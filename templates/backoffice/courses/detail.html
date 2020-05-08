@@ -1,4 +1,5 @@
 {% extends 'backoffice/base-adminlte.html' %}
+{% load tags_courses %}
 
 {% block content %}
 <div class="col-sm-12">
@@ -33,7 +34,11 @@
                                         <label>Deskripsi Singkat</label>
                                     </td>
                                     <td>
-                                        {{ course.short_description|safe }}
+                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                            {{ course.short_description_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ course.short_description|safe }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
@@ -41,7 +46,11 @@
                                         <label>Deskripsi</label>
                                     </td>
                                     <td>
-                                        {{ course.description|safe }}
+                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                            {{ course.description_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ course.description|safe }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>

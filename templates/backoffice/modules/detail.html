@@ -1,5 +1,5 @@
 {% extends 'backoffice/base-adminlte.html' %}
-
+{% load tags_courses %}
 {% block content %}
 <div class="col-sm-12">
     <ol class="breadcrumb">
@@ -34,7 +34,11 @@
                                         <label>Deskripsi</label>
                                     </td>
                                     <td>
-                                        {{ module.description|safe }}
+                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                            {{ module.description_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ module.description|safe }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>

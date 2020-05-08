@@ -62,7 +62,12 @@ def edit(request, id):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form-editor.html', context)
+
+    template = 'backoffice/form-editor.html'
+    if settings.FEATURE["MARKDOWN_CONTENT"]:
+        template = 'backoffice/form-editor-markdown.html'
+
+    return render(request, template, context)
 
 
 @staff_member_required

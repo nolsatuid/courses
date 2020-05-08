@@ -21,7 +21,11 @@
         {% endif %}
         <div class="card-body text-dark">
             <h4>{{ course.title }}</h4>
-            {{ course.short_description|safe|truncatechars:100 }}
+            {% if "MARKDOWN_CONTENT"|get_toggle %}
+                {{ module.short_description_md|show_markdown|safe|truncatechars:100 }}
+            {% else %}
+                {{ module.short_description|safe|truncatechars:100 }}
+            {% endif %}
         </div>
     </a>
 </div>

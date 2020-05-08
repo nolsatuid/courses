@@ -3,6 +3,9 @@ import math
 from django.template import Library
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from markdownx.utils import markdownify
+
+from nolsatu_courses import settings
 from nolsatu_courses.apps.courses.models import Enrollment
 
 register = Library()
@@ -153,3 +156,12 @@ def sectoduration(value, arg=''):
     else:
         # Provide 'No duration' message
         return "No duration"
+
+
+@register.filter
+def show_markdown(text):
+    return markdownify(text)
+
+@register.filter
+def get_toggle(identifier):
+    return settings.FEATURE.get(identifier, False)
