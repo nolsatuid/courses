@@ -196,6 +196,10 @@ class Module(models.Model):
     order = models.PositiveIntegerField(_("Urutan"))
     is_visible = models.BooleanField(_("Terlihat"), default=False)
     course = models.ForeignKey("Courses", on_delete=models.CASCADE, related_name="modules")
+    hidden_all_sections = models.BooleanField(
+        _("Bab terlihat"), default=False, 
+        help_text=_("Jika di centang maka seluruh bab pada modul ini akan terlihat")
+    )
 
     class Meta:
         verbose_name = _("module")
@@ -210,6 +214,8 @@ class Module(models.Model):
             self.slug = generate_unique_slug(Module, self.slug, self.id)
         else:
             self.slug = generate_unique_slug(Module, self.title, self.id)
+
+        self.sections.update(is_visible=self.hidden_all_sections)
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):
