@@ -224,6 +224,13 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 TOP_NAV_BG = ""
 TOP_NAV_COLOR = ""
 
+# Markdown
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.codehilite'
+]
+MARKDOWNX_DISABLE_KEYS = False
+
 # FEATURE_TOGGLE
 FEATURE = {
     "MARKDOWN_CONTENT": False,
