@@ -17,7 +17,7 @@ class FormCourses(forms.ModelForm):
 
     class Meta:
         model = Courses
-        exclude = ("users",)
+        exclude = ("users", "quizzes")
 
 
 class FormFilterRegistrants(forms.Form):
