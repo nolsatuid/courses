@@ -1,4 +1,5 @@
 {% extends 'website/base-top-nav.html' %}
+{% load tags_courses %}
 
 {% block content %}
 <div class="row">
@@ -20,7 +21,11 @@
                   </nav>
                   <div class="tab-content pt-4" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
-                        {{ course.description|safe }}
+                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                            {{ course.description_md|show_markdown|safe }}
+                        {% else %}
+                            {{ course.description|safe }}
+                        {% endif %}
                     </div>
 
                     <div class="tab-pane fade" id="nav-module" role="tabpanel" aria-labelledby="nav-module-tab">

@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
 
     'nolsatu_courses.apps.courses',
     'nolsatu_courses.apps.upload_files',
@@ -75,6 +76,7 @@ INSTALLED_APPS = [
     'multichoice',
     'true_false',
     'essay',
+    'markdownx'
 ]
 
 MIDDLEWARE = [
@@ -108,6 +110,8 @@ TEMPLATES = [
         },
     },
 ]
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 WSGI_APPLICATION = 'nolsatu_courses.wsgi.application'
 
@@ -219,6 +223,19 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 # appearance
 TOP_NAV_BG = ""
 TOP_NAV_COLOR = ""
+
+# Markdown
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.codehilite'
+]
+MARKDOWNX_DISABLE_KEYS = False
+
+# FEATURE_TOGGLE
+FEATURE = {
+    "MARKDOWN_CONTENT": False,
+    "MARKDOWN_BACKOFFICE_EDITOR": False
+}
 
 try:
     from .local_settings import *

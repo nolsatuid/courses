@@ -1,5 +1,5 @@
 {% extends 'backoffice/base-adminlte.html' %}
-
+{% load tags_courses %}
 {% block content %}
 <div class="col-sm-12">
     <ol class="breadcrumb">
@@ -35,7 +35,11 @@
                                         <label>Deskripsi</label>
                                     </td>
                                     <td>
-                                        {{ section.content|safe }}
+                                        {% if "MARKDOWN_BACKOFFICE_EDITOR"|get_toggle %}
+                                            {{ section.content_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ section.content|safe }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
@@ -83,7 +87,11 @@
                                         <label>Instruksi</label>
                                     </td>
                                     <td>
-                                        {{ task_setting.instruction|safe }}
+                                        {% if "MARKDOWN_BACKOFFICE_EDITOR"|get_toggle %}
+                                            {{ task_setting.instruction_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ task_setting.instruction|safe }}
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>

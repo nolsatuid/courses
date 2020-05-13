@@ -1,0 +1,21 @@
+<div class="markdownx">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="editor-tab{{ widget.name }}" data-toggle="tab" href="#editor{{ widget.name }}" role="tab"
+               aria-controls="editor"
+               aria-selected="true">Editor</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="preview-tab{{ widget.name }}" data-toggle="tab" href="#preview{{ widget.name }}" role="tab" aria-controls="preview{{ widget.name }}"
+               aria-selected="false">Preview</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="editor{{ widget.name }}" role="tabpanel" aria-labelledby="editor-tab{{ widget.name }}">
+            {% include 'django/forms/widgets/textarea.html' %}
+        </div>
+        <div class="tab-pane fade" id="preview{{ widget.name }}" role="tabpanel" aria-labelledby="preview-tab{{ widget.name }}">
+            <div class="markdownx-preview"></div>
+        </div>
+    </div>
+</div>

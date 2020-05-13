@@ -1,5 +1,5 @@
 {% extends 'website/base-top-nav.html' %}
-
+{% load tags_courses %}
 {% block content %}
 <div class="row">
     <div class="col-sm-12">
@@ -19,8 +19,12 @@
                 <h1>Materi {{ section.title }}</h1>
             </div>
             <div class="card-body" id="course-content">
-                {{ section.content|safe }}
-            
+                {% if "MARKDOWN_CONTENT"|get_toggle %}
+                    {{ section.content_md|show_markdown|safe }}
+                {% else %}
+                    {{ section.content|safe }}
+                {% endif %}
+
                 <!-- form pengumpulan tugas -->
                 {% if file_not_found is None %}
                     {% include 'partials/form-task-upload.html' with form=form section=section task=task %}

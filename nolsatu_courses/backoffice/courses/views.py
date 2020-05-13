@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
@@ -35,7 +36,12 @@ def add(request):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form-editor.html', context)
+
+    template = 'backoffice/form-editor.html'
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
+        template = 'backoffice/form-editor-markdown.html'
+
+    return render(request, template, context)
 
 
 @staff_member_required
@@ -53,7 +59,12 @@ def edit(request, id):
         'form': form,
         'title_submit': 'Simpan'
     }
-    return render(request, 'backoffice/form-editor.html', context)
+
+    template = 'backoffice/form-editor.html'
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
+        template = 'backoffice/form-editor-markdown.html'
+
+    return render(request, template, context)
 
 
 @staff_member_required
@@ -88,19 +99,20 @@ def registrants(request):
         for id in data.getlist('checkMark'):
             enroll = get_object_or_404(Enrollment, id=id)
             if not enroll.course.batchs.last().link_group:
-                messages.error(request, _(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi'))
+                messages.error(request, _(
+                    f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi'))
             else:
                 if enroll.batch != enroll.course.batchs.last():
                     enroll.batch = enroll.course.batchs.last()
                 enroll.allowed_access = True
                 enroll.status = Enrollment.STATUS.begin
                 enroll.save()
-                
+
                 utils.send_notification(
                     enroll.user, f'Akses kelas {enroll.course.title} di berikan',
                     f'Selamat, Anda sudah dapat mengakses kelas {enroll.course.title}. \
-                        Silahkan gabung ke grup telegram menggunakan link berikut <a href="{ enroll.batch.link_group }">\
-                        { enroll.batch.link_group }</a> untuk mendapatkan informasi lebih lanjut.'
+                        Silahkan gabung ke grup telegram menggunakan link berikut <a href="{enroll.batch.link_group}">\
+                        {enroll.batch.link_group}</a> untuk mendapatkan informasi lebih lanjut.'
                 )
                 messages.success(request, _(f'Berhasil mengubah status <strong>{enroll}</strong>'))
 
@@ -120,9 +132,9 @@ def ajax_change_status_registrants(request):
     enroll = get_object_or_404(Enrollment, id=id)
     if not enroll.course.batchs.last().link_group:
         data = {
-            'status':False, 
-            'message':f'Link grup pada batch {enroll.batch} belum diisi', 
-            'batch':enroll.batch.batch
+            'status': False,
+            'message': f'Link grup pada batch {enroll.batch} belum diisi',
+            'batch': enroll.batch.batch
         }
         return JsonResponse(data, status=200)
     if enroll.batch != enroll.course.batchs.last():
@@ -130,19 +142,19 @@ def ajax_change_status_registrants(request):
     enroll.allowed_access = status
     enroll.status = Enrollment.STATUS.begin
     enroll.save()
-    
+
     if status == "True":
         utils.send_notification(enroll.user, f'Akses kelas {enroll.course.title} di berikan',
-                        f'Selamat, Anda sudah dapat mengakses kelas {enroll.course.title}. \
-                            Silahkan gabung ke grup telegram menggunakan link berikut <a href="{ enroll.batch.link_group }">\
-                            { enroll.batch.link_group }</a> untuk mendapatkan informasi lebih lanjut.')
+                                f'Selamat, Anda sudah dapat mengakses kelas {enroll.course.title}. \
+                            Silahkan gabung ke grup telegram menggunakan link berikut <a href="{enroll.batch.link_group}">\
+                            {enroll.batch.link_group}</a> untuk mendapatkan informasi lebih lanjut.')
     else:
         utils.send_notification(enroll.user, f'Akses kelas {enroll.course.title} dibatalkan',
-                        f'Maaf, Akses belajar pada kelas {enroll.course.title} Anda dibatalkan.')
+                                f'Maaf, Akses belajar pada kelas {enroll.course.title} Anda dibatalkan.')
 
     data = {
-        'status':True, 
-        'message':f'Berhasil mengubah status {enroll.user}', 
-        'batch':enroll.batch.batch
+        'status': True,
+        'message': f'Berhasil mengubah status {enroll.user}',
+        'batch': enroll.batch.batch
     }
     return JsonResponse(data, status=200)

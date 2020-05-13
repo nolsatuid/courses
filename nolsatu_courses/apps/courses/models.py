@@ -8,6 +8,7 @@ from django.db.models import When, Case, Count, IntegerField
 
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
+from markdownx.models import MarkdownxField
 from model_utils import Choices
 from model_utils.managers import InheritanceManager
 from taggit.managers import TaggableManager
@@ -18,8 +19,13 @@ from nolsatu_courses.apps.utils import generate_unique_slug
 class Courses(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
     slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
-    short_description = RichTextField(_("Deskripsi Singkat"), config_name='basic_ckeditor')
-    description = RichTextUploadingField(_("Deskripsi"))
+    short_description = RichTextField(_("Deskripsi Singkat"), config_name='basic_ckeditor', default="")
+    description = RichTextUploadingField(_("Deskripsi"), default="")
+
+    # Markdown Field
+    short_description_md = MarkdownxField(_("Deskripsi Singkat"), default="")
+    description_md = MarkdownxField(_("Deskripsi"), default="")
+
     featured_image = models.FileField(_("Gambar Unggulan"), upload_to="images/", blank=True)
     LEVEL = Choices(
         (1, 'beginner', _("Pemula")),
@@ -192,7 +198,11 @@ class Courses(models.Model):
 class Module(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
     slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
-    description = RichTextUploadingField(_("Deskripsi"))
+    description = RichTextUploadingField(_("Deskripsi"), default="")
+
+    # Markdown Field
+    description_md = MarkdownxField(_("Deskripsi"), default="")
+
     order = models.PositiveIntegerField(_("Urutan"))
     is_visible = models.BooleanField(_("Terlihat"), default=False)
     course = models.ForeignKey("Courses", on_delete=models.CASCADE, related_name="modules")
@@ -255,7 +265,11 @@ class Module(models.Model):
 class Section(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
     slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
-    content = RichTextUploadingField(_("Deskripsi"))
+    content = RichTextUploadingField(_("Deskripsi"), default="")
+
+    # Markdown Field
+    content_md = MarkdownxField(_("Deskripsi"), default="")
+
     order = models.PositiveIntegerField(_("Urutan"))
     is_visible = models.BooleanField(_("Terlihat"), default=True)
     is_task = models.BooleanField(_("Tugas"), default=False)
@@ -313,7 +327,11 @@ class Section(models.Model):
 
 class TaskUploadSettings(models.Model):
     section = models.OneToOneField("Section", on_delete=models.CASCADE, related_name='task_setting')
-    instruction = RichTextField(_("Instruksi"), config_name='basic_ckeditor')
+    instruction = RichTextField(_("Instruksi"), config_name='basic_ckeditor', default="")
+
+    # Markdown Field
+    instruction_md = MarkdownxField(_("Instruksi"), default="")
+
     allowed_extension = TaggableManager(
         _("Ekstensi yang diizinkan "),
         help_text=_("Extensi dipisahkan dengan koma dan menggunakan titik di depan")

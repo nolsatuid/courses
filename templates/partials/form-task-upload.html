@@ -1,5 +1,5 @@
 {% load static widget_tweaks %}
-
+{% load tags_courses %}
 {% if section.is_task %}
     <hr>
     <div class="card">
@@ -61,7 +61,13 @@
                     {{ form.media }}
                     {{ form.non_field_errors }}
                     <div class="form-group">
-                        <div class="col-md-12">{{ section.task_setting.instruction|safe }}</div>
+                        <div class="col-md-12">
+                            {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                {{ section.task_setting.instruction_md|show_markdown|safe }}
+                            {% else %}
+                                {{ section.task_setting.instruction|safe }}
+                            {% endif %}
+                        </div>
                         <div class="col-md-12">
                             {% render_field form.file %}
                             {% render_field form.name %}

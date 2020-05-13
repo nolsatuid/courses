@@ -1,9 +1,19 @@
 from django import forms
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from nolsatu_courses.apps.courses.models import Courses, Batch
 
 
 class FormCourses(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if settings.FEATURE['MARKDOWN_BACKOFFICE_EDITOR']:
+            self.fields.pop("short_description")
+            self.fields.pop("description")
+        else:
+            self.fields.pop("short_description_md")
+            self.fields.pop("description_md")
 
     class Meta:
         model = Courses

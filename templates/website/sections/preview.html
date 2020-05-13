@@ -1,5 +1,5 @@
 {% extends 'website/base-top-nav.html' %}
-
+{% load tags_courses %}
 {% block content %}
 <div class="row">
     {% include 'partials/preview-content-list.html' with module=section.module %}      
@@ -10,7 +10,11 @@
             </div>
 
             <div class="card-body" id="course-content">
-                {{ section.content|safe }}
+                {% if "MARKDOWN_CONTENT"|get_toggle %}
+                    {{ section.content_md|show_markdown|safe }}
+                {% else %}
+                    {{ section.content|safe }}
+                {% endif %}
 
                 {% if user.is_superuser %}
                     {% include 'partials/form-task-preview.html' %}
