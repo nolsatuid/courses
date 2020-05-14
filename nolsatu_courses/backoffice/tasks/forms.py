@@ -14,8 +14,9 @@ class FormFilterTask(forms.Form):
     STATUS = Choices(
         ('', '', _('Pilih Status')),
         (1, 'review', _('Diperiksa')),
-        (2, 'repeat', _('Ulangi')),
-        (3, 'pass', _('Lulus')),
+        (2, 'repeat', _('Mengulang')),
+        (4, 'not_pass', _('Tidak Lulus')),
+        (3, 'graduated', _('Lulus')),
     )
     status = forms.ChoiceField(choices=STATUS, required=False, label="Status") 
 
