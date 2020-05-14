@@ -408,6 +408,37 @@ class Enrollment(models.Model):
         certificate_number = f"NS-DEV-{batch}{user_id}-{date}"
         return certificate_number
 
+    def get_cert_data(self) -> dict:
+        return {
+            'title': self.get_cert_title(),
+            'certificate_number': self.get_cert_number(),
+            'created': self.get_cert_date(),
+            'user_id': self.user.nolsatu.id_nolsatu
+        }
+
+    def get_cert_title(self) -> str:
+        if hasattr(self.course, 'certsetting') and \
+                self.course.certsetting.cert_title:
+            return self.course.certsetting.cert_title
+        else:
+            return self.course.title
+
+    def get_cert_number(self) -> str:
+        if hasattr(self.course, 'certsetting'):
+            if self.course.certsetting.generate_cert_number:
+                return self.generate_certificate_number()
+            else:
+                return ""
+        else:
+            return self.generate_certificate_number()
+
+    def get_cert_date(self) -> str:
+        if hasattr(self.course, 'certsetting') and \
+                self.course.certsetting.static_date:
+            return self.course.certsetting.static_date
+        else:
+            return self.finishing_date.strftime("%d-%m-%Y")
+
 
 class CollectTask(models.Model):
     user = models.ForeignKey(User, related_name='collect_tasks', on_delete=models.CASCADE)
@@ -450,3 +481,17 @@ class Activity(models.Model):
     def __str__(self):
         state = self.section if self.section else self.module
         return f"{self.user} - {state.title}"
+
+
+class CertSetting(models.Model):
+    course = models.OneToOneField(Courses, on_delete=models.CASCADE)
+    cert_title = models.CharField(max_length=220, blank=True, null=True)
+    generate_cert_number = models.BooleanField(default=False)
+    static_date = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Certificate Setting")
+        verbose_name_plural = _("Certificate Settings")
+
+    def __str__(self):
+        return self.course.title
