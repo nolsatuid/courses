@@ -74,6 +74,6 @@ class AdminActivity(admin.ModelAdmin):
 @admin.register(CertSetting)
 class AdminCertSetting(admin.ModelAdmin):
     list_display = (
-        'course', 'cert_title', 'generate_cert_number', 'static_date',
+        'course', 'cert_title', 'prefix_cert_number', 'static_date',
     )
     search_fields = ('course', 'cert_title')

@@ -397,7 +397,7 @@ class Enrollment(models.Model):
         )
         return count_status
 
-    def generate_certificate_number(self):
+    def generate_certificate_number(self, prefix="NS-DEV"):
         batch = str(self.batch.batch)
         batch = "0" + batch if len(batch) == 1 else batch
 
@@ -405,7 +405,7 @@ class Enrollment(models.Model):
         user_id = "0" + user_id if len(user_id) == 1 else user_id
 
         date = self.finishing_date.strftime("%Y-%m%d")
-        certificate_number = f"NS-DEV-{batch}{user_id}-{date}"
+        certificate_number = f"{prefix}-{batch}{user_id}-{date}"
         return certificate_number
 
     def get_cert_data(self) -> dict:
@@ -424,18 +424,17 @@ class Enrollment(models.Model):
             return self.course.title
 
     def get_cert_number(self) -> str:
-        if hasattr(self.course, 'certsetting'):
-            if self.course.certsetting.generate_cert_number:
-                return self.generate_certificate_number()
-            else:
-                return ""
+        if hasattr(self.course, 'certsetting') and \
+                self.course.certsetting.prefix_cert_number:
+            prefix = self.course.certsetting.prefix_cert_number
+            return self.generate_certificate_number(prefix)
         else:
             return self.generate_certificate_number()
 
     def get_cert_date(self) -> str:
         if hasattr(self.course, 'certsetting') and \
                 self.course.certsetting.static_date:
-            return self.course.certsetting.static_date
+            return self.course.certsetting.static_date.strftime("%d-%m-%Y")
         else:
             return self.finishing_date.strftime("%d-%m-%Y")
 
@@ -486,8 +485,8 @@ class Activity(models.Model):
 class CertSetting(models.Model):
     course = models.OneToOneField(Courses, on_delete=models.CASCADE)
     cert_title = models.CharField(max_length=220, blank=True, null=True)
-    generate_cert_number = models.BooleanField(default=False)
-    static_date = models.CharField(max_length=50, blank=True, null=True)
+    prefix_cert_number = models.CharField(max_length=50, blank=True, null=True)
+    static_date = models.DateField(blank=True, null=True)
 
     class Meta:
         verbose_name = _("Certificate Setting")
