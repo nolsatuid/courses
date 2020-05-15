@@ -61,9 +61,12 @@ def candidate_to_graduate(request, id):
     if response.status_code == 200:
         enroll.status = Enrollment.STATUS.graduate
         enroll.save()
-        utils.send_notification(enroll.user, f'Selamat! Anda lulus',
-                         f'Selamat, Anda telah berhasil menyelesaikan persyaratan yang diperlukan untuk mendapatkan \
-                             Sertifikasi kelulusan NolSatu pada kelas {enroll.course.title}.')
+        utils.send_notification(
+            enroll.user, 'Selamat! Anda lulus',
+            'Selamat, Anda telah berhasil menyelesaikan persyaratan yang diperlukan untuk mendapatkan ' \
+            f'Sertifikasi kelulusan pada kelas {enroll.course.title}. ' \
+            'Silahkan cek sertifikat Anda dimenu Sertifikat pada halaman akun.'
+        )
         messages.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan')
     else:
         messages.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan')
