@@ -404,8 +404,11 @@ class Enrollment(models.Model):
         user_id = str(self.user_id)
         user_id = "0" + user_id if len(user_id) == 1 else user_id
 
+        course_id = str(self.course_id)
+        course = "0" + course_id if len(course_id) == 1 else course_id
+
         date = self.finishing_date.strftime("%Y-%m%d")
-        certificate_number = f"{prefix}-{batch}{user_id}-{date}"
+        certificate_number = f"{prefix}-{course}{batch}{user_id}-{date}"
         return certificate_number
 
     def get_cert_data(self) -> dict:
