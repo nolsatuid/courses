@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Courses, Module, Section, TaskUploadSettings, Batch,
-    Enrollment, CollectTask, Activity
+    Enrollment, CollectTask, Activity, CertSetting
 )
 
 
@@ -69,3 +69,11 @@ class AdminActivity(admin.ModelAdmin):
         'user', 'course', 'module', 'section', 'created',
     )
     search_fields = ('user', 'module', 'section')
+
+
+@admin.register(CertSetting)
+class AdminCertSetting(admin.ModelAdmin):
+    list_display = (
+        'course', 'cert_title', 'prefix_cert_number', 'static_date',
+    )
+    search_fields = ('course', 'cert_title')

@@ -397,7 +397,7 @@ class Enrollment(models.Model):
         )
         return count_status
 
-    def generate_certificate_number(self):
+    def generate_certificate_number(self, prefix="NS-DEV"):
         batch = str(self.batch.batch)
         batch = "0" + batch if len(batch) == 1 else batch
 
@@ -405,8 +405,38 @@ class Enrollment(models.Model):
         user_id = "0" + user_id if len(user_id) == 1 else user_id
 
         date = self.finishing_date.strftime("%Y-%m%d")
-        certificate_number = f"NS-DEV-{batch}{user_id}-{date}"
+        certificate_number = f"{prefix}-{batch}{user_id}-{date}"
         return certificate_number
+
+    def get_cert_data(self) -> dict:
+        return {
+            'title': self.get_cert_title(),
+            'certificate_number': self.get_cert_number(),
+            'created': self.get_cert_date(),
+            'user_id': self.user.nolsatu.id_nolsatu
+        }
+
+    def get_cert_title(self) -> str:
+        if hasattr(self.course, 'certsetting') and \
+                self.course.certsetting.cert_title:
+            return self.course.certsetting.cert_title
+        else:
+            return self.course.title
+
+    def get_cert_number(self) -> str:
+        if hasattr(self.course, 'certsetting') and \
+                self.course.certsetting.prefix_cert_number:
+            prefix = self.course.certsetting.prefix_cert_number
+            return self.generate_certificate_number(prefix)
+        else:
+            return self.generate_certificate_number()
+
+    def get_cert_date(self) -> str:
+        if hasattr(self.course, 'certsetting') and \
+                self.course.certsetting.static_date:
+            return self.course.certsetting.static_date.strftime("%d-%m-%Y")
+        else:
+            return self.finishing_date.strftime("%d-%m-%Y")
 
 
 class CollectTask(models.Model):
@@ -450,3 +480,17 @@ class Activity(models.Model):
     def __str__(self):
         state = self.section if self.section else self.module
         return f"{self.user} - {state.title}"
+
+
+class CertSetting(models.Model):
+    course = models.OneToOneField(Courses, on_delete=models.CASCADE)
+    cert_title = models.CharField(max_length=220, blank=True, null=True)
+    prefix_cert_number = models.CharField(max_length=50, blank=True, null=True)
+    static_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Certificate Setting")
+        verbose_name_plural = _("Certificate Settings")
+
+    def __str__(self):
+        return self.course.title
