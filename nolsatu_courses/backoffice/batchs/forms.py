@@ -12,10 +12,6 @@ class FormBatch(forms.ModelForm):
     class Meta:
         model = Batch
         fields = ('__all__')
-        widgets = {
-            'start_date': DateInput(),
-            'end_date': DateInput(),
-        }
         labels = {
             'batch': _('Angkatan'),
             'course': _('Kursus'),
