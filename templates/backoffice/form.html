@@ -50,3 +50,24 @@
     </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+
+        startDate = $("#id_start_date").val();
+        endDate = $("#id_end_date").val();
+
+        flatpickr("#id_start_date", {
+            dateFormat: "d-m-Y",
+            defaultDate: startDate
+        });
+
+        flatpickr("#id_end_date", {
+            dateFormat: "d-m-Y",
+            defaultDate: endDate
+        });
+	});
+
+</script>
+{% endblock %}
