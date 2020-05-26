@@ -71,7 +71,8 @@ def details(request, slug):
         'form': form,
         'task': collect_task,
         'is_complete_tasks': is_complete_tasks,
-        'file_not_found': file_not_found
+        'file_not_found': file_not_found,
+        'module_all': section.module.course.modules.prefetch_related('sections', 'activities_section')
     }
 
     # save activities user to section
@@ -94,7 +95,8 @@ def preview(request, slug):
         'title': section.title,
         'section': section,
         'pagination': pagination,
-        'form': FormUploadFile(None, user=request.user)
+        'form': FormUploadFile(None, user=request.user),
+        'module_all': section.module.course.modules.prefetch_related('sections')
     }
     return render(request, 'website/sections/preview.html', context)
 

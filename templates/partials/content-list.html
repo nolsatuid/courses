@@ -7,12 +7,6 @@
             {% for mod in module.course.modules.all %}
                 <li class="item p-3 {%if mod.slug == module.slug and not section %}bg-maroon text-white{% endif %}" id="heading_{{mod.id}}">
                     <div class="card-tools row">
-                        {% if mod.sections.all %}
-                        <!-- Collapse Button -->
-                        <button type="button" class="btn btn-tool btn-sm col-md-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
-                        {% else %}
-                        <div class="offset-md-1"></div>
-                        {% endif %}
                         <div class="col-md-11">
                             {% if mod|on_activity:user %}
                                 <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
@@ -25,8 +19,6 @@
                         </div>
                     </div>
                 </li>
-                {% if mod.sections.all %}
-                <div id="collapse_{{mod.id}}" class="collapse {%if section.module.slug == mod.slug or mod.slug == module.slug %}show{% endif %}" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">
                 {% for sect in mod.sections.all %}
                 <li class="item p-3 {%if sect.slug == section.slug %}bg-maroon text-white{% endif %}"> 
                     <div class="card-body">
@@ -47,8 +39,6 @@
                     </div>
                 </li>
                 {% endfor %}
-                </div>
-                {% endif %}
             {% endfor %}
             <li></li>
         </ul>

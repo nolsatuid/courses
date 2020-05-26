@@ -28,7 +28,8 @@ def details(request, slug):
     context = {
         'title': module.title,
         'module': module,
-        'pagination': pagination
+        'pagination': pagination,
+        'module_all': module.course.modules.prefetch_related('sections')
     }
 
     # save activities user to module
@@ -53,7 +54,8 @@ def preview(request, slug):
     context = {
         'title': module.title,
         'module': module,
-        'pagination': pagination
+        'pagination': pagination,
+        'module_all': module.course.modules.prefetch_related('sections')
     }
     return render(request, 'website/modules/preview.html', context)
 
