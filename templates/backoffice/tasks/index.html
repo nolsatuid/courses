@@ -59,7 +59,7 @@ thead input {
                                 <td>{{ task.section.module.course.title }}</td>
                                 <td>{{ task.section.title }}</td>
                                 <td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>
-                                <td id="score-{{task.id}}">{{ task.score|default:'-' }}</td>       
+                                <td id="score-{{task.id}}">{{ task.score }}</td>       
                                 <td id="note-{{task.id}}">{{ task.note|default:'-' }}</td>     
                                 <td>{{ task.update_at }}</td>
                                 <td width="10px">
@@ -226,6 +226,10 @@ thead input {
         var btn_status = $('#btn-status-'+task_id);
         var note = $('#note-'+task_id);
         var score = $('#score-'+task_id);
+        var nilai = 0;
+        if(document.getElementById("score").value != ""){
+            nilai = document.getElementById("score").value;
+        }
         
         $.ajax({
             url: "{% url 'backoffice:tasks:ajax_change_status' %}",
@@ -233,14 +237,14 @@ thead input {
                 'task_id': task_id,
                 'status_id': status_id,
                 'note': document.getElementById("note").value,
-                'score': document.getElementById("score").value
+                'score': nilai
             },
             dataType: 'json',
             success: function (data) {
                 btn_status.html("");  
                 note.html(document.getElementById("note").value);
                 document.getElementById("note").value = "" 
-                score.html(document.getElementById("score").value);
+                score.html(nilai);
                 document.getElementById("score").value = "" 
                 if(status_id == 1){
                     btn_status.append(

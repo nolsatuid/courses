@@ -50,7 +50,7 @@ def ajax_change_status(request):
     task = get_object_or_404(CollectTask, id=id)
     task.status = status_id
     task.note = request.GET.get('note', None)
-    task.score = request.GET.get('score', None)
+    task.score = request.GET.get('score', 0)
     task.save()
 
     utils.send_notification(
