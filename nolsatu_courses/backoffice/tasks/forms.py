@@ -35,7 +35,10 @@ class FormFilterTask(forms.Form):
         status = self.cleaned_data['status']
         batch = self.cleaned_data['batch']
 
-        tasks = CollectTask.objects.select_related('section', 'user').all()
+        tasks = CollectTask.objects.select_related(
+            'section', 'user', 'file', 'section__module__course'
+        ).all()
+
         if course:
             tasks = tasks.filter(section__module__course=course)
 

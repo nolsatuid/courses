@@ -14,8 +14,9 @@ from .forms import FormFilterStudent
 
 @staff_member_required
 def index(request):
-    graduates = Enrollment.objects.select_related('course', 'user') \
-        .filter(status=Enrollment.STATUS.graduate)
+    graduates = Enrollment.objects.select_related(
+        'course', 'user', 'batch', 'user__nolsatu'
+    ).filter(status=Enrollment.STATUS.graduate)
     form = FormFilterStudent(request.GET or None)
     if form.is_valid():
         graduates = form.get_data(students=graduates)
@@ -31,8 +32,9 @@ def index(request):
 
 @staff_member_required
 def candidate(request):
-    students = Enrollment.objects.select_related('course', 'user') \
-        .filter(status=Enrollment.STATUS.finish)
+    students = Enrollment.objects.select_related(
+        'course', 'user', 'batch', 'user__nolsatu'
+    ).filter(status=Enrollment.STATUS.finish)
     form = FormFilterStudent(request.GET or None)
     if form.is_valid():
         students = form.get_data(students=students)

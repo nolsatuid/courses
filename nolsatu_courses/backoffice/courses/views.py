@@ -89,7 +89,7 @@ def details(request, id):
 
 @staff_member_required
 def registrants(request):
-    registrants = Enrollment.objects.all()
+    registrants = Enrollment.objects.select_related('user', 'course', 'batch')
     form = FormFilterRegistrants(request.GET or None)
     if form.is_valid():
         registrants = form.get_data(registrants=registrants)
