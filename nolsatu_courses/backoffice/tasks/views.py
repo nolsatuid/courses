@@ -5,13 +5,13 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
 from nolsatu_courses.apps import utils
-from nolsatu_courses.apps.courses.models import Section, CollectTask
+from nolsatu_courses.apps.courses.models import Section, CollectTask, Batch
 from .forms import FormFilterTask
 
 
 @staff_member_required
 def index(request):
-    tasks = CollectTask.objects.select_related('section', 'user').all()
+    tasks = None
     form = FormFilterTask(request.GET or None)
     if form.is_valid():
         tasks = form.get_data()
@@ -59,4 +59,22 @@ def ajax_change_status(request):
     )
 
     data = {}
+    return JsonResponse(data, status=200)
+
+
+@staff_member_required
+def ajax_filter_batch(request):
+    course = request.GET.get('course', None)
+    data = {
+        'batch': []
+    }
+    if course:
+        batch = Batch.objects.filter(course=course)
+        data['batch'] = [
+            {
+                'id': b.id,
+                'name': b.batch
+            } for b in batch
+        ]
+
     return JsonResponse(data, status=200)

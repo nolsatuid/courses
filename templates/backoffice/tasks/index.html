@@ -38,47 +38,49 @@ thead input {
             <!-- end filter form -->
         </div>
         <div class="card-body">
-            <table id="datatable" class="table table-striped">
-                <thead>
-                    <th>Nama</th>
-                    <th>Username</th>
-                    <th>Kursus</th>
-                    <th>Bab</th>
-                    <th>File</th>
-                    <th>Catatan</th>
-                    <th>Tanggal</th>
-                    <th style="width:25%;">Aksi</th>
-                </thead>
-                <tbody>
-                    {% for task in tasks %}
-                        <tr>
-                            <td>{{ task.user.first_name }} {{ task.user.last_name }}</td>
-                            <td>{{ task.user.username }}</td> 
-                            <td>{{ task.section.module.course.title }}</td>
-                            <td>{{ task.section.title }}</td>
-                            <td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>  
-                            <td id="note-{{task.id}}">{{ task.note|default:'-' }}</td>     
-                            <td>{{ task.update_at }}</td>
-                            <td width="10px">
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
-                                    <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa">
-                                        Diperiksa
-                                    </label>
-                                    <label class="btn {% if task.status == 2 %} btn-warning {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="2" data-url="" data-name="Mengulang">
-                                        Mengulang
-                                    </label>
-                                    <label class="btn {% if task.status == 4 %} bg-maroon {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="4" data-url="" data-name="Tidak Lulus">
-                                        Tidak Lulus
-                                    </label>
-                                    <label class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}"  data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="3" data-url="" data-name="Lulus">
-                                        Lulus
-                                    </label>
-                                </div>
-                            </td>  
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% if tasks %}
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Nama</th>
+                        <th>Username</th>
+                        <th>Kursus</th>
+                        <th>Bab</th>
+                        <th>File</th>
+                        <th>Catatan</th>
+                        <th>Tanggal</th>
+                        <th style="width:25%;">Aksi</th>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                            <tr>
+                                <td>{{ task.user.get_full_name }}</td>
+                                <td>{{ task.user.username }}</td> 
+                                <td>{{ task.section.module.course.title }}</td>
+                                <td>{{ task.section.title }}</td>
+                                <td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>  
+                                <td id="note-{{task.id}}">{{ task.note|default:'-' }}</td>     
+                                <td>{{ task.update_at }}</td>
+                                <td width="10px">
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
+                                        <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa">
+                                            Diperiksa
+                                        </label>
+                                        <label class="btn {% if task.status == 2 %} btn-warning {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="2" data-url="" data-name="Mengulang">
+                                            Mengulang
+                                        </label>
+                                        <label class="btn {% if task.status == 4 %} bg-maroon {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="4" data-url="" data-name="Tidak Lulus">
+                                            Tidak Lulus
+                                        </label>
+                                        <label class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}"  data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="3" data-url="" data-name="Lulus">
+                                            Lulus
+                                        </label>
+                                    </div>
+                                </td>  
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}            
         </div>
         <div class="card-footer">
 
@@ -117,6 +119,7 @@ thead input {
     $(document).ready(function() {
         $('#datatable').DataTable();
         filterSection();
+        filterBatch();
 
         $('#confirmStatus').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
@@ -134,7 +137,8 @@ thead input {
     })
 
     $('#id_course').on('change', function() {
-        filterSection();      
+        filterSection();  
+        filterBatch();    
     });
 
     function filterSection(){
@@ -157,6 +161,38 @@ thead input {
                     }else{
                         list_section.append(
                             '<option value="'+value.id+'">'+value.name+'</option>'
+                        ); 
+                    }                      
+                });                      
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        }); 
+    }
+
+    function filterBatch(){
+        var id_batch = $('#id_batch').val();
+        var list_batch = $('#id_batch');
+        var course = $('#id_course').val();
+        $.ajax({
+            url: '{% url "backoffice:tasks:ajax_filter_batch" %}',
+            data: {
+                'course': course
+            },
+            dataType: 'json',
+            success: function (data) {
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");  
+                $.each(data.batch, function(key,value) {
+                    if(id_batch == value.id){
+                        list_batch.append(
+                            '<option value="'+value.id+'" selected>Angkatan '+value.name+'</option>'
+                        ); 
+                    }else{
+                        list_batch.append(
+                            '<option value="'+value.id+'">Angkatan '+value.name+'</option>'
                         ); 
                     }                      
                 });                      
