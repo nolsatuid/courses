@@ -67,6 +67,8 @@ class Courses(models.Model):
 
     @property
     def author_name(self):
+        if self.vendor:
+            return self.vendor.name
         return self.author.get_full_name()
 
     def save(self, *args, **kwargs):
