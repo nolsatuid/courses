@@ -70,7 +70,8 @@ def results(request):
 @staff_member_required
 def detail_result(request, id):
     quiz = get_object_or_404(Quiz, id=id)
-    results = Sitting.objects.filter(quiz=quiz).order_by('-current_score')
+    results = Sitting.objects.select_related('user', 'quiz') \
+        .filter(quiz=quiz).order_by('-current_score')
 
     context = {
         'menu_active': 'quiz',
@@ -83,7 +84,7 @@ def detail_result(request, id):
 
 @staff_member_required
 def participant_result(request, id):
-    sitting = get_object_or_404(Sitting, id=id)
+    sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
 
     context = {
         'menu_active': 'quiz',

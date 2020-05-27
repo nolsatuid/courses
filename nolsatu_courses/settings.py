@@ -61,6 +61,13 @@ INSTALLED_APPS = [
     'nolsatu_courses.apps.courses',
     'nolsatu_courses.apps.upload_files',
     'nolsatu_courses.apps.accounts',
+    'nolsatu_courses.apps.vendors',
+
+    # quiz
+    'quiz',
+    'multichoice',
+    'true_false',
+    'essay',
 
     # other apps
     'django_extensions',
@@ -70,12 +77,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'drf_yasg',
-
-    # quiz
-    'quiz',
-    'multichoice',
-    'true_false',
-    'essay',
+    'debug_toolbar',
     'markdownx'
 ]
 
@@ -88,6 +90,7 @@ MIDDLEWARE = [
     'nolsatu_courses.apps.middleware.NolSatuAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 SESSION_ENGINE = 'redis_sessions.session'
@@ -236,6 +239,9 @@ FEATURE = {
     "MARKDOWN_CONTENT": False,
     "MARKDOWN_BACKOFFICE_EDITOR": False
 }
+
+# django debug toolbar
+INTERNAL_IPS = ['127.0.0.1']
 
 try:
     from .local_settings import *

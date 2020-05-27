@@ -44,6 +44,10 @@ class Courses(models.Model):
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.publish)
     quizzes = models.ManyToManyField('quiz.Quiz', verbose_name='Quiz')
+    vendor = models.ForeignKey(
+        "vendors.Vendor", verbose_name=_("Vendor"),
+        on_delete=models.CASCADE, blank=True, null=True
+    )
 
     objects = InheritanceManager()
 
@@ -63,6 +67,8 @@ class Courses(models.Model):
 
     @property
     def author_name(self):
+        if self.vendor:
+            return self.vendor.name
         return self.author.get_full_name()
 
     def save(self, *args, **kwargs):
@@ -456,6 +462,7 @@ class CollectTask(models.Model):
     note = models.CharField(_("Catatan"), max_length=220, blank=True, null=True)
     create_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     update_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    score = models.PositiveIntegerField(_("Nilai"), null=True, blank=True)
 
     def __str__(self):
         return f"{self.user} - {self.section}"

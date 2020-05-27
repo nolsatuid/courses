@@ -10,9 +10,17 @@ from nolsatu_courses.apps.courses.models import Courses, Enrollment
 
 def details(request, slug):
     if request.user.is_superuser:
-        course = get_object_or_404(Courses, slug=slug)
+        course = get_object_or_404(
+            Courses.objects.prefetch_related('modules', 'modules__sections') \
+            .select_related('vendor'),
+            slug=slug
+        )
     else:
-        course = get_object_or_404(Courses, slug=slug, status=Courses.STATUS.publish)
+        course = get_object_or_404(
+            Courses.objects.prefetch_related('modules', 'modules__sections') \
+            .select_related('vendor'),
+            slug=slug, status=Courses.STATUS.publish
+        )
 
     context = {
         'title': course.title,

@@ -14,7 +14,7 @@ def index(request):
     context = {
         'menu_active': 'batch',
         'title': _('Daftar Angkatan'),
-        'batchs': Batch.objects.all(),
+        'batchs': Batch.objects.select_related('course'),
         'sidebar': True
     }
     return render(request, 'backoffice/batchs/index.html', context)
