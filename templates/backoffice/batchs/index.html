@@ -28,9 +28,16 @@
                             <td>{{ batch.is_active|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td><a href="{{ batch.link_group }}">{{ batch.link_group }}</a></td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:batchs:details' batch.id %}"data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i></a>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:batchs:edit' batch.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i></a>
-                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:batchs:delete' batch.id %}" data-name="Angkatan {{ batch.batch}}" data-toggle="tooltip" title="Hapus"><i class="fas fa-trash-alt"></i></button> 
+                                <div class="btn-group">
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Aksi
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'backoffice:batchs:details' batch.id %}">Detail</a>
+                                        <a class="dropdown-item" href="{% url 'backoffice:batchs:edit' batch.id %}">Ubah</a>
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:batchs:delete' batch.id %}" data-name="Angkatan {{ batch.batch}}">Hapus</button> 
+                                    </div>
+                                </div>                                
                             </td>
                         </tr>
                     {% endfor %}
@@ -52,7 +59,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Yakin ingin menghapus <strong id="confirmDeleteName"></strong>
+                Yakin ingin menghapus <strong id="confirmDeleteName"></strong> ?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>

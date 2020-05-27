@@ -24,14 +24,22 @@
                 <tbody>
                     {% for module in modules %}
                         <tr>
-                            <td>{{ module.title }}</td>
+                            <td><a href="{% url 'backoffice:modules:details' module.id %}" >{{ module.title }}</a></td>
                             <td>{{ module.order }}</td>
                             <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:modules:details' module.id %}" data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i></a>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:modules:edit' module.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i></a>
-                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" data-toggle="tooltip" title="Hapus"><i class="fas fa-trash-alt"></i></button> |
-                                <a class="btn btn-sm btn-pill btn-warning" href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
+                                <div class="btn-group">
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Aksi
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'backoffice:modules:details' module.id %}" >Detail</a>
+                                        <a class="dropdown-item" href="{% url 'backoffice:modules:edit' module.id %}" >Ubah</a>
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
+                                    </div>
+                                </div> 
                             </td>
                         </tr>
                     {% endfor %}
