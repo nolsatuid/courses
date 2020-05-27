@@ -10,6 +10,9 @@
                 {% for mod in module_all %}
                     <li class="item p-3 {%if mod.slug == module.slug and not section %}bg-maroon text-white{% endif %}" id="heading_{{mod.id}}">
                         <div class="card-tools row">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-tool btn-sm col-md-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas  {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
+
                             <div class="col-md-11">
                                 {% if mod.is_visible or user.is_superuser %}
                                 <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
