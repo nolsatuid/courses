@@ -67,7 +67,7 @@ def details(request, slug):
 
     module_all = section.module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish()),
-        'activities_section'
+        'activities_module'
     )
 
     context = {
