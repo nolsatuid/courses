@@ -21,7 +21,7 @@
                 <tbody>
                     {% for batch in batchs %}
                         <tr>
-                            <td>{{ batch.batch }}</td>
+                            <td><a href="{% url 'backoffice:batchs:details' batch.id %}">Angkatan {{ batch.batch }}</a></td>
                             <td>{{ batch.course.title }}</td>
                             <td>{{ batch.start_date }}</td>
                             <td>{{ batch.end_date }}</td>
