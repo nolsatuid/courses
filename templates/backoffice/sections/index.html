@@ -26,19 +26,25 @@
                 <tbody>
                     {% for section in sections %}
                         <tr>
-                            <td>{{ section.title }}</td>
+                            <td><a href="{% url 'backoffice:sections:details' section.id %}">{{ section.title }}</a></td>
                             <td>{{ section.order }}</td>
                             <td>{{ section.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>{{ section.is_task|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-success" href="{% url 'backoffice:sections:details' section.id %}" data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i></a>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:sections:edit' section.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i></a>
-                                <button class="btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:sections:delete' section.id %}" data-name="{{ section.title}}" data-toggle="tooltip" title="Hapus"><i class="fas fa-trash-alt"></i></button> |
-                                {% if section.is_task %}
-                                    <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'backoffice:sections:task_setting' section.id %}"><i class="fas fa-cog"></i> Task Setting</a>
-                                {% else %}
-                                    <button disabled class="btn btn-sm btn-pill btn-secondary" data-toggle="tooltip" title="Tugas tidak aktif"><i class="fas fa-cog"></i> Task Setting</button>
-                                {% endif %}
+                                <div class="btn-group">
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Aksi
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'backoffice:sections:details' section.id %}">Detail</a>
+                                        <a class="dropdown-item" href="{% url 'backoffice:sections:edit' section.id %}">Ubah</a>
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:sections:delete' section.id %}" data-name="{{ section.title}}">Hapus</button>
+                                        {% if section.is_task %}
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{% url 'backoffice:sections:task_setting' section.id %}"><i class="fas fa-cog"></i> Task Setting</a>
+                                        {% endif %}
+                                    </div>
+                                </div> 
                             </td>
                         </tr>
                     {% endfor %}
