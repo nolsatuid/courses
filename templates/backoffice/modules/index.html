@@ -19,6 +19,7 @@
                     <th>Judul</th>
                     <th>Urutan</th>
                     <th>Terlihat</th>
+                    <th>Draf</th>
                     <th>Aksi</th>
                 </thead>
                 <tbody>
@@ -27,6 +28,7 @@
                             <td><a href="{% url 'backoffice:modules:details' module.id %}" >{{ module.title }}</a></td>
                             <td>{{ module.order }}</td>
                             <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ module.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>
                                 <div class="btn-group">
                                     <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
