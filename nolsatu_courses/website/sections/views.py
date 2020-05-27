@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
+from django.db.models import Prefetch
 
 from django.contrib.auth.decorators import login_required
 
@@ -64,6 +65,11 @@ def details(request, slug):
             )
             return redirect("website:sections:details", prev.slug)
 
+    module_all = section.module.course.modules.publish().prefetch_related(
+        Prefetch('sections', queryset=Section.objects.publish()),
+        'activities_module'
+    )
+
     context = {
         'title': section.title,
         'section': section,
@@ -72,7 +78,7 @@ def details(request, slug):
         'task': collect_task,
         'is_complete_tasks': is_complete_tasks,
         'file_not_found': file_not_found,
-        'module_all': section.module.course.modules.prefetch_related('sections', 'activities_section')
+        'module_all': module_all
     }
 
     # save activities user to section
@@ -91,12 +97,16 @@ def preview(request, slug):
         section = get_object_or_404(Section, slug=slug, is_visible=True)
         pagination = None
 
+    module_all = section.module.course.modules.publish().prefetch_related(
+        Prefetch('sections', queryset=Section.objects.publish())
+    )
+
     context = {
         'title': section.title,
         'section': section,
         'pagination': pagination,
         'form': FormUploadFile(None, user=request.user),
-        'module_all': section.module.course.modules.prefetch_related('sections')
+        'module_all': module_all
     }
     return render(request, 'website/sections/preview.html', context)
 
@@ -104,11 +114,11 @@ def preview(request, slug):
 def get_pagination(request, section):
     """fungsi untuk mendapatkan pagination
     """
-    section_slugs = section.module.sections.values_list('slug', flat=True)
+    section_slugs = section.module.sections.publish().values_list('slug', flat=True)
     next_slug = section.get_next(section_slugs)
     next_type = 'section'
     if not next_slug:
-        module_slugs = section.module.course.modules.values_list('slug', flat=True)
+        module_slugs = section.module.course.modules.publish().values_list('slug', flat=True)
         next_slug = section.module.get_next(module_slugs)
         next_type = 'module'
 

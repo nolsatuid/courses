@@ -201,6 +201,12 @@ class Courses(models.Model):
         ).count()
 
 
+class ModuleManager(models.Manager):
+    def publish(self):
+        publish = self.filter(draft=False)
+        return publish
+
+
 class Module(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
     slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
@@ -216,6 +222,8 @@ class Module(models.Model):
         _("Bab terlihat"), default=False, 
         help_text=_("Jika di centang maka seluruh bab pada modul ini akan terlihat")
     )
+    draft = models.BooleanField(_("Draf"), default=False)
+    objects = ModuleManager()
 
     class Meta:
         verbose_name = _("module")
@@ -268,6 +276,12 @@ class Module(models.Model):
         return settings.HOST + reverse("api:courses:module_preview", args=[self.id])
 
 
+class SectionManager(models.Manager):
+    def publish(self):
+        publish = self.filter(draft=False)
+        return publish
+
+
 class Section(models.Model):
     title = models.CharField(_("Judul"), max_length=220)
     slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
@@ -281,6 +295,8 @@ class Section(models.Model):
     is_task = models.BooleanField(_("Tugas"), default=False)
     module = models.ForeignKey("Module", on_delete=models.CASCADE, related_name="sections")
     files = models.ManyToManyField("upload_files.UploadFile", blank=True)
+    draft = models.BooleanField(_("Draf"), default=False)
+    objects = SectionManager()
 
     class Meta:
         verbose_name = _("section")

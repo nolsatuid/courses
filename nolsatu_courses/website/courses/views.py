@@ -3,22 +3,27 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.db.models import Prefetch
 
 from nolsatu_courses.apps import utils
-from nolsatu_courses.apps.courses.models import Courses, Enrollment
+from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section
 
 
 def details(request, slug):
     if request.user.is_superuser:
         course = get_object_or_404(
-            Courses.objects.prefetch_related('modules', 'modules__sections') \
-            .select_related('vendor'),
+            Courses.objects.prefetch_related(
+                Prefetch('modules', queryset=Module.objects.publish()),
+                Prefetch('modules__sections', queryset=Section.objects.publish())
+            ).select_related('vendor'),
             slug=slug
         )
     else:
         course = get_object_or_404(
-            Courses.objects.prefetch_related('modules', 'modules__sections') \
-            .select_related('vendor'),
+            Courses.objects.prefetch_related(
+                Prefetch('modules', queryset=Module.objects.publish()),
+                Prefetch('modules__sections', queryset=Section.objects.publish())
+            ).select_related('vendor'),
             slug=slug, status=Courses.STATUS.publish
         )
 

@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Prefetch
 
-from nolsatu_courses.apps.courses.models import Module
+from nolsatu_courses.apps.courses.models import Module, Section
 from nolsatu_courses.apps.decorators import enroll_required, course_was_started
 
 
@@ -25,11 +26,15 @@ def details(request, slug):
             )
             return redirect("website:sections:details", prev.slug)
 
+    module_all = module.course.modules.publish().prefetch_related(
+        Prefetch('sections', queryset=Section.objects.publish())
+    )
+
     context = {
         'title': module.title,
         'module': module,
         'pagination': pagination,
-        'module_all': module.course.modules.prefetch_related('sections')
+        'module_all': module_all
     }
 
     # save activities user to module
@@ -51,11 +56,15 @@ def preview(request, slug):
     else:
         pagination = None
 
+    module_all = module.course.modules.publish().prefetch_related(
+        Prefetch('sections', queryset=Section.objects.publish())
+    )
+
     context = {
         'title': module.title,
         'module': module,
         'pagination': pagination,
-        'module_all': module.course.modules.prefetch_related('sections')
+        'module_all': module_all
     }
     return render(request, 'website/modules/preview.html', context)
 
@@ -65,7 +74,7 @@ def get_pagination(request, module):
     fungsi untuk mendapatkan pagination
     """
     slugs = module.course.modules.values_list('slug', flat=True)
-    next_slug = module.sections.first()
+    next_slug = module.sections.publish().first()
     next_type = "section"
     if not next_slug:
         next_slug = module.get_next(slugs)
@@ -74,8 +83,8 @@ def get_pagination(request, module):
     prev_slug = module.get_prev(slugs)
     prev_type = "module"
     if prev_slug:
-        if prev_slug.sections.last():
-            prev_slug = prev_slug.sections.last()
+        if prev_slug.sections.publish().last():
+            prev_slug = prev_slug.sections.publish().last()
             prev_type = "section"
 
     return {
