@@ -23,7 +23,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <nav class="main-header navbar navbar-expand navbar-{{ color_text_top_nav }} bg-{{ bg_top_nav }} border-bottom-0">
     <div class="container">
       <a href="{{ nolsatu_home_page_url }}" class="navbar-brand">
-          <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image">
+          {% if not hide_logo %}
+            <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image">
+          {% endif %}
           <span class="brand-text font-weight-bold color-white d-none d-md-flex" style="font-size:88%">
             {% if not hide_site_name %}
                 {{ site_name }}
