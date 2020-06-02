@@ -44,8 +44,9 @@ NOLSATU_PROFILE_PAGE_URL = f'{NOLSATU_HOST}/accounts/profile/'
 LOGIN_URL = f"{NOLSATU_HOST}/accounts/login/?navbar=hidden"
 LOGOUT_URL = f"{NOLSATU_HOST}/accounts/logout/"
 
-# get apperance from academy
-KEY_CACHE_APPERANCE = "setting-apperance"
+# get appearance from academy
+SESSION_COOKIE_DOMAIN = '.nolsatu.id'
+KEY_CACHE_APPERANCE = f"course-appearance-{SESSION_COOKIE_DOMAIN}"
 
 # Application definition
 
@@ -190,8 +191,6 @@ REST_FRAMEWORK = {
 # Setup support for proxy headers
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-SESSION_COOKIE_DOMAIN = '.nolsatu.id'
 
 SERVER_KEY = "serverToServerAuthKeyKeepItVerySecret"
 
