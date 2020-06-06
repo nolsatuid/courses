@@ -10,6 +10,7 @@
             </h4>
         </div>
         <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="card-body">
                 <div class="row-fluid">
                     <div class="row">
@@ -18,7 +19,6 @@
                         </div>
                         <div class=" col-md-12 col-lg-12 ">
                             <div class="tab-content">
-                                {% csrf_token %}
 
                                 {{ form.media }}
                                 {{ form.non_field_errors }}
@@ -27,7 +27,9 @@
                                         <label class="col-md-2"> {{ field.label }}</label>
                                         <div class="col-md-10">
                                             {% if field.field.widget.input_type == 'checkbox' %}
-                                                {% render_field field%}
+                                                {% render_field field %}
+                                            {% elif  field.field.widget.input_type == 'file' %}
+                                                {% render_field field %}
                                             {% else %}
                                                 {% render_field field|add_class:"form-control" %}
                                             {% endif %}
@@ -35,7 +37,7 @@
                                             <small class="form-text text-danger">{{ field.errors }}</small>
                                         </div>
                                     </div>
-                                {% endfor %}                                
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -69,5 +71,40 @@
         });
 	});
 
+    $('#id_course').on('change', function() {
+        filterBatch();
+    });
+
+    function filterBatch(){
+        var id_batch = $('#id_batch').val();
+        var list_batch = $('#id_batch');
+        var course = $('#id_course').val();
+        $.ajax({
+            url: '{% url "backoffice:graduates:ajax_filter_batch" %}',
+            data: {
+                'course': course
+            },
+            dataType: 'json',
+            success: function (data) {
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");
+                $.each(data.batch, function(key,value) {
+                    if(id_batch == value.id){
+                        list_batch.append(
+                            '<option value="'+value.id+'" selected>Angkatan '+value.batch+'</option>'
+                        );
+                    }else{
+                        list_batch.append(
+                            '<option value="'+value.id+'">Angkatan '+value.batch+'</option>'
+                        );
+                    }
+                });
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        });
+    }
 </script>
 {% endblock %}

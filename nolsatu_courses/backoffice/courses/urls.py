@@ -11,4 +11,5 @@ urlpatterns = [
     path('registrants/', views.registrants, name='registrants'),
     path('ajax-change-status-registrants/',
          views.ajax_change_status_registrants, name='ajax_change_status_registrants'),
+    path('bulk-register/', views.bulk_register, name='bulk_register'),
 ]

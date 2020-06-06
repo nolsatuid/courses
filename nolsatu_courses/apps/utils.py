@@ -36,9 +36,18 @@ def send_notification(user, subject, content):
     return call_internal_api('post', url, data=data)
 
 
-def update_user(user_id):
-    url = f"{settings.NOLSATU_HOST}/api/internal/user/{user_id}"
-    data = call_internal_api("get", url).json()
+def update_user(identificator, type_identificator='id', user=None):
+    """
+    identicator digunakan sebagai nilai yang digunakan untuk mendapatkan user
+    type_identificator digunakan untuk menentukan key parameter
+    user gunakan untuk passing data user tanpa harus melakukan get_user_academy
+    """
+    if user:
+        data = user
+    else:
+        resp = get_user_academy(type_identificator, identificator)
+        data = resp.json()
+
     profile = data['profile'] if data['profile'] else {}
 
     defaults = {
@@ -90,3 +99,13 @@ def call_internal_api(method, url, **kwargs):
     }
 
     return method_map[method](url, headers=headers, **kwargs)
+
+
+def get_user_academy(type_identificator, identificator):
+    if type_identificator == 'id':
+        url = f"{settings.NOLSATU_HOST}/api/internal/user/{identificator}"
+    elif type_identificator == 'email':
+        url = f"{settings.NOLSATU_HOST}/api/internal/get-user?email={identificator}"
+    else:
+        url = f"{settings.NOLSATU_HOST}/api/internal/get-user?username={identificator}"
+    return call_internal_api("get", url)
