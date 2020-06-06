@@ -232,6 +232,10 @@ MARKDOWNX_MARKDOWN_EXTENSIONS = [
     'markdown.extensions.codehilite'
 ]
 MARKDOWNX_DISABLE_KEYS = False
+MARKDOWNX_IMAGE_MAX_SIZE = {
+    'size': (1000, 1000),
+    'quality': 90
+}
 
 # FEATURE_TOGGLE
 FEATURE = {
