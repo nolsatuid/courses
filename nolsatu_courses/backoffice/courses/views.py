@@ -4,11 +4,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Courses, Enrollment
-from .forms import FormCourses, FormFilterRegistrants
+from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister
 
 
 @staff_member_required
@@ -158,3 +158,21 @@ def ajax_change_status_registrants(request):
         'batch': enroll.batch.batch
     }
     return JsonResponse(data, status=200)
+
+
+@staff_member_required
+def bulk_register(request):
+    form = FormBulkRegister(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        csv_buffer = form.sync_users()
+        response = HttpResponse(csv_buffer.getvalue(), content_type="text/csv")
+        response['Content-Disposition'] = 'attachment; filename=reject-data.csv'
+        return response
+
+    context = {
+        'menu_active': 'registrants',
+        'title': 'Registrasi Masal',
+        'form': form,
+        'title_submit': _("Proses")
+    }
+    return render(request, 'backoffice/form.html', context)

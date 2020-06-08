@@ -5,11 +5,11 @@
     <!-- Brand Logo -->
     <!-- Brand Logo -->
     <a href="{% url 'website:index' %}" class="brand-link">
-        {% if not hide_logo %}   
+        {% if not hide_logo %}
             <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image"
            style="opacity: .8">
         {% endif %}
-        
+
       <span class="brand-text font-weight-bold color-white" style="font-size:88%">
         {% if not hide_site_name %}
             {{ brand }}
@@ -61,11 +61,25 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <a href="{% url 'backoffice:courses:registrants' %}" class="nav-link {% if menu_active == 'registrants' %}active{% endif %}">
+            <li class="nav-item {% if menu_active == 'registrants' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'registrants' %}active{% endif %}">
                     <i class="nav-icon fas fa-users"></i>
-                    <p>Pendaftar</p>
+                    <p>Pendaftar<i class="right fas fa-angle-left"></i></p>
                 </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:courses:registrants' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Data Pendaftar</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:courses:bulk_register' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Registrasi Masal</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item">
                 <a href="{% url 'backoffice:tasks:index' %}" class="nav-link {% if menu_active == 'task' %}active{% endif %}">
