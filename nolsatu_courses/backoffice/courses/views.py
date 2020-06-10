@@ -98,7 +98,8 @@ def registrants(request):
         data = request.POST
         for id in data.getlist('checkMark'):
             enroll = get_object_or_404(Enrollment, id=id)
-            if not enroll.course.batchs.last().link_group:
+            if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] and \
+                    not enroll.course.batchs.last().link_group:
                 messages.error(request, _(
                     f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi'))
             else:
@@ -108,12 +109,12 @@ def registrants(request):
                 enroll.status = Enrollment.STATUS.begin
                 enroll.save()
 
+                text1 = f'Selamat, Anda sudah mendapatkan akses kelas {enroll.course.title}. '
+                text2 = f'Gabung ke grup chat menggunakan link <a href="{enroll.batch.link_group}">ini</a> untuk mendapatkan informasi lebih lanjut.'
+                notif_msg = text1 + text2 if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] else text1
+
                 utils.send_notification(
-                    enroll.user, f'Akses kelas {enroll.course.title} di berikan',
-                    f'Selamat, Anda sudah dapat mengakses kelas {enroll.course.title}. \
-                        Silahkan gabung ke grup telegram menggunakan link berikut <a href="{enroll.batch.link_group}">\
-                        {enroll.batch.link_group}</a> untuk mendapatkan informasi lebih lanjut.'
-                )
+                    enroll.user, f'Akses kelas {enroll.course.title} di berikan', notif_msg)
                 messages.success(request, _(f'Berhasil mengubah status <strong>{enroll}</strong>'))
 
     context = {
@@ -130,7 +131,8 @@ def ajax_change_status_registrants(request):
     id = request.GET.get('id', None)
     status = request.GET.get('status', None)
     enroll = get_object_or_404(Enrollment, id=id)
-    if not enroll.course.batchs.last().link_group:
+    if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] and \
+            not enroll.course.batchs.last().link_group:
         data = {
             'status': False,
             'message': f'Link grup pada batch {enroll.batch} belum diisi',
@@ -144,10 +146,10 @@ def ajax_change_status_registrants(request):
     enroll.save()
 
     if status == "True":
-        utils.send_notification(enroll.user, f'Akses kelas {enroll.course.title} di berikan',
-                                f'Selamat, Anda sudah dapat mengakses kelas {enroll.course.title}. \
-                            Silahkan gabung ke grup telegram menggunakan link berikut <a href="{enroll.batch.link_group}">\
-                            {enroll.batch.link_group}</a> untuk mendapatkan informasi lebih lanjut.')
+        text1 = f'Selamat, Anda sudah mendapatkan akses kelas {enroll.course.title}. '
+        text2 = f'Gabung ke grup chat menggunakan link <a href="{enroll.batch.link_group}">ini</a> untuk mendapatkan informasi lebih lanjut.'
+        notif_msg = text1 + text2 if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] else text1
+        utils.send_notification(enroll.user, f'Akses kelas {enroll.course.title} di berikan', notif_msg)
     else:
         utils.send_notification(enroll.user, f'Akses kelas {enroll.course.title} dibatalkan',
                                 f'Maaf, Akses belajar pada kelas {enroll.course.title} Anda dibatalkan.')
