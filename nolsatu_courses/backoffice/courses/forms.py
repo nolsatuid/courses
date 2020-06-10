@@ -126,12 +126,17 @@ class FormBulkRegister(forms.Form):
             return {'username': identificator}
 
     def register_course(self, user):
+        if self.cleaned_data['allowed_access']:
+            status = Enrollment.STATUS.begin
+        else:
+            status = Enrollment.STATUS.register
+
         Enrollment.objects.update_or_create(
             user=user,
             course=self.cleaned_data['course'],
             batch=self.cleaned_data['batch'],
             defaults={
-                'allowed_access':self.cleaned_data['allowed_access'],
-                'status': Enrollment.STATUS.register
+                'allowed_access': self.cleaned_data['allowed_access'],
+                'status': status
             }
         )
