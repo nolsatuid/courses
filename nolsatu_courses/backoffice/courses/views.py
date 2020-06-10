@@ -100,8 +100,10 @@ def registrants(request):
             enroll = get_object_or_404(Enrollment, id=id)
             if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] and \
                     not enroll.course.batchs.last().link_group:
-                messages.error(request, _(
-                    f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi'))
+                messages.error(
+                    request,
+                    _(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi')
+                )
             else:
                 if enroll.batch != enroll.course.batchs.last():
                     enroll.batch = enroll.course.batchs.last()
