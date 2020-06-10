@@ -33,7 +33,7 @@ class AdminSection(admin.ModelAdmin):
 @admin.register(CollectTask)
 class AdminCollectTask(admin.ModelAdmin):
     list_display = ('user', 'section', 'file')
-    search_fields = ('user', 'section', )
+    search_fields = ('user__username', 'section__title', )
 
 
 @admin.register(TaskUploadSettings)
@@ -60,7 +60,7 @@ class AdminEnrollment(admin.ModelAdmin):
         'user', 'batch', 'allowed_access', 'status',
         'date_enrollment', 'finishing_date'
     )
-    search_fields = ('user', 'course')
+    search_fields = ['user__username', 'course__title']
 
 
 @admin.register(Activity)
@@ -68,7 +68,7 @@ class AdminActivity(admin.ModelAdmin):
     list_display = (
         'user', 'course', 'module', 'section', 'created',
     )
-    search_fields = ('user', 'module', 'section')
+    search_fields = ('user__username', 'module__title', 'section__title')
 
 
 @admin.register(CertSetting)
@@ -76,4 +76,4 @@ class AdminCertSetting(admin.ModelAdmin):
     list_display = (
         'course', 'cert_title', 'prefix_cert_number', 'static_date',
     )
-    search_fields = ('course', 'cert_title')
+    search_fields = ('course__title', 'cert_title')

@@ -243,6 +243,11 @@ FEATURE = {
     "MARKDOWN_BACKOFFICE_EDITOR": False
 }
 
+# internal course configs
+COURSE_CONFIGS = {
+    "REQUIRED_LINK_GROUP": True,
+}
+
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']
 
