@@ -1,6 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
 
+from nolsatu_courses.api.courses.utils import prepare_markdown
 from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module, TaskUploadSettings
 
 
@@ -19,13 +20,14 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def get_short_description(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return obj.short_description_md
+            return prepare_markdown(obj.short_description_md)
         else:
             return obj.short_description
 
     class Meta:
         model = Courses
-        fields = ['id', 'author', 'featured_image', 'level', 'categories', 'short_description', 'is_allowed', 'quizzes']
+        fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories', 'short_description', 'is_allowed',
+                  'quizzes']
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
@@ -37,14 +39,14 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     def get_description(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return obj.description_md
+            return prepare_markdown(obj.description_md)
         else:
             return obj.description
 
     class Meta:
         model = Courses
-        fields = ['id', 'author', 'featured_image', 'level', 'categories', 'description', 'is_allowed', 'status',
-                  'quizzes']
+        fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories', 'description', 'is_allowed',
+                  'status', 'quizzes']
 
 
 class EnrollDetailSerializer(serializers.ModelSerializer):
@@ -93,7 +95,7 @@ class ModulePreviewSerializer(serializers.ModelSerializer):
 
     def get_description(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return obj.description_md
+            return prepare_markdown(obj.description_md)
         else:
             return obj.description
 
@@ -107,7 +109,7 @@ class SectionPreviewSerializer(serializers.ModelSerializer):
 
     def get_content(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return obj.content_md
+            return prepare_markdown(obj.content_md)
         else:
             return obj.content
 
@@ -121,7 +123,7 @@ class ModuleSerializer(serializers.ModelSerializer):
 
     def get_description(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return obj.description_md
+            return prepare_markdown(obj.description_md)
         else:
             return obj.description
 
@@ -135,7 +137,7 @@ class TaskSettingSerializer(serializers.ModelSerializer):
 
     def get_instruction(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return obj.instruction_md
+            return prepare_markdown(obj.instruction_md)
         else:
             return obj.instruction
 
@@ -150,7 +152,7 @@ class SectionSerializer(serializers.ModelSerializer):
 
     def get_content(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return obj.content_md
+            return prepare_markdown(obj.content_md)
         else:
             return obj.content
 
