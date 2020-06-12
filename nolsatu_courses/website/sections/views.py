@@ -5,7 +5,7 @@ from django.db.models import Prefetch
 
 from django.contrib.auth.decorators import login_required
 
-from nolsatu_courses.apps.decorators import enroll_required, course_was_started
+from nolsatu_courses.apps.decorators import enroll_required
 from nolsatu_courses.apps.courses.models import Section
 
 from .forms import FormUploadFile
@@ -13,13 +13,15 @@ from .forms import FormUploadFile
 
 @login_required
 @enroll_required
-@course_was_started
 def details(request, slug):
-    section = get_object_or_404(Section, slug=slug)
+    section = get_object_or_404(
+        Section.objects.select_related("module", "task_setting", "module__course"), slug=slug
+    )
     file_not_found = None
 
     # form untuk pengumpulan tugas
-    collect_task = section.collect_task.filter(user=request.user).first()
+    collect_task = section.collect_task.filter(user=request.user) \
+        .select_related("file").first()
 
     # jika ada file
     if hasattr(collect_task, 'file'):
@@ -85,6 +87,7 @@ def details(request, slug):
     if section.has_enrolled(request.user):
         section.activities_section.update_or_create(
             user=request.user, course=section.module.course)
+        section.delete_cache()
 
     return render(request, 'website/sections/details.html', context)
 
