@@ -87,7 +87,7 @@ def details(request, slug):
     if section.has_enrolled(request.user):
         section.activities_section.update_or_create(
             user=request.user, course=section.module.course)
-        section.delete_cache()
+        section.delete_cache(request.user)
 
     return render(request, 'website/sections/details.html', context)
 

@@ -269,19 +269,20 @@ class Module(models.Model):
         return self.course.has_enrolled(user)
 
     def on_activity(self, user):
-        if cache.get('module-activity'):
-            activity_ids = cache.get('module-activity')
+        key = f'module-activity-{user.username}'
+        if cache.get(key):
+            activity_ids = cache.get(key)
         else:
             activity_ids = Activity.objects.filter(user=user, course=self.course) \
                 .values_list('module__id', flat=True)
-            cache.set('module-activity', activity_ids, 60 * 10)
+            cache.set(key, activity_ids, 60 * 10)
 
         if self.id in activity_ids:
             return True
         return False
 
-    def delete_cache(self):
-        cache.delete('module-activity')
+    def delete_cache(self, user):
+        cache.delete(f'module-activity-{user.username}')
 
 
 class SectionManager(models.Manager):
@@ -341,19 +342,20 @@ class Section(models.Model):
         return self.module.course.has_enrolled(user)
 
     def on_activity(self, user):
-        if cache.get('section-activity'):
-            activity_ids = cache.get('section-activity')
+        key = f'section-activity-{user.username}'
+        if cache.get(key):
+            activity_ids = cache.get(key)
         else:
             activity_ids = Activity.objects.filter(user=user, course=self.module.course) \
                 .values_list('section__id', flat=True)
 
-        cache.set('section-activity', activity_ids)
+        cache.set(key, activity_ids)
         if self.id in activity_ids:
             return True
         return False
 
-    def delete_cache(self):
-        cache.delete('section-activity')
+    def delete_cache(self, user):
+        cache.delete(f'section-activity-{user.username}')
 
 
 class TaskUploadSettings(models.Model):

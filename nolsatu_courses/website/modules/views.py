@@ -42,7 +42,7 @@ def details(request, slug):
     if module.has_enrolled(request.user):
         module.activities_module.update_or_create(
             user=request.user, course=module.course)
-        module.delete_cache()
+        module.delete_cache(request.user)
 
     return render(request, 'website/modules/details.html', context)
 
