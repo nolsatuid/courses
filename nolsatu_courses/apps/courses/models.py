@@ -390,6 +390,10 @@ class Batch(models.Model):
     def __str__(self):
         return f"{self.batch} {self.course.title}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete('last-batch')
+
 
 class Enrollment(models.Model):
     user = models.ForeignKey(User, related_name='enroll', on_delete=models.CASCADE)
