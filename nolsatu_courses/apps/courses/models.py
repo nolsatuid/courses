@@ -490,7 +490,7 @@ class CollectTask(models.Model):
         (4, 'not_pass', _('Tidak Lulus')),
     )
     status = models.PositiveIntegerField(choices=STATUS, default=STATUS.review)
-    note = models.CharField(_("Catatan"), max_length=220, blank=True, null=True)
+    note = models.TextField(_("Catatan"), blank=True, null=True)
     create_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     update_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     score = models.PositiveIntegerField(_("Nilai"), null=True, blank=True)
