@@ -5,14 +5,15 @@ from django.contrib import messages
 from django.db.models import Prefetch
 
 from nolsatu_courses.apps.courses.models import Module, Section
-from nolsatu_courses.apps.decorators import enroll_required, course_was_started
+from nolsatu_courses.apps.decorators import enroll_required
 
 
 @login_required
 @enroll_required
-@course_was_started
 def details(request, slug):
-    module = get_object_or_404(Module, slug=slug)
+    module = get_object_or_404(
+        Module.objects.select_related("course"), slug=slug
+    )
     pagination = get_pagination(request, module)
     prev_type = pagination['prev_type']
     prev = pagination['prev']
@@ -41,6 +42,7 @@ def details(request, slug):
     if module.has_enrolled(request.user):
         module.activities_module.update_or_create(
             user=request.user, course=module.course)
+        module.delete_cache()
 
     return render(request, 'website/modules/details.html', context)
 

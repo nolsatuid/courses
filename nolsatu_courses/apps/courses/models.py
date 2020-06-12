@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User, AnonymousUser
@@ -97,7 +100,11 @@ class Courses(models.Model):
             return False
 
     def get_last_batch(self):
-        batch = self.batchs.filter(is_active=True).order_by('batch').last()
+        if cache.get('last-batch'):
+            batch = cache.get('last-batch')
+        else:
+            batch = self.batchs.filter(is_active=True).order_by('batch').last()
+            cache.set('last-batch', batch, 60 * 5)
         return batch
 
     def can_register(self, user):
@@ -219,7 +226,7 @@ class Module(models.Model):
     is_visible = models.BooleanField(_("Terlihat"), default=False)
     course = models.ForeignKey("Courses", on_delete=models.CASCADE, related_name="modules")
     show_all_sections = models.BooleanField(
-        _("Bab terlihat"), default=False, 
+        _("Bab terlihat"), default=False,
         help_text=_("Jika di centang maka seluruh bab pada modul ini akan terlihat")
     )
     draft = models.BooleanField(_("Draf"), default=False)
@@ -262,18 +269,19 @@ class Module(models.Model):
         return self.course.has_enrolled(user)
 
     def on_activity(self, user):
-        activity_ids = Activity.objects.filter(user=user, course=self.course) \
-            .values_list('module__id', flat=True)
+        if cache.get('module-activity'):
+            activity_ids = cache.get('module-activity')
+        else:
+            activity_ids = Activity.objects.filter(user=user, course=self.course) \
+                .values_list('module__id', flat=True)
+            cache.set('module-activity', activity_ids, 60 * 10)
 
         if self.id in activity_ids:
             return True
         return False
 
-    def api_detail_url(self):
-        return settings.HOST + reverse("api:courses:module_detail", args=[self.id])
-
-    def api_preview_url(self):
-        return settings.HOST + reverse("api:courses:module_preview", args=[self.id])
+    def delete_cache(self):
+        cache.delete('module-activity')
 
 
 class SectionManager(models.Manager):
@@ -333,18 +341,19 @@ class Section(models.Model):
         return self.module.course.has_enrolled(user)
 
     def on_activity(self, user):
-        activity_ids = Activity.objects.filter(user=user, course=self.module.course) \
-            .values_list('section__id', flat=True)
+        if cache.get('section-activity'):
+            activity_ids = cache.get('section-activity')
+        else:
+            activity_ids = Activity.objects.filter(user=user, course=self.module.course) \
+                .values_list('section__id', flat=True)
 
+        cache.set('section-activity', activity_ids)
         if self.id in activity_ids:
             return True
         return False
 
-    def api_detail_url(self):
-        return settings.HOST + reverse("api:courses:section_detail", args=[self.id])
-
-    def api_preview_url(self):
-        return settings.HOST + reverse("api:courses:section_preview", args=[self.id])
+    def delete_cache(self):
+        cache.delete('section-activity')
 
 
 class TaskUploadSettings(models.Model):
@@ -419,7 +428,7 @@ class Enrollment(models.Model):
         )
         return count_status
 
-    def generate_certificate_number(self, prefix="NS-DEV"):
+    def generate_certificate_number(self, prefix="NS-DEV") -> str:
         batch = str(self.batch.batch)
         batch = "0" + batch if len(batch) == 1 else batch
 
@@ -462,6 +471,10 @@ class Enrollment(models.Model):
             return self.course.certsetting.static_date.strftime("%d-%m-%Y")
         else:
             return self.finishing_date.strftime("%d-%m-%Y")
+
+    @property
+    def date_limit_access(self):
+        return self.batch.start_date + timedelta(days=365)
 
 
 class CollectTask(models.Model):
