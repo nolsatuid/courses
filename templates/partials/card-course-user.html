@@ -1,6 +1,5 @@
 {% load static tags_courses %}
 
-{{ course }}
 <div class="card" style="width: 100%;min-height: 400px;max-height: 450px;overflow: hidden;">
     <a href="{% url 'website:modules:details' course.course.get_first_module.slug %}">
         <div style="width: 100%;height: 200px;overflow: hidden;">
