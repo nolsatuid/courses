@@ -20,7 +20,8 @@ def correct_answer_for_all(context, question):
     return {'previous': {'answers': answers},
             'user_was_incorrect': user_was_incorrect,
             'user_answer': question.user_answer,
-            'explanation': question.explanation}
+            'explanation': question.explanation,
+            'quiz': context.get('quiz', None)}
 
 
 @register.filter
