@@ -20,11 +20,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <div class="wrapper">
 
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-dark navbar-{{ color_theme }} border-bottom-0">
+  <nav class="main-header navbar navbar-expand navbar-{{ color_text_top_nav }} bg-{{ bg_top_nav }} border-bottom-0">
     <div class="container">
       <a href="{{ nolsatu_home_page_url }}" class="navbar-brand">
-          <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image">
-          <span class="brand-text font-weight-bold color-white d-none d-md-flex" style="font-size:88%">{{ brand }}</span>
+          {% if not hide_logo %}
+            <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image">
+          {% endif %}
+          <span class="brand-text font-weight-bold color-white d-none d-md-flex" style="font-size:88%">
+            {% if not hide_site_name %}
+                {{ site_name }}
+            {% else %}
+                &nbsp;
+            {% endif %}
+          </span>
       </a>
 
       <!-- Right navbar links -->

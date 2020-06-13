@@ -239,12 +239,20 @@ class QuizTake(FormView):
             progress.update_score(self.question, 0, 1)
 
         if self.quiz.answers_at_end is not True:
-            self.previous = {'previous_answer': guess,
-                             'previous_outcome': is_correct,
-                             'previous_question': self.question,
-                             'answers': self.question.get_answers(),
-                             'question_type': {self.question
-                                               .__class__.__name__: True}}
+            incorrect_list = self.sitting.get_incorrect_questions
+            if self.question.id in incorrect_list:
+                user_was_incorrect = True
+            else:
+                user_was_incorrect = False
+
+            self.previous = {
+                'previous_answer': guess,
+                'previous_outcome': is_correct,
+                'previous_question': self.question,
+                'answers': self.question.get_answers(),
+                'question_type': {self.question.__class__.__name__: True},
+                'user_was_incorrect': user_was_incorrect
+            }
         else:
             self.previous = {}
 
