@@ -20,7 +20,7 @@ def index(request):
     context = {
         'title': _('Daftar Materi'),
         'courses': courses,
-        'progress_bar': False
+        'user_page': False
     }
     return render(request, 'website/index.html', context)
 

@@ -39,19 +39,16 @@ def details(request, slug):
 
 @login_required
 def user_courses(request):
-    enrolls = request.user.enroll.all()
+    enrolls = request.user.enroll.select_related("course")
 
     context = {
         'title': _('Daftar Materimu'),
         'courses': [{
-            "title": enroll.course.title,
-            "short_description": enroll.course.short_description,
-            "slug": enroll.course.slug,
-            "featured_image": enroll.course.featured_image,
+            "course": enroll.course,
             "progress_precentage": int(enroll.course.progress_percentage(request.user)),
             "status_enroll": enroll.status
         } for enroll in enrolls],
-        'progress_bar': True
+        'user_page': True
     }
     return render(request, 'website/index.html', context)
 

@@ -10,15 +10,6 @@
                 <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
             {% endif %}
         </div>
-        {% if progress_bar %}
-        <div class="card-header text-dark">
-            <span class="">Progress {{ course.progress_precentage }}% {% if course.progress_precentage == 100 %}, Keren! {% endif %}</span>
-            <div class="progress progress-xs">
-                <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{ course.progress_precentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ course.progress_precentage }}%"></div>
-            </div>
-            {{ course.status_enroll|enrollment_status_display:'True' }}
-        </div>
-        {% endif %}
         <div class="card-body text-dark">
             <h4>{{ course.title }}</h4>
             {% if "MARKDOWN_CONTENT"|get_toggle %}

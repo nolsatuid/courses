@@ -5,7 +5,11 @@
     <div class="col-md-12 mb-3"><h1 class="m-0 text-dark"> {{ title }}</h1></div>
     {% for course in courses %}
         <div class="col-lg-3">
-            {% include 'partials/card-course.html' with course=course progress_bar=progress_bar %}
+            {% if user_page %}
+                {% include 'partials/card-course-user.html' with course=course progress_bar=progress_bar %}
+            {% else %}
+                {% include 'partials/card-course.html' with course=course %}
+            {% endif %}
         </div>
     {% empty %}
             <div class="col-md-12 mb-3 card p-3"><h2 class="m-0 text-dark">Tidak ada materi yang tersedia.</h2></div>

@@ -1,0 +1,30 @@
+{% load static tags_courses %}
+
+{{ course }}
+<div class="card" style="width: 100%;min-height: 400px;max-height: 450px;overflow: hidden;">
+    <a href="{% url 'website:modules:details' course.course.get_first_module.slug %}">
+        <div style="width: 100%;height: 200px;overflow: hidden;">
+            {% if course.course.status == 1 %}
+                <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 10px;">{{ course.get_status_display }}</span>
+            {% endif %}
+            {% if course.course.featured_image %}
+                <img class="card-img-top" src="{{ course.course.featured_image.url }}" alt="{{ course.course.featured_image.name}}">
+            {% endif %}
+        </div>
+        <div class="card-header text-dark">
+            <span class="">Progress {{ course.progress_precentage }}% {% if course.progress_precentage == 100 %}, Keren! {% endif %}</span>
+            <div class="progress progress-xs">
+                <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{ course.progress_precentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ course.progress_precentage }}%"></div>
+            </div>
+            {{ course.status_enroll|enrollment_status_display:'True' }}
+        </div>
+        <div class="card-body text-dark">
+            <h4>{{ course.title }}</h4>
+            {% if "MARKDOWN_CONTENT"|get_toggle %}
+                {{ course.short_description_md|show_markdown|safe|truncatechars:100 }}
+            {% else %}
+                {{ course.short_description|safe|truncatechars:100 }}
+            {% endif %}
+        </div>
+    </a>
+</div>

@@ -100,11 +100,12 @@ class Courses(models.Model):
             return False
 
     def get_last_batch(self):
-        if cache.get('last-batch'):
-            batch = cache.get('last-batch')
+        key = f'last-batch-{self.id}'
+        if cache.get(key):
+            batch = cache.get(key)
         else:
             batch = self.batchs.filter(is_active=True).order_by('batch').last()
-            cache.set('last-batch', batch, 60 * 5)
+            cache.set(key, batch, 60 * 5)
         return batch
 
     def can_register(self, user):
@@ -392,7 +393,7 @@ class Batch(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        cache.delete('last-batch')
+        cache.delete(f'last-batch-{self.course.id}')
 
 
 class Enrollment(models.Model):
