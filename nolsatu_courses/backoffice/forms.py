@@ -12,13 +12,13 @@ class FormFilter(FormFilterStudent):
         self.fields['course'].required = True
 
     def get_data(self):
-        enrolls = Enrollment.objects.select_related('course', 'user').filter(
+        self.enrolls = Enrollment.objects.select_related('course', 'user').filter(
             course=self.cleaned_data['course'], batch=self.cleaned_data['batch'],
             status__gte=Enrollment.STATUS.begin
         ).exclude(user__is_superuser=True)
 
         data = []
-        for enroll in enrolls:
+        for enroll in self.enrolls:
             progress = self.cleaned_data['course'].progress_percentage(enroll.user)
             self.progresses.append(progress)
             data.append({
@@ -39,13 +39,15 @@ class FormFilter(FormFilterStudent):
     def get_quiz_stats(self):
         course = self.cleaned_data['course']
         quiz_stats = []
+        
+        user_ids = self.enrolls.values_list('user__id', flat=True)
 
         for quiz in course.quizzes.prefetch_related('sitting_set'):
             sitting_stats = []
             count_pass = []
             count_not_pass = []
             perfect_score = []
-            for sit in quiz.sitting_set.all():
+            for sit in quiz.sitting_set.filter(user__in=user_ids):
                 sitting_stats.append({
                     'sitting': sit,
                     'score': sit.get_percent_correct
