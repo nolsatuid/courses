@@ -39,13 +39,17 @@ class FormFilter(FormFilterStudent):
     def get_quiz_stats(self):
         course = self.cleaned_data['course']
         quiz_stats = []
+        
+        user_ids = Enrollment.objects.filter(
+            course=self.cleaned_data['course'], batch=self.cleaned_data['batch']
+        ).exclude(user__is_superuser=True).values_list('user__id', flat=True)
 
         for quiz in course.quizzes.prefetch_related('sitting_set'):
             sitting_stats = []
             count_pass = []
             count_not_pass = []
             perfect_score = []
-            for sit in quiz.sitting_set.all():
+            for sit in quiz.sitting_set.filter(user__in=user_ids):
                 sitting_stats.append({
                     'sitting': sit,
                     'score': sit.get_percent_correct
