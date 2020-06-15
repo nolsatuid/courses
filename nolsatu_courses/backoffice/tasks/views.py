@@ -12,14 +12,18 @@ from .forms import FormFilterTask
 @staff_member_required
 def index(request):
     tasks = None
+    course = None
     form = FormFilterTask(request.GET or None)
     if form.is_valid():
         tasks = form.get_data()
-
+    if tasks:
+        course = tasks.first().section.module.course.title
+        
     context = {
         'menu_active': 'task',
         'title': _('Pengumpulan Tugas'),
         'tasks': tasks,
+        'course': course,
         'form': form
     }
     return render(request, 'backoffice/tasks/index.html', context)

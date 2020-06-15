@@ -37,13 +37,13 @@ thead input {
             </form>
             <!-- end filter form -->
         </div>
-        <div class="card-body">
+        <div class="card-body">            
             {% if tasks %}
+                <h5 class="mb-5"><strong>Kursus : </strong> {{ course }}</h5>
                 <table id="datatable" class="table table-striped">
                     <thead>
                         <th>Nama</th>
                         <th>Username</th>
-                        <th>Kursus</th>
                         <th>Bab</th>
                         <th>File</th>
                         <th>Nilai</th>
@@ -56,25 +56,24 @@ thead input {
                             <tr>
                                 <td>{{ task.user.get_full_name }}</td>
                                 <td>{{ task.user.username }}</td> 
-                                <td>{{ task.section.module.course.title }}</td>
                                 <td>{{ task.section.title }}</td>
                                 <td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>
-                                <td id="score-{{task.id}}">{{ task.score }}</td>       
-                                <td id="note-{{task.id}}">{{ task.note|default:'-' }}</td>     
+                                <td id="score-{{task.id}}">{{ task.score|default:'0' }}</td>       
+                                <td id="note-{{task.id}}"><a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ task.note }}">{{ task.note|default:'-'|truncatewords:2 }}</a></td>     
                                 <td>{{ task.update_at }}</td>
                                 <td width="10px">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
                                         <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa">
-                                            Diperiksa
+                                            <i class="fas fa-pencil-alt" data-toggle="tooltip" title="Diperiksa"></i>
                                         </label>
                                         <label class="btn {% if task.status == 2 %} btn-warning {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="2" data-url="" data-name="Mengulang">
-                                            Mengulang
+                                            <i class="fas fa-redo" data-toggle="tooltip" title="Mengulang"></i>
                                         </label>
                                         <label class="btn {% if task.status == 4 %} bg-maroon {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="4" data-url="" data-name="Tidak Lulus">
-                                            Tidak Lulus
+                                            <i class="fas fa-times-circle" data-toggle="tooltip" title="Tidak Lulus"></i>
                                         </label>
                                         <label class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}"  data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="3" data-url="" data-name="Lulus">
-                                            Lulus
+                                            <i class="fas fa-check-circle" data-toggle="tooltip" title="Lulus"></i>
                                         </label>
                                     </div>
                                 </td>  
@@ -124,6 +123,25 @@ thead input {
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Catatan Tugas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="noteMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -147,6 +165,14 @@ thead input {
             modal.find('#confirmName').html(name);
             modal.find('#status_id').val(status);
             modal.find('#task_id').val(id);
+        })
+
+        $('#noteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var note = button.data('note');
+
+            var modal = $(this);
+            modal.find('#noteMessage').html(note);
         })
     })
 
@@ -242,68 +268,68 @@ thead input {
             dataType: 'json',
             success: function (data) {
                 btn_status.html("");  
-                note.html(document.getElementById("note").value);
+                note.html('<a href="#" data-toggle="modal" data-target="#noteModal" data-note="'+document.getElementById("note").value+'">'+document.getElementById("note").value.split(" ").splice(0,2).join(" ")+' ...</a>');
                 document.getElementById("note").value = "" 
                 score.html(nilai);
                 document.getElementById("score").value = "" 
                 if(status_id == 1){
                     btn_status.append(
                         '<label class="btn btn-info" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
-                            'Diperiksa'+
+                            '<i class="fas fa-pencil-alt" data-toggle="tooltip" title="Diperiksa"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
-                            'Mengulang'+
+                            '<i class="fas fa-redo" data-toggle="tooltip" title="Mengulang"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
-                            'Tidak Lulus'+
+                            '<i class="fas fa-times-circle" data-toggle="tooltip" title="Tidak Lulus"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
-                            'Lulus'+
+                            '<i class="fas fa-check-circle" data-toggle="tooltip" title="Lulus"></i>'+
                         '</label>'
                     ); 
                 }else if(status_id == 2){
                     btn_status.append(
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
-                            'Diperiksa'+
+                            '<i class="fas fa-pencil-alt" data-toggle="tooltip" title="Diperiksa"></i>'+
                         '</label>'+
                         '<label class="btn btn-warning" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
-                            'Mengulang'+
+                            '<i class="fas fa-redo" data-toggle="tooltip" title="Mengulang"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
-                            'Tidak Lulus'+
+                            '<i class="fas fa-times-circle" data-toggle="tooltip" title="Tidak Lulus"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
-                            'Lulus'+
+                            '<i class="fas fa-check-circle" data-toggle="tooltip" title="Lulus"></i>'+
                         '</label>'
                     ); 
                 }else if(status_id == 3){
                     btn_status.append(
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
-                            'Diperiksa'+
+                            '<i class="fas fa-pencil-alt" data-toggle="tooltip" title="Diperiksa"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
-                            'Mengulang'+
+                            '<i class="fas fa-redo" data-toggle="tooltip" title="Mengulang"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
-                            'Tidak Lulus'+
+                            '<i class="fas fa-times-circle" data-toggle="tooltip" title="Tidak Lulus"></i>'+
                         '</label>'+
                         '<label class="btn bg-olive" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
-                            'Lulus'+
+                            '<i class="fas fa-check-circle" data-toggle="tooltip" title="Lulus"></i>'+
                         '</label>'
                     ); 
                 }else if(status_id == 4){
                     btn_status.append(
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa">'+
-                            'Diperiksa'+
+                            '<i class="fas fa-pencil-alt" data-toggle="tooltip" title="Diperiksa"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" >'+
-                            'Mengulang'+
+                            '<i class="fas fa-redo" data-toggle="tooltip" title="Mengulang"></i>'+
                         '</label>'+
                         '<label class="btn bg-maroon" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus">'+
-                            'Tidak Lulus'+
+                            '<i class="fas fa-times-circle" data-toggle="tooltip" title="Tidak Lulus"></i>'+
                         '</label>'+
                         '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus">'+
-                            'Lulus'+
+                            '<i class="fas fa-check-circle" data-toggle="tooltip" title="Lulus"></i>'+
                         '</label>'
                     ); 
                 }
