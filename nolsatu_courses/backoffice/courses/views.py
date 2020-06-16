@@ -5,9 +5,11 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
+from django.db.models import Prefetch
 
 from nolsatu_courses.apps import utils
-from nolsatu_courses.apps.courses.models import Courses, Enrollment
+from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section
+from nolsatu_courses.apps.export import ExportCourse
 from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister
 
 
@@ -180,3 +182,19 @@ def bulk_register(request):
         'title_submit': _("Proses")
     }
     return render(request, 'backoffice/form.html', context)
+
+
+@staff_member_required
+def export_data(request, id):
+    course = get_object_or_404(
+        Courses.objects.prefetch_related(
+            Prefetch('modules', queryset=Module.objects.publish()),
+            Prefetch('modules__sections', queryset=Section.objects.publish())
+        ).select_related('vendor'),
+        id=id
+    )
+
+    ex_course = ExportCourse(course)
+    response = HttpResponse(ex_course.json_buffer().getvalue(), content_type="text/json")
+    response['Content-Disposition'] = f'attachment; filename=export-{course.slug}.json'
+    return response
