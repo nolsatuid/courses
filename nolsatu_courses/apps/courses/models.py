@@ -285,6 +285,9 @@ class Module(models.Model):
     def delete_cache(self, user):
         cache.delete(f'module-activity-{user.username}')
 
+    def sections_sorted(self):
+        return self.sections.order_by('order')
+
 
 class SectionManager(models.Manager):
     def publish(self):

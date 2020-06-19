@@ -1,0 +1,74 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load tags_courses %}
+{% block content %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="pull-left">
+                    {{ title }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class=" col-md-12 col-lg-12 ">
+                            <div class="tab-content">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td><label>Nama</label></td>
+                                        <td>{{ user.get_full_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Kursus</label></td>
+                                        <td>{{ course.title }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    {% for module in modules %}
+                                        <tr>
+                                            <td>
+                                                Modul: <label>{{ module.title }}</label>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Bab</label>
+                                            </td>
+                                            <td>
+                                                <label>Nilai</label>
+                                            </td>
+                                        </tr>
+                                        {% for section in module.sections_sorted %}
+                                            {% if section.is_task %}
+                                                <tr>
+                                                    <td>
+                                                        <label>{{ section.title }}</label>
+                                                    </td>
+                                                    <td>
+                                                        {{ tasks|keyvalue:section.id|default:"0" }}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                {#                <a href="{% url 'backoffice:sections:index' section.module.id %}"#}
+                {#                   class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Bab</a>#}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

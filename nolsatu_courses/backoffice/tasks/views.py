@@ -1,12 +1,13 @@
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
 
 from nolsatu_courses.apps import utils
-from nolsatu_courses.apps.courses.models import Section, CollectTask, Batch
-from .forms import FormFilterTask
+from nolsatu_courses.apps.courses.models import Section, CollectTask, Batch, Courses
+from .forms import FormFilterTask, FormFilterTaskReport
 
 
 @staff_member_required
@@ -18,7 +19,7 @@ def index(request):
         tasks = form.get_data()
     if tasks:
         course = tasks.first().section.module.course.title
-        
+
     context = {
         'menu_active': 'task',
         'title': _('Pengumpulan Tugas'),
@@ -83,3 +84,47 @@ def ajax_filter_batch(request):
         ]
 
     return JsonResponse(data, status=200)
+
+
+@staff_member_required
+def report_index(request):
+    users = None
+    course = None
+    avg_score = None
+    form = FormFilterTaskReport(request.GET or None)
+    if form.is_valid():
+        users, avg_score = form.get_data()
+
+    if users:
+        course = users.first().enroll.first().course
+
+    context = {
+        'menu_active': 'task',
+        'title': _('Pelaporan Tugas'),
+        'users': users,
+        'course': course,
+        'avg_score': avg_score,
+        'form': form
+    }
+    return render(request, 'backoffice/tasks/report_index.html', context)
+
+
+@staff_member_required
+def report_detail(request, user_id, course_id):
+    user = get_object_or_404(User, id=user_id)
+    course = get_object_or_404(Courses, id=course_id, enrolled__user__in=[user])
+    modules = course.modules.order_by('order')
+    tasks = CollectTask.objects.filter(section__module__course=course, user=user)
+    tasks = {
+        t.section.id: t.score
+        for t in tasks
+    }
+    context = {
+        'menu_active': 'task',
+        'title': _('Pelaporan Tugas'),
+        'user': user,
+        'course': course,
+        'modules': modules,
+        'tasks': tasks
+    }
+    return render(request, 'backoffice/tasks/report_detail.html', context)
