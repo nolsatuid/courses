@@ -58,7 +58,7 @@
                                             {% if section.is_task %}
                                                 <tr>
                                                     <td>
-                                                        <label>{{ section.title }}</label>
+                                                        {{ section.title }}
                                                     </td>
                                                     <td>
                                                         {{ tasks|keyvalue:section.id|default:"0" }}
