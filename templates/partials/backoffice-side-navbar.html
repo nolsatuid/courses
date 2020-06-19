@@ -81,11 +81,25 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <a href="{% url 'backoffice:tasks:index' %}" class="nav-link {% if menu_active == 'task' %}active{% endif %}">
-                    <i class="nav-icon fas fa-file"></i>
-                    <p>Periksa Tugas</p>
+            <li class="nav-item {% if menu_active == 'task' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'task' %}active{% endif %}">
+                    <i class="nav-icon fas fa-book"></i>
+                    <p>Tugas<i class="right right fas fa-angle-left"></i></p>
                 </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:tasks:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Periksa Tugas</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:tasks:report_index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Laporan Tugas</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item {% if menu_active == 'graduate' %}has-treeview menu-open{% endif %}">
                 <a href="#" class="nav-link {% if menu_active == 'graduate' %}active{% endif %}">

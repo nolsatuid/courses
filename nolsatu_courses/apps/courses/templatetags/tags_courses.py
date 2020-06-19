@@ -87,7 +87,7 @@ def sectoduration(value, arg=''):
 
         # Subtract hours from seconds
         secs = secs - (hours * int(hourSecs))
-		
+
         # Calculate number of minutes from seconds (minus number of days and hours)
         minutes = int(math.floor(secs / int(minSecs)))
 
@@ -98,7 +98,7 @@ def sectoduration(value, arg=''):
         seconds = secs
 
         # If number of days is greater than 0				
-        if days > 0:	
+        if days > 0:
             # Add multiple days to duration string
             durationString += " " + str(days) + dayUnitName + (days > 1 and "s" or "")
 
@@ -129,7 +129,7 @@ def sectoduration(value, arg=''):
                 minSplitter = lastDurSplitter
 
             # If there are unit after this
-            else:	
+            else:
                 # Set minute splitter to next
                 minSplitter = (len(durationString) > 0 and nextDurSplitter or "")
 
@@ -162,6 +162,12 @@ def sectoduration(value, arg=''):
 def show_markdown(text):
     return markdownify(text)
 
+
 @register.filter
 def get_toggle(identifier):
     return settings.FEATURE.get(identifier, False)
+
+
+@register.filter
+def keyvalue(dict, key):
+    return dict.get(key, None)
