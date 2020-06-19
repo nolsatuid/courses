@@ -4,6 +4,31 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
+                <h4 class="pull-left">Informasi</h4>
+            </div>
+            <div class="card-body">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><label>Nama</label></td>
+                                    <td>{{ user.get_full_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>Kursus</label></td>
+                                    <td>{{ course.title }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
                 <h4 class="pull-left">
                     {{ title }}
                 </h4>
@@ -14,18 +39,6 @@
                         <div class=" col-md-12 col-lg-12 ">
                             <div class="tab-content">
                                 <table class="table table-condensed">
-                                    <tr>
-                                        <td><label>Nama</label></td>
-                                        <td>{{ user.get_full_name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>Kursus</label></td>
-                                        <td>{{ course.title }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
                                     {% for module in modules %}
                                         <tr>
                                             <td>
@@ -64,11 +77,6 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
-                {#                <a href="{% url 'backoffice:sections:index' section.module.id %}"#}
-                {#                   class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Bab</a>#}
-            </div>
-
         </div>
     </div>
 {% endblock %}
