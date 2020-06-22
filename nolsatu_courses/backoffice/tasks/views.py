@@ -95,8 +95,8 @@ def report_index(request):
     if form.is_valid():
         users, avg_score = form.get_data()
 
-    if users:
-        course = users.first().enroll.first().course
+        if users:
+            course = form.cleaned_data['course']
 
     context = {
         'menu_active': 'task',
