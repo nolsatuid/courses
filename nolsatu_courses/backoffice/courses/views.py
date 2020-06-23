@@ -9,7 +9,7 @@ from django.db.models import Prefetch
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section
-from nolsatu_courses.apps.export import ExportCourse
+from nolsatu_courses.apps.courses.utils import ExportCourse
 from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister
 
 
