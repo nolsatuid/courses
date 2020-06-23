@@ -56,28 +56,27 @@ class FormFilterQuizzes(forms.Form):
 
         return quizzes
 
-    def download_report(self, batch):
+    def download_report(self):
         csv_buffer = StringIO()
         writer = csv.writer(csv_buffer)
         
-        users = Enrollment.objects.filter(batch=batch)  
-        sittings = Sitting.objects.filter(
-            user__id__in=users.values_list('user__id', flat=True)
-            ).select_related('user', 'quiz')
+        enrolls = Enrollment.objects.filter(batch=self.cleaned_data['batch'])  
+        sittings = Sitting.objects.filter(user__id__in=enrolls.values_list('user__id', flat=True)) \
+            .select_related('user', 'quiz')
 
         title = ['Nama Peserta']
         for quiz in self.get_data():
             title.append(quiz.title)
-        writer.writeheader(title)
+        writer.writerow(title)
         
-        for user in users:
-            result = [f'{user.user.get_full_name()} ({user.user.username})']
+        for enroll in enrolls:
+            result = [f'{enroll.user.get_full_name()} ({enroll.user.username})']
             for quiz in self.get_data():                
-                score_quiz = sittings.filter(user=user.user, quiz=quiz)
+                score_quiz = sittings.filter(user=enroll.user, quiz=quiz)
                 if score_quiz:
                     result.append(score_quiz.first().get_percent_correct)
                 else:
-                    result.append('-')
+                    result.append('0')
             writer.writerow(result)
 
         return csv_buffer
