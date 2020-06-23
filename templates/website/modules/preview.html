@@ -8,6 +8,9 @@
         <div class="card">
             <div class="card-header">
                 <h1>Modul {{ module.title }}</h1>
+                {% if user.is_superuser %}
+                    <a href="{% url 'backoffice:modules:edit' module.id %}" class="btn btn-outline-danger">Edit</a>
+                {% endif %}
             </div>
   
             <div class="card-body" id="course-content">

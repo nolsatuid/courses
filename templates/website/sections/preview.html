@@ -7,6 +7,9 @@
         <div class="card">
             <div class="card-header">
                 <h1>Materi {{ section.title }}</h1>
+                {% if user.is_superuser %}
+                    <a href="{% url 'backoffice:sections:edit' section.id %}" class="btn btn-outline-danger">Edit</a>
+                {% endif %}
             </div>
 
             <div class="card-body" id="course-content">
