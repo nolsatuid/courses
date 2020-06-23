@@ -8,11 +8,12 @@ from .forms import FormFilter
 def index(request):
     statistics = None
     quiz_stats = None
-
+    batch = None
     form = FormFilter(request.GET or None)
     if form.is_valid():
         data = form.get_data()
         course = form.cleaned_data['course']
+        batch = form.cleaned_data['batch'].id
         statistics = {
             'total_registrant': len(data),
             'course': course,
@@ -27,5 +28,6 @@ def index(request):
         'statistics': statistics,
         'form': form,
         'quiz_stats': quiz_stats,
+        'batch': batch
     }
     return render(request, 'backoffice/index.html', context)

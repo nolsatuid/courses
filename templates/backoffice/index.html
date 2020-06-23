@@ -188,9 +188,9 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>
-                                <a href="{% url 'backoffice:quizzes:detail_result' data.sitting.quiz.id %}">{{ data.sitting.quiz }}</a>
+                                <a href="{% url 'backoffice:quizzes:detail_result' data.sitting.quiz.id batch %}">{{ data.sitting.quiz }}</a>
                             </td>
-                            <td>{{ data.score }} a.n <a href="{% url 'backoffice:quizzes:participant_result' data.sitting.id %}">{{ data.sitting.user }}</a></td>
+                            <td>{{ data.score }} a.n <a href="{% url 'backoffice:quizzes:participant_result' data.sitting.id batch %}">{{ data.sitting.user }}</a></td>
                             <td>{{ data.pass }}</td>
                             <td>{{ data.not_pass }}</td>
                         </tr>

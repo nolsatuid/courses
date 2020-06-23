@@ -92,20 +92,22 @@ def detail_result(request, id, batch):
         'menu_active': 'quiz',
         'title': _('Detail Hasil Kuis'),
         'quiz': quiz,
-        'results': results
+        'results': results,
+        'batch': batch
     }
     return render(request, 'backoffice/quizzes/detail-results.html', context)
 
 
 @staff_member_required
-def participant_result(request, id):
+def participant_result(request, id, batch):
     sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
 
     context = {
         'menu_active': 'quiz',
         'title': _('Detail Hasil Partisipan'),
         'sitting': sitting,
-        'questions': sitting.get_questions(with_answers=True)
+        'questions': sitting.get_questions(with_answers=True),
+        'batch': batch
     }
     return render(request, 'backoffice/quizzes/participant-results.html', context)
 
