@@ -3,10 +3,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from quiz.models import Quiz, Sitting, Question, SubCategory
-from .forms import FormQuiz
+from nolsatu_courses.apps.courses.models import Enrollment
+from .forms import FormQuiz, FormFilterQuizzes
 
 
 @staff_member_required
@@ -57,21 +58,35 @@ def edit(request, id):
 
 @staff_member_required
 def results(request):
-    quizzes = Quiz.objects.all()
+    quizzes = None
+    batch = None
+    download = request.GET.get('download', '')
+    form = FormFilterQuizzes(request.GET or None)
+    if form.is_valid():
+        batch = form.cleaned_data['batch']
+        quizzes = form.get_data()
+        if download:
+            csv_buffer = form.download_report(batch)
+            response = HttpResponse(csv_buffer.getvalue(), content_type="text/csv")
+            response['Content-Disposition'] = f'attachment; filename=Quiz-Angkatan{batch}.csv'
+            return response
 
     context = {
         'menu_active': 'quiz',
         'title': _('Hasil Kuis'),
-        'quizzes': quizzes
+        'quizzes': quizzes,
+        'form': form,
+        'batch': batch.id if batch else None
     }
     return render(request, 'backoffice/quizzes/results.html', context)
 
 
 @staff_member_required
-def detail_result(request, id):
+def detail_result(request, id, batch):
     quiz = get_object_or_404(Quiz, id=id)
+    user_ids = Enrollment.objects.filter(batch=batch).values_list('user__id', flat=True)
     results = Sitting.objects.select_related('user', 'quiz') \
-        .filter(quiz=quiz).order_by('-current_score')
+        .filter(quiz=quiz, user__id__in=user_ids).order_by('-current_score')
 
     context = {
         'menu_active': 'quiz',

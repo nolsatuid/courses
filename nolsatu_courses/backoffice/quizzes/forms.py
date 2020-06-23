@@ -1,5 +1,13 @@
+import csv
+
+from io import StringIO
+
 from django import forms
+from django.utils.translation import ugettext_lazy as _
+
 from quiz.admin import QuizAdminForm
+from quiz.models import Quiz, Sitting
+from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment
 
 
 class FormQuiz(QuizAdminForm):
@@ -33,3 +41,43 @@ class FormQuiz(QuizAdminForm):
                     " sama dengan jam waktu mulai")
 
         return cleaned_data
+
+
+class FormFilterQuizzes(forms.Form):
+    course = forms.ModelChoiceField(
+        queryset=Courses.objects.all(), empty_label=_("Pilih Kursus")
+    )
+    batch = forms.ModelChoiceField(
+        queryset=Batch.objects.all(), empty_label=_("Pilih Angkatan")
+    )
+
+    def get_data(self):
+        quizzes = Quiz.objects.filter(courses=self.cleaned_data['course'])        
+
+        return quizzes
+
+    def download_report(self, batch):
+        csv_buffer = StringIO()
+        writer = csv.writer(csv_buffer)
+        
+        users = Enrollment.objects.filter(batch=batch)  
+        sittings = Sitting.objects.filter(
+            user__id__in=users.values_list('user__id', flat=True)
+            ).select_related('user', 'quiz')
+
+        title = ['Nama Peserta']
+        for quiz in self.get_data():
+            title.append(quiz.title)
+        writer.writeheader(title)
+        
+        for user in users:
+            result = [f'{user.user.get_full_name()} ({user.user.username})']
+            for quiz in self.get_data():                
+                score_quiz = sittings.filter(user=user.user, quiz=quiz)
+                if score_quiz:
+                    result.append(score_quiz.first().get_percent_correct)
+                else:
+                    result.append('-')
+            writer.writerow(result)
+
+        return csv_buffer
