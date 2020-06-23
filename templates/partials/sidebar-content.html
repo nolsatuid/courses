@@ -1,6 +1,11 @@
 <div class="card position-sticky sticky-top" id="sticky-sidebar">
     <h5><div class="card-header">Sidebar <i class="float-right fas fa-bookmark"></i></div></h5>
     <div class="card-body">
+        {% if user.is_superuser %}
+            <div class="card">
+                <a class="btn btn-outline-danger" href="{% url 'backoffice:courses:edit' course.id %}">Edit</a>
+            </div>
+        {% endif %}
         <p>Kategori: <strong class="text-info"> {{ course.category_list|capfirst }}</strong></p>
         <p>Level: <strong class="text-info"> {{ course.get_level_display }}</strong></p>
         <p>Angkatan: <strong class="text-info"> {{ batch.batch }}</strong></p>
