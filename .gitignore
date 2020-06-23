@@ -14,6 +14,7 @@ local_settings.py
 media/*
 env/*
 logs/*
+tmp/*
 
 *.sqlite3
 db.*

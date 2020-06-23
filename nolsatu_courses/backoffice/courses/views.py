@@ -195,6 +195,9 @@ def export_data(request, id):
     )
 
     ex_course = ExportCourse(course)
-    response = HttpResponse(ex_course.json_buffer().getvalue(), content_type="text/json")
-    response['Content-Disposition'] = f'attachment; filename=export-{course.slug}.json'
+    ex_course.export_data()
+
+    response = HttpResponse(ex_course.zip_buffer.getvalue(),
+                            content_type="application/x-zip-compressed")
+    response['Content-Disposition'] = 'attachment; filename=%s' % ex_course.zip_filename
     return response
