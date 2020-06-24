@@ -11,6 +11,7 @@ from rest_framework import serializers
 from nolsatu_courses.apps.courses.models import (
     Courses, Module, Section, TaskUploadSettings
 )
+from nolsatu_courses.apps.utils import md_extract_img
 
 
 class ExportCourse:
@@ -47,7 +48,7 @@ class ExportCourse:
         """
         return os.path.join(self.tmp_dir, self.json_filename)
 
-    def _get_files(self):
+    def _write_files_to_zip(self):
         """
         To get all files then include into zip
         E.g [thearchive.zip]/
@@ -85,9 +86,44 @@ class ExportCourse:
             # Add file, at correct path
             self.zip_file.write(fpath['path'], zip_path)
 
+    def _write_img_md_to_zip(self):
+        """
+        to write all images from markdownx models Courses, Module, Section
+        """
+        # get image from model Courses
+        imgs = md_extract_img(self.course.description_md)
+        imgs += md_extract_img(self.course.description_md)
+
+        for module in self.course.modules.all():
+            # get image from model Module
+            imgs += md_extract_img(module.description_md)
+
+            for section in module.sections.all():
+                # get image from model Section
+                imgs += md_extract_img(section.content_md)
+                if section.is_task:
+                    imgs += md_extract_img(
+                        section.task_setting.instruction_md)
+
+        # use set to remove duplicate image
+        for img in set(imgs):
+            path, name = os.path.split(img)
+
+            # if first char is /, then remove it to join to work
+            if path.startswith('/'):
+                path = path[1:]
+
+            subdir = os.path.join(settings.PROJECT_ROOT, path)
+            full_path = os.path.join(subdir, name)
+            zip_markdownx_dir = os.path.join(self.export_name, f"{path}/{name}")
+
+            # Add file, at correct path
+            self.zip_file.write(full_path, zip_markdownx_dir)
+
     def export_data(self):
         self._write_to_json()
-        self._get_files()
+        self._write_files_to_zip()
+        self._write_img_md_to_zip()
 
         # Must close zip for all contents to be written
         self.zip_file.close()

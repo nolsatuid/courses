@@ -1,13 +1,16 @@
 import datetime
-
 import jwt
 import requests
+import markdown
+
+from markdown.treeprocessors import Treeprocessor
+from markdown.extensions import Extension
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 from nolsatu_courses.apps.accounts.models import MemberNolsatu
-
 
 def generate_unique_slug(klass, field, id):
     """
@@ -109,3 +112,32 @@ def get_user_academy(type_identificator, identificator):
     else:
         url = f"{settings.NOLSATU_HOST}/api/internal/get-user?username={identificator}"
     return call_internal_api("get", url)
+
+
+def md_extract_img(text) -> [str]:
+    """
+    function to get src image/path image
+    """
+    md = markdown.Markdown(extensions=[ImageExtension()])
+    md.convert(text)
+    return md.images
+
+
+class InlineImageProcessor(Treeprocessor):
+    """
+    treeprocessor to get all images
+    """
+    def run(self, root):
+        self.md.images = []
+        for element in root.iter('img'):
+            attrib = element.attrib
+            self.md.images.append(attrib['src'])
+
+
+class ImageExtension(Extension):
+    """
+    create markdown extensions
+    """
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(
+            InlineImageProcessor(md), 'inlineimageprocessor', 15)
