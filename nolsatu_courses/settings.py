@@ -20,6 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SETTINGS_DIR = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.dirname(SETTINGS_DIR)
 PROJECT_NAME = os.path.basename(PROJECT_ROOT)
+TMP_PRJ_DIR = os.path.join(BASE_DIR, 'tmp')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
