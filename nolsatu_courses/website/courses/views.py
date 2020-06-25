@@ -74,8 +74,8 @@ def user_quizzes(request, course_id):
 def user_tasks(request, course_id):
     course = get_object_or_404(Courses, id=course_id)
     tasks = CollectTask.objects.select_related(
-            'section', 'file', 'section__module__course'
-        ).filter(section__module__course=course, user=request.user)
+        'section', 'file', 'section__module__course'
+    ).filter(section__module__course=course, user=request.user)
 
     context = {
         'title': _(f'Kursus: {course.title}'),
