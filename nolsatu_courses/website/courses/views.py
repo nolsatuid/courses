@@ -6,7 +6,8 @@ from django.utils import timezone
 from django.db.models import Prefetch
 
 from nolsatu_courses.apps import utils
-from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section
+from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section, CollectTask
+from quiz.models import Quiz, Sitting
 
 
 def details(request, slug):
@@ -46,11 +47,42 @@ def user_courses(request):
         'courses': [{
             "course": enroll.course,
             "progress_precentage": int(enroll.course.progress_percentage(request.user)),
+            "progress_step": f'{enroll.course.number_of_activity_step(request.user)} dari {enroll.course.number_of_step()}',
             "status_enroll": enroll.status
         } for enroll in enrolls],
         'user_page': True
     }
     return render(request, 'website/index.html', context)
+
+
+@login_required
+def user_quizzes(request, course_id):
+    course = get_object_or_404(Courses, id=course_id)
+    quizzes = Quiz.objects.filter(courses=course)
+    sittings = Sitting.objects.filter(user=request.user, quiz_id__in=quizzes) \
+        .select_related('user', 'quiz')
+
+    context = {
+        'title': _(f'Kursus: {course.title}'),
+        'sittings': sittings,
+        'user_page': True
+    }
+    return render(request, 'website/user/quizzes.html', context)
+
+
+@login_required
+def user_tasks(request, course_id):
+    course = get_object_or_404(Courses, id=course_id)
+    tasks = CollectTask.objects.select_related(
+            'section', 'file', 'section__module__course'
+        ).filter(section__module__course=course, user=request.user)
+
+    context = {
+        'title': _(f'Kursus: {course.title}'),
+        'tasks': tasks,
+        'user_page': True
+    }
+    return render(request, 'website/user/tasks.html', context)
 
 
 @login_required
