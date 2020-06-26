@@ -1,0 +1,55 @@
+{% extends 'website/base-top-nav.html' %}
+{% load static tags_courses %}
+
+{% block content %}
+<div class="row">
+  	<div class="col-sm-12">
+		<div class="card">
+			<div class="card-header">
+				<h2>{{ title }}</h2>
+			</div>
+			<div class="card-body">
+				{% if courses %}
+					<table class="table table-bordered table-striped">
+
+					<thead>
+						<tr>
+							<th>Kursus</th>
+							<th>Progress</th>
+							<th>Status</th>
+							<th>Aksi</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+					{% for course in courses %}
+
+						<tr>
+							<td><a href="{% url 'website:courses:details' course.course.slug %}">{{ course.course.title }}</a></td>
+							<td>
+								<span class="">{{ course.progress_precentage }}% ({{ course.progress_step }})</span>
+								<div class="progress progress-xs">
+									<div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{ course.progress_precentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ course.progress_precentage }}%"></div>
+								</div>
+							</td>
+							<td>{{ course.status_enroll|enrollment_status_display:'True' }}</td>
+							<td style="width: fit-content;">
+								<a href="{% url 'website:courses:user_quizzes' course.course.id %}" class="btn btn-outline-info">Nilai Kuis</a>
+                				<a href="{% url 'website:courses:user_tasks' course.course.id %}" class="btn btn-outline-info">Nilai Tugas</a>
+							</td>
+						</tr>
+
+					{% endfor %}
+					</tbody>
+
+					</table>
+
+				{% else %}
+					<p>Tidak ada kursus yang diikuti.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
