@@ -286,8 +286,12 @@ class Module(models.Model):
                 .values_list('module__id', flat=True)
             cache.set(key, activity_ids, 60 * 10)
 
-        if self.id in activity_ids:
-            return True
+        try:
+            if self.id in activity_ids:
+                cache.set(key, activity_ids)
+                return True
+        except TypeError:
+            pass
         return False
 
     def delete_cache(self, user):
