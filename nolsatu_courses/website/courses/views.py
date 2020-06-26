@@ -52,7 +52,7 @@ def user_courses(request):
         } for enroll in enrolls],
         'user_page': True
     }
-    return render(request, 'website/index.html', context)
+    return render(request, 'website/user/courses.html', context)
 
 
 @login_required
