@@ -369,9 +369,12 @@ class Section(models.Model):
             activity_ids = Activity.objects.filter(user=user, course=self.module.course) \
                 .values_list('section__id', flat=True)
 
-        cache.set(key, activity_ids)
-        if type(activity_ids) == list and self.id in activity_ids:
-            return True
+        try:
+            if self.id in activity_ids:
+                cache.set(key, activity_ids)
+                return True
+        except TypeError:
+            pass
         return False
 
     def delete_cache(self, user):
