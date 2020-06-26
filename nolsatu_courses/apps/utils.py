@@ -12,6 +12,7 @@ from django.utils.text import slugify
 
 from nolsatu_courses.apps.accounts.models import MemberNolsatu
 
+
 def generate_unique_slug(klass, field, id):
     """
     generate unique slug.
@@ -141,3 +142,11 @@ class ImageExtension(Extension):
     def extendMarkdown(self, md):
         md.treeprocessors.register(
             InlineImageProcessor(md), 'inlineimageprocessor', 15)
+
+
+def check_on_activity(slug, type_field='module'):
+    from nolsatu_courses.apps.courses.models import Activity
+    if type_field == 'section':
+        return Activity.objects.filter(section__slug=slug).exists()
+    else:
+        return Activity.objects.filter(module__slug=slug).exists()

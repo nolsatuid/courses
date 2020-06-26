@@ -3,9 +3,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Prefetch
+from django.http import Http404
 
 from nolsatu_courses.apps.courses.models import Module, Section
 from nolsatu_courses.apps.decorators import enroll_required
+from nolsatu_courses.apps.utils import check_on_activity
 
 
 @login_required
@@ -14,6 +16,19 @@ def details(request, slug):
     module = get_object_or_404(
         Module.objects.select_related("course"), slug=slug
     )
+
+    first_module = module.course.get_first_module()
+    if not module.id == first_module.id:
+        print(request.session.get('next_type'))
+        print(request.session.get('next_page_slug'))
+        # cek apakah module ini sudah pernah dilihat, jika belum maka
+        # maka cek id module apakah sama dengan next_page_slug, jika tidak sama
+        # maka munculkan halaman 404
+        if not check_on_activity(slug=module.slug, type_field='module'):
+            print(module.slug, request.session.get('next_page_slug'))
+            if module.slug != request.session.get('next_page_slug'):
+                raise Http404()
+
     pagination = get_pagination(request, module)
     prev_type = pagination['prev_type']
     prev = pagination['prev']
@@ -88,6 +103,12 @@ def get_pagination(request, module):
         if prev_slug.sections.publish().last():
             prev_slug = prev_slug.sections.publish().last()
             prev_type = "section"
+
+    # set session
+    request.session['next_type'] = next_type
+    request.session['next_page_slug'] = next_slug.slug if next_slug else None
+    request.session['prev_type'] = prev_type
+    request.session['prev_page_slug'] = prev_slug.slug if prev_slug else None
 
     return {
         'prev': prev_slug,

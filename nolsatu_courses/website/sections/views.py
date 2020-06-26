@@ -2,11 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.db.models import Prefetch
-
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
 
 from nolsatu_courses.apps.decorators import enroll_required
 from nolsatu_courses.apps.courses.models import Section
+from nolsatu_courses.apps.utils import check_on_activity
 
 from .forms import FormUploadFile
 
@@ -18,6 +19,13 @@ def details(request, slug):
         Section.objects.select_related("module", "task_setting", "module__course"), slug=slug
     )
     file_not_found = None
+
+    # cek apakah section ini sudah pernah dilihat, jika belum maka
+    # maka cek id section apakah sama dengan next_page_slug, jika tidak sama
+    # maka munculkan halaman 404
+    if not check_on_activity(slug=section.slug, type_field='section'):
+        if section.slug != request.session.get('next_page_slug'):
+            raise Http404()
 
     # form untuk pengumpulan tugas
     collect_task = section.collect_task.filter(user=request.user) \
@@ -130,6 +138,12 @@ def get_pagination(request, section):
     if not prev_slug:
         prev_slug = section.module
         prev_type = 'module'
+
+    # set session
+    request.session['next_type'] = next_type
+    request.session['next_page_slug'] = next_slug.slug if next_slug else None
+    request.session['prev_type'] = prev_type
+    request.session['prev_page_slug'] = prev_slug.slug if prev_slug else None
 
     return {
         'prev': prev_slug,

@@ -80,6 +80,8 @@ class Courses(models.Model):
         else:
             self.slug = generate_unique_slug(Courses, self.title, self.id)
         super().save(*args, **kwargs)
+        key = f'course-{self.id}'
+        cache.delete(key)
 
     def category_list(self):
         return ", ".join(category.name for category in self.category.all())
@@ -132,7 +134,13 @@ class Courses(models.Model):
             return False
 
     def get_first_module(self):
+        key = f'course-{self.id}'
+        mod_cache = cache.get(key)
+        if mod_cache:
+            return mod_cache
+
         module = self.modules.first()
+        cache.set(key, module)
         return module
 
     def get_enroll(self, user):
