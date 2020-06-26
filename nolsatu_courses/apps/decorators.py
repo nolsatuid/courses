@@ -5,6 +5,7 @@ from django.utils.decorators import available_attrs
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+from django.http import Http404
 
 from nolsatu_courses.apps.courses.models import Courses, Module, Section
 
@@ -15,14 +16,20 @@ def enroll_required(view_func):
     """
     @wraps(view_func, assigned=available_attrs(view_func))
     def _wrapped_view(request, *args, **kwargs):
-        try:
-            obj = Module.objects.select_related("course").get(slug=kwargs['slug'])
+        module = Module.objects.select_related("course").filter(slug=kwargs['slug']).first()
+        section = Section.objects.select_related("module", "module__course") \
+            .filter(slug=kwargs['slug']).first()
+
+        if not module and not section:
+            raise Http404()
+
+        if module:
+            obj = module
             enroll = obj.course.get_enroll(request.user)
             course = obj.course
             is_started = course.is_started()
-        except ObjectDoesNotExist:
-            obj = Section.objects.select_related("module", "module__course") \
-                .get(slug=kwargs['slug'])
+        else:
+            obj = section
             enroll = obj.module.course.get_enroll(request.user)
             course = obj.module.course
             is_started = obj.module.course.is_started()

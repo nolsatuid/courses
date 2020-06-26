@@ -354,7 +354,7 @@ class Section(models.Model):
                 .values_list('section__id', flat=True)
 
         cache.set(key, activity_ids)
-        if self.id in activity_ids:
+        if type(activity_ids) == list and self.id in activity_ids:
             return True
         return False
 
