@@ -27,6 +27,21 @@ def details(request, slug):
         if section.slug != request.session.get('next_page_slug'):
             raise Http404()
 
+    # dapatkan pagination
+    pagination = get_pagination(request, section)
+    prev_type = pagination['prev_type']
+    prev = pagination['prev']
+    next_slug = pagination['next']
+
+    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
+    # jika page_type adalah section dan section memiliki tugas
+    if prev_type == 'section' and prev.is_task:
+        if not request.user.collect_tasks.filter(section=prev):
+            messages.warning(
+                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}")
+            )
+            return redirect("website:sections:details", prev.slug)
+
     # form untuk pengumpulan tugas
     collect_task = section.collect_task.filter(user=request.user) \
         .select_related("file").first()
@@ -55,25 +70,10 @@ def details(request, slug):
         messages.success(request, _(f"Berhasil mengupload tugas"))
         return redirect('website:sections:details', slug)
 
-    # dapatkan pagination
-    pagination = get_pagination(request, section)
-    prev_type = pagination['prev_type']
-    prev = pagination['prev']
-    next_slug = pagination['next']
-
     # jika next kosong berarti berada pada sesi terakhir
     is_complete_tasks = None
     if not next_slug:
         is_complete_tasks = section.module.course.is_complete_tasks(request.user)
-
-    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
-    # jika page_type adalah section dan section memiliki tugas
-    if prev_type == 'section' and prev.is_task:
-        if not prev.collect_task.all():
-            messages.warning(
-                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}")
-            )
-            return redirect("website:sections:details", prev.slug)
 
     module_all = section.module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish()),

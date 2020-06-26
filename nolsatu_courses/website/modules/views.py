@@ -19,13 +19,10 @@ def details(request, slug):
 
     first_module = module.course.get_first_module()
     if not module.id == first_module.id:
-        print(request.session.get('next_type'))
-        print(request.session.get('next_page_slug'))
         # cek apakah module ini sudah pernah dilihat, jika belum maka
         # maka cek id module apakah sama dengan next_page_slug, jika tidak sama
         # maka munculkan halaman 404
         if not check_on_activity(slug=module.slug, type_field='module'):
-            print(module.slug, request.session.get('next_page_slug'))
             if module.slug != request.session.get('next_page_slug'):
                 raise Http404()
 
@@ -36,7 +33,7 @@ def details(request, slug):
     # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
     # jika page_type adalah section dan section memiliki tugas
     if prev_type == 'section' and prev.is_task:
-        if not prev.collect_task.all():
+        if not request.user.collect_tasks.filter(section=prev):
             messages.warning(
                 request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}")
             )
