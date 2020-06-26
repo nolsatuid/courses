@@ -251,19 +251,27 @@ class Module(models.Model):
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             next_slug = slugs[index + 1]
         except (AssertionError, IndexError):
-            next_slug = None
+            return None
         return Module.objects.filter(slug=next_slug).first()
 
     def get_prev(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             prev_slug = slugs[index - 1]
         except (AssertionError, IndexError):
-            prev_slug = None
+            return None
         return Module.objects.filter(slug=prev_slug).first()
 
     def has_enrolled(self, user):
@@ -327,19 +335,27 @@ class Section(models.Model):
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             next_slug = slugs[index + 1]
         except (AssertionError, IndexError):
-            next_slug = None
+            return None
         return Section.objects.filter(slug=next_slug).first()
 
     def get_prev(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             prev_slug = slugs[index - 1]
         except (AssertionError, IndexError):
-            prev_slug = None
+            return None
         return Section.objects.filter(slug=prev_slug).first()
 
     def has_enrolled(self, user):
