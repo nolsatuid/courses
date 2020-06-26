@@ -80,6 +80,8 @@ class Courses(models.Model):
         else:
             self.slug = generate_unique_slug(Courses, self.title, self.id)
         super().save(*args, **kwargs)
+        key = f'course-{self.id}'
+        cache.delete(key)
 
     def category_list(self):
         return ", ".join(category.name for category in self.category.all())
@@ -132,7 +134,13 @@ class Courses(models.Model):
             return False
 
     def get_first_module(self):
+        key = f'course-{self.id}'
+        mod_cache = cache.get(key)
+        if mod_cache:
+            return mod_cache
+
         module = self.modules.first()
+        cache.set(key, module)
         return module
 
     def get_enroll(self, user):
@@ -278,24 +286,23 @@ class Module(models.Model):
         return self.course.has_enrolled(user)
 
     def on_activity(self, user):
-        key = f'module-activity-{user.username}'
+        key = f'module-{self.id}-activity-{user.username}'
         if cache.get(key):
             activity_ids = cache.get(key)
         else:
             activity_ids = Activity.objects.filter(user=user, course=self.course) \
                 .values_list('module__id', flat=True)
-            cache.set(key, activity_ids, 60 * 10)
 
         try:
             if self.id in activity_ids:
-                cache.set(key, activity_ids)
+                cache.set(key, activity_ids, 60 * 10)
                 return True
         except TypeError:
             pass
         return False
 
     def delete_cache(self, user):
-        cache.delete(f'module-activity-{user.username}')
+        cache.delete(f'module-{self.id}-activity-{user.username}')
 
     def sections_sorted(self):
         return self.sections.order_by('order')
@@ -366,7 +373,7 @@ class Section(models.Model):
         return self.module.course.has_enrolled(user)
 
     def on_activity(self, user):
-        key = f'section-activity-{user.username}'
+        key = f'section-{self.id}-activity-{user.username}'
         if cache.get(key):
             activity_ids = cache.get(key)
         else:
@@ -375,14 +382,14 @@ class Section(models.Model):
 
         try:
             if self.id in activity_ids:
-                cache.set(key, activity_ids)
+                cache.set(key, activity_ids, 60 * 10)
                 return True
         except TypeError:
             pass
         return False
 
     def delete_cache(self, user):
-        cache.delete(f'section-activity-{user.username}')
+        cache.delete(f'section-{self.id}-activity-{user.username}')
 
 
 class TaskUploadSettings(models.Model):

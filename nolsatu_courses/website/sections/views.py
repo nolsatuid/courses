@@ -2,11 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.db.models import Prefetch
-
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
 
 from nolsatu_courses.apps.decorators import enroll_required
 from nolsatu_courses.apps.courses.models import Section
+from nolsatu_courses.apps.utils import check_on_activity
 
 from .forms import FormUploadFile
 
@@ -18,6 +19,28 @@ def details(request, slug):
         Section.objects.select_related("module", "task_setting", "module__course"), slug=slug
     )
     file_not_found = None
+
+    # cek apakah section ini sudah pernah dilihat, jika belum maka
+    # maka cek id section apakah sama dengan next_page_slug, jika tidak sama
+    # maka munculkan halaman 404
+    if not check_on_activity(slug=section.slug, type_field='section'):
+        if section.slug != request.session.get('next_page_slug'):
+            raise Http404()
+
+    # dapatkan pagination
+    pagination = get_pagination(request, section)
+    prev_type = pagination['prev_type']
+    prev = pagination['prev']
+    next_slug = pagination['next']
+
+    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
+    # jika page_type adalah section dan section memiliki tugas
+    if prev_type == 'section' and prev.is_task:
+        if not request.user.collect_tasks.filter(section=prev):
+            messages.warning(
+                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}")
+            )
+            return redirect("website:sections:details", prev.slug)
 
     # form untuk pengumpulan tugas
     collect_task = section.collect_task.filter(user=request.user) \
@@ -47,25 +70,10 @@ def details(request, slug):
         messages.success(request, _(f"Berhasil mengupload tugas"))
         return redirect('website:sections:details', slug)
 
-    # dapatkan pagination
-    pagination = get_pagination(request, section)
-    prev_type = pagination['prev_type']
-    prev = pagination['prev']
-    next_slug = pagination['next']
-
     # jika next kosong berarti berada pada sesi terakhir
     is_complete_tasks = None
     if not next_slug:
         is_complete_tasks = section.module.course.is_complete_tasks(request.user)
-
-    # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
-    # jika page_type adalah section dan section memiliki tugas
-    if prev_type == 'section' and prev.is_task:
-        if not prev.collect_task.all():
-            messages.warning(
-                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}")
-            )
-            return redirect("website:sections:details", prev.slug)
 
     module_all = section.module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish()),
@@ -130,6 +138,12 @@ def get_pagination(request, section):
     if not prev_slug:
         prev_slug = section.module
         prev_type = 'module'
+
+    # set session
+    request.session['next_type'] = next_type
+    request.session['next_page_slug'] = next_slug.slug if next_slug else None
+    request.session['prev_type'] = prev_type
+    request.session['prev_page_slug'] = prev_slug.slug if prev_slug else None
 
     return {
         'prev': prev_slug,
