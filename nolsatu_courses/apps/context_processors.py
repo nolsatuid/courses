@@ -20,7 +20,7 @@ def nolsatu_context(request):
         'brand_logo': settings.NOLSATU_HOST + appearance.get('logo', ''),
         'brand_logo_light': settings.NOLSATU_HOST + appearance.get('logo_light', ''),
         'brand_logo_dark': settings.NOLSATU_HOST + appearance.get('logo_dark', ''),
-        'brand_favicon': settings.NOLSATU_HOST + appearance.get('brand_favicon', ''),
+        'brand_favicon': settings.NOLSATU_HOST + appearance.get('favicon', ''),
         'brand': appearance.get('site_name', 'Site Name'),
         'site_name': appearance.get('site_name', 'Site Name'),
         'color_theme': appearance.get('color_theme', 'danger'),
