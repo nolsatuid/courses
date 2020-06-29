@@ -6,6 +6,9 @@ from io import StringIO, BytesIO
 
 from django.utils.datetime_safe import datetime
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
+from django.db import transaction
 
 from rest_framework import serializers
 from nolsatu_courses.apps.courses.models import (
@@ -158,3 +161,71 @@ class ExportCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         exclude = ['author', 'users', 'quizzes', 'vendor']
+
+
+class ImportCourse:
+
+    def __init__(self, zip_file):
+        self.zip_file = zip_file
+        self.dir_extract, self.extension = self.zip_file.name.split(".")
+        self.json_data = None
+        self.course = None
+
+    def _extract_zip(self):
+        with zipfile.ZipFile(self.zip_file, "r") as zip_ref:
+            zip_ref.extractall(settings.TMP_PRJ_DIR)
+
+    def _get_course_data(self):
+        json_file = os.path.join(
+            settings.TMP_PRJ_DIR,
+            os.path.join(self.dir_extract, f"{self.dir_extract}.json")
+        )
+        try:
+            with open(json_file) as json_ref:
+                self.json_data = json.loads(json.load(json_ref))
+        except FileNotFoundError:
+            raise ImportCourseError(_("json file not found"))
+
+    def _import_course(self):
+        course_data = self.json_data.copy()
+        course_data.pop("modules")
+        course_data.pop("id")
+        course_data['author'] = User.objects.filter(is_superuser=True).first()
+        obj = Courses.objects.create(**course_data)
+        self._import_module(obj)
+
+    def _import_module(self, course):
+        module_data = self.json_data['modules'].copy()
+        for module in module_data:
+            module['course'] = course
+            module.pop("id")
+            section_data = module.pop("sections")
+            obj = Module.objects.create(**module)
+            self._import_section(section_data, obj)
+
+    def _import_section(self, data, module):
+        section_data = data
+        section_for_save = []
+        for section in section_data:
+            section['module'] = module
+            section.pop("id")
+            print(section)
+            section_for_save.append(Section(**section))
+        Section.objects.bulk_create(section_for_save)
+
+    def prepare_data(self):
+        self._extract_zip()
+        self._get_course_data()
+
+    def import_data(self):
+        self.prepare_data()
+        with transaction.atomic():
+            self._import_course()
+
+
+class ImportCourseError(Exception):
+    pass
+
+
+class ExportCourseError(Exception):
+    pass

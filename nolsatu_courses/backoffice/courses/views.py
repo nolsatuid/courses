@@ -10,7 +10,7 @@ from django.db.models import Prefetch
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section
 from nolsatu_courses.apps.courses.utils import ExportCourse
-from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister
+from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister, FormImportCourse
 
 
 @staff_member_required
@@ -201,3 +201,18 @@ def export_data(request, id):
                             content_type="application/x-zip-compressed")
     response['Content-Disposition'] = 'attachment; filename=%s' % ex_course.zip_filename
     return response
+
+
+@staff_member_required
+def import_data(request):
+    form = FormImportCourse(data=request.POST or None, files=request.FILES or None)
+    if form.is_valid():
+        form.import_course()
+
+    context = {
+        'menu_active': 'course',
+        'title': 'Impor Materi Kursus',
+        'form': form,
+        'title_submit': _("Proses")
+    }
+    return render(request, 'backoffice/form.html', context)
