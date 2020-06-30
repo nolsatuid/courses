@@ -158,6 +158,10 @@ class ExportModuleSerializer(serializers.ModelSerializer):
 
 class ExportCourseSerializer(serializers.ModelSerializer):
     modules = ExportModuleSerializer(many=True)
+    featured_image = serializers.SerializerMethodField()
+
+    def get_featured_image(self, obj) -> str:
+        return obj.featured_image.name
 
     class Meta:
         model = Courses
