@@ -2,6 +2,7 @@ import json
 import os
 import zipfile
 
+from distutils.dir_util import copy_tree
 from io import StringIO, BytesIO
 
 from django.utils.datetime_safe import datetime
@@ -209,7 +210,6 @@ class ImportCourse:
         for section in section_data:
             section['module'] = module
             section.pop("id")
-            print(section)
             section_for_save.append(Section(**section))
         Section.objects.bulk_create(section_for_save)
 
@@ -221,6 +221,10 @@ class ImportCourse:
         self.prepare_data()
         with transaction.atomic():
             self._import_course()
+
+    def move_files(self):
+        media_import = os.path.join(settings.TMP_PRJ_DIR, f"{self.dir_extract}/media")
+        copy_tree(media_import, settings.MEDIA_ROOT)
 
 
 class ImportCourseError(Exception):

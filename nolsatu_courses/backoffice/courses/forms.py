@@ -148,6 +148,12 @@ class FormImportCourse(forms.Form):
         help_text=_("Unggah file .zip"),
         validators=[FileExtensionValidator(allowed_extensions=['zip'])]
     )
+    OPTION = (
+        ('all', _('Data dan berkas media')),
+        ('only_data', _('Hanya data')),
+        ('only_files', _('Hanya berkas'))
+    )
+    option = forms.ChoiceField(label=_("Opsi Impor"), choices=OPTION)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -161,4 +167,12 @@ class FormImportCourse(forms.Form):
     def import_course(self):
         cleaned_data = super().clean()
         imp_course = ImportCourse(cleaned_data['zip_file'])
-        imp_course.import_data()
+
+        option = self.cleaned_data['option']
+        if option == 'all':
+            imp_course.import_data()
+            imp_course.move_files()
+        elif option == 'only_data':
+            imp_course.import_data()
+        elif option == 'only_files':
+            imp_course.move_files()
