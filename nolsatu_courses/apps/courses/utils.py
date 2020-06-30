@@ -177,10 +177,16 @@ class ImportCourse:
         self.course = None
 
     def _extract_zip(self):
+        """
+        extract zip to tmp dir
+        """
         with zipfile.ZipFile(self.zip_file, "r") as zip_ref:
             zip_ref.extractall(settings.TMP_PRJ_DIR)
 
     def _get_course_data(self):
+        """
+        get course data from json to dict
+        """
         json_file = os.path.join(
             settings.TMP_PRJ_DIR,
             os.path.join(self.dir_extract, f"{self.dir_extract}.json")
@@ -192,45 +198,66 @@ class ImportCourse:
             raise ImportCourseError(_("json file not found"))
 
     def _import_course(self):
+        """
+        process import course data
+        """
         course_data = self.json_data.copy()
-        course_data.pop("modules")
-        course_data.pop("id")
+        course_data.pop("modules")  # pop module for except error instance
+        course_data.pop("id")  # remove id to get new id from increment
         course_data['author'] = User.objects.filter(is_superuser=True).first()
         obj = Courses.objects.create(**course_data)
         self._import_module(obj)
 
     def _import_module(self, course):
+        """
+        process import modules data
+        """
         module_data = self.json_data['modules'].copy()
         for module in module_data:
             module['course'] = course
-            module.pop("id")
-            section_data = module.pop("sections")
+            module.pop("id")  # remove id to get new id from increment
+            section_data = module.pop("sections")  # pop sections to get data
             obj = Module.objects.create(**module)
             self._import_section(section_data, obj)
 
     def _import_section(self, data, module):
+        """
+        process import sections data
+        """
         section_data = data
         section_for_save = []
         for section in section_data:
             section['module'] = module
-            section.pop("id")
+            section.pop("id")  # remove id to get new id from increment
             section_for_save.append(Section(**section))
         Section.objects.bulk_create(section_for_save)
 
     def prepare_data(self):
+        """
+        checking dir or file to import
+        """
         self._extract_zip()
         self._get_course_data()
 
     def import_data(self):
+        """
+        import data from .json to databse
+        """
         self.prepare_data()
         with transaction.atomic():
             self._import_course()
 
     def move_files(self):
+        """
+        copy all directories and files on the media
+        """
         media_import = os.path.join(settings.TMP_PRJ_DIR, f"{self.dir_extract}/media")
         copy_tree(media_import, settings.MEDIA_ROOT)
 
     def delete_all_data(self):
+        """
+        delete all data json and media files in tmp
+        """
         dir_import = os.path.join(settings.TMP_PRJ_DIR, self.dir_extract)
         remove_tree(dir_import)
 
