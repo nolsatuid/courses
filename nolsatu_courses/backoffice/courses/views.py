@@ -208,6 +208,7 @@ def import_data(request):
     form = FormImportCourse(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
         form.import_course()
+        messages.success(request, _('Berhasil impor data'))
 
     context = {
         'menu_active': 'course',
