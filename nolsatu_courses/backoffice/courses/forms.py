@@ -9,6 +9,7 @@ from django.core.validators import FileExtensionValidator
 
 from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment
 from nolsatu_courses.apps import utils
+from nolsatu_courses.apps.courses.utils import ImportCourse, ImportCourseError
 
 
 class FormCourses(forms.ModelForm):
@@ -140,3 +141,41 @@ class FormBulkRegister(forms.Form):
                 'status': status
             }
         )
+
+
+class FormImportCourse(forms.Form):
+    zip_file = forms.FileField(
+        help_text=_("Unggah file .zip"),
+        validators=[FileExtensionValidator(allowed_extensions=['zip'])]
+    )
+    OPTION = (
+        ('all', _('Data dan berkas media')),
+        ('only_data', _('Hanya data')),
+        ('only_files', _('Hanya berkas'))
+    )
+    option = forms.ChoiceField(label=_("Opsi Impor"), choices=OPTION)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        imp_course = ImportCourse(cleaned_data['zip_file'])
+        try:
+            imp_course.prepare_data()
+        except ImportCourseError as error:
+            raise forms.ValidationError(f"Terjadi kesalahan: {error}")
+        return cleaned_data
+
+    def import_course(self):
+        cleaned_data = super().clean()
+        imp_course = ImportCourse(cleaned_data['zip_file'])
+
+        option = self.cleaned_data['option']
+        if option == 'all':
+            imp_course.import_data()
+            imp_course.move_files()
+            imp_course.delete_all_data()
+        elif option == 'only_data':
+            imp_course.import_data()
+            imp_course.delete_all_data()
+        elif option == 'only_files':
+            imp_course.move_files()
+            imp_course.delete_all_data()
