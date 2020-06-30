@@ -172,7 +172,10 @@ class FormImportCourse(forms.Form):
         if option == 'all':
             imp_course.import_data()
             imp_course.move_files()
+            imp_course.delete_all_data()
         elif option == 'only_data':
             imp_course.import_data()
+            imp_course.delete_all_data()
         elif option == 'only_files':
             imp_course.move_files()
+            imp_course.delete_all_data()

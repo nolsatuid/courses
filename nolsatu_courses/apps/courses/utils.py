@@ -2,7 +2,7 @@ import json
 import os
 import zipfile
 
-from distutils.dir_util import copy_tree
+from distutils.dir_util import copy_tree, remove_tree
 from io import StringIO, BytesIO
 
 from django.utils.datetime_safe import datetime
@@ -229,6 +229,10 @@ class ImportCourse:
     def move_files(self):
         media_import = os.path.join(settings.TMP_PRJ_DIR, f"{self.dir_extract}/media")
         copy_tree(media_import, settings.MEDIA_ROOT)
+
+    def delete_all_data(self):
+        dir_import = os.path.join(settings.TMP_PRJ_DIR, self.dir_extract)
+        remove_tree(dir_import)
 
 
 class ImportCourseError(Exception):
