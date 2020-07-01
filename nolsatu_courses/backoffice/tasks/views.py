@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import localtime
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Section, CollectTask, Batch, Courses
@@ -64,7 +65,9 @@ def ajax_change_status(request):
         f'Status tugas {task.section.title} Anda di ubah menjadi {CollectTask.STATUS[int(task.status)]}'
     )
 
-    data = {}
+    data = {
+        'update_at': localtime(task.update_at).strftime("%d %B %Y, %H:%M")
+    }
     return JsonResponse(data, status=200)
 
 
