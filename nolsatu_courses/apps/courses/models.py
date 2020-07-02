@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+import pdfkit
+
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models
@@ -8,6 +10,8 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import When, Case, Count, IntegerField
+from django.template.loader import get_template
+from django.http import HttpResponse
 
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -306,6 +310,30 @@ class Module(models.Model):
 
     def sections_sorted(self):
         return self.sections.order_by('order')
+
+    def export_to_pdf(self):
+        html_template = get_template('backoffice/modules/export.html')
+        section_all = self.sections.publish()
+        context = {
+            'module': self,
+            'section_all': section_all
+        }
+        rendered_html = html_template.render(context)
+
+        options = {
+            'page-size': 'A4',
+            'margin-top': '0.75in',
+            'margin-right': '0.75in',
+            'margin-bottom': '0.75in',
+            'margin-left': '0.75in',
+            'encoding': "UTF-8",
+            'no-outline': None
+        }
+        module_pdf = pdfkit.from_string(rendered_html, False, options=options)
+        response = HttpResponse(module_pdf, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename=module-{self.slug}.pdf'
+
+        return response
 
 
 class SectionManager(models.Manager):
