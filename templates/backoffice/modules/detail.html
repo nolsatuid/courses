@@ -11,9 +11,12 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h4 class="pull-left">
+            <h4 class="float-left">
                 {{ title }}
             </h4>
+            <span class="float-right">
+                <a href="{% url 'backoffice:modules:edit' module.id %}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Ubah</a>
+            </span>
         </div>
         <div class="card-body">
             <div class="row-fluid">
