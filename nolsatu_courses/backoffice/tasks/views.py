@@ -1,6 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -94,9 +94,17 @@ def report_index(request):
     users = None
     course = None
     avg_score = None
+    download = request.GET.get('download', '')
     form = FormFilterTaskReport(request.GET or None)
     if form.is_valid():
         users, avg_score = form.get_data()
+
+        if download:
+            batch = form.cleaned_data['batch']
+            csv_buffer = form.download_report()
+            response = HttpResponse(csv_buffer.getvalue(), content_type="text/csv")
+            response['Content-Disposition'] = f'attachment; filename=Tugas-Angkatan-{batch}.csv'
+            return response
 
         if users:
             course = form.cleaned_data['course']
