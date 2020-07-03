@@ -1,0 +1,29 @@
+{% load tags_courses %}
+<html>
+    <body>      
+        <h2>
+            <strong>Modul: {{ module.title }}</strong>
+        </h2>
+        <p>
+            {% if "MARKDOWN_CONTENT"|get_toggle %}
+                {{ module.description_md|show_markdown|safe }}
+            {% else %}
+                {{ module.description|safe }}
+            {% endif %}
+        </p>
+        {% for sect in section_all %}
+            <br>
+            <h3>
+                <strong>Bab: {{ sect.title }}</strong>
+            </h3>
+            <p>
+                {% if "MARKDOWN_CONTENT"|get_toggle %}
+                    {{ sect.content_md|show_markdown|safe }}
+                {% else %}
+                    {{ sect.content|safe }}
+                {% endif %}
+            </p>
+        {% endfor %}
+        <br>
+    </body>
+</html>

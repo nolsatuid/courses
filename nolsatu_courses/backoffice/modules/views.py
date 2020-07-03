@@ -81,6 +81,10 @@ def delete(request, id):
 @staff_member_required
 def details(request, id):
     module = get_object_or_404(Module, id=id)
+    download = request.GET.get('download', '')
+    if download:
+        module_pdf = module.export_to_pdf()
+        return module_pdf
 
     context = {
         'menu_active': 'course',
