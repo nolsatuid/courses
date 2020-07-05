@@ -22,6 +22,8 @@ class FormUploadFile(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         upload_setting = TaskUploadSettings.objects.filter(section=self.section).first()
+        if not upload_setting:
+            raise forms.ValidationError("Admin belum set maksimal file")
         if cleaned_data:
             file = cleaned_data['file']
             if file.size > upload_setting.max_size*1048576:
