@@ -164,6 +164,11 @@ def show_markdown(text):
 
 
 @register.filter
+def image_markdown(text):
+    return text.replace("/media", f"{settings.HOST}/media")
+
+
+@register.filter
 def get_toggle(identifier):
     return settings.FEATURE.get(identifier, False)
 
