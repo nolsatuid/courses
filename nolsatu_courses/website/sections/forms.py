@@ -37,11 +37,11 @@ class FormUploadFile(forms.ModelForm):
         upload_file = super().save()
 
         # rename file upload
-        ext = upload_file.file.name.split('.')[-1]
+        ext = os.path.splitext(str(upload_file.file))[1]
         initial_path = upload_file.file.path
         section_name = str(self.section).lower().replace(" ","")
         module_id = self.section.module.id
-        upload_file.file.name = f'uploads/{self.user.username}_{module_id}_{section_name}.{ext}'
+        upload_file.file.name = f'uploads/{self.user.username}_{module_id}_{section_name}{ext}'
         new_path = settings.MEDIA_ROOT + '/' + upload_file.file.name
         os.rename(initial_path, new_path)
 
