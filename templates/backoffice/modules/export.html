@@ -6,7 +6,7 @@
         </h2>
         <p>
             {% if "MARKDOWN_CONTENT"|get_toggle %}
-                {{ module.description_md|show_markdown|safe }}
+                {{ module.description_md|show_markdown|image_markdown|safe }}
             {% else %}
                 {{ module.description|safe }}
             {% endif %}
@@ -18,7 +18,7 @@
             </h3>
             <p>
                 {% if "MARKDOWN_CONTENT"|get_toggle %}
-                    {{ sect.content_md|show_markdown|safe }}
+                    {{ sect.content_md|show_markdown|image_markdown|safe }}
                 {% else %}
                     {{ sect.content|safe }}
                 {% endif %}
