@@ -1,0 +1,1 @@
+[{"model": "vendors.vendor", "pk": 1, "fields": {"name": "Nolsatu", "description": "### nolsatu\r\n\r\nadalah sebuah vendor belajar dengan materi `ops` yang khusus digunakan\r\n\r\n```python\r\ndef coba():\r\n    pass\r\n```", "users": [4, 6]}}]

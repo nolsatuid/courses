@@ -172,6 +172,7 @@ STATIC_ROOT = os.path.join(SETTINGS_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL = '/media/'
+FIXTURE_DIRS = [os.path.join(BASE_DIR, "fixtures")]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
