@@ -81,10 +81,6 @@ def delete(request, id):
 @staff_member_required
 def details(request, id):
     module = get_object_or_404(Module, id=id)
-    download = request.GET.get('download', '')
-    if download:
-        module_pdf = module.export_to_pdf()
-        return module_pdf
 
     context = {
         'menu_active': 'course',
@@ -92,3 +88,20 @@ def details(request, id):
         'module': module
     }
     return render(request, 'backoffice/modules/detail.html', context)
+
+
+@staff_member_required
+def preview(request, id):
+    module = get_object_or_404(Module, id=id)
+    download = request.GET.get('download', '')
+    if download:
+        module_pdf = module.export_to_pdf()
+        return module_pdf
+
+    context = {
+        'menu_active': 'course',
+        'title': 'Preview Ekspor PDF',
+        'module': module,
+        'section_all': module.sections.publish()
+    }
+    return render(request, 'backoffice/modules/preview.html', context)

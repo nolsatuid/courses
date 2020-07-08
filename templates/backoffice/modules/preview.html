@@ -1,0 +1,28 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load tags_courses %}
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:courses:index'%}">Kursus</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:modules:index' module.course.id%}">Modul</a></li>
+        <li class="breadcrumb-item active">Preview Ekspor PDF</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">
+                {{ title }}
+            </h4>
+            <span class="float-right">
+                <a href="{% url 'backoffice:modules:preview' module.id %}?download=true" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Ekspor PDF</a>
+            </span>
+        </div>
+    </div>
+
+    <div class="card p-5">
+        {% include 'backoffice/modules/export.html' with module=module section_all=section_all %}
+    </div>
+
+</div>
+{% endblock %}
