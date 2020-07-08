@@ -1,13 +1,10 @@
 from tests import CourseTestCase
 from django.urls import reverse
 
-from django.contrib.auth.models import User
-
 
 class AuthUserViewTest(CourseTestCase):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def test_view_login(self):
         url = reverse('website:login')
         response = self.client.get(url)
 
