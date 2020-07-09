@@ -474,6 +474,8 @@ class Enrollment(models.Model):
     allowed_access = models.BooleanField(_("Akses diberikan"), default=False)
     date_enrollment = models.DateField(_("Tanggal mendaftar"), auto_now_add=True)
     finishing_date = models.DateField(_("Tanggal menyelesaikan"), blank=True, null=True)
+    final_score = models.IntegerField(_("Nilai Akhir"), default=0)
+    note = models.TextField(_("Catatan"), blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} - {self.course}"

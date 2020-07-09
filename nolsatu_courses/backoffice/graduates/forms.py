@@ -1,7 +1,7 @@
 from django import forms
 from model_utils import Choices
 from django.utils.translation import ugettext_lazy as _
-from nolsatu_courses.apps.courses.models import Courses, Batch
+from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment
 
 
 class FormFilterStudent(forms.Form):
@@ -12,7 +12,10 @@ class FormFilterStudent(forms.Form):
         queryset=Batch.objects.all(), empty_label=_("Pilih Angkatan"), required=False
     )
 
-    def get_data(self, students):
+    def get_data(self):
+        students = Enrollment.objects.select_related(
+            'course', 'user', 'batch', 'user__nolsatu'
+        ).filter(status=Enrollment.STATUS.finish)
         course = self.cleaned_data['course']
         batch = self.cleaned_data['batch']
 

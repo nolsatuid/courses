@@ -36,8 +36,6 @@
                 <thead>
                     <th>Nama</th>
                     <th>Username</th>
-                    <th>Kursus</th>
-                    <th>Angkatan</th>
                     <th>Mendaftar</th>
                     <th>Menyelesaikan</th>
                     <th>Task Lulus</th>
@@ -49,16 +47,17 @@
                     {% for candidate in candidate %}
                         <tr>
                             <td>{{ candidate.enroll.user.get_full_name }}</td>
-                            <td>{{ candidate.enroll.user.username }}</td> 
-                            <td>{{ candidate.enroll.course.title }}</td>
-                            <td>Angkatan {{ candidate.enroll.batch.batch }}</td>
-                            <td>{{ candidate.enroll.date_enrollment }}</td>  
-                            <td>{{ candidate.enroll.finishing_date }}</td>    
+                            <td>{{ candidate.enroll.user.username }}</td>
+                            <td>{{ candidate.enroll.date_enrollment }}</td>
+                            <td>{{ candidate.enroll.finishing_date }}</td>
                             <td>{{ candidate.task.graduated }}</td>
                             <td>{{ candidate.task.repeat }}</td>
                             <td>{{ candidate.task.review }}</td>
                             <td>
-                                <button class="btn bg-olive btn-pill" data-toggle="modal" data-target="#confirmModal" data-url="{% url 'backoffice:graduates:candidate_to_graduate' candidate.enroll.id %}" data-name="{{ candidate.enroll.user.get_full_name }}" data-toggle="tooltip" title="Luluskan">Luluskan</button>
+                                <button class="btn bg-olive btn-pill" data-toggle="modal" data-target="#confirmModal"
+                                    data-url="{% url 'backoffice:graduates:candidate_to_graduate' candidate.enroll.id %}"
+                                    data-name="{{ candidate.enroll.user.get_full_name }}"
+                                    data-toggle="tooltip" title="Luluskan">Luluskan</button>
                             </td>
                         </tr>
                     {% endfor %}
@@ -83,10 +82,25 @@
             </div>
             <div class="modal-body">
                 Apakah Anda yakin mengubah status <strong id="confirmName"></strong> menjadi lulus?
+
+                <input type="hidden" name="url" id="url">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Nilai Akhir</label>
+                    <div class="col-sm-10">
+                      <input type="number" min="0" max="100" class="form-control" id="final_score" placeholder="Beri nilai 0 - 100">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Catatan</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" width="100%" id="note" placeholder="Tulis catatan disini.."></textarea>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                <a id="confirmButton" class="btn btn-success" >Ya</a>
+                <button id="confirmButton" class="btn btn-success" onclick="setGraduate()">Ya</button>
             </div>
         </div>
     </div>
@@ -106,13 +120,13 @@
             var name = button.data('name');
 
             var modal = $(this);
-            modal.find('#confirmButton').attr("href", url);
             modal.find('#confirmName').html(name);
+            modal.find('#url').val(url);
         })
     })
 
     $('#id_course').on('change', function() {
-        filterBatch();      
+        filterBatch();
     });
 
     function filterBatch(){
@@ -126,25 +140,74 @@
             },
             dataType: 'json',
             success: function (data) {
-                list_batch.html("'<option value=''>Pilih Angkatan</option>'");  
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");
                 $.each(data.batch, function(key,value) {
                     if(id_batch == value.id){
                         list_batch.append(
                             '<option value="'+value.id+'" selected>Angkatan '+value.batch+'</option>'
-                        ); 
+                        );
                     }else{
                         list_batch.append(
                             '<option value="'+value.id+'">Angkatan '+value.batch+'</option>'
-                        ); 
-                    }                      
-                });                      
+                        );
+                    }
+                });
             },
             error: function (data) {
                 if (data.status == 500) {
                     alert("Terjadi kesalahan, mohon refresh halaman.");
                 }
             }
-        }); 
+        });
     }
+
+    function setGraduate() {
+        var finalScore = $('#final_score').val();
+        var note = $('#note').val();
+        var url = $('#url').val();
+
+        if( finalScore == "" || finalScore == 0) {
+            $('#final_score').after('<small class="form-text text-danger"> This field is required </small>');
+            return
+        } else {
+            $('#final_score').next(".text-danger").remove();
+        }
+
+        $('#confirmModal').modal('hide');
+        $('.spinner').show('fade');
+
+        $.ajax({
+            url: url,
+            data: {
+                'final_score': finalScore,
+                'note': note
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('.spinner').hide();
+                location.reload();
+            },
+            error: function (data) {
+                $('.spinner').hide();
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        });
+    }
+
+    $( "#final_score" ).on("keypress keyup blur",function (event) {
+        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+        if ((this.value < 0)) {
+            this.value = 0;
+        }
+        if ((this.value > 100)) {
+            this.value = 100;
+        }
+    });
+
 </script>
 {% endblock %}
