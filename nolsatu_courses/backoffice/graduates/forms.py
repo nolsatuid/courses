@@ -12,10 +12,10 @@ class FormFilterStudent(forms.Form):
         queryset=Batch.objects.all(), empty_label=_("Pilih Angkatan"), required=False
     )
 
-    def get_data(self):
+    def get_data(self, status):
         students = Enrollment.objects.select_related(
             'course', 'user', 'batch', 'user__nolsatu'
-        ).filter(status=Enrollment.STATUS.finish)
+        ).filter(status=status)
         course = self.cleaned_data['course']
         batch = self.cleaned_data['batch']
 

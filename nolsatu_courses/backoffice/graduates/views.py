@@ -14,12 +14,10 @@ from .forms import FormFilterStudent
 
 @staff_member_required
 def index(request):
-    graduates = Enrollment.objects.select_related(
-        'course', 'user', 'batch', 'user__nolsatu'
-    ).filter(status=Enrollment.STATUS.graduate)
+    graduates = []
     form = FormFilterStudent(request.GET or None)
     if form.is_valid():
-        graduates = form.get_data(students=graduates)
+        graduates = form.get_data(status=Enrollment.STATUS.graduate)
 
     context = {
         'menu_active': 'graduate',
@@ -35,7 +33,7 @@ def candidate(request):
     candidate = []
     form = FormFilterStudent(request.GET or None)
     if form.is_valid():
-        students = form.get_data()
+        students = form.get_data(status=Enrollment.STATUS.finish)
         candidate = [
             {
                 'enroll': student,
