@@ -73,10 +73,11 @@ class ExportCourse:
         )
 
         # write featured_image into zip
-        filenames.append({
-            'path': self.course.featured_image.path,
-            'name': self.course.featured_image.name
-        })
+        if self.course.featured_image:
+            filenames.append({
+                'path': self.course.featured_image.path,
+                'name': self.course.featured_image.name
+            })
 
         for fpath in filenames:
             # Calculate path for file in zip

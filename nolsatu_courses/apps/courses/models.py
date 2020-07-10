@@ -67,16 +67,20 @@ class Courses(models.Model):
 
     @property
     def featured_image_with_host(self):
-        if self.featured_image:
-            return settings.HOST + self.featured_image.url
-        else:
-            return None
+        return settings.HOST + self.get_featured_image_url()
 
     @property
     def author_name(self):
         if self.vendor:
             return self.vendor.name
         return self.author.get_full_name()
+
+    def get_featured_image_url(self):
+        if self.featured_image:
+            return self.featured_image.url
+
+        from django.templatetags.static import static
+        return static(settings.COURSE_IMAGE_PLACEHOLDER_STATIC)
 
     def save(self, *args, **kwargs):
         if self.slug:

@@ -227,6 +227,7 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 # appearance
 TOP_NAV_BG = ""
 TOP_NAV_COLOR = ""
+COURSE_IMAGE_PLACEHOLDER_STATIC = "website/images/adinusa_placeholder.png"
 
 # Markdown
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
