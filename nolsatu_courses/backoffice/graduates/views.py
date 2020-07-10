@@ -14,12 +14,10 @@ from .forms import FormFilterStudent
 
 @staff_member_required
 def index(request):
-    graduates = Enrollment.objects.select_related(
-        'course', 'user', 'batch', 'user__nolsatu'
-    ).filter(status=Enrollment.STATUS.graduate)
+    graduates = []
     form = FormFilterStudent(request.GET or None)
     if form.is_valid():
-        graduates = form.get_data(students=graduates)
+        graduates = form.get_data(status=Enrollment.STATUS.graduate)
 
     context = {
         'menu_active': 'graduate',
@@ -32,19 +30,16 @@ def index(request):
 
 @staff_member_required
 def candidate(request):
-    students = Enrollment.objects.select_related(
-        'course', 'user', 'batch', 'user__nolsatu'
-    ).filter(status=Enrollment.STATUS.finish)
+    candidate = []
     form = FormFilterStudent(request.GET or None)
     if form.is_valid():
-        students = form.get_data(students=students)
-
-    candidate = [
-        {
-            'enroll': student,
-            'task': student.get_count_task_status()
-        } for student in students
-    ]
+        students = form.get_data(status=Enrollment.STATUS.finish)
+        candidate = [
+            {
+                'enroll': student,
+                'task': student.get_count_task_status()
+            } for student in students
+        ]
 
     context = {
         'menu_active': 'graduate',
@@ -58,6 +53,9 @@ def candidate(request):
 @staff_member_required
 def candidate_to_graduate(request, id):
     enroll = get_object_or_404(Enrollment, id=id)
+    enroll.note = request.GET.get('note', "")
+    enroll.final_score = request.GET.get('final_score', 0)
+
     data = enroll.get_cert_data()
     response = call_internal_api('post', url=settings.NOLSATU_HOST + '/api/internal/generate-certificate/', data=data)
     if response.status_code == 200:
@@ -73,6 +71,11 @@ def candidate_to_graduate(request, id):
     else:
         messages.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan')
 
+    if request.is_ajax():
+        data = {
+            'message': _("Berhasil set lulus")
+        }
+        return JsonResponse(data, status=200)
     return redirect('backoffice:graduates:candidate')
 
 

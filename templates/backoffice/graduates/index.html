@@ -36,24 +36,24 @@
                 <thead>
                     <th>Nama</th>
                     <th>Username</th>
-                    <th>Kursus</th>
-                    <th>Angkatan</th>
                     <th>Tanggal Mendaftar</th>
                     <th>Tanggal Menyelesaikan</th>
+                    <th>Nilai Akhir</th>
+                    <th>Catatan</th>
                     <th>Aksi</th>
                 </thead>
                 <tbody>
                     {% for graduate in graduates %}
                         <tr>
                             <td>{{ graduate.user.get_full_name }}</td>
-                            <td>{{ graduate.user.username }}</td> 
-                            <td>{{ graduate.course.title }}</td>
-                            <td>Angkatan {{ graduate.batch.batch }}</td>
-                            <td>{{ graduate.date_enrollment }}</td>  
-                            <td>{{ graduate.finishing_date }}</td>   
+                            <td>{{ graduate.user.username }}</td>
+                            <td>{{ graduate.date_enrollment }}</td>
+                            <td>{{ graduate.finishing_date }}</td>
+                            <td>{{ graduate.final_score }}</td>
+                            <td id="note-{{graduate.id}}"><a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ graduate.note }}">{{ gradute.note|default:'-'|truncatewords:2 }}</a></td>
                             <td>
                                 <a class="btn btn-sm btn-pill bg-navy" href="{% url 'backoffice:graduates:regenerate_certificate' graduate.user.nolsatu.id_nolsatu %}">Perbarui Sertifikat</a>
-                            </td> 
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -61,6 +61,25 @@
         </div>
         <div class="card-footer">
 
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Catatan Tugas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="noteMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
         </div>
     </div>
 </div>
@@ -75,7 +94,7 @@
     })
 
     $('#id_course').on('change', function() {
-        filterBatch();      
+        filterBatch();
     });
 
     function filterBatch(){
@@ -89,25 +108,25 @@
             },
             dataType: 'json',
             success: function (data) {
-                list_batch.html("'<option value=''>Pilih Angkatan</option>'");  
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");
                 $.each(data.batch, function(key,value) {
                     if(id_batch == value.id){
                         list_batch.append(
                             '<option value="'+value.id+'" selected>Angkatan '+value.batch+'</option>'
-                        ); 
+                        );
                     }else{
                         list_batch.append(
                             '<option value="'+value.id+'">Angkatan '+value.batch+'</option>'
-                        ); 
-                    }                      
-                });                      
+                        );
+                    }
+                });
             },
             error: function (data) {
                 if (data.status == 500) {
                     alert("Terjadi kesalahan, mohon refresh halaman.");
                 }
             }
-        }); 
+        });
     }
 </script>
 {% endblock %}

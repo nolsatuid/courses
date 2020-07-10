@@ -15,13 +15,16 @@ register = Library()
 def status_to_display(status, styling=False):
     if status == Enrollment.STATUS.begin:
         status_display = _('Mulai')
-        class_bagde = 'success'
+        class_bagde = 'primary'
     elif status == Enrollment.STATUS.finish:
         status_display = _('Selesai')
         class_bagde = 'secondary'
     elif status == Enrollment.STATUS.register:
         status_display = _('Daftar')
         class_bagde = 'danger'
+    elif status == Enrollment.STATUS.graduate:
+        status_display = _('Lulus')
+        class_bagde = 'success'
     else:
         return '-'
 
@@ -97,7 +100,7 @@ def sectoduration(value, arg=''):
         # Calculate number of seconds (minus days, hours and minutes)
         seconds = secs
 
-        # If number of days is greater than 0				
+        # If number of days is greater than 0
         if days > 0:
             # Add multiple days to duration string
             durationString += " " + str(days) + dayUnitName + (days > 1 and "s" or "")
@@ -116,7 +119,7 @@ def sectoduration(value, arg=''):
                 # Set hour splitter to next
                 hourSplitter = (len(durationString) > 0 and nextDurSplitter or "")
 
-        # If number of hours is greater than 0				
+        # If number of hours is greater than 0
         if hours > 0:
             # Add multiple days to duration string
             durationString += hourSplitter + ' ' + str(hours) + hourUnitName + (hours > 1 and "s" or "")
@@ -133,7 +136,7 @@ def sectoduration(value, arg=''):
                 # Set minute splitter to next
                 minSplitter = (len(durationString) > 0 and nextDurSplitter or "")
 
-        # If number of minutes is greater than 0				
+        # If number of minutes is greater than 0
         if minutes > 0:
             # Add multiple days to duration string
             durationString += minSplitter + ' ' + str(minutes) + minUnitName + (minutes > 1 and "s" or "")
@@ -143,7 +146,7 @@ def sectoduration(value, arg=''):
             # Set second splitter
             secSplitter = (len(durationString) > 0 and lastDurSplitter or "")
 
-        # If number of seconds is greater than 0				
+        # If number of seconds is greater than 0
         if seconds > 0:
 
             # Add multiple days to duration string
