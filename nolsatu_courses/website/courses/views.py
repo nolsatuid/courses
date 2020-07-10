@@ -48,7 +48,9 @@ def user_courses(request):
             "course": enroll.course,
             "progress_precentage": int(enroll.course.progress_percentage(request.user)),
             "progress_step": f'{enroll.course.number_of_activity_step(request.user)} dari {enroll.course.number_of_step()}',
-            "status_enroll": enroll.status
+            "status_enroll": enroll.status,
+            "final_score": enroll.final_score,
+            "note": enroll.note
         } for enroll in enrolls],
         'user_page': True
     }
