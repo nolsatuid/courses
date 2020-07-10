@@ -25,12 +25,14 @@ class FormUploadFile(forms.ModelForm):
         if not upload_setting:
             raise forms.ValidationError("Ada masalah pengumpulan tugas, mohon hubungi Admin")
         if cleaned_data:
-            file = cleaned_data['file']
+            file = cleaned_data.get('file')
+            if not file:
+                raise forms.ValidationError(_("Tidak ada file yang diunggah"))
             if file.size > upload_setting.max_size*1048576:
-                self.add_error('file', _(f"Ukuran file lebih dari {upload_setting.max_size}MB"))
+                raise forms.ValidationError(_(f"Ukuran file lebih dari {upload_setting.max_size}MB"))
             file_extension = os.path.splitext(str(file))[1]
             if str(file_extension) not in str(upload_setting.allowed_extension.all()):
-                self.add_error('file', _(f"Ekstensi file tidak sesuai"))                
+                raise forms.ValidationError(_("Ekstensi file tidak sesuai"))            
         return cleaned_data
 
     def save(self, collect_task):
