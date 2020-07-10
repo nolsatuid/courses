@@ -35,7 +35,7 @@
 								</div>
 							</td>
 							<td>{{ course.status_enroll|enrollment_status_display:'True' }}</td>
-							<td> {% if course.final_score %} {{ course.final_score }} {% else %} belom {% endif %}</td>
+							<td> {% if course.final_score %} {{ course.final_score }} {% else %} - {% endif %}</td>
 							<td style="width: fit-content;">
 								<a href="{% url 'website:courses:user_quizzes' course.course.id %}" class="btn btn-outline-info">Nilai Kuis</a>
                 				<a href="{% url 'website:courses:user_tasks' course.course.id %}" class="btn btn-outline-info">Nilai Tugas</a>
