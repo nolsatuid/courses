@@ -26,7 +26,7 @@ def details(request, slug):
             if module.slug != request.session.get('next_page_slug'):
                 raise Http404()
 
-    pagination = get_pagination(request, module)
+    pagination = get_pagination(request, module, set_session=True)
     prev_type = pagination['prev_type']
     prev = pagination['prev']
 
@@ -83,7 +83,7 @@ def preview(request, slug):
     return render(request, 'website/modules/preview.html', context)
 
 
-def get_pagination(request, module):
+def get_pagination(request, module, set_session=False):
     """
     fungsi untuk mendapatkan pagination
     """
@@ -102,10 +102,11 @@ def get_pagination(request, module):
             prev_type = "section"
 
     # set session
-    request.session['next_type'] = next_type
-    request.session['next_page_slug'] = next_slug.slug if next_slug else None
-    request.session['prev_type'] = prev_type
-    request.session['prev_page_slug'] = prev_slug.slug if prev_slug else None
+    if set_session:
+        request.session['next_type'] = next_type
+        request.session['next_page_slug'] = next_slug.slug if next_slug else None
+        request.session['prev_type'] = prev_type
+        request.session['prev_page_slug'] = prev_slug.slug if prev_slug else None
 
     return {
         'prev': prev_slug,
