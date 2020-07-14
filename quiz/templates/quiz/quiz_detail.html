@@ -22,7 +22,7 @@
             <h5>
               <i class="fas fa-calendar"></i>
               {% if quiz.any_schedule %}
-                {{ quiz.start_time.date }}, {{ quiz.start_time|date:"H:i" }} - {{ quiz.end_time|date:"H:i" }}
+                {{ quiz.start_time.date }}, {{ quiz.start_hour_with_tz }} - {{ quiz.end_hour_with_tz }}
               {% endif %}
             </h5>
           

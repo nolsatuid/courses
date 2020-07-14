@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import (
     MaxValueValidator, validate_comma_separated_integer_list,
 )
+from django.utils import formats
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 from django.utils.encoding import python_2_unicode_compatible
@@ -172,6 +173,16 @@ class Quiz(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def start_hour_with_tz(self):
+        hour = formats.date_format(self.start_time, "H:i")
+        return f"{hour} WIB"
+
+    @property
+    def end_hour_with_tz(self):
+        hour = formats.date_format(self.end_time, "H:i")
+        return f"{hour} WIB"
 
     def get_questions(self):
         return self.question_set.all().select_subclasses()
