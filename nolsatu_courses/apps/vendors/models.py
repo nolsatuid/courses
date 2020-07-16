@@ -7,8 +7,8 @@ from markdownx.models import MarkdownxField
 class Vendor(models.Model):
     name = models.CharField(_("Nama"), max_length=100)
     description = MarkdownxField(_("Deskripsi"), default="")
-    users = models.ForeignKey(User, verbose_name=_("users"), related_name=_("vendors"),
-                              null=True, blank=True, on_delete=models.CASCADE)
+    users = models.OneToOneField(User, verbose_name=_("users"), related_name=_("vendors"),
+                                 null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Vendor")
