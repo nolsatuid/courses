@@ -1,0 +1,125 @@
+{% extends 'vendors/index.html' %}
+{% load tags_courses %}
+
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'vendors:courses:index'%}">Kursus</a></li>
+        <li class="breadcrumb-item active">Detail Bab</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header pb-0" style="border:0px">
+
+            <span class="float-right">
+                <a href="{% url 'backoffice:courses:edit' course.id %}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Ubah</a>
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <div class="tab-content">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td width="200px">
+                                        <label>Judul</label>
+                                    </td>
+                                    <td>
+                                        {{ course.title }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Deskripsi Singkat</label>
+                                    </td>
+                                    <td>
+                                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                                            {{ course.short_description_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ course.short_description|safe }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Deskripsi</label>
+                                    </td>
+                                    <td>
+                                        {% if "MARKDOWN_BACKOFFICE_EDITOR"|get_toggle %}
+                                            {{ course.description_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ course.description|safe }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Slug</label>
+                                    </td>
+                                    <td>
+                                        {{ course.slug }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Gambar</label>
+                                    </td>
+                                    <td>
+                                        <img width="100px" src="{{ course.get_featured_image_url }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Level</label>
+                                    </td>
+                                    <td>
+                                        {{ course.level }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Kategori</label>
+                                    </td>
+                                    <td>
+                                        {{ course.category.all|join:', ' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Terlihat</label>
+                                    </td>
+                                    <td>
+                                        {{ course.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Diperbolehkan</label>
+                                    </td>
+                                    <td>
+                                        {{ course.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Author</label>
+                                    </td>
+                                    <td>
+                                        {{ course.author }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'vendors:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

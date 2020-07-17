@@ -20,7 +20,7 @@
                 <tbody>
                     {% for courses in courses %}
                         <tr>
-                            <td><a href="{% url 'backoffice:courses:details' courses.id %}">{{ courses.title }}</a></td>
+                            <td><a href="{% url 'vendors:courses:details' courses.id %}">{{ courses.title }}</a></td>
                             <td>{{ courses.get_level_display }}</td>
                             <td>{{ courses.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>{{ courses.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
