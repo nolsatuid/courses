@@ -40,7 +40,20 @@
                     <p>Dashboard</p>
                 </a>
             </li>
-
+            <li class="nav-item {% if menu_active == 'course' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'course' %}active{% endif %}">
+                    <i class="nav-icon fas fa-id-card"></i>
+                    <p>Kursus<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:courses:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Daftar Kursus</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
         </nav>
         <!-- /.sidebar-menu -->
