@@ -72,13 +72,17 @@ def update_user(identificator, type_identificator='id', user=None):
     if created or not hasattr(user, 'nolsatu'):
         # save other data from nolsatu to model MemberNolsatu
         MemberNolsatu.objects.create(
-            user=user, id_nolsatu=data["id"],
-            avatar=profile.get("avatar", ""), phone_number=data['phone']
+            user=user,
+            id_nolsatu=data["id"],
+            role=data["role"],
+            avatar=profile.get("avatar", ""),
+            phone_number=data['phone']
         )
 
     # update data from response
     user.nolsatu.avatar = profile.get("avatar", "")
     user.nolsatu.id_nolsatu = data['id']
+    user.nolsatu.role = data['role']
     user.nolsatu.phone_number = data['phone']
 
     return user
