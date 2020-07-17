@@ -7,7 +7,7 @@ from nolsatu_courses.apps.courses.models import Courses
 @staff_member_required
 def get_list_courses(request):
     context = {
-        'courses': Courses.objects.filter(vendor__users__username=request.user),
+        'courses': Courses.objects.filter(vendor__users__email=request.user.email),
         'menu_active': 'course',
         'title': _('Daftar Kursus'),
         'sidebar': True
