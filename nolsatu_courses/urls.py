@@ -32,6 +32,8 @@ urlpatterns = [
     path('sentry-debug/', trigger_error),
     path('quiz/', include('quiz.urls')),
     path('markdownx/', include('markdownx.urls')),
+    path('vendors/', include('nolsatu_courses.vendors.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
