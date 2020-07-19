@@ -1,0 +1,21 @@
+stages:
+- update
+
+update-to-development:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/nolsatu-courses/dev-courseupdate.sh && sudo bash /var/www/html/nolsatu-courses/dev-courseupdate.sh
+  only:
+    - /-DEV$/
+  tags:
+    - runner-development
+
+
+update-to-production:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/nolsatu-courses/prod-courseupdate.sh && sudo bash /var/www/html/nolsatu-courses/prod-courseupdate.sh
+  only:
+    - /-PROD$/
+  tags:
+    - runner-production
