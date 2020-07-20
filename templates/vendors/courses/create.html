@@ -45,19 +45,8 @@
                                                         {% if field.field.widget.input_type == 'file' or field.field.widget.input_type == 'checkbox' %}
                                                             {% render_field field%}
                                                         {% else %}
-                                                            {% if field.name == 'author' %}
-                                                                <select name="author" class="form-control" id="id_author">
-                                                                  <option value="{{ author.id }}" selected>{{ request.user }}</option>
-                                                                </select>
-                                                            {% elif field.name == 'vendor' %}
-                                                                <select name="vendor" class="form-control" id="id_vendor">
-                                                                  <option value="{{ vendor.id }}" selected>{{ vendor.name }}</option>
-                                                                </select>
-                                                            {% else %}
-                                                                {% render_field field|add_class:"form-control" %}
-                                                            {% endif  %}
+                                                            {% render_field field|add_class:"form-control" %}
                                                         {% endif %}
-
                                                         <small class="form-text text-muted">{{ field.help_text }}</small>
                                                         <small class="form-text text-danger">{{ field.errors }}</small>
                                                     </div>
