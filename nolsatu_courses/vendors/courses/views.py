@@ -12,7 +12,7 @@ from nolsatu_courses.backoffice.courses.forms import FormCourses
 
 
 @staff_member_required
-def list(request):
+def index(request):
     context = {
         'courses': Courses.objects.filter(vendor__users__email=request.user.email),
         'menu_active': 'course',
