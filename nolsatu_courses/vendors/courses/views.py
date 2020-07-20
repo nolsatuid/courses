@@ -12,7 +12,7 @@ from nolsatu_courses.backoffice.courses.forms import FormCourses
 
 
 @staff_member_required
-def get_list_courses(request):
+def list(request):
     context = {
         'courses': Courses.objects.filter(vendor__users__email=request.user.email),
         'menu_active': 'course',
@@ -23,7 +23,7 @@ def get_list_courses(request):
 
 
 @staff_member_required
-def get_details_courses(request, courses_id):
+def details(request, courses_id):
     course = get_object_or_404(Courses, id=courses_id, vendor__users__email=request.user.email)
     context = {
         'menu_active': 'course',
@@ -34,7 +34,7 @@ def get_details_courses(request, courses_id):
 
 
 @staff_member_required
-def create_course(request):
+def create(request):
     template_name = 'vendors/courses/course-create.html'
 
     form = FormCourses(data=request.POST or None, files=request.FILES or None)
