@@ -19,7 +19,7 @@ def index(request):
         'title': _('Daftar Kursus'),
         'sidebar': True
     }
-    return render(request, 'vendors/courses/courses-list.html', context)
+    return render(request, 'vendors/courses/list.html', context)
 
 
 @staff_member_required
@@ -30,12 +30,12 @@ def details(request, courses_id):
         'title': 'Detail Kursus',
         'course': course,
     }
-    return render(request, 'vendors/courses/course-detail.html', context)
+    return render(request, 'vendors/courses/detail.html', context)
 
 
 @staff_member_required
 def create(request):
-    template_name = 'vendors/courses/course-create.html'
+    template_name = 'vendors/courses/create.html'
 
     form = FormCourses(data=request.POST or None, files=request.FILES or None)
     vendor = Vendor.objects.filter(users__email=request.user.email).first()
