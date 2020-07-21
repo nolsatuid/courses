@@ -37,7 +37,7 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="{% url 'website:modules:preview' module.slug %}" >Pratayang</a>
                                         <a class="dropdown-item" href="{% url 'vendors:modules:edit' module.id %}" >Ubah</a>
-                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
                                         <div class="dropdown-divider"></div>
