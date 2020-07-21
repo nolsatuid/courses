@@ -1,4 +1,3 @@
-from django.conf import settings
 from nolsatu_courses.backoffice.courses.forms import FormCourses
 
 

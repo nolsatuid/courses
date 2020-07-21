@@ -35,7 +35,7 @@ def details(request, courses_id):
 
 @staff_member_required
 def create(request):
-    template_name = 'vendors/courses/create.html'
+    template_name = 'vendors/form-editor.html'
 
     form = FormVendorCourse(data=request.POST or None, files=request.FILES or None)
     author = User.objects.filter(email=request.user.email).first()
@@ -43,6 +43,7 @@ def create(request):
     if form.is_valid():
         with transaction.atomic():
             course = form.save(author)
+            form.save_m2m()
             messages.success(request, _(f"Berhasil tambah kursus {course.title}"))
         return redirect('vendors:courses:index')
 
@@ -53,7 +54,42 @@ def create(request):
         'title_submit': 'Simpan'
     }
 
-    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
-        template_name = 'backoffice/form-editor-markdown.html'
+    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+        template_name = 'vendors/form-editor-markdown.html'
+
+    return render(request, template_name, context)
+
+
+@staff_member_required
+def delete(request, id):
+    course = get_object_or_404(Courses, id=id, vendor__users__email=request.user.email)
+    course.delete()
+    messages.success(request, 'Berhasil hapus kursus')
+    return redirect('vendors:courses:index')
+
+
+@staff_member_required
+def edit(request, id):
+    template_name = 'vendors/form-editor.html'
+    course = get_object_or_404(Courses, id=id, vendor__users__email=request.user.email)
+    author = User.objects.filter(email=request.user.email).first()
+    form = FormVendorCourse(data=request.POST or None, files=request.FILES or None, instance=course)
+
+    if form.is_valid():
+        with transaction.atomic():
+            change_course = form.save(author)
+            form.save_m2m()
+        messages.success(request, _(f"Berhasil ubah kursus {change_course.title}"))
+        return redirect('vendors:courses:index')
+
+    context = {
+        'menu_active': 'course',
+        'title': _('Ubah Kursus'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+
+    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+        template_name = 'vendors/form-editor-markdown.html'
 
     return render(request, template_name, context)
