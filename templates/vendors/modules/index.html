@@ -25,7 +25,7 @@
                 <tbody>
                     {% for module in modules %}
                         <tr>
-                            <td><a href="{% url 'backoffice:modules:details' module.id %}" >{{ module.title }}</a></td>
+                            <td><a href="{% url 'vendors:modules:details' module.id %}" >{{ module.title }}</a></td>
                             <td>{{ module.order }}</td>
                             <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>{{ module.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>

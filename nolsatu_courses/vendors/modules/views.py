@@ -45,3 +45,15 @@ def create(request, id):
         template_name = 'vendors/form-editor-markdown.html'
 
     return render(request, template_name, context)
+
+
+@staff_member_required
+def details(request, id):
+    module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
+
+    context = {
+        'menu_active': 'course',
+        'title': 'Detail Modul',
+        'module': module
+    }
+    return render(request, 'vendors/modules/detail.html', context)
