@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-header">
             <h4 class="float-left">Modul pada Kursus {{ course.title }}</h4>
-            <a href="{% url 'backoffice:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
+            <a href="{% url 'vendors:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
