@@ -40,7 +40,7 @@ def details(request, slug):
 
 @login_required
 def user_courses(request):
-    enrolls = request.user.enroll.select_related("course")
+    enrolls = request.user.enroll.filter(batch__isnull=False).select_related("course")
 
     context = {
         'title': _('Daftar Materimu'),
