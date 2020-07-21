@@ -57,3 +57,26 @@ def details(request, id):
         'module': module
     }
     return render(request, 'vendors/modules/detail.html', context)
+
+
+@staff_member_required
+def edit(request, id):
+    module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
+    form = FormModule(data=request.POST or None, files=request.FILES or None, instance=module)
+    if form.is_valid():
+        module = form.save()
+        messages.success(request, _(f"Berhasil ubah modul {module.title}"))
+        return redirect('vendors:modules:index', id=module.course.id)
+
+    context = {
+        'menu_active': 'course',
+        'title': _('Ubah Modul'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+
+    template = 'vendors/form-editor.html'
+    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+        template = 'vendors/form-editor-markdown.html'
+
+    return render(request, template, context)
