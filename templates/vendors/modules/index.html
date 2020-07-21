@@ -1,50 +1,48 @@
 {% extends 'vendors/index.html' %}
 
 {% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'vendors:courses:index'%}">Kursus</a></li>
+        <li class="breadcrumb-item active">Modul</li>
+    </ol>
+</div>
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <span class="float-right">
-                <a href="{% url 'vendors:courses:add' %}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Tambah Kursus</a>
-            </span>
+            <h4 class="float-left">Modul pada Kursus {{ course.title }}</h4>
+            <a href="{% url 'backoffice:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
                 <thead>
                     <th>Judul</th>
-                    <th>Level</th>
+                    <th>Urutan</th>
                     <th>Terlihat</th>
-                    <th>Diperbolehkan</th>
-                    <th>Status</th>
-                    <th>Author</th>
-                    <th>Vendor</th>
+                    <th>Draf</th>
                     <th>Aksi</th>
                 </thead>
                 <tbody>
-                    {% for courses in courses %}
+                    {% for module in modules %}
                         <tr>
-                            <td><a href="{% url 'vendors:courses:details' courses.id %}">{{ courses.title }}</a></td>
-                            <td>{{ courses.get_level_display }}</td>
-                            <td>{{ courses.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ courses.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ courses.get_status_display }}</td>
-                            <td>{{ courses.author }}</td>
-                            <td>{{ courses.vendor }}</td>
+                            <td><a href="{% url 'backoffice:modules:details' module.id %}" >{{ module.title }}</a></td>
+                            <td>{{ module.order }}</td>
+                            <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ module.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>
                                 <div class="btn-group">
                                     <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       Aksi
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{% url 'website:courses:details' courses.slug %}">Pratayang</a>
-                                        <a class="dropdown-item" href="{% url 'vendors:courses:edit' courses.id %}">Ubah</a>
-                                        <a style="cursor: pointer;" class="dropdown-item" data-toggle="modal"
-                                           data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:courses:delete' courses.id %}"
-                                           data-name="{{ courses.title}}">Hapus</a>
+                                        <a class="dropdown-item" href="{% url 'website:modules:preview' module.slug %}" >Pratayang</a>
+                                        <a class="dropdown-item" href="{% url 'backoffice:modules:edit' module.id %}" >Ubah</a>
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{% url 'vendors:modules:index' courses.id %}">Lihat Modul</a>
+                                        <a class="dropdown-item" href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{% url 'backoffice:courses:export_data' courses.id %}">Ekspor data</a>
+                                        <a href="{% url 'backoffice:modules:preview' module.id %}?download=true" class="dropdown-item">Ekspor PDF</a>
+                                        <a href="{% url 'backoffice:modules:preview' module.id %}" class="dropdown-item">Preview PDF</a>
                                     </div>
                                 </div>
                             </td>
@@ -54,7 +52,7 @@
             </table>
         </div>
         <div class="card-footer">
-
+            <a href="{% url 'vendors:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
         </div>
     </div>
 </div>
