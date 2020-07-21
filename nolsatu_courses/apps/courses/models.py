@@ -594,6 +594,11 @@ class Activity(models.Model):
         state = self.section if self.section else self.module
         return f"{self.user} - {state.title}"
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'course', 'module', 'section'], name='unique_activity')
+        ]
+
 
 class CertSetting(models.Model):
     course = models.OneToOneField(Courses, on_delete=models.CASCADE)
