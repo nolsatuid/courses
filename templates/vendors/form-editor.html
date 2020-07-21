@@ -10,13 +10,13 @@
             </h4>
         </div>
         <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
             <div class="card-body">
                 <div class="row-fluid">
                     <div class="row">
                         <div class=" col-md-12 col-lg-12 ">
                             <h5>{{ title_extra }}</h5>
                             <div class="tab-content">
+                                    {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-8">
                                         {{ form.media }}
