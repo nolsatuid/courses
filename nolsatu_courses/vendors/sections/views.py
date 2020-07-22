@@ -1,9 +1,11 @@
-from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-
+from django.utils.translation import ugettext_lazy as _
 from nolsatu_courses.apps.courses.models import Module, Section, TaskUploadSettings
+from nolsatu_courses.backoffice.sections.forms import FormSection, FormTaskSetting
 
 
 @staff_member_required
@@ -17,3 +19,28 @@ def index(request, id):
         'sidebar': True
     }
     return render(request, 'vendors/sections/index.html', context)
+
+
+@staff_member_required
+def create(request, id):
+    module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
+    form = FormSection(data=request.POST or None, files=request.FILES or None)
+    if form.is_valid():
+        section = form.save(commit=False)
+        section.module = module
+        section.save()
+        messages.success(request, _(f"Berhasil tambah bab {section.title}"))
+        return redirect('vendors:sections:index', id=id)
+
+    context = {
+        'menu_active': 'course',
+        'title': _('Tambah Bab'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+
+    template = 'vendors/form-editor.html'
+    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+        template = 'vendors/form-editor-markdown.html'
+
+    return render(request, template, context)

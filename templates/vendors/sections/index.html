@@ -12,6 +12,7 @@
     <div class="card">
         <div class="card-header">
             <h4 class="float-left">Bab pada Modul {{ module.title }}</h4>
+            <a href="{% url 'vendors:sections:add' module.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Bab</a>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
