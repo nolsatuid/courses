@@ -75,3 +75,16 @@ def delete(request, id):
     section.delete()
     messages.success(request, 'Berhasil hapus bab')
     return redirect('vendors:sections:index', id=section.module.id)
+
+
+@staff_member_required
+def details(request, id):
+    section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
+
+    context = {
+        'menu_active': 'course',
+        'title': 'Detail Bab',
+        'section': section,
+        'task_setting': TaskUploadSettings.objects.filter(section=section).first()
+    }
+    return render(request, 'vendors/sections/detail.html', context)

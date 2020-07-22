@@ -27,7 +27,7 @@
                 <tbody>
                     {% for section in sections %}
                         <tr>
-                            <td>{{ section.title }}</a></td>
+                            <td><a href="{% url 'vendors:sections:details' section.id %}">{{ section.title }}</a></td>
                             <td>{{ section.order }}</td>
                             <td>{{ section.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>{{ section.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>

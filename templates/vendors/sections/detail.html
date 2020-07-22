@@ -1,0 +1,128 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load tags_courses %}
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'vendors:courses:index'%}">Kursus</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vendors:modules:index' section.module.course.id%}">Modul</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vendors:sections:index' section.module.id %}">Bab</a></li>
+        <li class="breadcrumb-item active">Detail Bab</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">
+                {{ title }}
+            </h4>
+            <span class="float-right">
+                <a href="{% url 'vendors:sections:edit' section.id %}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Ubah</a>
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <div class="tab-content">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td width="200px">
+                                        <label>Judul</label>
+                                    </td>
+                                    <td>
+                                        {{ section.title }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Deskripsi</label>
+                                    </td>
+                                    <td>
+                                        {% if "MARKDOWN_VENDORS_EDITOR"|get_toggle %}
+                                            {{ section.content_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ section.content|safe }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Slug</label>
+                                    </td>
+                                    <td>
+                                        {{ section.slug }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Urutan</label>
+                                    </td>
+                                    <td>
+                                        {{ section.order }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Terlihat</label>
+                                    </td>
+                                    <td>
+                                        {{ section.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Tugas</label>
+                                    </td>
+                                    <td>
+                                        {{ section.is_task|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5>Task Setting</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Instruksi</label>
+                                    </td>
+                                    <td>
+                                        {% if "MARKDOWN_VENDORS_EDITOR"|get_toggle %}
+                                            {{ task_setting.instruction_md|show_markdown|safe }}
+                                        {% else %}
+                                            {{ task_setting.instruction|safe }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Ekstensi</label>
+                                    </td>
+                                    <td>
+                                        {{ task_setting.allowed_extension.all|join:', ' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Ukuran Maksimal</label>
+                                    </td>
+                                    <td>
+                                        {{ task_setting.max_size }} MB
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'vendors:sections:index' section.module.id %}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Bab</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
