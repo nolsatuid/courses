@@ -88,3 +88,20 @@ def delete(request, id):
     module.delete()
     messages.success(request, 'Berhasil hapus modul')
     return redirect('vendors:modules:index', id=module.course.id)
+
+
+@staff_member_required
+def preview(request, id):
+    module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
+    download = request.GET.get('download', '')
+    if download:
+        module_pdf = module.export_to_pdf()
+        return module_pdf
+
+    context = {
+        'menu_active': 'course',
+        'title': 'Preview Ekspor PDF',
+        'module': module,
+        'section_all': module.sections.publish()
+    }
+    return render(request, 'vendors/modules/preview.html', context)
