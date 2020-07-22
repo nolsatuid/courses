@@ -119,7 +119,8 @@ def registrants(request):
 
                 utils.send_notification(
                     enroll.user, f'Akses kelas {enroll.course.title} di berikan', notif_msg)
-                messages.success(request, _(f'Berhasil mengubah status <strong>{enroll}</strong>'))
+        
+        messages.success(request, _(f'Berhasil memberikan akses massal'))
 
     context = {
         'menu_active': 'registrants',
@@ -160,8 +161,9 @@ def ajax_change_status_registrants(request):
 
     data = {
         'status': True,
-        'message': f'Berhasil mengubah status {enroll.user}',
-        'batch': enroll.batch.batch
+        'message': f'Berhasil mengubah hak akses {enroll.user.get_full_name()}',
+        'batch': enroll.batch.batch,
+        'detail': f'{enroll.user.get_full_name()} - {enroll.course}'
     }
     return JsonResponse(data, status=200)
 
