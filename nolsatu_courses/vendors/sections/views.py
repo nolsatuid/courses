@@ -88,3 +88,30 @@ def details(request, id):
         'task_setting': TaskUploadSettings.objects.filter(section=section).first()
     }
     return render(request, 'vendors/sections/detail.html', context)
+
+
+@staff_member_required
+def task_setting(request, id):
+    section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
+    set_to_task = TaskUploadSettings.objects.filter(section=section).first()
+    form = FormTaskSetting(data=request.POST or None, instance=set_to_task or None)
+    if form.is_valid():
+        set_to_task = form.save(commit=False)
+        set_to_task.section = section
+        set_to_task.save()
+        form.save_m2m()
+        messages.success(request, _(f"Berhasil ubah pengaturan tugas"))
+        return redirect('vendors:sections:index', id=section.module.id)
+
+    context = {
+        'menu_active': 'course',
+        'title': _('Pengaturan Tugas'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+
+    template = 'vendors/form-editor.html'
+    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+        template = 'vendors/form-editor-markdown.html'
+
+    return render(request, template, context)

@@ -8,5 +8,6 @@ urlpatterns = [
     path('<int:id>/edit/', views.edit, name='edit'),
     path('<int:id>/delete/', views.delete, name='delete'),
     path('details/<int:id>', views.details, name='details'),
+    path('<int:id>/task-setting/', views.task_setting, name='task_setting'),
 
 ]
