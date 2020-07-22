@@ -44,3 +44,26 @@ def create(request, id):
         template = 'vendors/form-editor-markdown.html'
 
     return render(request, template, context)
+
+
+@staff_member_required
+def edit(request, id):
+    section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
+    form = FormSection(data=request.POST or None, files=request.FILES or None, instance=section)
+    if form.is_valid():
+        section = form.save()
+        messages.success(request, _(f"Berhasil ubah bab {section.title}"))
+        return redirect('vendors:sections:index', id=section.module.id)
+
+    context = {
+        'menu_active': 'course',
+        'title': _('Ubah Bab'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+
+    template = 'vendors/form-editor.html'
+    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+        template = 'vendors/form-editor-markdown.html'
+
+    return render(request, template, context)
