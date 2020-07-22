@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
@@ -28,7 +29,8 @@ def create(request, id):
     if form.is_valid():
         section = form.save(commit=False)
         section.module = module
-        section.save()
+        with transaction.atomic():
+            section.save()
         messages.success(request, _(f"Berhasil tambah bab {section.title}"))
         return redirect('vendors:sections:index', id=id)
 
@@ -51,7 +53,8 @@ def edit(request, id):
     section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
     form = FormSection(data=request.POST or None, files=request.FILES or None, instance=section)
     if form.is_valid():
-        section = form.save()
+        with transaction.atomic():
+            section = form.save()
         messages.success(request, _(f"Berhasil ubah bab {section.title}"))
         return redirect('vendors:sections:index', id=section.module.id)
 
@@ -72,7 +75,8 @@ def edit(request, id):
 @staff_member_required
 def delete(request, id):
     section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
-    section.delete()
+    with transaction.atomic():
+        section.delete()
     messages.success(request, 'Berhasil hapus bab')
     return redirect('vendors:sections:index', id=section.module.id)
 
@@ -98,7 +102,8 @@ def task_setting(request, id):
     if form.is_valid():
         set_to_task = form.save(commit=False)
         set_to_task.section = section
-        set_to_task.save()
+        with transaction.atomic():
+            set_to_task.save()
         form.save_m2m()
         messages.success(request, _(f"Berhasil ubah pengaturan tugas"))
         return redirect('vendors:sections:index', id=section.module.id)
