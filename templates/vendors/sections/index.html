@@ -40,7 +40,7 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="{% url 'website:sections:preview' section.slug %}">Pratayang</a>
                                         <a class="dropdown-item" href="{% url 'vendors:sections:edit' section.id %}">Ubah</a>
-
+                                       <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:sections:delete' section.id %}" data-name="{{ section.title}}">Hapus</button>
                                     </div>
                                 </div>
                             </td>

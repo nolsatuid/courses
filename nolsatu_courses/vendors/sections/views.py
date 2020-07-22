@@ -67,3 +67,11 @@ def edit(request, id):
         template = 'vendors/form-editor-markdown.html'
 
     return render(request, template, context)
+
+
+@staff_member_required
+def delete(request, id):
+    section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
+    section.delete()
+    messages.success(request, 'Berhasil hapus bab')
+    return redirect('vendors:sections:index', id=section.module.id)
