@@ -7,5 +7,23 @@ update-to-development:
     - sudo chmod +x /var/www/html/nolsatu-courses/dev-courseupdate.sh && sudo bash /var/www/html/nolsatu-courses/dev-courseupdate.sh
   only:
     - /-DEV$/
+    - master
+  except:
+    - branches
+  tags:
+    - runner-development
+
+stages:
+- update
+
+update-to-development:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/devcourseadi/dev-courseadinusaupdate.sh && sudo bash /var/www/html/devcourseadi/dev-courseadinusaupdate.sh
+  only:
+    - /-ADICOURSE$/
+    - dev-course.adinusa.id
+  except:
+    - branches
   tags:
     - runner-development
