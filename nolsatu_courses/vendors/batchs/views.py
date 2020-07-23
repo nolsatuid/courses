@@ -47,3 +47,21 @@ def details(request, id):
         'batch': batch
     }
     return render(request, 'vendors/batchs/detail.html', context)
+
+
+@staff_member_required
+def edit(request, id):
+    batch = get_object_or_404(Batch, id=id)
+    form = FormBatchVendor(data=request.POST or None, instance=batch, user_email=request.user.email)
+    if form.is_valid():
+        batch = form.save()
+        messages.success(request, _(f"Berhasil ubah angkatan {batch.batch}"))
+        return redirect('vendors:batchs:index')
+
+    context = {
+        'menu_active': 'batch',
+        'title': _('Ubah Angkatan'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+    return render(request, 'vendors/form.html', context)
