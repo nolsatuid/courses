@@ -14,7 +14,7 @@ def index(request):
     context = {
         'menu_active': 'batch',
         'title': _('Daftar Angkatan'),
-        'batchs': Batch.objects.select_related('course'),
+        'batchs': Batch.objects.filter(course__vendor__users__email=request.user.email).select_related('course'),
         'sidebar': True
     }
     return render(request, 'vendors/batchs/index.html', context)
