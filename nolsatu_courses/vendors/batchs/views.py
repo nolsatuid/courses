@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.db import transaction
+from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 
 from nolsatu_courses.apps.courses.models import Batch
+from nolsatu_courses.backoffice.batchs.forms import FormBatch
 
 
 @staff_member_required
@@ -14,3 +17,21 @@ def index(request):
         'sidebar': True
     }
     return render(request, 'vendors/batchs/index.html', context)
+
+
+@staff_member_required
+def create(request):
+    form = FormBatch(data=request.POST or None)
+    if form.is_valid():
+        with transaction.atomic():
+            batch = form.save()
+        messages.success(request, _(f"Berhasil tambah angkatan {batch.batch}"))
+        return redirect('vendors:batchs:index')
+
+    context = {
+        'menu_active': 'batch',
+        'title': _('Tambah Angkatan'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+    return render(request, 'vendors/form.html', context)
