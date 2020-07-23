@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 
 from nolsatu_courses.apps.courses.models import Batch
-from nolsatu_courses.backoffice.batchs.forms import FormBatch
+from .forms import FormBatchVendor
 
 
 @staff_member_required
@@ -22,7 +22,7 @@ def index(request):
 
 @staff_member_required
 def create(request):
-    form = FormBatch(data=request.POST or None)
+    form = FormBatchVendor(data=request.POST or None, user_email=request.user.email)
     if form.is_valid():
         with transaction.atomic():
             batch = form.save()
@@ -41,7 +41,6 @@ def create(request):
 @staff_member_required
 def details(request, id):
     batch = get_object_or_404(Batch, id=id, course__vendor__users__email=request.user.email)
-
     context = {
         'menu_active': 'batch',
         'title': 'Detail Angkatan',
