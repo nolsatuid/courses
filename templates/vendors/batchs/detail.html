@@ -1,0 +1,83 @@
+{% extends 'vendors/index.html' %}
+
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'vendors:batchs:index'%}">Angkatan</a></li>
+        <li class="breadcrumb-item active">Detail Angkatan</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                {{ title }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <div class="tab-content">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td>
+                                        <label>Batch</label>
+                                    </td>
+                                    <td>
+                                        {{ batch.batch }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Kursus</label>
+                                    </td>
+                                    <td>
+                                        {{ batch.course.title }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Tanggal Mulai</label>
+                                    </td>
+                                    <td>
+                                        {{ batch.start_date }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Tanggal Selesai</label>
+                                    </td>
+                                    <td>
+                                        {{ batch.end_date }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Status Aktif</label>
+                                    </td>
+                                    <td>
+                                        {{ batch.is_active }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Link Group</label>
+                                    </td>
+                                    <td>
+                                        <a href="{{ batch.link_group }}">{{ batch.link_group }}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'vendors:batchs:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Angkatan</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

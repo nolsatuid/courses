@@ -20,7 +20,7 @@
                 <tbody>
                     {% for batch in batchs %}
                         <tr>
-                            <td>Angkatan {{ batch.batch }}</a></td>
+                            <td><a href="{% url 'vendors:batchs:details' batch.id %}">Angkatan {{ batch.batch }}</a></td>
                             <td>{{ batch.course.title }}</td>
                             <td>{{ batch.start_date }}</td>
                             <td>{{ batch.end_date }}</td>

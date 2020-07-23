@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -35,3 +36,15 @@ def create(request):
         'title_submit': 'Simpan'
     }
     return render(request, 'vendors/form.html', context)
+
+
+@staff_member_required
+def details(request, id):
+    batch = get_object_or_404(Batch, id=id, course__vendor__users__email=request.user.email)
+
+    context = {
+        'menu_active': 'batch',
+        'title': 'Detail Angkatan',
+        'batch': batch
+    }
+    return render(request, 'vendors/batchs/detail.html', context)
