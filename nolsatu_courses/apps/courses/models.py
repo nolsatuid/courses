@@ -148,7 +148,7 @@ class Courses(models.Model):
             return mod_cache
 
         module = self.modules.first()
-        cache.set(key, module)
+        cache.set(key, module, 60 * 5)
         return module
 
     def get_enroll(self, user):
