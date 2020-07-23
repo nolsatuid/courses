@@ -32,6 +32,7 @@
                                       Aksi
                                     </button>
                                     <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'vendors:batchs:details' batch.id %}">Detail</a>
                                         <a class="dropdown-item" href="{% url 'vendors:batchs:edit' batch.id %}">Ubah</a>
                                         <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:batchs:delete' batch.id %}" data-name="Angkatan {{ batch.batch}}">Hapus</button>
                                     </div>
