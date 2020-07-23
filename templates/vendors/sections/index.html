@@ -4,14 +4,15 @@
 <div class="col-sm-12">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'vendors:courses:index'%}">Kursus</a></li>
-        <li class="breadcrumb-item active">Modul</li>
+        <li class="breadcrumb-item"><a href="{% url 'vendors:modules:index' module.course.id%}">Modul</a></li>
+        <li class="breadcrumb-item active">Bab</li>
     </ol>
 </div>
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h4 class="float-left">Modul pada Kursus {{ course.title }}</h4>
-            <a href="{% url 'vendors:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
+            <h4 class="float-left">Bab pada Modul {{ module.title }}</h4>
+            <a href="{% url 'vendors:sections:add' module.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Bab</a>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
@@ -20,29 +21,30 @@
                     <th>Urutan</th>
                     <th>Terlihat</th>
                     <th>Draf</th>
+                    <th>Tugas</th>
                     <th>Aksi</th>
                 </thead>
                 <tbody>
-                    {% for module in modules %}
+                    {% for section in sections %}
                         <tr>
-                            <td><a href="{% url 'vendors:modules:details' module.id %}" >{{ module.title }}</a></td>
-                            <td>{{ module.order }}</td>
-                            <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ module.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td><a href="{% url 'vendors:sections:details' section.id %}">{{ section.title }}</a></td>
+                            <td>{{ section.order }}</td>
+                            <td>{{ section.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ section.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ section.is_task|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
                             <td>
                                 <div class="btn-group">
                                     <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       Aksi
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{% url 'website:modules:preview' module.slug %}" >Pratayang</a>
-                                        <a class="dropdown-item" href="{% url 'vendors:modules:edit' module.id %}" >Ubah</a>
-                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{% url 'vendors:sections:index' module.id %}">Lihat Bab</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a href="{% url 'vendors:modules:preview' module.id %}?download=true" class="dropdown-item">Ekspor PDF</a>
-                                        <a href="{% url 'vendors:modules:preview' module.id %}" class="dropdown-item">Preview PDF</a>
+                                        <a class="dropdown-item" href="{% url 'website:sections:preview' section.slug %}">Pratayang</a>
+                                        <a class="dropdown-item" href="{% url 'vendors:sections:edit' section.id %}">Ubah</a>
+                                       <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:sections:delete' section.id %}" data-name="{{ section.title}}">Hapus</button>
+                                        {% if section.is_task %}
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{% url 'vendors:sections:task_setting' section.id %}"><i class="fas fa-cog"></i> Task Setting</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </td>
@@ -53,6 +55,7 @@
         </div>
         <div class="card-footer">
             <a href="{% url 'vendors:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
+            <a href="{% url 'vendors:modules:index' module.course.id%}" class="btn btn-sm btn-outline-primary float-right">Kembali ke Modul</a>
         </div>
     </div>
 </div>
