@@ -51,7 +51,7 @@ def details(request, id):
 
 @staff_member_required
 def edit(request, id):
-    batch = get_object_or_404(Batch, id=id)
+    batch = get_object_or_404(Batch, id=id, course__vendor__users__email=request.user.email)
     form = FormBatchVendor(data=request.POST or None, instance=batch, user_email=request.user.email)
     if form.is_valid():
         with transaction.atomic():
@@ -66,3 +66,12 @@ def edit(request, id):
         'title_submit': 'Simpan'
     }
     return render(request, 'vendors/form.html', context)
+
+
+@staff_member_required
+def delete(request, id):
+    batch = get_object_or_404(Batch, id=id, course__vendor__users__email=request.user.email)
+    with transaction.atomic():
+        batch.delete()
+    messages.success(request, 'Berhasil hapus angkatan')
+    return redirect('vendors:batchs:index')
