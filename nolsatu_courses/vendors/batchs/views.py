@@ -54,7 +54,8 @@ def edit(request, id):
     batch = get_object_or_404(Batch, id=id)
     form = FormBatchVendor(data=request.POST or None, instance=batch, user_email=request.user.email)
     if form.is_valid():
-        batch = form.save()
+        with transaction.atomic():
+            batch = form.save()
         messages.success(request, _(f"Berhasil ubah angkatan {batch.batch}"))
         return redirect('vendors:batchs:index')
 
