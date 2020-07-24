@@ -1,4 +1,4 @@
-{% extends 'backoffice/base-adminlte.html' %}
+{% extends 'vendors/index.html' %}
 {% load tags_courses %}
 {% load static widget_tweaks %}
 
@@ -37,7 +37,7 @@ thead input {
         </div>
         <div class="card-body">
             <div class="table-responsive enrollments">
-                <form action="{% url 'backoffice:courses:registrants' %}" method="post" id="actionMark">
+                <form action="{% url 'vendors:courses:registrants' %}" method="post" id="actionMark">
                     {% csrf_token %}
                     <table id="datatable" class="table table-striped">
                         <thead>
@@ -52,33 +52,31 @@ thead input {
                             <th>Status</th>
                             <th>Tanggal Mendaftar</th>
                             <th>Tanggal Menyelesaikan</th>
-                            <!-- <th>Status Akses</th> -->
                             <th style="width: 15%;">Akses</th>
                         </thead>
                         <tbody>
-                            {% for registrants in registrants %}
+                            {% for x in registrants %}
                                 <tr>
                                     <td id="column{{ registrants.id }}">
-                                        {% if not registrants.allowed_access %}
+                                        {% if not x.allowed_access %}
                                         <div class="icheck-primary pl-3">
-                                            <input type="checkbox" name="checkMark" value="{{registrants.id}}" id="check{{ registrants.id }}" class="checkMark">
-                                            <input type="hidden" value="{{ registrants.user.get_full_name }} - {{ registrants.course }}" id="name-check{{ registrants.id }}">
-                                            <label for="check{{ registrants.id }}"></label>
+                                            <input type="checkbox" name="checkMark" value="{{x.id}}" id="check{{ x.id }}" class="checkMark">
+                                            <input type="hidden" value="{{ x.user.get_full_name }} - {{ x.course }}" id="name-check{{ x.id }}">
+                                            <label for="check{{ x.id }}"></label>
                                         </div>
                                         {% endif %}
                                     </td>
-                                    <td>{{ registrants.id }}</td>
-                                    <td>{{ registrants.user.first_name }} {{ registrants.user.last_name }}</td>
-                                    <td>{{ registrants.user.username }}</td>    
-                                    <td id="batch-{{registrants.id}}">{{ registrants.batch.batch }}</td>
-                                    <td>{{ registrants.status|enrollment_status_display:'True' }}</td>                       
-                                    <td>{{ registrants.date_enrollment }}</td>                               
-                                    <td>{{ registrants.finishing_date|default_if_none:"-" }}</td>  
-                                    <!-- <td>{{ registrants.allowed_access|yesno:"<span class='badge badge-success'>Sudah</span>, <span class='badge badge-danger'>Belum</span>"|safe }}</td> -->
+                                    <td>{{ x.id }}</td>
+                                    <td>{{ x.user.first_name }} {{ x.user.last_name }}</td>
+                                    <td>{{ x.user.username }}</td>
+                                    <td id="batch-{{x.id}}">{{ x.batch.batch }}</td>
+                                    <td>{{ x.status|enrollment_status_display:'True' }}</td>
+                                    <td>{{ x.date_enrollment }}</td>
+                                    <td>{{ x.finishing_date|default_if_none:"-" }}</td>
                                     <td>
-                                        <div class="custom-control custom-switch" id="btn-status-{{registrants.id}}">
-                                            <input type="checkbox" class="custom-control-input" id="customSwitch{{registrants.id}}" onchange="setAkses('{{registrants.id}}','{{registrants.allowed_access}}')" {% if registrants.allowed_access %} checked {% endif %}>
-                                            <label class="custom-control-label" for="customSwitch{{registrants.id}}"></label>
+                                        <div class="custom-control custom-switch" id="btn-status-{{x.id}}">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch{{x.id}}" onchange="setAkses('{{x.id}}','{{x.allowed_access}}')" {% if x.allowed_access %} checked {% endif %}>
+                                            <label class="custom-control-label" for="customSwitch{{x.id}}"></label>
                                         </div>      
                                     </td>
                                 </tr>
@@ -151,30 +149,6 @@ thead input {
             "timeOut": "10000",
             "extendedTimeOut": "30000"
         }
-
-        // Setup - add a text input to each footer cell
-        // $('#datatable thead tr').clone(true).appendTo( '#datatable thead' );
-        // $('#datatable thead tr:eq(1) th').each( function (i) {
-        //     var title = $(this).text();
-        //     if(title == "Nama" || title == "Username" || title == "Kursus" || title == "Angkatan"){
-        //         $(this).html( '<input type="text" placeholder="Cari '+title+'" />' );
-        
-        //         $( 'input', this ).on( 'keyup change', function () {
-        //             if ( table.column(i).search() !== this.value ) {
-        //                 table
-        //                     .column(i)
-        //                     .search( this.value )
-        //                     .draw();
-        //             }
-        //         } );
-        //     }else if(title == "Akses"){
-        //         $(this).html( '<button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i></button>'+
-        //         '&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#confirmModal">Berikan Akses</button>');
-        //     }
-        //     else{
-        //         $(this).html( '' );
-        //     }
-        // } );
     
         var table = $('#datatable').DataTable( {
             orderCellsTop: true,
@@ -217,7 +191,7 @@ thead input {
         var btn_status = $('#btn-status-'+id);
         var column_mark = $('#column'+id);
         $.ajax({
-            url: "{% url 'backoffice:courses:ajax_change_status_registrants' %}",
+            url: "{% url 'vendors:courses:ajax_change_status_registrants' %}",
             data: {
                 'id': id,
                 'status': status
