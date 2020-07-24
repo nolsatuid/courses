@@ -1,0 +1,361 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load tags_courses %}
+{% load static widget_tweaks %}
+
+{% block extra_css %}
+<style>
+thead input {
+    width: 100%;
+}
+</style>
+<link href="{% static 'adminlte/plugins/toastr/toastr.css' %}" rel="stylesheet"/>
+{% endblock  %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <!-- Filter form -->
+            <form method="GET" >
+                <div class="form-group row">
+                    {% for field in form %}
+                        <div class="form-group col-md-3">
+                            {% render_field field|add_class:"form-control"%}
+                            <span class="help_text">
+                                {{ field.errors }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary btn-pill">Menyaring</button>
+                    </div>
+                </div>
+            </form>
+            <!-- end filter form -->
+        </div>
+        <div class="card-body">
+            <div class="table-responsive enrollments">
+                <form action="{% url 'backoffice:courses:registrants' %}" method="post" id="actionMark">
+                    {% csrf_token %}
+                    <table id="datatable" class="table table-striped">
+                        <thead>
+                            <th>
+                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i></button>
+                                <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#confirmModal" data-tooltip="tooltip" title="Berikan akses massal"><i class="fas fa-toggle-on text-primary"></i></button>
+                            </th>
+                            <th>ID Pendaftar</th>
+                            <th>Nama</th>
+                            <th>Username</th>
+                            <th>Angkatan</th>
+                            <th>Status</th>
+                            <th>Tanggal Mendaftar</th>
+                            <th>Tanggal Menyelesaikan</th>
+                            <!-- <th>Status Akses</th> -->
+                            <th style="width: 15%;">Akses</th>
+                        </thead>
+                        <tbody>
+                            {% for registrants in registrants %}
+                                <tr>
+                                    <td id="column{{ registrants.id }}">
+                                        {% if not registrants.allowed_access %}
+                                        <div class="icheck-primary pl-3">
+                                            <input type="checkbox" name="checkMark" value="{{registrants.id}}" id="check{{ registrants.id }}" class="checkMark">
+                                            <input type="hidden" value="{{ registrants.user.get_full_name }} - {{ registrants.course }}" id="name-check{{ registrants.id }}">
+                                            <label for="check{{ registrants.id }}"></label>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ registrants.id }}</td>
+                                    <td>{{ registrants.user.first_name }} {{ registrants.user.last_name }}</td>
+                                    <td>{{ registrants.user.username }}</td>    
+                                    <td id="batch-{{registrants.id}}">{{ registrants.batch.batch }}</td>
+                                    <td>{{ registrants.status|enrollment_status_display:'True' }}</td>                       
+                                    <td>{{ registrants.date_enrollment }}</td>                               
+                                    <td>{{ registrants.finishing_date|default_if_none:"-" }}</td>  
+                                    <!-- <td>{{ registrants.allowed_access|yesno:"<span class='badge badge-success'>Sudah</span>, <span class='badge badge-danger'>Belum</span>"|safe }}</td> -->
+                                    <td>
+                                        <div class="custom-control custom-switch" id="btn-status-{{registrants.id}}">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch{{registrants.id}}" onchange="setAkses('{{registrants.id}}','{{registrants.allowed_access}}')" {% if registrants.allowed_access %} checked {% endif %}>
+                                            <label class="custom-control-label" for="customSwitch{{registrants.id}}"></label>
+                                        </div>      
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin akan memberi akses pada <br>
+                <ul>
+                    <strong id="confirmName"></strong>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button class="btn btn-success" onclick="sendForm()">Ya</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmAkses" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Apakah Anda yakin?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="unChangeStatus()">
+                <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Mengubah status menjadi <strong><span class="statusRegistrants"></span></strong>?</p>
+                <input type="hidden" id="idRegistrants">
+                <input type="hidden" id="statusRegistrants">
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="unChangeStatus()">Tutup</button>
+                <button class="btn btn-primary" onclick="changeStatus()">Ubah Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'adminlte/plugins/toastr/toastr.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {             
+        $('[data-tooltip="tooltip"]').tooltip();       
+        filterBatch();    
+        toastr.options = {
+            "showDuration": "10000",
+            "hideDuration": "10000",
+            "timeOut": "10000",
+            "extendedTimeOut": "30000"
+        }
+
+        // Setup - add a text input to each footer cell
+        // $('#datatable thead tr').clone(true).appendTo( '#datatable thead' );
+        // $('#datatable thead tr:eq(1) th').each( function (i) {
+        //     var title = $(this).text();
+        //     if(title == "Nama" || title == "Username" || title == "Kursus" || title == "Angkatan"){
+        //         $(this).html( '<input type="text" placeholder="Cari '+title+'" />' );
+        
+        //         $( 'input', this ).on( 'keyup change', function () {
+        //             if ( table.column(i).search() !== this.value ) {
+        //                 table
+        //                     .column(i)
+        //                     .search( this.value )
+        //                     .draw();
+        //             }
+        //         } );
+        //     }else if(title == "Akses"){
+        //         $(this).html( '<button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i></button>'+
+        //         '&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#confirmModal">Berikan Akses</button>');
+        //     }
+        //     else{
+        //         $(this).html( '' );
+        //     }
+        // } );
+    
+        var table = $('#datatable').DataTable( {
+            orderCellsTop: true,
+            fixedHeader: true,
+            "columnDefs": [ {
+                "targets": 0,
+                "orderable": false,
+            } ]
+        } );
+
+        $('#confirmModal').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            name = "";
+            data = $('.enrollments input[class=\'checkMark\']:checked');
+            for (i = 0; i < data.length; i++) {
+                console.log($('#name-check'+data[i].value).val());
+                name += "<li>" + $('#name-check'+data[i].value).val() + "</li>";
+            } 
+            modal.find('#confirmName').html(name);
+        })
+    })
+
+    function setAkses(id, status){
+        $('#idRegistrants').val(id);
+        if(status == 'False'){
+            $('.statusRegistrants').html("Diijinkan");
+            $('#statusRegistrants').val("True");
+        }
+        else if(status == "True"){
+            $('.statusRegistrants').html("Tidak Diijinkan");
+            $('#statusRegistrants').val("False");
+        }
+        $('#confirmAkses').modal('show');
+    }
+
+    function changeStatus(){
+        $('#confirmAkses').modal('hide');
+        var id = $('#idRegistrants').val();
+        var status = $('#statusRegistrants').val();
+        var btn_status = $('#btn-status-'+id);
+        var column_mark = $('#column'+id);
+        $.ajax({
+            url: "{% url 'backoffice:courses:ajax_change_status_registrants' %}",
+            data: {
+                'id': id,
+                'status': status
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.status);
+                if(data.status == true){
+                    $('#batch-'+id).html(data.batch);
+                    btn_status.html("");  
+                    column_mark.html("");
+                    if(status == "True"){
+                        btn_status.append(
+                            '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'True'"+')" checked>'+
+                            '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                        ); 
+                    }else if(status == "False"){
+                        column_mark.append(
+                            '<div class="icheck-primary pl-3">'+
+                                '<input type="checkbox" name="checkMark" value="'+id+'" id="check'+id+'" class="checkMark">'+
+                                '<input type="hidden" value="'+data.detail+'" id="name-check'+id+'">'+
+                                '<label for="check'+id+'"></label>'+
+                            '</div>'
+                        );
+                        btn_status.append(
+                            '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'False'"+')">'+
+                            '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                        ); 
+                    }
+                    toastr.success(data.message);
+                }else{
+                    btn_status.html(""); 
+                    if(status == "True"){
+                        btn_status.append(
+                            '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'False'"+')">'+
+                            '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                        ); 
+                    }else if(status == "False"){
+                        btn_status.append(
+                            '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'True'"+')" checked>'+
+                            '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                        ); 
+                    }
+                    toastr.error(data.message);
+                }
+            },
+            error: function (data) {
+                btn_status.html(""); 
+                if(status == "True"){
+                    btn_status.append(
+                        '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'False'"+')">'+
+                        '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                    ); 
+                }else if(status == "False"){
+                    btn_status.append(
+                        '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'True'"+')" checked>'+
+                        '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+                    ); 
+                }
+                alert("Terjadi kesalahan, mohon refresh halaman.");
+            }
+        }); 
+    }
+
+    function unChangeStatus(){
+        $('#confirmAkses').modal('hide');
+        var id = $('#idRegistrants').val();
+        var status = $('#statusRegistrants').val();
+        var btn_status = $('#btn-status-'+id);
+        btn_status.html("");  
+        if(status == "True"){
+            btn_status.append(
+                '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'False'"+')">'+
+                '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+            ); 
+        }else if(status == "False"){
+            btn_status.append(
+                '<input type="checkbox" class="custom-control-input" id="customSwitch'+id+'" onchange="setAkses('+id+','+"'True'"+')" checked>'+
+                '<label class="custom-control-label" for="customSwitch'+id+'"></label>'
+            ); 
+        }
+    }
+
+    $('#id_course').on('change', function() {
+        filterBatch();      
+    });
+
+    function filterBatch(){
+        var id_batch = $('#id_batch').val();
+        var list_batch = $('#id_batch');
+        var course = $('#id_course').val();
+        $.ajax({
+            url: '{% url "backoffice:graduates:ajax_filter_batch" %}',
+            data: {
+                'course': course
+            },
+            dataType: 'json',
+            success: function (data) {
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");  
+                $.each(data.batch, function(key,value) {
+                    if(id_batch == value.id){
+                        list_batch.append(
+                            '<option value="'+value.id+'" selected>Angkatan '+value.batch+'</option>'
+                        ); 
+                    }else{
+                        list_batch.append(
+                            '<option value="'+value.id+'">Angkatan '+value.batch+'</option>'
+                        ); 
+                    }                      
+                });                      
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        }); 
+    }
+
+    $(function () {
+        //Enable check and uncheck all functionality
+        $('.checkbox-toggle').click(function () {
+            var clicks = $(this).data('clicks')
+            if (clicks) {
+                //Uncheck all checkboxes
+                $('.enrollments input[class=\'checkMark\']').prop('checked', false)
+                $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
+            } else {
+                //Check all checkboxes
+                $('.enrollments input[class=\'checkMark\']').prop('checked', true)
+                $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
+            }
+            $(this).data('clicks', !clicks)
+        })
+    })
+
+    function sendForm(){
+        $('#actionMark').submit();
+    }
+</script>
+{% endblock %}
