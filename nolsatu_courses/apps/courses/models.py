@@ -157,7 +157,7 @@ class Courses(models.Model):
         """
         if user == AnonymousUser():
             return None
-        enroll = self.enrolled.filter(user=user).first()
+        enroll = self.enrolled.filter(user=user, batch__isnull=False).first()
         return enroll
 
     def number_of_step(self):
