@@ -1,4 +1,5 @@
-from nolsatu_courses.backoffice.courses.forms import FormCourses
+from nolsatu_courses.apps.courses.models import Courses, Batch
+from nolsatu_courses.backoffice.courses.forms import FormCourses, FormFilterRegistrants
 
 
 class FormVendorCourse(FormCourses):
@@ -11,3 +12,11 @@ class FormVendorCourse(FormCourses):
         course.vendor = user.vendors.first()
         course.save()
         return course
+
+
+class FormFilterRegistrantsVendors(FormFilterRegistrants):
+    def __init__(self, *args, **kwargs):
+        user_email = kwargs.pop('user_email', None)
+        super(FormFilterRegistrantsVendors, self).__init__(*args, **kwargs)
+        self.fields['course'].queryset = Courses.objects.filter(vendor__users__email=user_email)
+        self.fields['batch'].queryset = Batch.objects.filter(course__vendor__users__email=user_email)
