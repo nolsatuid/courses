@@ -34,6 +34,16 @@ class CourseListView(APIView):
         return Response(serializer.data)
 
 
+class MyCourseListView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get My Course List", responses={
+        200: CourseSerializer(many=True)
+    })
+    def get(self, request):
+        courses = Courses.objects.filter(enrolled__user=request.user)
+        serializer = CourseSerializer(courses, many=True)
+        return Response(serializer.data)
+
+
 class CourseDetailView(APIView):
 
     @swagger_auto_schema(tags=['Courses'], operation_description="Get Course Detail", responses={
