@@ -1,0 +1,155 @@
+{% extends 'vendors/index.html' %}
+{% load static %}
+{% load tags_courses %}
+{% load static widget_tweaks %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <style>
+        thead input {
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <!-- Filter form -->
+                <form method="GET">
+                    <div class="form-group row">
+                        {% for field in form %}
+                            <div class="form-group col-md-3">
+                                {% render_field field|add_class:"form-control" %}
+                                <span class="help_text">
+                                {{ field.errors }}
+                            </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-pill">Menyaring</button>
+                            <button name="download" value="true" class="btn btn-secondary btn-pill">Unduh</button>
+                        </div>
+                    </div>
+                </form>
+                <!-- end filter form -->
+            </div>
+            <div class="card-body">
+                {% if users %}
+                    <table id="datatable" class="table table-striped">
+                        <thead>
+                        <th>Nama</th>
+                        <th>Username</th>
+                        <th>Kursus</th>
+                        <th>Nilai Rata-Rata</th>
+                        <th style="width:25%;">Aksi</th>
+                        </thead>
+                        <tbody>
+                        {% for x in users %}
+                            <tr>
+                                <td>{{ x.name }}</td>
+                                <td>{{ x.username }}</td>
+                                <td>{{ x.title}}</td>
+                                <td id="score-{{ x.id }}">{{ x.avg_score|default:"0" }}</td>
+                                <td width="10px">
+                                    <a class="btn btn-sm btn-pill bg-navy" href="">Detail</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-tooltip="tooltip"]').tooltip();
+
+            $('#datatable').DataTable();
+            filterSection();
+            filterBatch();
+        })
+
+        $('#id_course').on('change', function () {
+            filterSection();
+            filterBatch();
+        });
+
+        function filterSection() {
+            var id_section = $('#id_section').val();
+            var list_section = $('#id_section');
+            var course = $('#id_course').val();
+            $.ajax({
+                url: '{% url "backoffice:tasks:ajax_filter_section" %}',
+                data: {
+                    'course': course
+                },
+                dataType: 'json',
+                success: function (data) {
+                    list_section.html("'<option value=''>Pilih Bab</option>'");
+                    $.each(data.section, function (key, value) {
+                        if (id_section == value.id) {
+                            list_section.append(
+                                '<option value="' + value.id + '" selected>' + value.name + '</option>'
+                            );
+                        } else {
+                            list_section.append(
+                                '<option value="' + value.id + '">' + value.name + '</option>'
+                            );
+                        }
+                    });
+                },
+                error: function (data) {
+                    if (data.status == 500) {
+                        alert("Terjadi kesalahan, mohon refresh halaman.");
+                    }
+                }
+            });
+        }
+
+        function filterBatch() {
+            var id_batch = $('#id_batch').val();
+            var list_batch = $('#id_batch');
+            var course = $('#id_course').val();
+            $.ajax({
+                url: '{% url "backoffice:tasks:ajax_filter_batch" %}',
+                data: {
+                    'course': course
+                },
+                dataType: 'json',
+                success: function (data) {
+                    list_batch.html("'<option value=''>Pilih Angkatan</option>'");
+                    $.each(data.batch, function (key, value) {
+                        if (id_batch == value.id) {
+                            list_batch.append(
+                                '<option value="' + value.id + '" selected>Angkatan ' + value.name + '</option>'
+                            );
+                        } else {
+                            list_batch.append(
+                                '<option value="' + value.id + '">Angkatan ' + value.name + '</option>'
+                            );
+                        }
+                    });
+                },
+                error: function (data) {
+                    if (data.status == 500) {
+                        alert("Terjadi kesalahan, mohon refresh halaman.");
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
