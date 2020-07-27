@@ -141,15 +141,18 @@ class Courses(models.Model):
         else:
             return False
 
-    def get_first_module(self):
-        key = f'course-{self.id}'
-        mod_cache = cache.get(key)
-        if mod_cache:
-            return mod_cache
+    def get_first_module(self, use_cache=False):
+        if use_cache:
+            key = f'course-{self.id}'
+            mod_cache = cache.get(key)
+            if mod_cache:
+                return mod_cache
 
-        module = self.modules.first()
-        cache.set(key, module, 60 * 5)
-        return module
+            module = self.modules.first()
+            cache.set(key, module, 60 * 5)
+            return module
+        else:
+            return self.modules.first()
 
     def get_enroll(self, user):
         """
