@@ -27,3 +27,27 @@ update-to-development:
     - branches
   tags:
     - runner-development
+    
+update-to-development:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/devcoursetest/devcoursetest.sh && sudo bash /var/www/html/devcoursetest/devcoursetest.sh
+  only:
+    - /-DEV-ACAD/
+    - course_test
+  except:
+    - branches
+  tags:
+    - runner-development
+    
+update-to-production:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/course_test/coursetest.sh && sudo bash /var/www/html/coursetest/coursetest.sh
+  only:
+    - /-DEV-WEBTEST$/
+    - course_test
+  except:
+    - branches
+  tags:
+    - runner-production
