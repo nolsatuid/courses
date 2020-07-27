@@ -108,8 +108,6 @@ def registrants(request):
                         _(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi')
                     )
                 else:
-                    if enroll.batch != enroll.course.batchs.last():
-                        enroll.batch = enroll.course.batchs.last()
                     enroll.allowed_access = True
                     enroll.status = Enrollment.STATUS.begin
                     enroll.save()
