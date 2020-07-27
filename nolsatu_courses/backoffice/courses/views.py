@@ -145,8 +145,7 @@ def ajax_change_status_registrants(request):
             'batch': enroll.batch.batch
         }
         return JsonResponse(data, status=200)
-    if enroll.batch != enroll.course.batchs.last():
-        enroll.batch = enroll.course.batchs.last()
+   
     enroll.allowed_access = status
     enroll.status = Enrollment.STATUS.begin
     enroll.save()
