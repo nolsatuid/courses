@@ -1,4 +1,5 @@
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
 from django.db.models import Avg, F
 from django.db.models.functions import Concat
 from django.http import JsonResponse, HttpResponse
@@ -79,3 +80,25 @@ def report_index(request):
         'form': form
     }
     return render(request, 'vendors/tasks/report_index.html', context)
+
+
+@staff_member_required
+def report_detail(request, user_id, course_id):
+    user = get_object_or_404(User, id=user_id)
+    course = get_object_or_404(Courses, id=course_id, enrolled__user__in=[user],
+                               vendor__users__email=request.user.email)
+    modules = course.modules.order_by('order')
+    tasks = CollectTask.objects.filter(section__module__course=course, user=user)
+    tasks = {
+        t.section.id: t.score
+        for t in tasks
+    }
+    context = {
+        'menu_active': 'task',
+        'title': _('Pelaporan Tugas'),
+        'user': user,
+        'course': course,
+        'modules': modules,
+        'tasks': tasks
+    }
+    return render(request, 'vendors/tasks/report_detail.html', context)

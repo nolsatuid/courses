@@ -56,7 +56,7 @@
                                 <td>{{ x.title}}</td>
                                 <td id="score-{{ x.id }}">{{ x.avg_score|default:"0" }}</td>
                                 <td width="10px">
-                                    <a class="btn btn-sm btn-pill bg-navy" href="">Detail</a>
+                                    <a class="btn btn-sm btn-pill bg-navy" href="{% url 'vendors:tasks:report_detail' x.user_id x.course_id %}">Detail</a>
                                 </td>
                             </tr>
                         {% endfor %}

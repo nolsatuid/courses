@@ -1,0 +1,68 @@
+{% extends 'vendors/index.html' %}
+{% load tags_courses %}
+{% block content %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="pull-left">Informasi</h4>
+            </div>
+            <div class="card-body" style="border-top:0px;">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td width="40%"><label>Nama</label></td>
+                                    <td>{{ user.get_full_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>Kursus</label></td>
+                                    <td>{{ course.title }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header pb-0" style="border-bottom:0px">
+                <h4 class="pull-left">{{ title }}</h4>
+            </div>
+            <div class="card-body pl-2 pr-2">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class=" col-md-12 col-lg-12 ">
+                            <div class="tab-content">
+                                <table class="table table-condensed">
+                                    {% for module in modules %}
+                                        <tr>
+                                            <th width="40%">Modul: <label>{{ module.title }}</label></th>
+                                            <th><label>Bab</label></th>
+                                            <th><label>Nilai</label></th>
+                                        </tr>
+                                    {% for section in module.sections_sorted %}                                    <tr>
+                                        <tr>
+                                                    {% if section.is_task %}
+                                                    <td style="border:0"></td>
+                                                    <td>
+                                                                            {{ section.title }}
+                                                                        </td>
+                                                    <td>
+                                                                            {{ tasks|keyvalue:section.id|default:"0" }}
+                                                                        </td>
+                                                    {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

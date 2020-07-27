@@ -38,6 +38,7 @@ class FormFilterTaskReportVendor(FormFilterTaskReport):
             users_report_task = users_report_task.filter(user__enroll__batch=batch)
 
         users_report_result = users_report_task.values("section__module__course").annotate(
+            user_id=F("user__id"), course_id=F("section__module__course__id"),
             name=Concat('user__first_name', 'user__last_name'), username=F("user__username"),
             avg_score=Avg("score"), title=F("section__module__course__title"))
 
