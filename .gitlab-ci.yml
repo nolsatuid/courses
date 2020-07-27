@@ -43,7 +43,7 @@ update-to-development:
 update-to-production:
   stage: update
   script:
-    - sudo chmod +x /var/www/html/course_test/coursetest.sh && sudo bash /var/www/html/coursetest/coursetest.sh
+    - sudo chmod +x /var/www/html/course_test/coursetest.sh && sudo bash /var/www/html/course_test/coursetest.sh
   only:
     - /-DEV-WEBTEST$/
     - course_test
