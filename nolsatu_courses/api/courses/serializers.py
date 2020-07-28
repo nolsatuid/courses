@@ -2,7 +2,8 @@ from django.conf import settings
 from rest_framework import serializers
 
 from nolsatu_courses.api.courses.utils import prepare_markdown
-from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment, Section, Module, TaskUploadSettings
+from nolsatu_courses.apps.courses.models import ( Courses, Batch, Enrollment,
+                                                  Section, Module, TaskUploadSettings)
 
 
 class BatchDetailSerializer(serializers.ModelSerializer):
@@ -228,3 +229,13 @@ class CourseTrackingListSerializer(serializers.ModelSerializer):
         self.user = kwargs.pop('user', None)
         self.fields['modules'] = ModuleTrackingListSerializer(many=True, user=self.user)
         super().__init__(*args, **kwargs)
+
+
+class UserReportTaskSerializer(serializers.Serializer):
+    section_name = serializers.CharField()
+    score = serializers.FloatField(max_value=100, min_value=0)
+    note = serializers.CharField(allow_blank=True)
+    create_at = serializers.DateTimeField()
+    update_at = serializers.DateTimeField()
+
+

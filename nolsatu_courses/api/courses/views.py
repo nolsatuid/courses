@@ -1,5 +1,7 @@
+from django.http import JsonResponse
 from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -11,7 +13,7 @@ from django.conf import settings
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
     ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
-    CollectTaskSerializer, CourseTrackingListSerializer
+    CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
@@ -41,6 +43,20 @@ class MyCourseListView(UserAuthAPIView):
     def get(self, request):
         courses = Courses.objects.filter(enrolled__user=request.user)
         serializer = CourseSerializer(courses, many=True)
+        return Response(serializer.data)
+
+
+class MyTaskListView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['Task'], operation_description="Get My Grade", responses={
+        200: CourseSerializer(many=True)
+    })
+    def get(self, request, course_id):
+        my_tasks = CollectTask.objects.filter(
+            section__module__course=course_id, user=request.user
+        ).values_list('section__title', 'score', 'note', 'create_at', 'update_at')
+        data = [{'section_name': x[0], 'score': x[1], 'note': x[2], 'create_at': x[3],
+                 'update_at': x[4]} for x in my_tasks]
+        serializer = UserReportTaskSerializer(data, many=True)
         return Response(serializer.data)
 
 
