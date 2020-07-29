@@ -34,6 +34,11 @@ class Category(models.Model):
         max_length=250, blank=True,
         unique=True, null=True)
 
+    vendor = models.ForeignKey(
+        "vendors.Vendor", verbose_name=_("Vendor"),
+        on_delete=models.CASCADE, blank=True, null=True
+    )
+
     objects = CategoryManager()
 
     class Meta:
