@@ -4,28 +4,31 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <a href="{% url 'vendors:quizzes:add_category' %}" class="btn btn-sm btn-info float-right">
-                <i class="fas fa-plus"></i> Tambah Kategori
+            <a href="{% url 'vendors:quizzes:category'%}" class="btn btn-sm btn-secondary">
+                <i class="fas fa-arrow-left"></i> Lihat Daftar Kategori
+            </a>
+            <a href="{% url 'vendors:quizzes:add_sub_category' category.id %}" class="btn btn-sm btn-info float-right">
+                <i class="fas fa-plus"></i> Tambah Sub Kategori
             </a>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
                 <thead>
+                    <th>Sub Kategori</th>
                     <th>Kategori</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
-                    {% for x in categories %}
+                    {% for x in sub_categories %}
                         <tr>
+                            <td >{{ x.sub_category }}</td>
                             <td >{{ x.category }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'vendors:quizzes:edit_category' x.id %}">
+                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'vendors:quizzes:edit_sub_category' x.id %}">
                                     <i class="fas fa-edit"></i> Edit</a>
-                                <a class="btn btn-sm btn-pill btn-secondary" href="">
-                                    <i class="fas fa-eye"></i> Lihat Sub Kategori</a>
                                 <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
-                                   data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:quizzes:delete_category' x.id %}"
-                                   data-name="{{ x.category}}"> <i class="fas fa-trash"></i> Hapus</a>
+                                   data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:quizzes:delete_sub_category' x.id %}"
+                                   data-name="{{ x.sub_category}}"> <i class="fas fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
                     {% endfor %}

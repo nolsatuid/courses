@@ -21,7 +21,7 @@
                             <td class="text-center">
                                 <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'vendors:quizzes:edit_category' x.id %}">
                                     <i class="fas fa-edit"></i> Edit</a>
-                                <a class="btn btn-sm btn-pill btn-secondary" href="">
+                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'vendors:quizzes:sub_category' x.id %}">
                                     <i class="fas fa-eye"></i> Lihat Sub Kategori</a>
                                 <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
                                    data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:quizzes:delete_category' x.id %}"
