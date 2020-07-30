@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
@@ -23,7 +24,8 @@ def create_category(request):
     if form.is_valid():
         category = form.save(commit=False)
         category.vendor = request.user.vendors.first()
-        category.save()
+        with transaction.atomic():
+            category.save()
         messages.success(request, _(f"Berhasil tambah Kategori {category.category}"))
         return redirect('vendors:quizzes:category')
 
@@ -41,7 +43,8 @@ def edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id, vendor__users__email=request.user.email)
     form = CategoryForm(data=request.POST or None, instance=category)
     if form.is_valid():
-        category = form.save()
+        with transaction.atomic():
+            category = form.save()
         messages.success(request, _(f"Berhasil ubah kategori {category.category}"))
         return redirect('vendors:quizzes:category')
 
@@ -57,7 +60,8 @@ def edit_category(request, category_id):
 @staff_member_required
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id, vendor__users__email=request.user.email)
-    category.delete()
+    with transaction.atomic():
+        category.delete()
     messages.success(request, 'Berhasil hapus Kategori')
     return redirect('vendors:quizzes:category')
 
@@ -85,7 +89,8 @@ def create_sub_category(request, category_id):
     if form.is_valid():
         sub_category = form.save(commit=False)
         sub_category.category = category
-        sub_category.save()
+        with transaction.atomic():
+            sub_category.save()
         messages.success(request, _(f"Berhasil tambah Sub Kategori {sub_category.sub_category}"))
         return redirect('vendors:quizzes:sub_category', category_id=category_id)
 
@@ -103,7 +108,8 @@ def delete_sub_category(request, sub_category_id):
     sub_category = get_object_or_404(SubCategory, id=sub_category_id,
                                      category__vendor__users__email=request.user.email)
     category_id = sub_category.category.id
-    sub_category.delete()
+    with transaction.atomic():
+        sub_category.delete()
     messages.success(request, 'Berhasil hapus Sub Kategori')
     return redirect('vendors:quizzes:sub_category', category_id=category_id)
 
@@ -114,7 +120,8 @@ def edit_sub_category(request, sub_category_id):
                                      category__vendor__users__email=request.user.email)
     form = SubCategoryForm(data=request.POST or None, instance=sub_category)
     if form.is_valid():
-        sub_category.save()
+        with transaction.atomic():
+            sub_category.save()
         messages.success(request, _(f"Berhasil Ubah Sub Kategori {sub_category.sub_category}"))
         return redirect('vendors:quizzes:sub_category', category_id=sub_category.category.id)
 
