@@ -231,7 +231,7 @@ def edit_question(request, question_id):
 
     context = {
         'menu_active': 'quiz',
-        'title': _('Tambah Pertanyaan'),
+        'title': _('Ubah Pertanyaan'),
         'form': form,
         'formset': formset,
         'title_submit': 'Simpan',
