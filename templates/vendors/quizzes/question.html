@@ -23,7 +23,7 @@
                             <td >{{ x.category.category }}</td>
                             <td >{{ x.sub_category.sub_category }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-pill btn-secondary" href="#}">
+                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'vendors:quizzes:edit_question' x.id %}">
                                     <i class="fas fa-edit"></i> Edit</a>
                                 <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
                                    data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:quizzes:delete_question' x.id %}"
