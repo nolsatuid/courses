@@ -506,7 +506,7 @@ class Enrollment(models.Model):
         return count_status
 
     def generate_certificate_number(self, prefix="NS-DEV") -> str:
-        batch = str(self.batch.batch)
+        batch = str(self.batch.id)
         batch = "0" + batch if len(batch) == 1 else batch
 
         user_id = str(self.user_id)
