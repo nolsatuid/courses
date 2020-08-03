@@ -649,6 +649,11 @@ class Question(models.Model):
                                                "been answered."),
                                    verbose_name=_('Explanation'))
 
+    vendor = models.ForeignKey(
+        "vendors.Vendor", verbose_name=_("Vendor"),
+        on_delete=models.CASCADE, blank=True, null=True
+    )
+
     objects = InheritanceManager()
 
     class Meta:
