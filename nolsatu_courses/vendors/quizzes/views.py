@@ -1,10 +1,13 @@
 from django.contrib import messages
 from django.db import transaction
+from django.forms import formset_factory
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from quiz.models import Category, SubCategory
-from .forms import CategoryForm, SubCategoryForm
+from multichoice.models import MCQuestion, Answer
+from .forms import CategoryForm, SubCategoryForm, MCQuestionForm, AnswerForm, AnswerModelForm
 
 
 @staff_member_required
@@ -130,5 +133,63 @@ def edit_sub_category(request, sub_category_id):
         'title': _('Ubah Sub Kategori'),
         'form': form,
         'title_submit': 'Simpan'
+    }
+    return render(request, 'vendors/form-editor.html', context)
+
+
+@staff_member_required
+def list_question(request):
+    context = {
+        'menu_active': 'quiz',
+        'questions': MCQuestion.objects.filter(vendor__users__email=request.user.email),
+        'title': _('Pertanyaan Kuis'),
+        'sidebar': True,
+    }
+    return render(request, 'vendors/quizzes/question.html', context)
+
+
+@staff_member_required
+def ajax_filter_subcategory(request):
+    category = request.GET.get('category', None)
+    data = {
+        'sub_category': []
+    }
+    if category:
+        sub_category = SubCategory.objects.filter(category=category)
+        data['sub_category'] = [
+            {
+                'id': sub.id,
+                'sub_category': sub.sub_category
+            } for sub in sub_category
+        ]
+
+    return JsonResponse(data, status=200)
+
+
+@staff_member_required
+def create_question(request):
+    form = MCQuestionForm(prefix='question')
+    AnswerFormSet = formset_factory(AnswerForm, extra=3)
+    formset = AnswerFormSet(prefix='answer')
+    if request.method == 'POST':
+        form = MCQuestionForm(data=request.POST, prefix='question')
+        formset = AnswerFormSet(data=request.POST, prefix='answer')
+        if form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                question = form.save(request.user.vendors.first())
+                answer = [form.cleaned_data for form in formset]
+                for x in answer:
+                    AnswerModelForm(x).save(question)
+            messages.success(request, _(f"Berhasil tambah Pertanyaan {question.content}"))
+            return redirect('vendors:quizzes:question')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Tambah Pertanyaan'),
+        'form': form,
+        'formset': formset,
+        'title_submit': 'Simpan',
+        'code': 'question',
+        'formset_delete': False,
     }
     return render(request, 'vendors/form-editor.html', context)

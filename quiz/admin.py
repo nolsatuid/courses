@@ -81,7 +81,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
 class MCQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', 'sub_category')
     list_filter = ('category', 'sub_category')
-    fields = ('content', 'category', 'sub_category',
+    fields = ('content', 'vendor', 'category', 'sub_category',
               'figure', 'quiz', 'explanation', 'answer_order')
 
     search_fields = ('content', 'explanation')
