@@ -193,3 +193,12 @@ def create_question(request):
         'formset_delete': False,
     }
     return render(request, 'vendors/form-editor.html', context)
+
+
+@staff_member_required
+def delete_question(request, question_id):
+    category = get_object_or_404(MCQuestion, id=question_id, vendor__users__email=request.user.email)
+    with transaction.atomic():
+        category.delete()
+    messages.success(request, 'Berhasil hapus Pertanyaan')
+    return redirect('vendors:quizzes:question')

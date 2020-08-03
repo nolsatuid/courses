@@ -14,5 +14,5 @@ urlpatterns = [
     path('ajax-filter-sub-category/', views.ajax_filter_subcategory, name='ajax_filter_subcategory'),
     path('question/', views.list_question, name='question'),
     path('add-question/', views.create_question, name='create_question'),
-
+    path('delete-question/<int:question_id>', views.delete_question, name='delete_question'),
 ]
