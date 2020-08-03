@@ -22,7 +22,7 @@
                                         {{ form.media }}
                                         {{ form.non_field_errors }}
                                         {% for field in form %}
-                                            {% if field.name == "title" or field.name == "description" or field.name == "short_description" or field.name == "content" or field.name == "instruction" %}
+                                            {% if field.name == "sub_category" or field.name == "category" or field.name == "title" or field.name == "description" or field.name == "short_description" or field.name == "content" or field.name == "instruction" %}
                                             <div class="form-group col-md-12">
                                                 <label class="col-md-12"> {{ field.label }} </label>
                                                 <div class="col-md-12">
@@ -38,7 +38,7 @@
                                             {{ form.media }}
                                             {{ form.non_field_errors }}
                                             {% for field in form %}
-                                                {% if field.name != "title" and field.name != "description" and field.name != "short_description" and field.name != "content" and field.name != "instruction" %}
+                                                {% if field.name != "sub_category" and field.name != "category" and field.name != "title" and field.name != "description" and field.name != "short_description" and field.name != "content" and field.name != "instruction" %}
                                                 <div class="form-group col-md-12">
                                                     <label class="col-md-12"> {{ field.label }} </label>
                                                     <div class="col-md-12">
