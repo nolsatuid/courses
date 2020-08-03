@@ -27,19 +27,3 @@ class MCQuestionForm(forms.ModelForm):
         question.vendor = vendor
         question.save()
         return question
-
-
-class AnswerForm(forms.Form):
-    content = forms.CharField(label=_("Jawaban"), required=False)
-    correct = forms.BooleanField(label=_("Jawaban Benar"), required=False)
-
-
-class AnswerModelForm(forms.ModelForm):
-    class Meta:
-        model = Answer
-        fields = ('content', 'correct')
-
-    def save(self, question):
-        answer = super().save(commit=False)
-        answer.question = question
-        answer.save()

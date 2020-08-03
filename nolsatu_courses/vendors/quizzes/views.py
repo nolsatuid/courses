@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from quiz.models import Category, SubCategory
 from multichoice.models import MCQuestion, Answer
-from .forms import CategoryForm, SubCategoryForm, MCQuestionForm, AnswerForm, AnswerModelForm
+from .forms import CategoryForm, SubCategoryForm, MCQuestionForm
 
 
 @staff_member_required
@@ -168,18 +168,20 @@ def ajax_filter_subcategory(request):
 
 @staff_member_required
 def create_question(request):
-    form = MCQuestionForm(prefix='question')
-    AnswerFormSet = formset_factory(AnswerForm, extra=3)
-    formset = AnswerFormSet(prefix='answer')
+    form = MCQuestionForm(data=request.POST or None, prefix='question')
+    AnswerFormSet = modelformset_factory(Answer, extra=3, fields=('content', 'correct'), can_delete=True)
+    formset = AnswerFormSet(data=request.POST or None, queryset=Answer.objects.none(), prefix='answer')
     if request.method == 'POST':
-        form = MCQuestionForm(data=request.POST, prefix='question')
-        formset = AnswerFormSet(data=request.POST, prefix='answer')
         if form.is_valid() and formset.is_valid():
             with transaction.atomic():
                 question = form.save(request.user.vendors.first())
-                answer = [form.cleaned_data for form in formset]
-                for x in answer:
-                    AnswerModelForm(x).save(question)
+
+                instance = formset.save(commit=False)
+                for obj in formset.deleted_objects:
+                    obj.delete()
+                for i in instance:
+                    i.question = question
+                    i.save()
             messages.success(request, _(f"Berhasil tambah Pertanyaan {question.content}"))
             return redirect('vendors:quizzes:question')
 
@@ -224,7 +226,7 @@ def edit_question(request, question_id):
                 for i in instance:
                     i.question = question
                     i.save()
-            messages.success(request, _(f"Berhasil tambah Pertanyaan {question.content}"))
+            messages.success(request, _(f"Berhasil Ubah Pertanyaan {question.content}"))
             return redirect('vendors:quizzes:question')
 
     context = {
