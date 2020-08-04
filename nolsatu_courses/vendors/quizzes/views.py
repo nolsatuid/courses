@@ -1,10 +1,13 @@
 from django.contrib import messages
 from django.db import transaction
+from django.forms import modelformset_factory
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from quiz.models import Category, SubCategory
-from .forms import CategoryForm, SubCategoryForm
+from multichoice.models import MCQuestion, Answer
+from .forms import CategoryForm, SubCategoryForm, MCQuestionForm
 
 
 @staff_member_required
@@ -130,5 +133,109 @@ def edit_sub_category(request, sub_category_id):
         'title': _('Ubah Sub Kategori'),
         'form': form,
         'title_submit': 'Simpan'
+    }
+    return render(request, 'vendors/form-editor.html', context)
+
+
+@staff_member_required
+def list_question(request):
+    context = {
+        'menu_active': 'quiz',
+        'questions': MCQuestion.objects.filter(vendor__users__email=request.user.email),
+        'title': _('Pertanyaan Kuis'),
+        'sidebar': True,
+    }
+    return render(request, 'vendors/quizzes/question.html', context)
+
+
+@staff_member_required
+def ajax_filter_subcategory(request):
+    category = request.GET.get('category', None)
+    data = {
+        'sub_category': []
+    }
+    if category:
+        sub_category = SubCategory.objects.filter(category=category)
+        data['sub_category'] = [
+            {
+                'id': sub.id,
+                'sub_category': sub.sub_category
+            } for sub in sub_category
+        ]
+
+    return JsonResponse(data, status=200)
+
+
+@staff_member_required
+def create_question(request):
+    form = MCQuestionForm(data=request.POST or None, prefix='question')
+    AnswerFormSet = modelformset_factory(Answer, extra=3, fields=('content', 'correct'), can_delete=True)
+    formset = AnswerFormSet(data=request.POST or None, queryset=Answer.objects.none(), prefix='answer')
+    if request.method == 'POST':
+        if form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                question = form.save(request.user.vendors.first())
+
+                instance = formset.save(commit=False)
+                for obj in formset.deleted_objects:
+                    obj.delete()
+                for i in instance:
+                    i.question = question
+                    i.save()
+            messages.success(request, _(f"Berhasil tambah Pertanyaan {question.content}"))
+            return redirect('vendors:quizzes:question')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Tambah Pertanyaan'),
+        'form': form,
+        'formset': formset,
+        'title_submit': 'Simpan',
+        'code': 'question',
+        'formset_delete': False,
+    }
+    return render(request, 'vendors/form-editor.html', context)
+
+
+@staff_member_required
+def delete_question(request, question_id):
+    category = get_object_or_404(MCQuestion, id=question_id, vendor__users__email=request.user.email)
+    with transaction.atomic():
+        category.delete()
+    messages.success(request, 'Berhasil hapus Pertanyaan')
+    return redirect('vendors:quizzes:question')
+
+
+@staff_member_required
+def edit_question(request, question_id):
+    data_question = get_object_or_404(MCQuestion, id=question_id, vendor__users__email=request.user.email)
+    form = MCQuestionForm(data=request.POST or None, instance=data_question, prefix='question')
+
+    AnswerFormSet = modelformset_factory(Answer, extra=3, fields=('content', 'correct'), can_delete=True)
+    formset = AnswerFormSet(data=request.POST or None, queryset=Answer.objects.filter(
+        question=data_question).all(), prefix='answer')
+
+    if request.method == 'POST':
+        if form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                question = form.save(request.user.vendors.first())
+
+                instance = formset.save(commit=False)
+                for obj in formset.deleted_objects:
+                    obj.delete()
+                for i in instance:
+                    i.question = question
+                    i.save()
+            messages.success(request, _(f"Berhasil Ubah Pertanyaan {question.content}"))
+            return redirect('vendors:quizzes:question')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Ubah Pertanyaan'),
+        'form': form,
+        'formset': formset,
+        'title_submit': 'Simpan',
+        'code': 'question',
+        'formset_delete': True,
     }
     return render(request, 'vendors/form-editor.html', context)
