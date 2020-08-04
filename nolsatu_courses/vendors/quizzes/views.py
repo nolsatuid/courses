@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.db import transaction
-from django.forms import formset_factory, modelformset_factory
+from django.forms import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _

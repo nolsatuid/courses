@@ -1,5 +1,4 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
 from multichoice.models import MCQuestion, Answer
 from quiz.models import Category, SubCategory
 
