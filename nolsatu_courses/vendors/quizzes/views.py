@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
-from quiz.models import Category, SubCategory
+from quiz.models import Category, SubCategory, Quiz
 from multichoice.models import MCQuestion, Answer
 from .forms import CategoryForm, SubCategoryForm, MCQuestionForm
 
@@ -239,3 +239,14 @@ def edit_question(request, question_id):
         'formset_delete': True,
     }
     return render(request, 'vendors/form-editor.html', context)
+
+
+@staff_member_required
+def list_quiz(request):
+    context = {
+        'menu_active': 'quiz',
+        'quizzes': Quiz.objects.filter(category__vendor__users__email=request.user.email),
+        'title': _('Daftar Kuis'),
+        'sidebar': True,
+    }
+    return render(request, 'vendors/quizzes/quiz.html', context)
