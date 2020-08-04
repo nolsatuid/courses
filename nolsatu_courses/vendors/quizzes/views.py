@@ -267,3 +267,21 @@ def create_quiz(request):
         'title_submit': 'Simpan'
     }
     return render(request, 'vendors/form-quiz.html', context)
+
+
+@staff_member_required
+def edit_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    form = FormQuizVendor(data=request.POST or None, instance=quiz, user_email=request.user.email)
+    if form.is_valid():
+        quiz = form.save()
+        messages.success(request, _(f"Berhasil ubah kursus {quiz.title}"))
+        return redirect('vendors:quizzes:list_quiz')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Ubah Kuis'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+    return render(request, 'vendors/form-quiz.html', context)

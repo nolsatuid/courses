@@ -24,7 +24,7 @@
                             <td>{{ quiz.draft|yesno:"<span class='badge badge-danger'>Konsep</span>, <span class='badge badge-success'>Terbit</span>"|safe }}</td>
                             <td>{{ quiz.start_time.date }} <br> {{ quiz.start_time|date:"H:i" }} - {{ quiz.end_time|date:"H:i" }}</td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:edit' quiz.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i> Edit</a>
+                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'vendors:quizzes:edit_quiz' quiz.id %}" data-toggle="tooltip" title="Ubah"><i class="fas fa-edit"></i> Edit</a>
                             </td>
                         </tr>
                     {% endfor %}
