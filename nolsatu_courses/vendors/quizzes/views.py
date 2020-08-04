@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from quiz.models import Category, SubCategory, Quiz
 from multichoice.models import MCQuestion, Answer
-from .forms import CategoryForm, SubCategoryForm, MCQuestionForm
+from .forms import CategoryForm, SubCategoryForm, MCQuestionForm, FormQuizVendor
 
 
 @staff_member_required
@@ -250,3 +250,20 @@ def list_quiz(request):
         'sidebar': True,
     }
     return render(request, 'vendors/quizzes/quiz.html', context)
+
+
+@staff_member_required
+def create_quiz(request):
+    form = FormQuizVendor(data=request.POST or None, user_email=request.user.email)
+    if form.is_valid():
+        quiz = form.save()
+        messages.success(request, _(f"Berhasil tambah kuis {quiz.title}"))
+        return redirect('vendors:quizzes:list_quiz')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Tambah Kuis'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+    return render(request, 'vendors/form-quiz.html', context)
