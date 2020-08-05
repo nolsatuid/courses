@@ -58,3 +58,11 @@ def test_login(request):
         'courses': Courses.objects.all()
     }
     return render(request, 'website/index.html', context)
+
+
+def error_404(request):
+    return render(request, '404.html', {})
+
+
+def error_500(request):
+    return render(request, '500.html', {})
