@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.conf.urls import handler404, handler500
 from . import views
 
 app_name = 'website'
@@ -11,5 +12,7 @@ urlpatterns = [
     path('courses/', include('nolsatu_courses.website.courses.urls')),
     path('modules/', include('nolsatu_courses.website.modules.urls')),
     path('sections/', include('nolsatu_courses.website.sections.urls')),
-    path('apps/', include('nolsatu_courses.website.apps.urls'))
+    path('apps/', include('nolsatu_courses.website.apps.urls')),
+    path('error404/', views.error_404, name='error404'),
+    path('error500/', views.error_500, name='error500'),
 ]
