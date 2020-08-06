@@ -1,8 +1,8 @@
 from django import forms
 from multichoice.models import MCQuestion, Answer
 from quiz.models import Category, SubCategory, Question
-from nolsatu_courses.backoffice.quizzes.forms import FormQuiz
-from nolsatu_courses.apps.courses.models import Courses
+from nolsatu_courses.backoffice.quizzes.forms import FormQuiz, FormFilterQuizzes
+from nolsatu_courses.apps.courses.models import Courses, Batch
 
 
 class CategoryForm(forms.ModelForm):
@@ -39,3 +39,11 @@ class FormQuizVendor(FormQuiz):
         self.fields['category'].queryset = Category.objects.filter(vendor__users__email=user_email)
         self.fields['courses'].queryset = Courses.objects.filter(vendor__users__email=user_email)
         self.fields['questions'].queryset = Question.objects.filter(vendor__users__email=user_email)
+
+
+class FormFilterQuizzesVendor(FormFilterQuizzes):
+    def __init__(self, *args, **kwargs):
+        user_email = kwargs.pop('user_email', None)
+        super(FormFilterQuizzesVendor, self).__init__(*args, **kwargs)
+        self.fields['course'].queryset = Courses.objects.filter(vendor__users__email=user_email)
+        self.fields['batch'].queryset = Batch.objects.filter(course__vendor__users__email=user_email)
