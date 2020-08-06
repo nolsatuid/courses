@@ -8,7 +8,7 @@
 {% block content %}
 <div class="col-sm-12">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'backoffice:quizzes:results'%}">Hasil Kuis</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vendors:quizzes:result_quiz'%}">Hasil Kuis</a></li>
         <li class="breadcrumb-item active">Detail Hasil Kuis</li>
     </ol>
 </div>
@@ -38,7 +38,7 @@
                             <td>{{ result.get_percent_correct }}</td>
                             <td>{{ result.get_status_display }}</td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'backoffice:quizzes:participant_result' result.id batch %}"><i class="fas fa-eye"></i> Lihat Detail</a>
+                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'vendors:quizzes:participant_result' result.id batch %}"><i class="fas fa-eye"></i> Lihat Detail</a>
                             </td>  
                         </tr>
                     {% endfor %}

@@ -332,7 +332,8 @@ def detail_result(request, quiz_id, batch_id):
 
 @staff_member_required
 def participant_result(request, id, batch):
-    sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
+    sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id,
+                                quiz__category__vendor__users__email=request.user.email)
 
     context = {
         'menu_active': 'quiz',
@@ -341,4 +342,4 @@ def participant_result(request, id, batch):
         'questions': sitting.get_questions(with_answers=True),
         'batch': batch
     }
-    return render(request, 'backoffice/quizzes/participant-results.html', context)
+    return render(request, 'vendors/quizzes/participant-results.html', context)
