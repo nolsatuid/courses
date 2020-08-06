@@ -5,9 +5,10 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
-from quiz.models import Category, SubCategory, Quiz
+from quiz.models import Category, SubCategory, Quiz, Sitting
 from multichoice.models import MCQuestion, Answer
 from .forms import CategoryForm, SubCategoryForm, MCQuestionForm, FormQuizVendor, FormFilterQuizzesVendor
+from nolsatu_courses.apps.courses.models import Enrollment
 
 
 @staff_member_required
@@ -310,3 +311,34 @@ def result_quiz(request):
         'batch': batch.id if batch else None
     }
     return render(request, 'vendors/quizzes/results.html', context)
+
+
+@staff_member_required
+def detail_result(request, quiz_id, batch_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id, category__vendor__users__email=request.user.email)
+    user_ids = Enrollment.objects.filter(batch_id=batch_id).values_list('user__id', flat=True)
+    results = Sitting.objects.select_related('user', 'quiz') \
+        .filter(quiz=quiz, user__id__in=user_ids).order_by('-current_score')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Detail Hasil Kuis'),
+        'quiz': quiz,
+        'results': results,
+        'batch': batch_id
+    }
+    return render(request, 'vendors/quizzes/detail-results.html', context)
+
+
+@staff_member_required
+def participant_result(request, id, batch):
+    sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Detail Hasil Partisipan'),
+        'sitting': sitting,
+        'questions': sitting.get_questions(with_answers=True),
+        'batch': batch
+    }
+    return render(request, 'backoffice/quizzes/participant-results.html', context)
