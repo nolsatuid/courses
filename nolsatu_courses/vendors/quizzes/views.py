@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.db import transaction
 from django.forms import modelformset_factory
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
-from quiz.models import Category, SubCategory, Quiz
+from quiz.models import Category, SubCategory, Quiz, Sitting
 from multichoice.models import MCQuestion, Answer
-from .forms import CategoryForm, SubCategoryForm, MCQuestionForm, FormQuizVendor
+from .forms import CategoryForm, SubCategoryForm, MCQuestionForm, FormQuizVendor, FormFilterQuizzesVendor
+from nolsatu_courses.apps.courses.models import Enrollment
 
 
 @staff_member_required
@@ -285,3 +286,60 @@ def edit_quiz(request, quiz_id):
         'title_submit': 'Simpan'
     }
     return render(request, 'vendors/form-quiz.html', context)
+
+
+@staff_member_required
+def result_quiz(request):
+    quizzes = None
+    batch = None
+    download = request.GET.get('download', '')
+    form = FormFilterQuizzesVendor(request.GET or None, user_email=request.user.email)
+    if form.is_valid():
+        batch = form.cleaned_data['batch']
+        quizzes = form.get_data()
+        if download:
+            csv_buffer = form.download_report()
+            response = HttpResponse(csv_buffer.getvalue(), content_type="text/csv")
+            response['Content-Disposition'] = f'attachment; filename=Quiz-Angkatan{batch}.csv'
+            return response
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Hasil Kuis'),
+        'quizzes': quizzes,
+        'form': form,
+        'batch': batch.id if batch else None
+    }
+    return render(request, 'vendors/quizzes/results.html', context)
+
+
+@staff_member_required
+def detail_result(request, quiz_id, batch_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id, category__vendor__users__email=request.user.email)
+    user_ids = Enrollment.objects.filter(batch_id=batch_id).values_list('user__id', flat=True)
+    results = Sitting.objects.select_related('user', 'quiz') \
+        .filter(quiz=quiz, user__id__in=user_ids).order_by('-current_score')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Detail Hasil Kuis'),
+        'quiz': quiz,
+        'results': results,
+        'batch': batch_id
+    }
+    return render(request, 'vendors/quizzes/detail-results.html', context)
+
+
+@staff_member_required
+def participant_result(request, id, batch):
+    sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id,
+                                quiz__category__vendor__users__email=request.user.email)
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Detail Hasil Partisipan'),
+        'sitting': sitting,
+        'questions': sitting.get_questions(with_answers=True),
+        'batch': batch
+    }
+    return render(request, 'vendors/quizzes/participant-results.html', context)
