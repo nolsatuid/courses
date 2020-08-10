@@ -10,4 +10,5 @@ urlpatterns = [
     path('batchs/', include('nolsatu_courses.vendors.batchs.urls')),
     path('tasks/', include('nolsatu_courses.vendors.tasks.urls')),
     path('quizzes/', include('nolsatu_courses.vendors.quizzes.urls')),
+    path('graduates/', include('nolsatu_courses.vendors.graduates.urls')),
 ]
