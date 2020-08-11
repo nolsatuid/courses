@@ -60,3 +60,19 @@ def candidate_to_graduate(request, candidate_id):
         }
         return JsonResponse(data, status=200)
     return redirect('vendors:graduates:candidate')
+
+
+@staff_member_required
+def graduate(request):
+    graduates = []
+    form = FormFilterStudentVendor(request.GET or None, user_email=request.user.email)
+    if form.is_valid():
+        graduates = form.get_data(status=Enrollment.STATUS.graduate)
+
+    context = {
+        'menu_active': 'graduate',
+        'title': _('Lulusan'),
+        'graduates': graduates,
+        'form': form
+    }
+    return render(request, 'vendors/graduates/index.html', context)
