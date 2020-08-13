@@ -34,6 +34,14 @@ def enroll_required(view_func):
             course = obj.module.course
             is_started = obj.module.course.is_started()
 
+        if not enroll:
+            messages.warning(
+                request,
+                _("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
+                    " dan admin telah menyetujui kamu sebagai peserta.")
+            )
+            return redirect('website:index')
+
         if not is_started or (enroll.date_limit_access < course.get_last_batch().start_date):
             messages.warning(
                 request,
@@ -49,7 +57,8 @@ def enroll_required(view_func):
         messages.warning(
             request,
             _("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
-              " dan admin telah menyetujui kamu sebagai peserta.")
+                " dan admin telah menyetujui kamu sebagai peserta.")
         )
         return redirect('website:index')
+
     return _wrapped_view

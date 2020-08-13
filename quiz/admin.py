@@ -119,7 +119,7 @@ class EssayQuestionAdmin(admin.ModelAdmin):
 class SittingAdmin(admin.ModelAdmin):
     list_display = ('quiz', 'user', )
     list_filter = ('quiz',)
-    search_fields = ('quiz', 'user', )
+    search_fields = ('quiz__title', 'user__username', )
 
 
 admin.site.register(Quiz, QuizAdmin)
