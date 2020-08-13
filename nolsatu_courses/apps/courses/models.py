@@ -342,6 +342,19 @@ class Module(models.Model):
 
         return response
 
+    def get_or_create_activity(self, user, course):
+        """
+        this method to handle race condition and auto delete duplicate data
+        """
+        activities = self.activities_module.filter(user=user, course=course)
+        if activities:
+            act = activities.first()
+            if len(activities) > 1:
+                activities.exclude(id=act.id).delete()
+        else:
+            act = self.activities_module.create(user=user, course=course)
+        return act
+
 
 class SectionManager(models.Manager):
     def publish(self):
@@ -425,6 +438,19 @@ class Section(models.Model):
 
     def delete_cache(self, user):
         cache.delete(f'section-{self.id}-activity-{user.username}')
+
+    def get_or_create_activity(self, user, course):
+        """
+        this method to handle race condition and auto delete duplicate data
+        """
+        activities = self.activities_section.filter(user=user, course=course)
+        if activities:
+            act = activities.first()
+            if len(activities) > 1:
+                activities.exclude(id=act.id).delete()
+        else:
+            act = self.activities_section.create(user=user, course=course)
+        return act
 
 
 class TaskUploadSettings(models.Model):
