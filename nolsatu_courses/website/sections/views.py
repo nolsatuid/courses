@@ -93,8 +93,7 @@ def details(request, slug):
 
     # save activities user to section
     if section.has_enrolled(request.user):
-        section.activities_section.get_or_create(
-            user=request.user, course=section.module.course)
+        section.get_or_create_activity(user=request.user, course=section.module.course)
         section.delete_cache(request.user)
 
     return render(request, 'website/sections/details.html', context)
