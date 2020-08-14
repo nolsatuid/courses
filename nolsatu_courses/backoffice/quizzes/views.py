@@ -181,10 +181,8 @@ def list_category(request):
 def create_category(request):
     form = CategoryFormBackoffice(data=request.POST or None)
     if form.is_valid():
-        category = form.save(commit=False)
-        category.vendor = request.user.vendors.first()
         with transaction.atomic():
-            category.save()
+            category = form.save()
         messages.success(request, _(f"Berhasil tambah Kategori {category.category}"))
         return redirect('backoffice:quizzes:category')
 
