@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
@@ -5,9 +6,9 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 
-from quiz.models import Quiz, Sitting, Question, SubCategory
+from quiz.models import Quiz, Sitting, Question, SubCategory, Category
 from nolsatu_courses.apps.courses.models import Enrollment
-from .forms import FormQuiz, FormFilterQuizzes
+from .forms import FormQuiz, FormFilterQuizzes, CategoryFormBackoffice
 
 
 @staff_member_required
@@ -162,3 +163,62 @@ def participant_result(request, id, batch):
         'batch': batch
     }
     return render(request, 'backoffice/quizzes/participant-results.html', context)
+
+
+@staff_member_required
+def list_category(request):
+    context = {
+        'menu_active': 'quiz',
+        'categories': Category.objects.all(),
+        'title': _('Kategori Kuis'),
+        'sidebar': True,
+    }
+    return render(request, 'backoffice/quizzes/category.html', context)
+
+
+@staff_member_required
+def create_category(request):
+    form = CategoryFormBackoffice(data=request.POST or None)
+    if form.is_valid():
+        category = form.save(commit=False)
+        category.vendor = request.user.vendors.first()
+        with transaction.atomic():
+            category.save()
+        messages.success(request, _(f"Berhasil tambah Kategori {category.category}"))
+        return redirect('backoffice:quizzes:category')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Tambah Kategori'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+    return render(request, 'backoffice/form-editor.html', context)
+
+
+@staff_member_required
+def edit_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    form = CategoryFormBackoffice(data=request.POST or None, instance=category)
+    if form.is_valid():
+        with transaction.atomic():
+            category = form.save()
+        messages.success(request, _(f"Berhasil ubah kategori {category.category}"))
+        return redirect('backoffice:quizzes:category')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Ubah Kategori'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+    return render(request, 'backoffice/form-editor.html', context)
+
+
+@staff_member_required
+def delete_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    with transaction.atomic():
+        category.delete()
+    messages.success(request, 'Berhasil hapus Kategori')
+    return redirect('backoffice:quizzes:category')

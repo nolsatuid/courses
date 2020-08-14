@@ -6,12 +6,11 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from quiz.admin import QuizAdminForm
-from quiz.models import Quiz, Sitting
+from quiz.models import Quiz, Sitting, Question, SubCategory, Category
 from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment
 
 
 class FormQuiz(QuizAdminForm):
-
     class Media:
         css = {'all': ('admin/css/widgets.css',)}
         js = ('admin/jquery.js', '/admin/jsi18n/')
@@ -52,15 +51,15 @@ class FormFilterQuizzes(forms.Form):
     )
 
     def get_data(self):
-        quizzes = Quiz.objects.filter(courses=self.cleaned_data['course'])        
+        quizzes = Quiz.objects.filter(courses=self.cleaned_data['course'])
 
         return quizzes
 
     def download_report(self):
         csv_buffer = StringIO()
         writer = csv.writer(csv_buffer)
-        
-        enrolls = Enrollment.objects.filter(batch=self.cleaned_data['batch'])  
+
+        enrolls = Enrollment.objects.filter(batch=self.cleaned_data['batch'])
         sittings = Sitting.objects.filter(user__id__in=enrolls.values_list('user__id', flat=True)) \
             .select_related('user', 'quiz')
 
@@ -68,10 +67,10 @@ class FormFilterQuizzes(forms.Form):
         for quiz in self.get_data():
             title.append(quiz.title)
         writer.writerow(title)
-        
+
         for enroll in enrolls:
             result = [f'{enroll.user.get_full_name()} ({enroll.user.username})']
-            for quiz in self.get_data():                
+            for quiz in self.get_data():
                 score_quiz = sittings.filter(user=enroll.user, quiz=quiz)
                 if score_quiz:
                     result.append(score_quiz.first().get_percent_correct)
@@ -80,3 +79,9 @@ class FormFilterQuizzes(forms.Form):
             writer.writerow(result)
 
         return csv_buffer
+
+
+class CategoryFormBackoffice(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
