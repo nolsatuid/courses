@@ -5,11 +5,13 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
+from django.forms import modelformset_factory
 
 from quiz.models import Quiz, Sitting, Question, SubCategory, Category
 from nolsatu_courses.apps.courses.models import Enrollment
+from multichoice.models import MCQuestion, Answer
 from nolsatu_courses.vendors.quizzes.forms import SubCategoryForm
-from .forms import FormQuiz, FormFilterQuizzes, CategoryFormBackoffice
+from .forms import FormQuiz, FormFilterQuizzes, CategoryFormBackoffice, MCQuestionFormBackoffice
 
 
 @staff_member_required
@@ -284,5 +286,109 @@ def edit_sub_category(request, sub_category_id):
         'title': _('Ubah Sub Kategori'),
         'form': form,
         'title_submit': 'Simpan'
+    }
+    return render(request, 'backoffice/form-editor.html', context)
+
+
+@staff_member_required
+def ajax_filter_category(request):
+    vendor = request.GET.get('vendor', None)
+    data = {
+        'category': []
+    }
+    if vendor:
+        category = Category.objects.filter(vendor=vendor)
+        data['category'] = [
+            {
+                'id': cat.id,
+                'category': cat.category
+            } for cat in category
+        ]
+
+    return JsonResponse(data, status=200)
+
+
+@staff_member_required
+def list_question(request):
+    context = {
+        'menu_active': 'quiz',
+        'questions': MCQuestion.objects.all(),
+        'title': _('Pertanyaan Kuis'),
+        'sidebar': True,
+    }
+    return render(request, 'backoffice/quizzes/question.html', context)
+
+
+@staff_member_required
+def create_question(request):
+    form = MCQuestionFormBackoffice(data=request.POST or None, prefix='question')
+    AnswerFormSet = modelformset_factory(Answer, extra=3, fields=('content', 'correct'), can_delete=True)
+    formset = AnswerFormSet(data=request.POST or None, queryset=Answer.objects.none(), prefix='answer')
+    if request.method == 'POST':
+        if form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                question = form.save()
+
+                instance = formset.save(commit=False)
+                for obj in formset.deleted_objects:
+                    obj.delete()
+                for i in instance:
+                    i.question = question
+                    i.save()
+            messages.success(request, _(f"Berhasil tambah Pertanyaan {question.content}"))
+            return redirect('backoffice:quizzes:question')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Tambah Pertanyaan'),
+        'form': form,
+        'formset': formset,
+        'title_submit': 'Simpan',
+        'code': 'question',
+        'formset_delete': False,
+    }
+    return render(request, 'backoffice/form-editor.html', context)
+
+
+@staff_member_required
+def delete_question(request, question_id):
+    category = get_object_or_404(MCQuestion, id=question_id)
+    with transaction.atomic():
+        category.delete()
+    messages.success(request, 'Berhasil hapus Pertanyaan')
+    return redirect('backoffice:quizzes:question')
+
+
+@staff_member_required
+def edit_question(request, question_id):
+    data_question = get_object_or_404(MCQuestion, id=question_id)
+    form = MCQuestionFormBackoffice(data=request.POST or None, instance=data_question, prefix='question')
+
+    AnswerFormSet = modelformset_factory(Answer, extra=3, fields=('content', 'correct'), can_delete=True)
+    formset = AnswerFormSet(data=request.POST or None, queryset=Answer.objects.filter(
+        question=data_question).all(), prefix='answer')
+
+    if request.method == 'POST':
+        if form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                question = form.save()
+
+                instance = formset.save(commit=False)
+                for obj in formset.deleted_objects:
+                    obj.delete()
+                for i in instance:
+                    i.question = question
+                    i.save()
+            messages.success(request, _(f"Berhasil Ubah Pertanyaan {question.content}"))
+            return redirect('backoffice:quizzes:question')
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Ubah Pertanyaan'),
+        'form': form,
+        'formset': formset,
+        'title_submit': 'Simpan',
+        'code': 'question',
+        'formset_delete': True,
     }
     return render(request, 'backoffice/form-editor.html', context)
