@@ -6,6 +6,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from quiz.admin import QuizAdminForm
+from multichoice.models import MCQuestion, Answer
 from quiz.models import Quiz, Sitting, Question, SubCategory, Category
 from nolsatu_courses.apps.courses.models import Courses, Batch, Enrollment
 
@@ -85,3 +86,10 @@ class CategoryFormBackoffice(forms.ModelForm):
     class Meta:
         model = Category
         fields = '__all__'
+
+
+class MCQuestionFormBackoffice(forms.ModelForm):
+    class Meta:
+        model = MCQuestion
+        fields = ('content', 'vendor', 'category', 'sub_category',
+                  'figure', 'explanation', 'answer_order')
