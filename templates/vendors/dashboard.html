@@ -179,7 +179,7 @@
                 <thead>
                     <th>No</th>
                     <th>Kuis</th>
-                    <th>Nilai  Sempurna</th>
+                    <th>Nilai Sempurna</th>
                     <th>Lulus</th>
                     <th>Tidak Lulus</th>
                 </thead>
@@ -190,7 +190,7 @@
                             <td>
                                 <a href="{% url 'vendors:quizzes:detail_result' data.sitting.quiz.id batch %}">{{ data.sitting.quiz }}</a>
                             </td>
-                            <td>{{ data.score }} a.n <a href="{% url 'vendors:quizzes:participant_result' data.sitting.id batch %}">{{ data.sitting.user }}</a></td>
+                            <td>{{ data.perfect_score }}</td>
                             <td>{{ data.pass }}</td>
                             <td>{{ data.not_pass }}</td>
                         </tr>
