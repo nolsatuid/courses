@@ -15,17 +15,15 @@
             {% if enroll.finishing_date %}
                 <div class="alert alert-success" >
                     Yeey, kamu sudah menyelesaikan semua materi pada tanggal {{ enroll.finishing_date }}. 
-                    Tetap pantau tugas kamu ya, pastikan kamu lulus disemua tugas supaya bisa dapat sertifikat.<br><br> 
-                    Klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk melihat semua materi.
+                    Tetap pantau tugas kamu ya, pastikan kamu lulus disemua tugas supaya bisa dapat sertifikat.<br>                   
                 </div>
+                <a href="{% url 'website:modules:details' course.get_first_module.slug %}" class="btn btn-outline-primary btn-block">Masuk Kelas</a>
             {% elif enroll.get_status_display == 'Daftar' %}
                 <div class="alert alert-success" >
                     Kamu sudah terdaftar dikelas ini. Kami harus menyeleksi semua pendaftar yang masuk sebelum kelas dimulai. Tunggu info selanjutnya ya.
                 </div>
             {% else %}
-                <div class="alert alert-warning" >
-                    Kamu sudah terdaftar dikelas ini, klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk memulai atau melanjutkan kelasmu
-                </div>
+                <a href="{% url 'website:modules:details' course.get_first_module.slug %}" class="btn btn-outline-primary btn-block">Masuk Kelas</a>
             {% endif %}
         {% else %}
             {% if batch and not course.is_started %}

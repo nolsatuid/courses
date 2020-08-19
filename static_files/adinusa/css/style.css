@@ -7364,3 +7364,29 @@ color: #ccc;
   font-family: "Roboto", sans-serif !important;
   color: black;
 }
+
+.special_level{
+  background-color: #3295ff;
+  padding: 10px 21px;
+  background: #3295ff;
+  text-transform: capitalize;
+  display: inline-block;
+  border: 2px solid transparent;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  color: #fff;
+}
+
+.special_img_card {
+  border: 1px solid #edeff2; 
+  border-bottom: 0px; 
+  height: 330px; 
+  font-weight: 10;
+}
+
+.normal-price {
+  font-size: 9pt; 
+  float: right; 
+  color: #888888; 
+  margin-bottom: -20px;
+}

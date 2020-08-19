@@ -1,24 +1,64 @@
-{% load static tags_courses %}
+{% load static tags_courses humanize %}
+
+{% block extra_css %}
+<style>
+</style>
+{% endblock %}
 
 <div class="col-sm-6 col-lg-4 mb-5 pb-5">
     <div class="single_special_cource">
-        {% if course.status == 1 %}
+        {% if course.course.status == 1 %}
             <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 25px;">{{ course.get_status_display }}</span>
         {% endif %}
-        {% if course.featured_image %}
-            <img class="special_img" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}" style="width: 100%;">
+        {% if course.course.featured_image %}
+        <div class="special_img special_img_card">
+            <a href="{% url 'website:courses:details' course.course.slug %}">
+                <img src="{{ course.course.featured_image.url }}" alt="{{ course.course.featured_image.name}}" style="width: 100%;">
+            </a>
+        </div>
         {% endif %}
         <div class="special_cource_text">
-            <a href="{% url 'website:courses:details' course.slug %}">
-                <h3>{{ course.title }}</h3>
-            </a>
+            <div class="special_level">{{ course.course.get_level_display }}</div>
+            <span>
+                {% if course.has_enrolled %}
+                    <a href="{% url 'website:courses:details' course.course.slug %}" class="genric-btn info-border radius float-right large">Masuk Kelas</a>
+                {% else %}
+                <h4>
+                    {% if course.course.product.discount %}
+                        <span class="normal-price">IDR <s>{{ course.course.product.discount|intcomma }}</s></span><br>    
+                    {% endif %}
+                    {% if course.course.product.price %}IDR {{ course.course.product.price|intcomma }}{% else %}GRATIS{% endif %}
+                </h4>
+                {% endif %}
+            </span>            
+            <a href="{% url 'website:courses:details' course.course.slug %}"><h3>{{ course.course.title }}</h3></a>
             <p>
                 {% if "MARKDOWN_CONTENT"|get_toggle %}
-                    {{ course.short_description_md|show_markdown|safe|truncatechars:100 }}
+                    {{ course.course.short_description_md|show_markdown|safe|truncatechars:100 }}
                 {% else %}
-                    {{ course.short_description|safe|truncatechars:100 }}
+                    {{ course.course.short_description|safe|truncatechars:100 }}
                 {% endif %}
             </p>
+            <div class="author_info">
+                <div class="">
+                    <div class="author_info_text">
+                        <p>Disediakan oleh:</p>                                        
+                        <img class="mt-2" src="https://btech.id/static/website/images/btech-logo-new-35px.png" alt="">
+                    </div>
+                </div>
+                <!--
+                <div class="author_rating">
+                    <div class="rating">
+                        <a href="#"><img src="img/icon/color_star.svg" alt=""></a>
+                        <a href="#"><img src="img/icon/color_star.svg" alt=""></a>
+                        <a href="#"><img src="img/icon/color_star.svg" alt=""></a>
+                        <a href="#"><img src="img/icon/color_star.svg" alt=""></a>
+                        <a href="#"><img src="img/icon/star.svg" alt=""></a>
+                    </div>
+                    <p>3.8 Ratings</p>
+                </div>
+                -->
+            </div>
         </div>
 
     </div>
