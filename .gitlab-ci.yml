@@ -1,0 +1,53 @@
+stages:
+- update
+
+update-to-development:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/nolsatu-courses/dev-courseupdate.sh && sudo bash /var/www/html/nolsatu-courses/dev-courseupdate.sh
+  only:
+    - /-DEV$/
+    - master
+  except:
+    - branches
+  tags:
+    - runner-development
+
+stages:
+- update
+
+update-to-development:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/devcourseadi/dev-courseadinusaupdate.sh && sudo bash /var/www/html/devcourseadi/dev-courseadinusaupdate.sh
+  only:
+    - /-ADICOURSE$/
+    - dev-course.adinusa.id
+  except:
+    - branches
+  tags:
+    - runner-development
+    
+update-to-development:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/devcoursetest/devcoursetest.sh && sudo bash /var/www/html/devcoursetest/devcoursetest.sh
+  only:
+    - /-DEV-ACAD/
+    - course_test
+  except:
+    - branches
+  tags:
+    - runner-development
+    
+update-to-production:
+  stage: update
+  script:
+    - sudo chmod +x /var/www/html/course_test/coursetest.sh && sudo bash /var/www/html/course_test/coursetest.sh
+  only:
+    - /-DEV-WEBTEST$/
+    - course_test
+  except:
+    - branches
+  tags:
+    - runner-production

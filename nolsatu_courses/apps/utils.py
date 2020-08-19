@@ -1,7 +1,11 @@
 import datetime
-
 import jwt
 import requests
+import markdown
+
+from markdown.treeprocessors import Treeprocessor
+from markdown.extensions import Extension
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -68,13 +72,17 @@ def update_user(identificator, type_identificator='id', user=None):
     if created or not hasattr(user, 'nolsatu'):
         # save other data from nolsatu to model MemberNolsatu
         MemberNolsatu.objects.create(
-            user=user, id_nolsatu=data["id"],
-            avatar=profile.get("avatar", ""), phone_number=data['phone']
+            user=user,
+            id_nolsatu=data["id"],
+            role=data["role"],
+            avatar=profile.get("avatar", ""),
+            phone_number=data['phone']
         )
 
     # update data from response
     user.nolsatu.avatar = profile.get("avatar", "")
     user.nolsatu.id_nolsatu = data['id']
+    user.nolsatu.role = data['role']
     user.nolsatu.phone_number = data['phone']
 
     return user
@@ -109,3 +117,40 @@ def get_user_academy(type_identificator, identificator):
     else:
         url = f"{settings.NOLSATU_HOST}/api/internal/get-user?username={identificator}"
     return call_internal_api("get", url)
+
+
+def md_extract_img(text) -> [str]:
+    """
+    function to get src image/path image
+    """
+    md = markdown.Markdown(extensions=[ImageExtension()])
+    md.convert(text)
+    return md.images
+
+
+class InlineImageProcessor(Treeprocessor):
+    """
+    treeprocessor to get all images
+    """
+    def run(self, root):
+        self.md.images = []
+        for element in root.iter('img'):
+            attrib = element.attrib
+            self.md.images.append(attrib['src'])
+
+
+class ImageExtension(Extension):
+    """
+    create markdown extensions
+    """
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(
+            InlineImageProcessor(md), 'inlineimageprocessor', 15)
+
+
+def check_on_activity(slug, type_field='module'):
+    from nolsatu_courses.apps.courses.models import Activity
+    if type_field == 'section':
+        return Activity.objects.filter(section__slug=slug).exists()
+    else:
+        return Activity.objects.filter(module__slug=slug).exists()

@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+import pdfkit
+
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models
@@ -8,6 +10,8 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import When, Case, Count, IntegerField
+from django.template.loader import get_template
+from django.http import HttpResponse
 
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -63,10 +67,7 @@ class Courses(models.Model):
 
     @property
     def featured_image_with_host(self):
-        if self.featured_image:
-            return settings.HOST + self.featured_image.url
-        else:
-            return None
+        return settings.HOST + self.get_featured_image_url()
 
     @property
     def author_name(self):
@@ -74,12 +75,21 @@ class Courses(models.Model):
             return self.vendor.name
         return self.author.get_full_name()
 
+    def get_featured_image_url(self):
+        if self.featured_image:
+            return self.featured_image.url
+
+        from django.templatetags.static import static
+        return static(settings.COURSE_IMAGE_PLACEHOLDER_STATIC)
+
     def save(self, *args, **kwargs):
         if self.slug:
             self.slug = generate_unique_slug(Courses, self.slug, self.id)
         else:
             self.slug = generate_unique_slug(Courses, self.title, self.id)
         super().save(*args, **kwargs)
+        key = f'course-{self.id}'
+        cache.delete(key)
 
     def category_list(self):
         return ", ".join(category.name for category in self.category.all())
@@ -131,9 +141,18 @@ class Courses(models.Model):
         else:
             return False
 
-    def get_first_module(self):
-        module = self.modules.first()
-        return module
+    def get_first_module(self, use_cache=False):
+        if use_cache:
+            key = f'course-{self.id}'
+            mod_cache = cache.get(key)
+            if mod_cache:
+                return mod_cache
+
+            module = self.modules.first()
+            cache.set(key, module, 60 * 5)
+            return module
+        else:
+            return self.modules.first()
 
     def get_enroll(self, user):
         """
@@ -141,7 +160,7 @@ class Courses(models.Model):
         """
         if user == AnonymousUser():
             return None
-        enroll = self.enrolled.filter(user=user).first()
+        enroll = self.enrolled.filter(user=user, batch__isnull=False).first()
         return enroll
 
     def number_of_step(self):
@@ -251,42 +270,90 @@ class Module(models.Model):
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             next_slug = slugs[index + 1]
         except (AssertionError, IndexError):
-            next_slug = None
+            return None
         return Module.objects.filter(slug=next_slug).first()
 
     def get_prev(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             prev_slug = slugs[index - 1]
         except (AssertionError, IndexError):
-            prev_slug = None
+            return None
         return Module.objects.filter(slug=prev_slug).first()
 
     def has_enrolled(self, user):
         return self.course.has_enrolled(user)
 
     def on_activity(self, user):
-        key = f'module-activity-{user.username}'
+        key = f'module-{self.id}-activity-{user.username}'
         if cache.get(key):
             activity_ids = cache.get(key)
         else:
             activity_ids = Activity.objects.filter(user=user, course=self.course) \
                 .values_list('module__id', flat=True)
-            cache.set(key, activity_ids, 60 * 10)
 
-        if self.id in activity_ids:
-            return True
+        try:
+            if self.id in activity_ids:
+                cache.set(key, activity_ids, 60 * 10)
+                return True
+        except TypeError:
+            pass
         return False
 
     def delete_cache(self, user):
-        cache.delete(f'module-activity-{user.username}')
+        cache.delete(f'module-{self.id}-activity-{user.username}')
 
     def sections_sorted(self):
         return self.sections.order_by('order')
+
+    def export_to_pdf(self):
+        html_template = get_template('backoffice/modules/export.html')
+        section_all = self.sections.publish()
+        context = {
+            'module': self,
+            'section_all': section_all
+        }
+        rendered_html = html_template.render(context)
+
+        options = {
+            'page-size': 'A4',
+            'margin-top': '0.75in',
+            'margin-right': '0.75in',
+            'margin-bottom': '0.75in',
+            'margin-left': '0.75in',
+            'encoding': "UTF-8",
+            'no-outline': None
+        }
+        module_pdf = pdfkit.from_string(rendered_html, False, options=options)
+        response = HttpResponse(module_pdf, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename=module-{self.slug}.pdf'
+
+        return response
+
+    def get_or_create_activity(self, user, course):
+        """
+        this method to handle race condition and auto delete duplicate data
+        """
+        activities = self.activities_module.filter(user=user, course=course)
+        if activities:
+            act = activities.first()
+            if len(activities) > 1:
+                activities.exclude(id=act.id).delete()
+        else:
+            act = self.activities_module.create(user=user, course=course)
+        return act
 
 
 class SectionManager(models.Manager):
@@ -327,39 +394,63 @@ class Section(models.Model):
         super().save(*args, **kwargs)
 
     def get_next(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             next_slug = slugs[index + 1]
         except (AssertionError, IndexError):
-            next_slug = None
+            return None
         return Section.objects.filter(slug=next_slug).first()
 
     def get_prev(self, slugs):
-        index = list(slugs).index(self.slug)
+        try:
+            index = list(slugs).index(self.slug)
+        except ValueError:
+            return None
+
         try:
             prev_slug = slugs[index - 1]
         except (AssertionError, IndexError):
-            prev_slug = None
+            return None
         return Section.objects.filter(slug=prev_slug).first()
 
     def has_enrolled(self, user):
         return self.module.course.has_enrolled(user)
 
     def on_activity(self, user):
-        key = f'section-activity-{user.username}'
+        key = f'section-{self.id}-activity-{user.username}'
         if cache.get(key):
             activity_ids = cache.get(key)
         else:
             activity_ids = Activity.objects.filter(user=user, course=self.module.course) \
                 .values_list('section__id', flat=True)
 
-        cache.set(key, activity_ids)
-        if self.id in activity_ids:
-            return True
+        try:
+            if self.id in activity_ids:
+                cache.set(key, activity_ids, 60 * 10)
+                return True
+        except TypeError:
+            pass
         return False
 
     def delete_cache(self, user):
-        cache.delete(f'section-activity-{user.username}')
+        cache.delete(f'section-{self.id}-activity-{user.username}')
+
+    def get_or_create_activity(self, user, course):
+        """
+        this method to handle race condition and auto delete duplicate data
+        """
+        activities = self.activities_section.filter(user=user, course=course)
+        if activities:
+            act = activities.first()
+            if len(activities) > 1:
+                activities.exclude(id=act.id).delete()
+        else:
+            act = self.activities_section.create(user=user, course=course)
+        return act
 
 
 class TaskUploadSettings(models.Model):
@@ -416,6 +507,8 @@ class Enrollment(models.Model):
     allowed_access = models.BooleanField(_("Akses diberikan"), default=False)
     date_enrollment = models.DateField(_("Tanggal mendaftar"), auto_now_add=True)
     finishing_date = models.DateField(_("Tanggal menyelesaikan"), blank=True, null=True)
+    final_score = models.IntegerField(_("Nilai Akhir"), default=0)
+    note = models.TextField(_("Catatan"), blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} - {self.course}"
@@ -439,7 +532,7 @@ class Enrollment(models.Model):
         return count_status
 
     def generate_certificate_number(self, prefix="NS-DEV") -> str:
-        batch = str(self.batch.batch)
+        batch = str(self.batch.id)
         batch = "0" + batch if len(batch) == 1 else batch
 
         user_id = str(self.user_id)
@@ -529,6 +622,11 @@ class Activity(models.Model):
     def __str__(self):
         state = self.section if self.section else self.module
         return f"{self.user} - {state.title}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'course', 'module', 'section'], name='unique_activity')
+        ]
 
 
 class CertSetting(models.Model):

@@ -2,27 +2,49 @@
 {% load tags_courses %}
 
 {% block content %}
-<div class="container padding_top">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card content-materi">
-                {% if course.featured_image %}
-                    <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
-                {% endif %}
-                <div class="card-body">
-                    <h1>{{ course.title }}</h1>
-                    <small><i class="fas fa-user-edit"></i> {{ course.author_name|capfirst }}</small>
-    
-                    <nav class="mt-5">
-                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-description-tab" data-toggle="tab" href="#nav-description" role="tab" aria-controls="nav-description" aria-selected="true">Deskripsi</a>
-                        <a class="nav-item nav-link" id="nav-module-tab" data-toggle="tab" href="#nav-module" role="tab" aria-controls="nav-profile" aria-selected="false">Modul</a>
-                        </div>
-                    </nav>
-                    <div class="tab-content pt-4" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
-                            {% if "MARKDOWN_CONTENT"|get_toggle %}
-                                {{ course.description_md|show_markdown|safe }}
+<div class="row">
+
+    <div class="col-md-8">
+        <div class="card">
+            <img class="card-img-top" src="{{ course.get_featured_image_url }}" alt="{{ course.featured_image.name}}">
+            <div class="card-body">
+                <h1>{{ course.title }}</h1>
+                <small><i class="fas fa-user-edit"></i> {{ course.author_name|capfirst }}</small>
+
+                <nav class="mt-5">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <a class="nav-item nav-link active" id="nav-description-tab" data-toggle="tab" href="#nav-description" role="tab" aria-controls="nav-description" aria-selected="true">Deskripsi</a>
+                      <a class="nav-item nav-link" id="nav-module-tab" data-toggle="tab" href="#nav-module" role="tab" aria-controls="nav-profile" aria-selected="false">Modul</a>
+                    </div>
+                  </nav>
+                  <div class="tab-content pt-4" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
+                        {% if "MARKDOWN_CONTENT"|get_toggle %}
+                            {{ course.description_md|show_markdown|safe }}
+                        {% else %}
+                            {{ course.description|safe }}
+                        {% endif %}
+                    </div>
+
+                    <div class="tab-pane fade" id="nav-module" role="tabpanel" aria-labelledby="nav-module-tab">
+                        <div class="">
+                            {% if has_enrolled %}
+                                {% if enroll.finishing_date %}
+                                    <div class="alert alert-success" >
+                                        Yeey, kamu sudah menyelesaikan semua materi pada tanggal {{ enroll.finishing_date }}. 
+                                        Tetap pantau tugas kamu ya, pastikan kamu lulus disemua tugas supaya bisa dapat sertifikat.<br><br> 
+                                        Klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk melihat semua materi.
+                                    </div>
+                                {% elif enroll.get_status_display == 'Daftar' %}
+                                    <div class="alert alert-success" >
+                                        Kamu sudah terdaftar dikelas ini. Kami harus menyeleksi semua pendaftar yang masuk sebelum kelas dimulai. Tunggu info selanjutnya ya.
+                                    </div>
+                                    {% include 'partials/module-section-list.html' %}
+                                {% else %}
+                                    <div class="alert alert-warning" >
+                                        Kamu sudah terdaftar dikelas ini, klik <a href="{% url 'website:modules:details' course.get_first_module.slug %}" >disini</a> untuk memulai atau melanjutkan kelasmu
+                                    </div>
+                                {% endif %}
                             {% else %}
                                 {{ course.description|safe }}
                             {% endif %}

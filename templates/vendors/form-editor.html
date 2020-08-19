@@ -1,0 +1,188 @@
+{% extends 'vendors/index.html' %}
+{% load static widget_tweaks %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                Form {{ title }}
+            </h4>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="card-body">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class=" col-md-12 col-lg-12 ">
+                            <h5>{{ title_extra }}</h5>
+                            <div class="tab-content">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                        {{ form.media }}
+                                        {{ form.non_field_errors }}
+                                        {% for field in form %}
+                                            {% if code == 'question' %}
+                                                {% if field.name == "content" or field.name == "explanation" %}
+                                                <div class="form-group col-md-12">
+                                                <label class="col-md-12"> {{ field.label }} </label>
+                                                <div class="col-md-12">
+                                                    {% render_field field|add_class:"form-control"%}
+                                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                    <small class="form-text text-danger">{{ field.errors }}</small>
+                                                </div>
+                                            </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if field.name == "sub_category" or field.name == "category" or field.name == "title" or field.name == "description" or field.name == "short_description" or field.name == "content" or field.name == "instruction" %}
+                                                <div class="form-group col-md-12">
+                                                    <label class="col-md-12"> {{ field.label }} </label>
+                                                    <div class="col-md-12">
+                                                        {% render_field field|add_class:"form-control"%}
+                                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                        <small class="form-text text-danger">{{ field.errors }}</small>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.media }}
+                                            {{ form.non_field_errors }}
+                                            {% for field in form %}
+                                            {% if code == 'question' %}
+                                                {% if field.name != "content" and field.name != "explanation" %}
+                                                    <div class="form-group col-md-12">
+                                                        <label class="col-md-12"> {{ field.label }} </label>
+                                                        <div class="col-md-12">
+                                                            {% if field.field.widget.input_type == 'file' or field.field.widget.input_type == 'checkbox' %}
+                                                                {% render_field field%}
+                                                            {% else %}
+                                                                {% render_field field|add_class:"form-control" %}
+                                                            {% endif %}
+                                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                            <small class="form-text text-danger">{{ field.errors }}</small>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                   {% if field.name != "sub_category" and field.name != "category" and field.name != "title" and field.name != "description" and field.name != "short_description" and field.name != "content" and field.name != "instruction" %}
+                                                    <div class="form-group col-md-12">
+                                                        <label class="col-md-12"> {{ field.label }} </label>
+                                                        <div class="col-md-12">
+                                                            {% if field.field.widget.input_type == 'file' or field.field.widget.input_type == 'checkbox' %}
+                                                                {% render_field field%}
+                                                            {% else %}
+                                                                {% render_field field|add_class:"form-control" %}
+                                                            {% endif %}
+                                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                            <small class="form-text text-danger">{{ field.errors }}</small>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if code == 'question' %}
+            <div class="card-body">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class=" col-md-12 col-lg-12 ">
+                            <div class="tab-content">
+                                <div class="col-md-12">
+                                     {{ formset.management_form }}
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th>Jawaban</th>
+                                            <th>Jawaban Benar</th>
+                                            {% if formset_delete %}
+                                            <th>Hapus</th>
+                                            {% endif %}
+                                        </thead>
+                                        <tbody>
+                                        {% for f in formset %}
+                                            <tr>
+                                                {% for field in f %}
+                                                <td>
+                                                    {% if field.name == "content" %}
+                                                        {% render_field field|add_class:"form-control" %}
+                                                    {% else %}
+                                                        {% render_field field%}
+                                                    {% endif %}
+                                                </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <small class="form-text text-muted pl-2">Hanya Jawaban yang diisi, yang akan disimpan</small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success btn-user float-right">
+                    {% if title_submit %} {{ title_submit }} {% else %} Submit {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        filterBatch();
+    })
+
+    $('#id_question-category').on('change', function() {
+        filterBatch();
+    });
+
+    function filterBatch(){
+        var id_sub_category = $('#id_question-sub_category').val();
+        var list_sub_category = $('#id_question-sub_category');
+        var category = $('#id_question-category').val();
+        $.ajax({
+            url: '{% url "vendors:quizzes:ajax_filter_subcategory" %}',
+            data: {
+                'category': category
+            },
+            dataType: 'json',
+            success: function (data) {
+                list_sub_category.html("'<option value=''>Pilih Sub Kategori</option>'");
+                $.each(data.sub_category, function(key,value) {
+                    if(id_sub_category == value.id){
+                        list_sub_category.append(
+                            '<option value="'+value.id+'" selected>Angkatan '+value.sub_category+'</option>'
+                        );
+                    }else{
+                        list_sub_category.append(
+                            '<option value="'+value.id+'">Angkatan '+value.sub_category+'</option>'
+                        );
+                    }
+                });
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'vendors/index.html' %}
+
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'vendors:courses:index'%}">Kursus</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'vendors:modules:index' module.course.id%}">Modul</a></li>
+        <li class="breadcrumb-item active">Bab</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">Bab pada Modul {{ module.title }}</h4>
+            <a href="{% url 'vendors:sections:add' module.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Bab</a>
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Judul</th>
+                    <th>Urutan</th>
+                    <th>Terlihat</th>
+                    <th>Draf</th>
+                    <th>Tugas</th>
+                    <th>Aksi</th>
+                </thead>
+                <tbody>
+                    {% for section in sections %}
+                        <tr>
+                            <td><a href="{% url 'vendors:sections:details' section.id %}">{{ section.title }}</a></td>
+                            <td>{{ section.order }}</td>
+                            <td>{{ section.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ section.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ section.is_task|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Aksi
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'website:sections:preview' section.slug %}">Pratayang</a>
+                                        <a class="dropdown-item" href="{% url 'vendors:sections:edit' section.id %}">Ubah</a>
+                                       <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:sections:delete' section.id %}" data-name="{{ section.title}}">Hapus</button>
+                                        {% if section.is_task %}
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{% url 'vendors:sections:task_setting' section.id %}"><i class="fas fa-cog"></i> Task Setting</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'vendors:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
+            <a href="{% url 'vendors:modules:index' module.course.id%}" class="btn btn-sm btn-outline-primary float-right">Kembali ke Modul</a>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Yakin ingin menghapus <strong id="confirmDeleteName"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable();
+        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('delete-url');
+            var name = button.data('name');
+
+            var modal = $(this);
+            modal.find('#confirmDeleteButton').attr("href", url);
+            modal.find('#confirmDeleteName').html(name);
+        })
+    })
+</script>
+{% endblock %}

@@ -1,20 +1,31 @@
 {% load static tags_courses %}
 
-<div class="col-sm-6 col-lg-4 mb-5 pb-5">
-    <div class="single_special_cource">
-        {% if course.course.status == 1 %}
-            <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 25px;">{{ course.course.get_status_display }}</span>
-        {% endif %}
-        {% if course.course.featured_image %}
-            <img class="special_img" src="{{ course.course.featured_image.url }}" alt="{{ course.course.featured_image.name}}" style="width: 100%;">
-        {% endif %}        
-        <div class="special_cource_text">
-            <div class="text-dark">
-                <span class="">Progress {{ course.progress_precentage }}% {% if course.progress_precentage == 100 %}, Keren! {% endif %}</span>
-                <div class="progress progress-xs">
-                    <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{ course.progress_precentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ course.progress_precentage }}%"></div>
-                </div>
-                {{ course.status_enroll|enrollment_status_display:'True' }}
+<div class="card" style="width: 100%;min-height: 400px;max-height: 450px;overflow: hidden;">
+    <ul class="navbar-nav ml-auto" style="position: absolute; top: 10px; right: 15px;">
+        <!-- user profile-->
+        <li class="nav-item dropdown">
+            <a class="" data-toggle="dropdown" href="#">
+                <h4><i class="fas fa-ellipsis-h text-white"></i></h4>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a href="{% url 'website:courses:user_quizzes' course.course.id %}" class="dropdown-item">Nilai Kuis</a>
+                <a href="{% url 'website:courses:user_tasks' course.course.id %}" class="dropdown-item">Nilai Tugas</a>
+            </div>
+        </li>
+    </ul>
+    <a href="{% url 'website:modules:details' course.course.get_first_module.slug %}">
+        <div style="width: 100%;height: 200px;overflow: hidden;">
+            {% if course.course.status == 1 %}
+                <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 10px;">{{ course.get_status_display }}</span>
+            {% endif %}
+            {% if course.course.featured_image %}
+                <img class="card-img-top" src="{{ course.course.featured_image.url }}" alt="{{ course.course.featured_image.name}}">
+            {% endif %}
+        </div>
+        <div class="card-header text-dark">
+            <span class="">Progress {{ course.progress_precentage }}% ({{ course.progress_step }}){% if course.progress_precentage == 100 %}, Keren! {% endif %}</span>
+            <div class="progress progress-xs">
+                <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{ course.progress_precentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ course.progress_precentage }}%"></div>
             </div>
             <a href="{% url 'website:modules:details' course.course.get_first_module.slug %}">
                 <h3>{{ course.course.title }}</h3>

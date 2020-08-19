@@ -14,6 +14,7 @@ local_settings.py
 media/*
 env/*
 logs/*
+tmp/*
 
 *.sqlite3
 db.*
@@ -22,3 +23,20 @@ projects/logs/*
 # IDE Setting
 .vscode/*
 .idea/*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/

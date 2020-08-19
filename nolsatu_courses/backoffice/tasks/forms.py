@@ -1,3 +1,7 @@
+import csv
+
+from io import StringIO
+
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
@@ -89,3 +93,27 @@ class FormFilterTaskReport(forms.Form):
         avg_score = {d['user']: d['avg_score'] for d in avg_score}
 
         return users, avg_score
+
+    def download_report(self):
+        csv_buffer = StringIO()
+        writer = csv.writer(csv_buffer)
+
+        course = self.cleaned_data['course']
+        enrollment = Enrollment.objects.filter(course=course, batch=self.cleaned_data['batch']).select_related('user')
+        # write course name, users
+        writer.writerow([f"Kursus: {course.title}"] + list(map(lambda e: e.user.get_full_name(), enrollment)))
+
+        for module in course.modules.order_by('order'):
+            # Write modules row
+            writer.writerow([f'Modul: {module.title}'])
+            for section in module.sections.filter(is_task=True).order_by('order'):
+                section_row = [section.title]
+                collect_task = CollectTask.objects.filter(section=section).values("user", "score")
+                collect_task = {d['user']: d['score'] for d in collect_task}
+                for e in enrollment:
+                    section_row.append(collect_task.get(e.user.id, 0))
+
+                # write section
+                writer.writerow(section_row)
+
+        return csv_buffer

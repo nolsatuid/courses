@@ -5,10 +5,12 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
+from django.db.models import Prefetch
 
 from nolsatu_courses.apps import utils
-from nolsatu_courses.apps.courses.models import Courses, Enrollment
-from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister
+from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section
+from nolsatu_courses.apps.courses.utils import ExportCourse
+from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister, FormImportCourse
 
 
 @staff_member_required
@@ -96,28 +98,28 @@ def registrants(request):
 
     if request.POST:
         data = request.POST
-        for id in data.getlist('checkMark'):
-            enroll = get_object_or_404(Enrollment, id=id)
-            if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] and \
-                    not enroll.course.batchs.last().link_group:
-                messages.error(
-                    request,
-                    _(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi')
-                )
-            else:
-                if enroll.batch != enroll.course.batchs.last():
-                    enroll.batch = enroll.course.batchs.last()
-                enroll.allowed_access = True
-                enroll.status = Enrollment.STATUS.begin
-                enroll.save()
+        if data.getlist('checkMark'):
+            for id in data.getlist('checkMark'):
+                enroll = get_object_or_404(Enrollment, id=id)
+                if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] and \
+                        not enroll.course.batchs.last().link_group:
+                    messages.error(
+                        request,
+                        _(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi')
+                    )
+                else:
+                    enroll.allowed_access = True
+                    enroll.status = Enrollment.STATUS.begin
+                    enroll.save()
 
-                text1 = f'Selamat, Anda sudah mendapatkan akses kelas {enroll.course.title}. '
-                text2 = f'Gabung ke grup chat menggunakan link <a href="{enroll.batch.link_group}">ini</a> untuk mendapatkan informasi lebih lanjut.'
-                notif_msg = text1 + text2 if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] else text1
+                    text1 = f'Selamat, Anda sudah mendapatkan akses kelas {enroll.course.title}. '
+                    text2 = f'Gabung ke grup chat menggunakan link <a href="{enroll.batch.link_group}">ini</a> untuk mendapatkan informasi lebih lanjut.'
+                    notif_msg = text1 + text2 if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] else text1
 
-                utils.send_notification(
-                    enroll.user, f'Akses kelas {enroll.course.title} di berikan', notif_msg)
-                messages.success(request, _(f'Berhasil mengubah status <strong>{enroll}</strong>'))
+                    utils.send_notification(
+                        enroll.user, f'Akses kelas {enroll.course.title} di berikan', notif_msg)
+            
+            messages.success(request, _(f'Berhasil memberikan akses massal'))
 
     context = {
         'menu_active': 'registrants',
@@ -141,8 +143,7 @@ def ajax_change_status_registrants(request):
             'batch': enroll.batch.batch
         }
         return JsonResponse(data, status=200)
-    if enroll.batch != enroll.course.batchs.last():
-        enroll.batch = enroll.course.batchs.last()
+   
     enroll.allowed_access = status
     enroll.status = Enrollment.STATUS.begin
     enroll.save()
@@ -158,8 +159,9 @@ def ajax_change_status_registrants(request):
 
     data = {
         'status': True,
-        'message': f'Berhasil mengubah status {enroll.user}',
-        'batch': enroll.batch.batch
+        'message': f'Berhasil mengubah hak akses {enroll.user.get_full_name()}',
+        'batch': enroll.batch.batch,
+        'detail': f'{enroll.user.get_full_name()} - {enroll.course}'
     }
     return JsonResponse(data, status=200)
 
@@ -176,6 +178,41 @@ def bulk_register(request):
     context = {
         'menu_active': 'registrants',
         'title': 'Registrasi Masal',
+        'form': form,
+        'title_submit': _("Proses")
+    }
+    return render(request, 'backoffice/form.html', context)
+
+
+@staff_member_required
+def export_data(request, id):
+    course = get_object_or_404(
+        Courses.objects.prefetch_related(
+            Prefetch('modules', queryset=Module.objects.publish()),
+            Prefetch('modules__sections', queryset=Section.objects.publish())
+        ).select_related('vendor'),
+        id=id
+    )
+
+    ex_course = ExportCourse(course)
+    ex_course.export_data()
+
+    response = HttpResponse(ex_course.zip_buffer.getvalue(),
+                            content_type="application/x-zip-compressed")
+    response['Content-Disposition'] = 'attachment; filename=%s' % ex_course.zip_filename
+    return response
+
+
+@staff_member_required
+def import_data(request):
+    form = FormImportCourse(data=request.POST or None, files=request.FILES or None)
+    if form.is_valid():
+        form.import_course()
+        messages.success(request, _('Berhasil impor data'))
+
+    context = {
+        'menu_active': 'course',
+        'title': 'Impor Materi Kursus',
         'form': form,
         'title_submit': _("Proses")
     }

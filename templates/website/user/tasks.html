@@ -1,0 +1,86 @@
+{% extends 'website/base-top-nav.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{% url 'website:courses:user_courses' %}">Daftar Materimu</a></li>
+			<li class="breadcrumb-item active">Nilai Tugas</li>
+		</ol>
+	</div>
+  	<div class="col-sm-12">
+		<div class="card">
+			<div class="card-header">
+				<h2>{{ title }}</h2>
+			</div>
+			<div class="card-body">
+				{% if tasks %}
+					<table class="table table-bordered table-striped">
+
+					<thead>
+						<tr>
+							<th>Bab</th>
+							<th>File</th>
+							<th>Nilai</th>
+							<th>Catatan</th>
+							<th>Tanggal</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+					{% for task in tasks %}
+
+						<tr>
+							<td>{{ task.section.title }}</td>
+							<td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>
+							<td id="score-{{task.id}}">{{ task.score|default:'0' }}</td>       
+							<td id="note-{{task.id}}"><a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ task.note }}">{{ task.note|default:'-'|truncatewords:2 }}</a></td>     
+							<td>{{ task.update_at }}</td>
+						</tr>
+
+					{% endfor %}
+					</tbody>
+
+					</table>
+
+				{% else %}
+					<p>Tidak ada tugas.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Catatan Tugas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="noteMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+	$(document).ready(function() {
+        $('#noteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var note = button.data('note');
+
+            var modal = $(this);
+            modal.find('#noteMessage').html(note);
+        })
+    })
+</script>
+{% endblock %}

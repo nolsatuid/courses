@@ -1,0 +1,253 @@
+{% extends 'vendors/index.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <form method="GET" >
+                <div class="form-group row">
+                    {% for field in form %}
+                        <div class="form-group col-md-3">
+                            {% render_field field|add_class:"form-control"%}
+                            <span class="help_text">
+                                {{ field.errors }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                    <div class="form-group col-md-3">
+                        <button type="submit" class="btn btn-primary btn-pill">Menyaring</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            {% if statistics %}
+            <div class="container-fluid">
+                <!-- Info boxes -->
+                <div class="row">
+                <div class="col-md-12 mb-4"><h3> Statistik Materi {{ statistics.course.title }} </h3></div>
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-percentage"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Progress keseluruhan</span>
+                        <span class="info-box-number">
+                        {{ statistics.global_progress|floatformat:-2 }}
+                        <small>%</small>
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-list"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Modul & Sesi</span>
+                        <span class="info-box-number">{{ statistics.course.number_of_step }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+                <!-- fix for small devices only -->
+                <div class="clearfix hidden-md-up"></div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-tasks"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Tugas</span>
+                        <span class="info-box-number"> {{ statistics.course.total_tasks }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Peserta</span>
+                        <span class="info-box-number">{{ statistics.total_registrant }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+                <table class="table table-bordered" id="datatable-progress">
+                    <thead>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Progress</th>
+                        <th>Modul & sesi</th>
+                        <th>Diperiksa</th>
+                        <th>Lulus</th>
+                        <th>Mengulang</th>
+                    </thead>
+                    <tbody>
+                        {% for data in statistics.data %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ data.user }}</td>
+                                <td>{{ data.progress|floatformat:-2 }} %</td>
+                                <td>{{ data.number_of_activity_step }} diselesaikan</td>
+                                <td>{{ data.task.review }}</td>
+                                <td>{{ data.task.graduated }}</td>
+                                <td>{{ data.task.repeat }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+        
+            <hr>
+            <h3 class="mt-3 mb-3">Statistik Kuis {{ statistics.course.title }}</h3>
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-tasks"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Kuis</span>
+                            <span class="info-box-number">
+                            {{ quiz_stats.detail_stats|length }}
+                            <small></small>
+                            </span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Lulus</span>
+                            <span class="info-box-number">{{ quiz_stats.sum_pass }}</span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Tidak Lulus</span>
+                            <span class="info-box-number">{{ quiz_stats.sum_not_pass }}</span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Nilai Sempurna</span>
+                            <span class="info-box-number">{{ quiz_stats.sum_perfect_score }}</span>
+                        </div>
+                    <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                    <th>No</th>
+                    <th>Kuis</th>
+                    <th>Nilai  Sempurna</th>
+                    <th>Lulus</th>
+                    <th>Tidak Lulus</th>
+                </thead>
+                <tbody>
+                    {% for data in quiz_stats.detail_stats  %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <a href="{% url 'vendors:quizzes:detail_result' data.sitting.quiz.id batch %}">{{ data.sitting.quiz }}</a>
+                            </td>
+                            <td>{{ data.score }} a.n <a href="{% url 'vendors:quizzes:participant_result' data.sitting.id batch %}">{{ data.sitting.user }}</a></td>
+                            <td>{{ data.pass }}</td>
+                            <td>{{ data.not_pass }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable-progress').DataTable();
+        filterBatch();
+    })
+
+    $('#id_course').on('change', function() {
+        filterBatch();      
+    });
+
+    function filterBatch(){
+        var id_batch = $('#id_batch').val();
+        var list_batch = $('#id_batch');
+        var course = $('#id_course').val();
+        $.ajax({
+            url: '{% url "backoffice:graduates:ajax_filter_batch" %}',
+            data: {
+                'course': course
+            },
+            dataType: 'json',
+            success: function (data) {
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");  
+                $.each(data.batch, function(key,value) {
+                    if(id_batch == value.id){
+                        list_batch.append(
+                            '<option value="'+value.id+'" selected>Angkatan '+value.batch+'</option>'
+                        ); 
+                    }else{
+                        list_batch.append(
+                            '<option value="'+value.id+'">Angkatan '+value.batch+'</option>'
+                        ); 
+                    }                      
+                });                      
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        }); 
+    }
+</script>
+{% endblock %}

@@ -1,5 +1,4 @@
 {% extends 'backoffice/base-adminlte.html' %}
-{% load static %}
 {% load tags_courses %}
 {% load static widget_tweaks %}
 
@@ -48,7 +47,8 @@ thead input {
                         <th>File</th>
                         <th>Nilai</th>
                         <th>Catatan</th>
-                        <th>Tanggal</th>
+                        <th>Tanggal Dibuat</th>
+                        <th>Tanggal Diperbarui</th>
                         <th style="width:25%;">Aksi</th>
                     </thead>
                     <tbody>
@@ -60,7 +60,8 @@ thead input {
                                 <td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>
                                 <td id="score-{{task.id}}">{{ task.score|default:'0' }}</td>       
                                 <td id="note-{{task.id}}"><a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ task.note }}">{{ task.note|default:'-'|truncatewords:2 }}</a></td>     
-                                <td>{{ task.update_at }}</td>
+                                <td>{{ task.create_at }}</td>
+                                <td id="update_at-{{task.id}}">{{ task.update_at }}</td>
                                 <td width="10px">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
                                         <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">
@@ -254,6 +255,7 @@ thead input {
         var btn_status = $('#btn-status-'+task_id);
         var note = $('#note-'+task_id);
         var score = $('#score-'+task_id);
+        var update_at = $('#update_at-'+task_id);
         var nilai = 0;
         if(document.getElementById("score").value != ""){
             nilai = document.getElementById("score").value;
@@ -274,6 +276,7 @@ thead input {
                 document.getElementById("note").value = "" 
                 score.html(nilai);
                 document.getElementById("score").value = "" 
+                update_at.html(data.update_at)
                 if(status_id == 1){
                     btn_status.append(
                         '<label class="btn btn-info" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">'+

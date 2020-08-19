@@ -20,6 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SETTINGS_DIR = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.dirname(SETTINGS_DIR)
 PROJECT_NAME = os.path.basename(PROJECT_ROOT)
+TMP_PRJ_DIR = os.path.join(BASE_DIR, 'tmp')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
     'nolsatu_courses.apps.upload_files',
     'nolsatu_courses.apps.accounts',
     'nolsatu_courses.apps.vendors',
+    'nolsatu_courses.apps.products',
 
     # quiz
     'quiz',
@@ -171,6 +173,7 @@ STATIC_ROOT = os.path.join(SETTINGS_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL = '/media/'
+FIXTURE_DIRS = [os.path.join(BASE_DIR, "fixtures")]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
@@ -225,6 +228,7 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 # appearance
 TOP_NAV_BG = ""
 TOP_NAV_COLOR = ""
+COURSE_IMAGE_PLACEHOLDER_STATIC = "website/images/adinusa_placeholder.png"
 
 # Markdown
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
@@ -240,7 +244,8 @@ MARKDOWNX_IMAGE_MAX_SIZE = {
 # FEATURE_TOGGLE
 FEATURE = {
     "MARKDOWN_CONTENT": False,
-    "MARKDOWN_BACKOFFICE_EDITOR": False
+    "MARKDOWN_BACKOFFICE_EDITOR": False,
+    "MARKDOWN_VENDORS_EDITOR": False
 }
 
 # internal course configs

@@ -11,9 +11,12 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h4 class="pull-left">
+            <h4 class="float-left">
                 {{ title }}
             </h4>
+            <span class="float-right">
+                <a href="{% url 'backoffice:courses:edit' course.id %}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Ubah</a>
+            </span>
         </div>
         <div class="card-body">
             <div class="row-fluid">
@@ -66,7 +69,7 @@
                                         <label>Gambar</label>
                                     </td>
                                     <td>
-                                        <img width="100px" src="{{ course.featured_image.url }}">
+                                        <img width="100px" src="{{ course.get_featured_image_url }}">
                                     </td>
                                 </tr>
                                 <tr>

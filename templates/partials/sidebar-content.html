@@ -1,11 +1,16 @@
 <div class="card position-sticky sticky-top" id="sticky-sidebar">
     <h5><div class="card-header">Sidebar <i class="float-right fas fa-bookmark"></i></div></h5>
     <div class="card-body">
-        <p class="pb-2">Kategori: <strong class="text-info"> {{ course.category_list|capfirst }}</strong></p>
-        <p class="pb-2">Level: <strong class="text-info"> {{ course.get_level_display }}</strong></p>
-        <p class="pb-2">Angkatan: <strong class="text-info"> {{ batch.batch }}</strong></p>
-        <p class="pb-2">Mulai: <strong class="text-info"> {{ batch.start_date }}</strong></p>
-        <p class="pb-3">Berakhir: <strong class="text-info"> {{ batch.end_date }}</strong></p>
+        {% if user.is_superuser %}
+            <div class="card">
+                <a class="btn btn-outline-danger" href="{% url 'backoffice:courses:edit' course.id %}">Edit</a>
+            </div>
+        {% endif %}
+        <p>Kategori: <strong class="text-info"> {{ course.category_list|capfirst }}</strong></p>
+        <p>Level: <strong class="text-info"> {{ course.get_level_display }}</strong></p>
+        <p>Angkatan: <strong class="text-info"> {{ batch.batch }}</strong></p>
+        <p>Mulai: <strong class="text-info"> {{ batch.start_date }}</strong></p>
+        <p>Berakhir: <strong class="text-info"> {{ batch.end_date }}</strong></p>
         {% if has_enrolled %}
             {% if enroll.finishing_date %}
                 <div class="alert alert-success" >

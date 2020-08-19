@@ -1,0 +1,164 @@
+{% load static %}
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar elevation-4 sidebar-{{ sidebar_color }}-{{ color_theme }}">
+    <!-- Brand Logo -->
+    <!-- Brand Logo -->
+    <a href="{% url 'website:index' %}" class="brand-link">
+        {% if not hide_logo %}
+            <img src="{{ brand_logo }}" alt="{{ brand }} Logo" class="brand-image"
+           style="opacity: .8">
+        {% endif %}
+
+      <span class="brand-text font-weight-bold color-white" style="font-size:88%">
+        {% if not hide_site_name %}
+            {{ brand }}
+        {% else %}
+            &nbsp;
+        {% endif %}
+      </span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+            <img src="{{ user.nolsatu.avatar }}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+            <a href="#" class="d-block">{{ user }}</a>
+        </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-item">
+                <a href="{% url 'vendors:index' %}" class="nav-link {% if menu_active == 'dashboard' %}active{% endif %}">
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+            <li class="nav-item {% if menu_active == 'course' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'course' %}active{% endif %}">
+                    <i class="nav-icon fas fa-id-card"></i>
+                    <p>Kursus<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:courses:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Daftar Kursus</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                <a href="{% url 'vendors:courses:add' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tambah Kursus</p>
+                </a>
+            </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'vendors:batchs:index' %}" class="nav-link {% if menu_active == 'batch' %}active{% endif %}">
+                    <i class="nav-icon fas fa-bookmark"></i>
+                    <p>Angkatan</p>
+                </a>
+            </li>
+            <li class="nav-item {% if menu_active == 'registrants' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'registrants' %}active{% endif %}">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>Pendaftar<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:courses:registrants' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Data Pendaftar</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item {% if menu_active == 'task' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'task' %}active{% endif %}">
+                    <i class="nav-icon fas fa-book"></i>
+                    <p>Tugas<i class="right right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:tasks:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Periksa Tugas</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:tasks:report_index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Laporan Tugas</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item {% if menu_active == 'quiz' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'quiz' %}active{% endif %}">
+                    <i class="nav-icon fas fa-tasks"></i>
+                    <p>Kuis<i class="right right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:quizzes:category' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Kategori Kuis</p>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:quizzes:question' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Pertanyaan Kuis</p>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:quizzes:list_quiz' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Daftar Kuis</p>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:quizzes:result_quiz' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Hasil Kuis</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+             <li class="nav-item {% if menu_active == 'graduate' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'graduate' %}active{% endif %}">
+                    <i class="nav-icon fas fa-user-graduate"></i>
+                    <p>Lulusan<i class="right right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'vendors:graduates:candidate' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Kandidat</p>
+                        </a>
+                        <a href="{% url 'vendors:graduates:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Data Lulusan</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

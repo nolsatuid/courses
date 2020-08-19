@@ -1,0 +1,87 @@
+{% extends 'vendors/index.html' %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <a href="{% url 'vendors:batchs:add' %}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Angkatan</a>
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Angkatan</th>
+                    <th>Kursus</th>
+                    <th>Tanggal Mulai</th>
+                    <th>Tanggal Selesai</th>
+                    <th>Status Aktif</th>
+                    <th>Link Grup</th>
+                    <th>Aksi</th>
+                </thead>
+                <tbody>
+                    {% for batch in batchs %}
+                        <tr>
+                            <td><a href="{% url 'vendors:batchs:details' batch.id %}">Angkatan {{ batch.batch }}</a></td>
+                            <td>{{ batch.course.title }}</td>
+                            <td>{{ batch.start_date }}</td>
+                            <td>{{ batch.end_date }}</td>
+                            <td>{{ batch.is_active|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td><a href="{{ batch.link_group }}">{{ batch.link_group }}</a></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Aksi
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'vendors:batchs:details' batch.id %}">Detail</a>
+                                        <a class="dropdown-item" href="{% url 'vendors:batchs:edit' batch.id %}">Ubah</a>
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:batchs:delete' batch.id %}" data-name="Angkatan {{ batch.batch}}">Hapus</button>
+                                    </div>
+                                </div>                                
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Yakin ingin menghapus <strong id="confirmDeleteName"></strong> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable();
+        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('delete-url');
+            var name = button.data('name');
+
+            var modal = $(this);
+            modal.find('#confirmDeleteButton').attr("href", url);
+            modal.find('#confirmDeleteName').html(name);
+        })
+    })
+</script>
+{% endblock %}

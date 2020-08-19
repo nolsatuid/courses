@@ -1,0 +1,95 @@
+{% extends 'vendors/index.html' %}
+
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'vendors:courses:index'%}">Kursus</a></li>
+        <li class="breadcrumb-item active">Modul</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">Modul pada Kursus {{ course.title }}</h4>
+            <a href="{% url 'vendors:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Judul</th>
+                    <th>Urutan</th>
+                    <th>Terlihat</th>
+                    <th>Draf</th>
+                    <th>Aksi</th>
+                </thead>
+                <tbody>
+                    {% for module in modules %}
+                        <tr>
+                            <td><a href="{% url 'vendors:modules:details' module.id %}" >{{ module.title }}</a></td>
+                            <td>{{ module.order }}</td>
+                            <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ module.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Aksi
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'website:modules:preview' module.slug %}" >Pratayang</a>
+                                        <a class="dropdown-item" href="{% url 'vendors:modules:edit' module.id %}" >Ubah</a>
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'vendors:sections:index' module.id %}">Lihat Bab</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{% url 'vendors:modules:preview' module.id %}?download=true" class="dropdown-item">Ekspor PDF</a>
+                                        <a href="{% url 'vendors:modules:preview' module.id %}" class="dropdown-item">Preview PDF</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'vendors:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Yakin ingin menghapus <strong id="confirmDeleteName"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable();
+        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('delete-url');
+            var name = button.data('name');
+
+            var modal = $(this);
+            modal.find('#confirmDeleteButton').attr("href", url);
+            modal.find('#confirmDeleteName').html(name);
+        })
+    })
+</script>
+{% endblock %}

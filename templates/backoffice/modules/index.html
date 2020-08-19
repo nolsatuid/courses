@@ -40,6 +40,9 @@
                                         <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{% url 'backoffice:modules:preview' module.id %}?download=true" class="dropdown-item">Ekspor PDF</a>
+                                        <a href="{% url 'backoffice:modules:preview' module.id %}" class="dropdown-item">Preview PDF</a>
                                     </div>
                                 </div>
                             </td>

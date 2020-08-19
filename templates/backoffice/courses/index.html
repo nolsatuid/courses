@@ -5,7 +5,10 @@
     <div class="card">
         <div class="card-header">
             <h4 class="float-left">{{ title }}</h4>
-            <a href="{% url 'backoffice:courses:add' %}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Kursus</a>
+            <span class="float-right">
+                <a href="{% url 'backoffice:courses:import_data' %}" class="btn btn-sm btn-secondary"><i class="fas fa-plus"></i> Impor Kursus</a>
+                <a href="{% url 'backoffice:courses:add' %}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Tambah Kursus</a>
+            </span>
         </div>
         <div class="card-body">
             <table id="datatable" class="table table-striped">
@@ -38,6 +41,8 @@
                                         <a class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:courses:delete' courses.id %}" data-name="{{ courses.title}}">Hapus</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{% url 'backoffice:modules:index' courses.id %}">Lihat Modul</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'backoffice:courses:export_data' courses.id %}">Ekspor data</a>
                                     </div>
                                 </div>
                             </td>

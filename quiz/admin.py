@@ -81,7 +81,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
 class MCQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', 'sub_category')
     list_filter = ('category', 'sub_category')
-    fields = ('content', 'category', 'sub_category',
+    fields = ('content', 'vendor', 'category', 'sub_category',
               'figure', 'quiz', 'explanation', 'answer_order')
 
     search_fields = ('content', 'explanation')
@@ -119,7 +119,7 @@ class EssayQuestionAdmin(admin.ModelAdmin):
 class SittingAdmin(admin.ModelAdmin):
     list_display = ('quiz', 'user', )
     list_filter = ('quiz',)
-    search_fields = ('quiz', 'user', )
+    search_fields = ('quiz__title', 'user__username', )
 
 
 admin.site.register(Quiz, QuizAdmin)
