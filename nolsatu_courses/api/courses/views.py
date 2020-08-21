@@ -13,7 +13,7 @@ from django.conf import settings
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
     ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
-    CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer
+    CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer, MyQuizSerializer
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
@@ -22,6 +22,7 @@ from nolsatu_courses.apps.courses.models import Courses, Module, Section, Enroll
 from nolsatu_courses.apps import utils
 from nolsatu_courses.website.modules.views import get_pagination as get_pagination_module
 from nolsatu_courses.website.sections.views import get_pagination as get_pagination_section
+from quiz.models import Sitting
 
 
 class CourseListView(APIView):
@@ -295,3 +296,18 @@ class FinishCourseView(UserAuthAPIView):
                                     f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
 
         return Response({'message': _(f'Kamu berhasil menyelesaikan kelas {enroll.course.title}')})
+
+
+class MyQuizListView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['My Quiz'], operation_description="Get My Quiz", responses={
+        200: MyQuizSerializer(many=True)
+    })
+    def get(self, request, course_id):
+        sitting = Sitting.objects.filter(user=request.user, quiz__courses__id=course_id)
+        data = [{
+            'name': sit.quiz,
+            'score': sit.get_percent_correct
+        } for sit in sitting]
+        serializer = MyQuizSerializer(data, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
