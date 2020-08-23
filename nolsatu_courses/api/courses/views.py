@@ -299,7 +299,7 @@ class FinishCourseView(UserAuthAPIView):
 
 
 class MyQuizListView(UserAuthAPIView):
-    @swagger_auto_schema(tags=['My Quiz'], operation_description="Get My Quiz", responses={
+    @swagger_auto_schema(tags=['Quiz'], operation_description="Get My Quiz", responses={
         200: MyQuizSerializer(many=True)
     })
     def get(self, request, course_id):
