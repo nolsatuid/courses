@@ -1,10 +1,9 @@
 from django.conf import settings
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
 
 from nolsatu_courses.apps.vendors.models import Vendor
 from .forms import VendorForm
