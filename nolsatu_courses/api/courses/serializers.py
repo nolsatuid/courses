@@ -239,3 +239,7 @@ class UserReportTaskSerializer(serializers.Serializer):
     update_at = serializers.DateTimeField()
 
 
+class MyQuizSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    score = serializers.FloatField(max_value=100, min_value=0)
+
