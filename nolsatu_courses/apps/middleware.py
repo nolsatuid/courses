@@ -30,7 +30,7 @@ def get_user(request):
 
         # cache user data
         if cache_key:
-            cache.set(cache_key, user)
+            cache.set(cache_key, user, 10 * 60)
         return user
     except (RequestException, JSONDecodeError):
         return AnonymousUser()

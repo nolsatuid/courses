@@ -63,7 +63,7 @@ def update_user(identificator, type_identificator='id', user=None):
     }
 
     # get or create user
-    user, created = User.objects.get_or_create(
+    user, created = User.objects.update_or_create(
         username=data['username'],
         email=data['email'],
         defaults={**defaults},
@@ -84,6 +84,7 @@ def update_user(identificator, type_identificator='id', user=None):
     user.nolsatu.id_nolsatu = data['id']
     user.nolsatu.role = data['role']
     user.nolsatu.phone_number = data['phone']
+    user.nolsatu.save()
 
     return user
 
