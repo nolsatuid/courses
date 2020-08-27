@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
@@ -10,10 +9,11 @@ from django.db.models import Prefetch
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section
 from nolsatu_courses.apps.courses.utils import ExportCourse
+from nolsatu_courses.apps.decorators import superuser_required
 from .forms import FormCourses, FormFilterRegistrants, FormBulkRegister, FormImportCourse
 
 
-@staff_member_required
+@superuser_required
 def index(request):
     context = {
         'menu_active': 'course',
@@ -24,7 +24,7 @@ def index(request):
     return render(request, 'backoffice/courses/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def add(request):
     form = FormCourses(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
@@ -46,7 +46,7 @@ def add(request):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def edit(request, id):
     course = get_object_or_404(Courses, id=id)
     form = FormCourses(data=request.POST or None, files=request.FILES or None, instance=course)
@@ -69,7 +69,7 @@ def edit(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def delete(request, id):
     course = get_object_or_404(Courses, id=id)
     course.delete()
@@ -77,7 +77,7 @@ def delete(request, id):
     return redirect('backoffice:courses:index')
 
 
-@staff_member_required
+@superuser_required
 def details(request, id):
     course = get_object_or_404(Courses, id=id)
 
@@ -89,7 +89,7 @@ def details(request, id):
     return render(request, 'backoffice/courses/detail.html', context)
 
 
-@staff_member_required
+@superuser_required
 def registrants(request):
     registrants = Enrollment.objects.select_related('user', 'course', 'batch')
     form = FormFilterRegistrants(request.GET or None)
@@ -130,7 +130,7 @@ def registrants(request):
     return render(request, 'backoffice/courses/registrants.html', context)
 
 
-@staff_member_required
+@superuser_required
 def ajax_change_status_registrants(request):
     id = request.GET.get('id', None)
     status = request.GET.get('status', None)
@@ -166,7 +166,7 @@ def ajax_change_status_registrants(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@superuser_required
 def bulk_register(request):
     form = FormBulkRegister(request.POST or None, request.FILES or None)
     if form.is_valid():
@@ -184,7 +184,7 @@ def bulk_register(request):
     return render(request, 'backoffice/form.html', context)
 
 
-@staff_member_required
+@superuser_required
 def export_data(request, id):
     course = get_object_or_404(
         Courses.objects.prefetch_related(
@@ -203,7 +203,7 @@ def export_data(request, id):
     return response
 
 
-@staff_member_required
+@superuser_required
 def import_data(request):
     form = FormImportCourse(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():

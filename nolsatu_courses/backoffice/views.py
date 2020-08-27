@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
+from nolsatu_courses.apps.decorators import superuser_required
 from .forms import FormFilter
 
 
-@staff_member_required
+@superuser_required
 def index(request):
     statistics = None
     quiz_stats = None

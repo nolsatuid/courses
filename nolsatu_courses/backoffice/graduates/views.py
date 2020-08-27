@@ -1,18 +1,18 @@
 from django.conf import settings
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Enrollment, Batch
+from nolsatu_courses.apps.decorators import superuser_required
 from nolsatu_courses.apps.utils import call_internal_api
 from .forms import FormFilterStudent
 
 
-@staff_member_required
+@superuser_required
 def index(request):
     graduates = []
     form = FormFilterStudent(request.GET or None)
@@ -28,7 +28,7 @@ def index(request):
     return render(request, 'backoffice/graduates/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def candidate(request):
     candidate = []
     form = FormFilterStudent(request.GET or None)
@@ -50,7 +50,7 @@ def candidate(request):
     return render(request, 'backoffice/graduates/candidate.html', context)
 
 
-@staff_member_required
+@superuser_required
 def candidate_to_graduate(request, id):
     enroll = get_object_or_404(Enrollment, id=id)
     enroll.note = request.GET.get('note', "")
@@ -79,7 +79,7 @@ def candidate_to_graduate(request, id):
     return redirect('backoffice:graduates:candidate')
 
 
-@staff_member_required
+@superuser_required
 def regenerate_certificate(request, user_id):
     response = call_internal_api('get', url=settings.NOLSATU_HOST + f'/api/internal/regenerate-certificate/{user_id}')
     if response.status_code == 200:
@@ -90,7 +90,7 @@ def regenerate_certificate(request, user_id):
     return redirect('backoffice:graduates:index')
 
 
-@staff_member_required
+@superuser_required
 def ajax_filter_batch(request):
     course = request.GET.get('course', None)
     data = {

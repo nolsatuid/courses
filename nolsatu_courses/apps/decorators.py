@@ -1,11 +1,11 @@
 from functools import wraps
 
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import available_attrs
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.http import Http404
+from django.contrib.auth.models import User
 
 from nolsatu_courses.apps.courses.models import Courses, Module, Section
 
@@ -14,6 +14,7 @@ def enroll_required(view_func):
     """
     Decorator for views that checks that the user is has enrolled
     """
+
     @wraps(view_func, assigned=available_attrs(view_func))
     def _wrapped_view(request, *args, **kwargs):
         module = Module.objects.select_related("course").filter(slug=kwargs['slug']).first()
@@ -38,7 +39,7 @@ def enroll_required(view_func):
             messages.warning(
                 request,
                 _("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
-                    " dan admin telah menyetujui kamu sebagai peserta.")
+                  " dan admin telah menyetujui kamu sebagai peserta.")
             )
             return redirect('website:index')
 
@@ -57,8 +58,22 @@ def enroll_required(view_func):
         messages.warning(
             request,
             _("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
-                " dan admin telah menyetujui kamu sebagai peserta.")
+              " dan admin telah menyetujui kamu sebagai peserta.")
         )
         return redirect('website:index')
 
+    return _wrapped_view
+
+
+def superuser_required(a_func):
+    """
+    Decorator for views, that checks the user on nolsatu
+    """
+
+    @wraps(a_func, assigned=available_attrs(a_func))
+    def _wrapped_view(request, *args, **kwargs):
+        user = get_object_or_404(User, username=request.user, is_active=True, is_superuser=True)
+        if not user:
+            raise Http404()
+        return a_func(request, *args, **kwargs)
     return _wrapped_view

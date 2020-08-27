@@ -1,7 +1,6 @@
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
@@ -9,12 +8,13 @@ from django.forms import modelformset_factory
 
 from quiz.models import Quiz, Sitting, Question, SubCategory, Category
 from nolsatu_courses.apps.courses.models import Enrollment
+from nolsatu_courses.apps.decorators import superuser_required
 from multichoice.models import MCQuestion, Answer
 from nolsatu_courses.vendors.quizzes.forms import SubCategoryForm
 from .forms import FormQuiz, FormFilterQuizzes, CategoryFormBackoffice, MCQuestionFormBackoffice
 
 
-@staff_member_required
+@superuser_required
 def index(request):
     context = {
         'menu_active': 'quiz',
@@ -25,7 +25,7 @@ def index(request):
     return render(request, 'backoffice/quizzes/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def add(request):
     form = FormQuiz(data=request.POST or None)
     if form.is_valid():
@@ -42,7 +42,7 @@ def add(request):
     return render(request, 'backoffice/form-quiz.html', context)
 
 
-@staff_member_required
+@superuser_required
 def edit(request, id):
     quiz = get_object_or_404(Quiz, id=id)
     form = FormQuiz(data=request.POST or None, instance=quiz)
@@ -60,7 +60,7 @@ def edit(request, id):
     return render(request, 'backoffice/form-quiz.html', context)
 
 
-@staff_member_required
+@superuser_required
 def results(request):
     quizzes = None
     batch = None
@@ -85,7 +85,7 @@ def results(request):
     return render(request, 'backoffice/quizzes/results.html', context)
 
 
-@staff_member_required
+@superuser_required
 def detail_result(request, id, batch):
     quiz = get_object_or_404(Quiz, id=id)
     user_ids = Enrollment.objects.filter(batch_id=batch).values_list('user__id', flat=True)
@@ -102,7 +102,7 @@ def detail_result(request, id, batch):
     return render(request, 'backoffice/quizzes/detail-results.html', context)
 
 
-@staff_member_required
+@superuser_required
 def participant_result(request, id, batch):
     sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
 
@@ -116,7 +116,7 @@ def participant_result(request, id, batch):
     return render(request, 'backoffice/quizzes/participant-results.html', context)
 
 
-@staff_member_required
+@superuser_required
 def ajax_filter_sub_category(request):
     category = request.GET.get('category', None)
     data = {
@@ -134,7 +134,7 @@ def ajax_filter_sub_category(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@superuser_required
 def ajax_filter_questions(request):
     sub_category = request.GET.get('sub_category', None)
     data = {
@@ -154,7 +154,7 @@ def ajax_filter_questions(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@superuser_required
 def participant_result(request, id, batch):
     sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
 
@@ -168,7 +168,7 @@ def participant_result(request, id, batch):
     return render(request, 'backoffice/quizzes/participant-results.html', context)
 
 
-@staff_member_required
+@superuser_required
 def list_category(request):
     context = {
         'menu_active': 'quiz',
@@ -179,7 +179,7 @@ def list_category(request):
     return render(request, 'backoffice/quizzes/category.html', context)
 
 
-@staff_member_required
+@superuser_required
 def create_category(request):
     form = CategoryFormBackoffice(data=request.POST or None)
     if form.is_valid():
@@ -197,7 +197,7 @@ def create_category(request):
     return render(request, 'backoffice/form-editor.html', context)
 
 
-@staff_member_required
+@superuser_required
 def edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     form = CategoryFormBackoffice(data=request.POST or None, instance=category)
@@ -216,7 +216,7 @@ def edit_category(request, category_id):
     return render(request, 'backoffice/form-editor.html', context)
 
 
-@staff_member_required
+@superuser_required
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     with transaction.atomic():
@@ -225,7 +225,7 @@ def delete_category(request, category_id):
     return redirect('backoffice:quizzes:category')
 
 
-@staff_member_required
+@superuser_required
 def list_sub_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
 
@@ -239,7 +239,7 @@ def list_sub_category(request, category_id):
     return render(request, 'backoffice/quizzes/sub-category.html', context)
 
 
-@staff_member_required
+@superuser_required
 def create_sub_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
 
@@ -261,7 +261,7 @@ def create_sub_category(request, category_id):
     return render(request, 'backoffice/form-editor.html', context)
 
 
-@staff_member_required
+@superuser_required
 def delete_sub_category(request, sub_category_id):
     sub_category = get_object_or_404(SubCategory, id=sub_category_id)
     category_id = sub_category.category.id
@@ -271,7 +271,7 @@ def delete_sub_category(request, sub_category_id):
     return redirect('backoffice:quizzes:sub_category', category_id=category_id)
 
 
-@staff_member_required
+@superuser_required
 def edit_sub_category(request, sub_category_id):
     sub_category = get_object_or_404(SubCategory, id=sub_category_id,)
     form = SubCategoryForm(data=request.POST or None, instance=sub_category)
@@ -290,7 +290,7 @@ def edit_sub_category(request, sub_category_id):
     return render(request, 'backoffice/form-editor.html', context)
 
 
-@staff_member_required
+@superuser_required
 def ajax_filter_category(request):
     vendor = request.GET.get('vendor', None)
     data = {
@@ -308,7 +308,7 @@ def ajax_filter_category(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@superuser_required
 def list_question(request):
     context = {
         'menu_active': 'quiz',
@@ -319,7 +319,7 @@ def list_question(request):
     return render(request, 'backoffice/quizzes/question.html', context)
 
 
-@staff_member_required
+@superuser_required
 def create_question(request):
     form = MCQuestionFormBackoffice(data=request.POST or None, prefix='question')
     AnswerFormSet = modelformset_factory(Answer, extra=3, fields=('content', 'correct'), can_delete=True)
@@ -350,7 +350,7 @@ def create_question(request):
     return render(request, 'backoffice/form-editor.html', context)
 
 
-@staff_member_required
+@superuser_required
 def delete_question(request, question_id):
     category = get_object_or_404(MCQuestion, id=question_id)
     with transaction.atomic():
@@ -359,7 +359,7 @@ def delete_question(request, question_id):
     return redirect('backoffice:quizzes:question')
 
 
-@staff_member_required
+@superuser_required
 def edit_question(request, question_id):
     data_question = get_object_or_404(MCQuestion, id=question_id)
     form = MCQuestionFormBackoffice(data=request.POST or None, instance=data_question, prefix='question')

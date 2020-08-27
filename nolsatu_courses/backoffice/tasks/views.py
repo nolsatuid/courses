@@ -1,4 +1,3 @@
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -8,10 +7,11 @@ from django.utils.timezone import localtime
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Section, CollectTask, Batch, Courses
+from nolsatu_courses.apps.decorators import superuser_required
 from .forms import FormFilterTask, FormFilterTaskReport
 
 
-@staff_member_required
+@superuser_required
 def index(request):
     tasks = None
     course = None
@@ -31,7 +31,7 @@ def index(request):
     return render(request, 'backoffice/tasks/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def ajax_filter_section(request):
     course = request.GET.get('course', None)
     data = {
@@ -49,7 +49,7 @@ def ajax_filter_section(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@superuser_required
 def ajax_change_status(request):
     id = request.GET.get('task_id', None)
     status_id = request.GET.get('status_id', None)
@@ -71,7 +71,7 @@ def ajax_change_status(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@superuser_required
 def ajax_filter_batch(request):
     course = request.GET.get('course', None)
     data = {
@@ -89,7 +89,7 @@ def ajax_filter_batch(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@superuser_required
 def report_index(request):
     users = None
     course = None
@@ -120,7 +120,7 @@ def report_index(request):
     return render(request, 'backoffice/tasks/report_index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def report_detail(request, user_id, course_id):
     user = get_object_or_404(User, id=user_id)
     course = get_object_or_404(Courses, id=course_id, enrolled__user__in=[user])
