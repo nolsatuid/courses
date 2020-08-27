@@ -243,3 +243,9 @@ class MyQuizSerializer(serializers.Serializer):
     name = serializers.CharField()
     score = serializers.FloatField(max_value=100, min_value=0)
 
+
+class MyCourseSerializer(serializers.Serializer):
+    course_title = serializers.CharField()
+    progress = serializers.FloatField(max_value=100, min_value=0)
+    status = serializers.CharField()
+

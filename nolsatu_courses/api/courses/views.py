@@ -13,7 +13,8 @@ from django.conf import settings
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
     ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
-    CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer, MyQuizSerializer
+    CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer, MyQuizSerializer,
+    MyCourseSerializer,
 )
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.api.authentications import UserAuthAPIView
@@ -37,13 +38,18 @@ class CourseListView(APIView):
         return Response(serializer.data)
 
 
-class MyCourseListView(UserAuthAPIView):
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get My Course List", responses={
+class MyCourseView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['Courses'], operation_description="Get My Course", responses={
         200: CourseSerializer(many=True)
     })
-    def get(self, request):
-        courses = Courses.objects.filter(enrolled__user=request.user)
-        serializer = CourseSerializer(courses, many=True)
+    def get(self, request, course_id):
+        course = Courses.objects.filter(enrolled__user=request.user, id=course_id).first()
+        data = {
+            'course_title': course.title,
+            'progress': course.progress_percentage(request.user),
+            'status': course.enrolled.first().get_status_display(),
+        }
+        serializer = MyCourseSerializer(data)
         return Response(serializer.data)
 
 
