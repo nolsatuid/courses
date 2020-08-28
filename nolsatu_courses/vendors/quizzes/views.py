@@ -4,14 +4,16 @@ from django.forms import modelformset_factory
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
+
 from quiz.models import Category, SubCategory, Quiz, Sitting
 from multichoice.models import MCQuestion, Answer
 from .forms import CategoryForm, SubCategoryForm, MCQuestionForm, FormQuizVendor, FormFilterQuizzesVendor
 from nolsatu_courses.apps.courses.models import Enrollment
+from nolsatu_courses.apps.decorators import vendor_member_required
 
 
-@staff_member_required
+
+@vendor_member_required
 def list_category(request):
     context = {
         'menu_active': 'quiz',
@@ -22,7 +24,7 @@ def list_category(request):
     return render(request, 'vendors/quizzes/category.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def create_category(request):
     form = CategoryForm(data=request.POST or None)
     if form.is_valid():
@@ -42,7 +44,7 @@ def create_category(request):
     return render(request, 'vendors/form-editor.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id, vendor__users__email=request.user.email)
     form = CategoryForm(data=request.POST or None, instance=category)
@@ -61,7 +63,7 @@ def edit_category(request, category_id):
     return render(request, 'vendors/form-editor.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id, vendor__users__email=request.user.email)
     with transaction.atomic():
@@ -70,7 +72,7 @@ def delete_category(request, category_id):
     return redirect('vendors:quizzes:category')
 
 
-@staff_member_required
+@vendor_member_required
 def list_sub_category(request, category_id):
     category = get_object_or_404(Category, id=category_id, vendor__users__email=request.user.email)
 
@@ -85,7 +87,7 @@ def list_sub_category(request, category_id):
     return render(request, 'vendors/quizzes/sub-category.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def create_sub_category(request, category_id):
     category = get_object_or_404(Category, id=category_id, vendor__users__email=request.user.email)
 
@@ -107,7 +109,7 @@ def create_sub_category(request, category_id):
     return render(request, 'vendors/form-editor.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def delete_sub_category(request, sub_category_id):
     sub_category = get_object_or_404(SubCategory, id=sub_category_id,
                                      category__vendor__users__email=request.user.email)
@@ -118,7 +120,7 @@ def delete_sub_category(request, sub_category_id):
     return redirect('vendors:quizzes:sub_category', category_id=category_id)
 
 
-@staff_member_required
+@vendor_member_required
 def edit_sub_category(request, sub_category_id):
     sub_category = get_object_or_404(SubCategory, id=sub_category_id,
                                      category__vendor__users__email=request.user.email)
@@ -138,7 +140,7 @@ def edit_sub_category(request, sub_category_id):
     return render(request, 'vendors/form-editor.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def list_question(request):
     context = {
         'menu_active': 'quiz',
@@ -149,7 +151,7 @@ def list_question(request):
     return render(request, 'vendors/quizzes/question.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def ajax_filter_subcategory(request):
     category = request.GET.get('category', None)
     data = {
@@ -167,7 +169,7 @@ def ajax_filter_subcategory(request):
     return JsonResponse(data, status=200)
 
 
-@staff_member_required
+@vendor_member_required
 def create_question(request):
     form = MCQuestionForm(data=request.POST or None, prefix='question')
     AnswerFormSet = modelformset_factory(Answer, extra=3, fields=('content', 'correct'), can_delete=True)
@@ -198,7 +200,7 @@ def create_question(request):
     return render(request, 'vendors/form-editor.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def delete_question(request, question_id):
     category = get_object_or_404(MCQuestion, id=question_id, vendor__users__email=request.user.email)
     with transaction.atomic():
@@ -207,7 +209,7 @@ def delete_question(request, question_id):
     return redirect('vendors:quizzes:question')
 
 
-@staff_member_required
+@vendor_member_required
 def edit_question(request, question_id):
     data_question = get_object_or_404(MCQuestion, id=question_id, vendor__users__email=request.user.email)
     form = MCQuestionForm(data=request.POST or None, instance=data_question, prefix='question')
@@ -242,7 +244,7 @@ def edit_question(request, question_id):
     return render(request, 'vendors/form-editor.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def list_quiz(request):
     context = {
         'menu_active': 'quiz',
@@ -253,7 +255,7 @@ def list_quiz(request):
     return render(request, 'vendors/quizzes/quiz.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def create_quiz(request):
     form = FormQuizVendor(data=request.POST or None, user_email=request.user.email)
     if form.is_valid():
@@ -270,7 +272,7 @@ def create_quiz(request):
     return render(request, 'vendors/form-quiz.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def edit_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     form = FormQuizVendor(data=request.POST or None, instance=quiz, user_email=request.user.email)
@@ -288,7 +290,7 @@ def edit_quiz(request, quiz_id):
     return render(request, 'vendors/form-quiz.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def result_quiz(request):
     quizzes = None
     batch = None
@@ -313,7 +315,7 @@ def result_quiz(request):
     return render(request, 'vendors/quizzes/results.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def detail_result(request, quiz_id, batch_id):
     quiz = get_object_or_404(Quiz, id=quiz_id, category__vendor__users__email=request.user.email)
     user_ids = Enrollment.objects.filter(batch_id=batch_id).values_list('user__id', flat=True)
@@ -330,7 +332,7 @@ def detail_result(request, quiz_id, batch_id):
     return render(request, 'vendors/quizzes/detail-results.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def participant_result(request, id, batch):
     sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id,
                                 quiz__category__vendor__users__email=request.user.email)

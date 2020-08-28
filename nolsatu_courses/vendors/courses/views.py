@@ -1,18 +1,19 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.admin.views.decorators import staff_member_required
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import ugettext_lazy as _
+
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Courses, Enrollment
+from nolsatu_courses.apps.decorators import vendor_member_required
 from nolsatu_courses.vendors.courses.forms import (FormVendorCourse,
                                                    FormFilterRegistrantsVendors, )
 
 
-@staff_member_required
+@vendor_member_required
 def index(request):
     context = {
         'courses': Courses.objects.filter(vendor__users__email=request.user.email),
@@ -23,7 +24,7 @@ def index(request):
     return render(request, 'vendors/courses/list.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def details(request, courses_id):
     course = get_object_or_404(Courses, id=courses_id, vendor__users__email=request.user.email)
     context = {
@@ -34,7 +35,7 @@ def details(request, courses_id):
     return render(request, 'vendors/courses/detail.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def create(request):
     template_name = 'vendors/form-editor.html'
 
@@ -61,7 +62,7 @@ def create(request):
     return render(request, template_name, context)
 
 
-@staff_member_required
+@vendor_member_required
 def delete(request, id):
     course = get_object_or_404(Courses, id=id, vendor__users__email=request.user.email)
     course.delete()
@@ -69,7 +70,7 @@ def delete(request, id):
     return redirect('vendors:courses:index')
 
 
-@staff_member_required
+@vendor_member_required
 def edit(request, id):
     template_name = 'vendors/form-editor.html'
     course = get_object_or_404(Courses, id=id, vendor__users__email=request.user.email)
@@ -96,7 +97,7 @@ def edit(request, id):
     return render(request, template_name, context)
 
 
-@staff_member_required
+@vendor_member_required
 def registrants(request):
     template_name = 'vendors/courses/registrants.html'
     list_registrants = Enrollment.objects.filter(course__vendor__users__email=request.user.email,
@@ -143,7 +144,7 @@ def registrants(request):
     return render(request, template_name, context)
 
 
-@staff_member_required
+@vendor_member_required
 def ajax_change_status_registrants(request):
     id = request.GET.get('id', None)
     status = request.GET.get('status', None)

@@ -1,15 +1,15 @@
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from nolsatu_courses.apps.courses.models import Module, Section, TaskUploadSettings
+from nolsatu_courses.apps.decorators import vendor_member_required
 from nolsatu_courses.backoffice.sections.forms import FormSection, FormTaskSetting
 
 
-@staff_member_required
+@vendor_member_required
 def index(request, id):
     module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
     context = {
@@ -22,7 +22,7 @@ def index(request, id):
     return render(request, 'vendors/sections/index.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def create(request, id):
     module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
     form = FormSection(data=request.POST or None, files=request.FILES or None)
@@ -48,7 +48,7 @@ def create(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@vendor_member_required
 def edit(request, id):
     section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
     form = FormSection(data=request.POST or None, files=request.FILES or None, instance=section)
@@ -72,7 +72,7 @@ def edit(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@vendor_member_required
 def delete(request, id):
     section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
     with transaction.atomic():
@@ -81,7 +81,7 @@ def delete(request, id):
     return redirect('vendors:sections:index', id=section.module.id)
 
 
-@staff_member_required
+@vendor_member_required
 def details(request, id):
     section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
 
@@ -94,7 +94,7 @@ def details(request, id):
     return render(request, 'vendors/sections/detail.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def task_setting(request, id):
     section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
     set_to_task = TaskUploadSettings.objects.filter(section=section).first()

@@ -1,15 +1,16 @@
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
+
 from nolsatu_courses.apps.courses.models import Enrollment, Batch
+from nolsatu_courses.apps.decorators import vendor_member_required
 from nolsatu_courses.apps import utils
 from .forms import FormFilterStudentVendor
 
 
-@staff_member_required
+@vendor_member_required
 def candidate(request):
     candidate_list = []
     form = FormFilterStudentVendor(request.GET or None, user_email=request.user.email)
@@ -31,7 +32,7 @@ def candidate(request):
     return render(request, 'vendors/graduates/candidate.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def candidate_to_graduate(request, candidate_id):
     enroll = get_object_or_404(Enrollment, id=candidate_id,
                                course__vendor__users__email=request.user.email)
@@ -62,7 +63,7 @@ def candidate_to_graduate(request, candidate_id):
     return redirect('vendors:graduates:candidate')
 
 
-@staff_member_required
+@vendor_member_required
 def graduate(request):
     graduates = []
     form = FormFilterStudentVendor(request.GET or None, user_email=request.user.email)
