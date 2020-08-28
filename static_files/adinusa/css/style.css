@@ -4043,7 +4043,7 @@ ul {
 
 /* line 61, E:/172 Etrain Education/172_Etrain_Education_html/sass/_special_cource.scss */
 .special_cource .single_special_cource .special_cource_text h4 {
-  float: right;
+  float: left;
   color: #3295ff;
   font-weight: 600;
 }
@@ -7378,15 +7378,21 @@ color: #ccc;
 }
 
 .special_img_card {
-  border: 1px solid #edeff2; 
-  border-bottom: 0px; 
-  height: 330px; 
+  border: 1px solid #edeff2;
+  border-bottom: 0px;
+  height: 300px;
   font-weight: 10;
 }
 
 .normal-price {
   font-size: 9pt; 
-  float: right; 
   color: #888888; 
   margin-bottom: -20px;
+  float: left;
+}
+
+.badge{
+  font-weight: 400;
+  font-size: 90%;
+  padding: 5px 10px;
 }
