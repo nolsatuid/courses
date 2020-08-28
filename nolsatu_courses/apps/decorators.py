@@ -76,4 +76,22 @@ def superuser_required(a_func):
         if not user:
             raise Http404()
         return a_func(request, *args, **kwargs)
+
+    return _wrapped_view
+
+
+def vendor_member_required(a_func):
+    """
+    Decorator for views, that checks the vendor on nolsatu
+    """
+
+    @wraps(a_func, assigned=available_attrs(a_func))
+    def _wrapped_view(request, *args, **kwargs):
+        user = get_object_or_404(User, username=request.user, is_active=True, is_staff=True)
+
+        if user.vendors.first() is None:
+            raise Http404()
+
+        return a_func(request, *args, **kwargs)
+
     return _wrapped_view
