@@ -2,14 +2,14 @@ from django.conf import settings
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 
+from nolsatu_courses.apps.decorators import superuser_required
 from nolsatu_courses.apps.vendors.models import Vendor
 from .forms import VendorForm
 
 
-@staff_member_required
+@superuser_required
 def index(request):
     context = {
         'menu_active': 'vendors',
@@ -20,7 +20,7 @@ def index(request):
     return render(request, 'backoffice/vendors/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def add(request):
     form = VendorForm(data=request.POST or None)
     if form.is_valid():
@@ -43,7 +43,7 @@ def add(request):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def edit(request, vendor_id):
     vendor = get_object_or_404(Vendor, id=vendor_id)
     form = VendorForm(data=request.POST or None, instance=vendor)
@@ -67,7 +67,7 @@ def edit(request, vendor_id):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def delete(request, vendor_id):
     vendor = get_object_or_404(Vendor, id=vendor_id)
     with transaction.atomic():

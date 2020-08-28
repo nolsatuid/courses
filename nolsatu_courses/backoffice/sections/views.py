@@ -1,15 +1,15 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 from nolsatu_courses.apps.courses.models import Module, Section, TaskUploadSettings
+from nolsatu_courses.apps.decorators import superuser_required
 from .forms import FormSection, FormTaskSetting
 
 
-@staff_member_required
+@superuser_required
 def index(request, id):
     module = get_object_or_404(Module, id=id)
     context = {
@@ -22,7 +22,7 @@ def index(request, id):
     return render(request, 'backoffice/sections/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def add(request, id):
     module = get_object_or_404(Module, id=id)
     form = FormSection(data=request.POST or None, files=request.FILES or None)
@@ -47,7 +47,7 @@ def add(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def edit(request, id):
     section = get_object_or_404(Section, id=id)
     form = FormSection(data=request.POST or None, files=request.FILES or None, instance=section)
@@ -70,7 +70,7 @@ def edit(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def delete(request, id):
     section = get_object_or_404(Section, id=id)
     section.delete()
@@ -78,7 +78,7 @@ def delete(request, id):
     return redirect('backoffice:sections:index', id=section.module.id)
 
 
-@staff_member_required
+@superuser_required
 def details(request, id):
     section = get_object_or_404(Section, id=id)
 
@@ -91,7 +91,7 @@ def details(request, id):
     return render(request, 'backoffice/sections/detail.html', context)
 
 
-@staff_member_required
+@superuser_required
 def task_setting(request, id):
     section = get_object_or_404(Section, id=id)
     task_setting = TaskUploadSettings.objects.filter(section=section).first()

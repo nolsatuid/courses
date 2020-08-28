@@ -1,15 +1,13 @@
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-
-from nolsatu_courses.apps import utils
+from nolsatu_courses.apps.decorators import superuser_required
 from nolsatu_courses.apps.courses.models import Batch
 from .forms import FormBatch
 
 
-@staff_member_required
+@superuser_required
 def index(request):
     context = {
         'menu_active': 'batch',
@@ -20,7 +18,7 @@ def index(request):
     return render(request, 'backoffice/batchs/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def add(request):
     form = FormBatch(data=request.POST or None)
     if form.is_valid():
@@ -37,7 +35,7 @@ def add(request):
     return render(request, 'backoffice/form.html', context)
 
 
-@staff_member_required
+@superuser_required
 def edit(request, id):
     batch = get_object_or_404(Batch, id=id)
     form = FormBatch(data=request.POST or None, instance=batch)
@@ -55,7 +53,7 @@ def edit(request, id):
     return render(request, 'backoffice/form.html', context)
 
 
-@staff_member_required
+@superuser_required
 def delete(request, id):
     batch = get_object_or_404(Batch, id=id)
     batch.delete()
@@ -63,7 +61,7 @@ def delete(request, id):
     return redirect('backoffice:batchs:index')
 
 
-@staff_member_required
+@superuser_required
 def details(request, id):
     batch = get_object_or_404(Batch, id=id)
 

@@ -1,15 +1,16 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 from nolsatu_courses.apps.courses.models import Courses, Module
+from nolsatu_courses.apps.decorators import superuser_required
+
 from .forms import FormModule
 
 
-@staff_member_required
+@superuser_required
 def index(request, id):
     course = get_object_or_404(Courses, id=id)
     context = {
@@ -22,7 +23,7 @@ def index(request, id):
     return render(request, 'backoffice/modules/index.html', context)
 
 
-@staff_member_required
+@superuser_required
 def add(request, id):
     course = get_object_or_404(Courses, id=id)
     form = FormModule(data=request.POST or None, files=request.FILES or None)
@@ -47,7 +48,7 @@ def add(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def edit(request, id):
     module = get_object_or_404(Module, id=id)
     form = FormModule(data=request.POST or None, files=request.FILES or None, instance=module)
@@ -70,7 +71,7 @@ def edit(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@superuser_required
 def delete(request, id):
     module = get_object_or_404(Module, id=id)
     module.delete()
@@ -78,7 +79,7 @@ def delete(request, id):
     return redirect('backoffice:modules:index', id=module.course.id)
 
 
-@staff_member_required
+@superuser_required
 def details(request, id):
     module = get_object_or_404(Module, id=id)
 
@@ -90,7 +91,7 @@ def details(request, id):
     return render(request, 'backoffice/modules/detail.html', context)
 
 
-@staff_member_required
+@superuser_required
 def preview(request, id):
     module = get_object_or_404(Module, id=id)
     download = request.GET.get('download', '')
