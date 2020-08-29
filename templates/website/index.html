@@ -1,19 +1,28 @@
-{% extends 'website/base-top-nav.html' %}
+{% extends 'base-adinusa.html' %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12 mb-3"><h1 class="m-0 text-dark"> {{ title }}</h1></div>
-    {% for course in courses %}
-        <div class="col-lg-3">
-            {% if user_page %}
-                {% include 'partials/card-course-user.html' with course=course progress_bar=progress_bar %}
-            {% else %}
-                {% include 'partials/card-course.html' with course=course %}
-            {% endif %}
+<!--::review_part start::-->
+<section class="special_cource padding_top">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5">
+                <div class="section_tittle text-center">
+                    <h2>Kursus</h2>
+                </div>
+            </div>
         </div>
-    {% empty %}
-            <div class="col-md-12 mb-3 card p-3"><h2 class="m-0 text-dark">Tidak ada materi yang tersedia.</h2></div>
-    {% endfor %}
-  </div>
-  <!-- /.row -->
+        <div class="row">
+            {% for course in courses %}
+                {% if user_page %}
+                    {% include 'partials/card-course-user.html' with course=course progress_bar=progress_bar %}
+                {% else %}
+                    {% include 'partials/card-course.html' with course=course %}
+                {% endif %}
+            {% empty %}
+                    <div class="col-md-12 mb-3 card p-3"><h2 class="m-0 text-dark">Tidak ada materi yang tersedia.</h2></div>
+            {% endfor %}            
+        </div>
+    </div>
+</section>
+<!--::blog_part end::-->
 {% endblock %}

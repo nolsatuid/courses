@@ -1,22 +1,39 @@
-{% load static tags_courses %}
+{% load static tags_courses humanize %}
 
-<div class="card" style="width: 100%;min-height: 400px;max-height: 450px;overflow: hidden;">
-    <a href="{% url 'website:courses:details' course.slug %}">
-        <div style="width: 100%;height: 200px;overflow: hidden;">
-            {% if course.status == 1 %}
-                <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 10px;">{{ course.get_status_display }}</span>
-            {% endif %}
-            {% if course.featured_image %}
-                <img class="card-img-top" src="{{ course.featured_image.url }}" alt="{{ course.featured_image.name}}">
-            {% endif %}
+{% block extra_css %}
+<style>
+</style>
+{% endblock %}
+
+<div class="col-sm-6 col-lg-4 mb-5 pb-5">
+    <div class="single_special_cource">
+        {% if course.course.status == 1 %}
+            <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 25px;">{{ course.course.get_status_display }}</span>
+        {% endif %}
+        {% if course.course.featured_image %}
+        <div class="special_img special_img_card">
+            <a href="{% url 'website:courses:details' course.course.slug %}">
+                <img src="{{ course.course.featured_image.url }}" alt="{{ course.course.featured_image.name}}" style="width: 100%;">
+            </a>
         </div>
-        <div class="card-body text-dark">
-            <h4>{{ course.title }}</h4>
-            {% if "MARKDOWN_CONTENT"|get_toggle %}
-                {{ course.short_description_md|show_markdown|safe|truncatechars:100 }}
-            {% else %}
-                {{ course.short_description|safe|truncatechars:100 }}
-            {% endif %}
+        {% endif %}
+        <div class="special_cource_text">      
+            <a href="{% url 'website:courses:details' course.course.slug %}"><h3>{{ course.course.title }}</h3></a>
+            <div class="badge badge-warning">{{ course.course.get_level_display }}</div>
+            <div class="author_info">                
+                <span class="d-flex align-items-center">
+                    {% if course.has_enrolled %}
+                        <a href="{% url 'website:courses:details' course.course.slug %}" class="genric-btn info-border radius large">Masuk Kelas</a>
+                    {% else %}
+                    <h4>
+                        {% if course.course.product.price %}IDR {{ course.course.product.price|intcomma }}{% else %}GRATIS{% endif %}<br>
+                        <span class="normal-price">{% if course.course.product.discount %}IDR <s>{{ course.course.product.discount|intcomma }}</s>{% endif %}</span>
+                    </h4>
+                    {% endif %}
+                </span>      
+                <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{{ course.course.vendor.logo.url }}" alt="{{ course.course.vendor.name }}"></a>
+            </div>
         </div>
-    </a>
+
+    </div>
 </div>

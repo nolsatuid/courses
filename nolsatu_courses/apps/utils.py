@@ -155,3 +155,12 @@ def check_on_activity(slug, type_field='module'):
         return Activity.objects.filter(section__slug=slug).exists()
     else:
         return Activity.objects.filter(module__slug=slug).exists()
+
+
+def image_upload_path(prefix='etc', use_dir_date=True):
+    if use_dir_date:
+        path = f"images/{prefix}/%Y/%m/%d"
+    else:
+        path = f"images/{prefix}"
+
+    return path

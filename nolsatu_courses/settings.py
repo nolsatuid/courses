@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
+    'django.contrib.humanize',
 
     'nolsatu_courses.apps.courses',
     'nolsatu_courses.apps.upload_files',

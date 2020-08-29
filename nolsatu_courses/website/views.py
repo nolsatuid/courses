@@ -19,7 +19,10 @@ def index(request):
 
     context = {
         'title': _('Daftar Materi'),
-        'courses': courses,
+        'courses': [{
+            'course': course,
+            'has_enrolled': course.has_enrolled(request.user)
+        } for course in courses],
         'user_page': False
     }
     return render(request, 'website/index.html', context)

@@ -1,12 +1,12 @@
-{% extends 'website/base-top-nav.html' %}
+{% extends 'base-adinusa.html' %}
 {% load static tags_courses %}
 
 {% block content %}
-<div class="row">
-  	<div class="col-sm-12">
+<section class="special_cource padding_top">
+    <div class="container">
 		<div class="card">
 			<div class="card-header">
-				<h2>{{ title }}</h2>
+				<h3>{{ title }}</h3>
 			</div>
 			<div class="card-body">
 				{% if courses %}
@@ -53,5 +53,5 @@
 			</div>
 		</div>
 	</div>
-</div>
+</section>
 {% endblock %}
