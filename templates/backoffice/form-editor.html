@@ -1,6 +1,11 @@
 {% extends 'backoffice/base-adminlte.html' %}
 {% load static widget_tweaks %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.css' %}">
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.css' %}">
+<{% endblock  %}
+
 {% block content %}
 <div class="col-md-12">
     <div class="card">
@@ -145,7 +150,11 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
 <script type="text/javascript">
+    $('#id_users').select2({
+        theme: 'bootstrap4'
+    })
     $(document).ready(function() {
         filterCategory();
         filterSubCategory();
