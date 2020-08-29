@@ -2,14 +2,15 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404
 
 from nolsatu_courses.apps.courses.models import Courses, Module
+from nolsatu_courses.apps.decorators import vendor_member_required
 from nolsatu_courses.backoffice.modules.forms import FormModule
 
 
-@staff_member_required
+
+@vendor_member_required
 def index(request, id):
     course = get_object_or_404(Courses, id=id, vendor__users__email=request.user.email)
     context = {
@@ -22,7 +23,7 @@ def index(request, id):
     return render(request, 'vendors/modules/index.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def create(request, id):
     course = get_object_or_404(Courses, id=id, vendor__users__email=request.user.email)
     form = FormModule(data=request.POST or None, files=request.FILES or None)
@@ -47,7 +48,7 @@ def create(request, id):
     return render(request, template_name, context)
 
 
-@staff_member_required
+@vendor_member_required
 def details(request, id):
     module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
 
@@ -59,7 +60,7 @@ def details(request, id):
     return render(request, 'vendors/modules/detail.html', context)
 
 
-@staff_member_required
+@vendor_member_required
 def edit(request, id):
     module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
     form = FormModule(data=request.POST or None, files=request.FILES or None, instance=module)
@@ -82,7 +83,7 @@ def edit(request, id):
     return render(request, template, context)
 
 
-@staff_member_required
+@vendor_member_required
 def delete(request, id):
     module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
     module.delete()
@@ -90,7 +91,7 @@ def delete(request, id):
     return redirect('vendors:modules:index', id=module.course.id)
 
 
-@staff_member_required
+@vendor_member_required
 def preview(request, id):
     module = get_object_or_404(Module, id=id, course__vendor__users__email=request.user.email)
     download = request.GET.get('download', '')
