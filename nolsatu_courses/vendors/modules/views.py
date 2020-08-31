@@ -41,7 +41,7 @@ def create(request, id):
     }
 
     template_name = 'vendors/form-editor.html'
-    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template_name = 'vendors/form-editor-markdown.html'
 
     return render(request, template_name, context)
@@ -76,7 +76,7 @@ def edit(request, id):
     }
 
     template = 'vendors/form-editor.html'
-    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template = 'vendors/form-editor-markdown.html'
 
     return render(request, template, context)

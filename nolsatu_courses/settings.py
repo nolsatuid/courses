@@ -245,7 +245,6 @@ MARKDOWNX_IMAGE_MAX_SIZE = {
 FEATURE = {
     "MARKDOWN_CONTENT": False,
     "MARKDOWN_BACKOFFICE_EDITOR": False,
-    "MARKDOWN_VENDORS_EDITOR": False
 }
 
 # internal course configs
