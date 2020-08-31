@@ -108,8 +108,9 @@
 
     $( "#id_discount_type" ).change(function() {
         disc_type = $( "#id_discount_type option:selected" ).val();
-        if(disc_type == 1)
-            $( "#id_discount_value" ).val('');
+        $( "#id_discount_value" ).val('');
+        $( "#id_discount" ).val('');
+        $( "#text-discount" ).html('');
     });
 
     $( "#id_discount_value" ).keyup(function() {

@@ -1,4 +1,5 @@
 {% extends 'backoffice/base-adminlte.html' %}
+{% load humanize %}
 
 {% block content %}
 <div class="col-md-12">
@@ -12,22 +13,26 @@
             <table id="datatable" class="table table-striped">
                 <thead>
                     <th>Kursus</th>
-                    <th>Harga</th>
                     <th>Kode</th>
-                    <th>Diskon Tipe</th>
-                    <th>Nilai Diskon</th>
-                    <th>Diskon</th>
+                    <th>Harga (IDR)</th>
+                    <th>Diskon (IDR)</th>
                     <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
                     {% for product in products %}
                         <tr>
                             <td>{{ product.course }}</td>
-                            <td>{{ product.price }}</td>
                             <td>{{ product.code|default:"-" }}</td>
-                            <td>{{ product.get_discount_type_display|default:"-" }}</td>
-                            <td>{{ product.discount_value|default:"-" }}</td>
-                            <td>{{ product.discount|default:"-" }}</td>
+                            <td>{{ product.price|intcomma }}</td>
+                            <td>
+                                {% if product.discount_type == 1 %}
+                                    {{ product.discount|intcomma }} ({{ product.discount_value|default:"-" }} %)
+                                {% elif product.discount_type == 2 %}
+                                    {{ product.discount|intcomma }}
+                                {% else %}
+                                    -
+                                {% endif %}                                
+                            </td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'backoffice:products:edit' product.id %}">
                                     <i class="fas fa-edit"></i> Edit</a>
