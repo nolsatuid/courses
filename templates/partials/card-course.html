@@ -31,7 +31,7 @@
                     </h4>
                     {% endif %}
                 </span>      
-                <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{{ course.course.vendor.logo.url }}" alt="{{ course.course.vendor.name }}"></a>
+                <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{% if course.course.vendor.logo %} {{ course.course.vendor.logo.url }} {% endif %}" alt="{{ course.course.vendor.name }}"></a>
             </div>
         </div>
 
