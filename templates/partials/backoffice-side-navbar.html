@@ -63,7 +63,7 @@
             </li>
             <li class="nav-item {% if menu_active == 'course' %}has-treeview menu-open{% endif %}">
                 <a href="#" class="nav-link {% if menu_active == 'course' %}active{% endif %}">
-                    <i class="nav-icon fas fa-id-card"></i>
+                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
                     <p>Kursus<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
@@ -77,6 +77,26 @@
                         <a href="{% url 'backoffice:courses:add' %}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Tambah Kursus</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item {% if menu_active == 'products' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'products' %}active{% endif %}">
+                    <i class="nav-icon fas fa-tags"></i>
+                    <p>Produk<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:products:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Daftar Produk</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:products:add' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Tambah Produk</p>
                         </a>
                     </li>
                 </ul>

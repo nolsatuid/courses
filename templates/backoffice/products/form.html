@@ -1,0 +1,145 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load static widget_tweaks %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                {{ title }}
+            </h4>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card-body">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class=" col-md-12 col-lg-12 ">
+                            <h5>{{ title_extra }}</h5>
+                        </div>
+                        <div class=" col-md-12 col-lg-12 ">
+                            <div class="tab-content">
+
+                                {{ form.media }}
+                                {{ form.non_field_errors }}
+                                <div class="form-group row">
+                                    <label class="col-md-2"> {{ form.course.label }}</label>
+                                    <div class="col-md-10">
+                                        {% render_field form.course|add_class:"form-control" %}
+                                        <small class="form-text text-muted">{{ form.course.help_text }}</small>
+                                        <small class="form-text text-danger">{{ form.course.errors }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-2"> {{ form.code.label }}</label>
+                                    <div class="col-md-10">
+                                        {% render_field form.code|add_class:"form-control" %}
+                                        <small class="form-text text-muted">{{ form.code.help_text }}</small>
+                                        <small class="form-text text-danger">{{ form.code.errors }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-2"> {{ form.price.label }}</label>
+                                    <div class="col-md-10">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">Rp</span>
+                                            </div>
+                                            {% render_field form.price|add_class:"form-control" %}
+                                        </div>                                        
+                                        <small class="form-text text-muted">{{ form.price.help_text }}</small>
+                                        <small class="form-text text-danger">{{ form.price.errors }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-2"> {{ form.discount_type.label }}</label>
+                                    <div class="col-md-10">
+                                        {% render_field form.discount_type|add_class:"form-control" %}
+                                        <small class="form-text text-muted">{{ form.discount_type.help_text }}</small>
+                                        <small class="form-text text-danger">{{ form.discount_type.errors }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-2"> {{ form.discount_value.label }}</label>
+                                    <div class="col-md-10">
+                                        {% render_field form.discount_value|add_class:"form-control" %}
+                                        <small class="form-text text-muted">{{ form.discount_value.help_text }}</small>
+                                        <small class="form-text text-danger">{{ form.discount_value.errors }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-2"> {{ form.discount.label }}</label>
+                                    <div class="col-md-10">
+                                        Rp. <span id="text-discount"></span>
+                                        {% render_field form.discount|add_class:"form-control d-none" %}
+                                        <small class="form-text text-muted">{{ form.discount.help_text }}</small>
+                                        <small class="form-text text-danger">{{ form.discount.errors }}</small>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success btn-user float-right">
+                    {% if title_submit %} {{ title_submit }} {% else %} Submit {% endif %}
+                </button>
+            </div>
+    </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    var disc_type = $( "#id_discount_type option:selected" ).val();
+    var value = $( "#id_discount_value" ).val();
+
+    $(document).ready(function() {
+        setDiscount();
+    })
+
+    $( "#id_discount_type" ).change(function() {
+        disc_type = $( "#id_discount_type option:selected" ).val();
+        $( "#id_discount_value" ).val('');
+        $( "#id_discount" ).val('');
+        $( "#text-discount" ).html('');
+    });
+
+    $( "#id_discount_value" ).keyup(function() {
+        setDiscount();
+    });
+
+    $( "#id_price" ).keyup(function() {
+        setDiscount();
+    });
+
+    function setDiscount(){
+        if(disc_type == 1){
+            if(value > 100) 
+                $( "#id_discount_value" ).val('100');
+
+            if($( "#id_price" ).val() != "")            
+                $( "#text-discount" ).html(($( "#id_price" ).val() * $( "#id_discount_value" ).val() / 100).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."));
+                $( "#id_discount" ).val($( "#id_price" ).val() * $( "#id_discount_value" ).val() / 100);
+        }
+        else if(disc_type == 2){
+            if(value > $( "#id_price" ).val()) 
+                $( "#id_discount_value" ).val($( "#id_price" ).val());
+
+            $( "#text-discount" ).html($( "#id_discount_value" ).val().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."));
+            $( "#id_discount" ).val($( "#id_discount_value" ).val());
+        }
+
+        if(value < 0) 
+            $( "#id_discount_value" ).val('0');
+    }
+</script>
+{% endblock %}
