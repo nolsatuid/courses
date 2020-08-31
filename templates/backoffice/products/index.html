@@ -1,0 +1,84 @@
+{% extends 'backoffice/base-adminlte.html' %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <span class="float-right">
+                <a href="{% url 'backoffice:products:add' %}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Tambah Produk</a>
+            </span>
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Kursus</th>
+                    <th>Harga</th>
+                    <th>Kode</th>
+                    <th>Diskon Tipe</th>
+                    <th>Nilai Diskon</th>
+                    <th>Diskon</th>
+                    <th class="text-center">Aksi</th>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.course }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.code|default:"-" }}</td>
+                            <td>{{ product.get_discount_type_display|default:"-" }}</td>
+                            <td>{{ product.discount_value|default:"-" }}</td>
+                            <td>{{ product.discount|default:"-" }}</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'backoffice:products:edit' product.id %}">
+                                    <i class="fas fa-edit"></i> Edit</a>
+                                <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
+                                   data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:products:delete' product.id %}"
+                                   data-name="{{ product.course }}"> <i class="fas fa-trash"></i> Hapus</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Yakin ingin menghapus <strong id="confirmDeleteName"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable();
+        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('delete-url');
+            var name = button.data('name');
+
+            var modal = $(this);
+            modal.find('#confirmDeleteButton').attr("href", url);
+            modal.find('#confirmDeleteName').html(name);
+        })
+    })
+</script>
+{% endblock %}
