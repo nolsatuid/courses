@@ -42,7 +42,7 @@ def create(request, id):
     }
 
     template = 'vendors/form-editor.html'
-    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template = 'vendors/form-editor-markdown.html'
 
     return render(request, template, context)
@@ -66,7 +66,7 @@ def edit(request, id):
     }
 
     template = 'vendors/form-editor.html'
-    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template = 'vendors/form-editor-markdown.html'
 
     return render(request, template, context)
@@ -116,7 +116,7 @@ def task_setting(request, id):
     }
 
     template = 'vendors/form-editor.html'
-    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template = 'vendors/form-editor-markdown.html'
 
     return render(request, template, context)

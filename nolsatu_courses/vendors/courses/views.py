@@ -56,7 +56,7 @@ def create(request):
         'title_submit': 'Simpan'
     }
 
-    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template_name = 'vendors/form-editor-markdown.html'
 
     return render(request, template_name, context)
@@ -91,7 +91,7 @@ def edit(request, id):
         'title_submit': 'Simpan'
     }
 
-    if settings.FEATURE["MARKDOWN_VENDORS_EDITOR"]:
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
         template_name = 'vendors/form-editor-markdown.html'
 
     return render(request, template_name, context)
