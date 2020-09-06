@@ -1,4 +1,4 @@
-{% load static tags_courses humanize %}
+{% load static tags_courses humanize thumbnail %}
 
 {% block extra_css %}
 <style>
@@ -10,13 +10,17 @@
         {% if course.course.status == 1 %}
             <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 25px;">{{ course.course.get_status_display }}</span>
         {% endif %}
-        {% if course.course.featured_image %}
-        <div class="special_img special_img_card">
+        <div class="special_img special_img_card">        
             <a href="{% url 'website:courses:details' course.course.slug %}">
-                <img src="{{ course.course.featured_image.url }}" alt="{{ course.course.featured_image.name}}" style="width: 100%;">
+                {% if course.course.featured_image %}    
+                    {% thumbnail course.course.featured_image "350x350" crop="center" as course_thumb %}
+                        <img src="{{ course_thumb.url }}" alt="{{ course_thumb.name}}" width="{{ course_thumb.width }}" height="{{ course_thumb.height }}">
+                    {% endthumbnail %}                
+                {% else %}
+                    <img src="{% static 'website/images/default_image.png' %}">
+                {% endif %}
             </a>
         </div>
-        {% endif %}
         <div class="special_cource_text">      
             <a href="{% url 'website:courses:details' course.course.slug %}"><h3>{{ course.course.title }}</h3></a>
             <div class="badge badge-warning">{{ course.course.get_level_display }}</div>

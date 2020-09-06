@@ -82,7 +82,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'debug_toolbar',
-    'markdownx'
+    'markdownx',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
