@@ -22,7 +22,7 @@ def index(request):
 
 @superuser_required
 def add(request):
-    form = VendorForm(data=request.POST or None)
+    form = VendorForm(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
         with transaction.atomic():
             vendor = form.save()
@@ -42,7 +42,7 @@ def add(request):
 @superuser_required
 def edit(request, vendor_id):
     vendor = get_object_or_404(Vendor, id=vendor_id)
-    form = VendorForm(data=request.POST or None, instance=vendor)
+    form = VendorForm(data=request.POST or None, files=request.FILES or None, instance=vendor)
     if form.is_valid():
         with transaction.atomic():
             vendor = form.save()
