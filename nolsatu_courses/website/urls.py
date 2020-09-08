@@ -15,4 +15,6 @@ urlpatterns = [
     path('apps/', include('nolsatu_courses.website.apps.urls')),
     path('error404/', views.error_404, name='error404'),
     path('error500/', views.error_500, name='error500'),
+    path('cart/', views.cart, name='cart'),
+    path('cart/<str:cart_id>/delete', views.cart_delete, name='cart_delete'),
 ]
