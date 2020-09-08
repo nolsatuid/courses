@@ -128,9 +128,13 @@
 			type: form.attr("method"),
       		dataType: 'json',
 			success: function (data) {
-				$("#"+remove_item).remove();
-				$("#total-price").html(data.total.price);
-				$("#trashAlert").modal("hide");
+				if (data.total.price) {
+					$("#"+remove_item).remove();
+					$("#total-price").html(data.total.price);
+					$("#trashAlert").modal("hide");
+				}else{
+					window.location.reload();
+				}
 			},
 			error: function (data) {
                 if (data.status == 500) {
