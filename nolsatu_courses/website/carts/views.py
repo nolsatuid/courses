@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Sum, F
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from nolsatu_courses.apps.products.models import Cart, Product

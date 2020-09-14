@@ -43,9 +43,6 @@
                 <button type="button" id="addToCart" class="btn btn-md btn-block btn-info mr-1">
                     Tambah Ke Keranjang
                 </button>
-<!--                <div class="alert alert-info" >-->
-<!--                    Kursus Telah Masuk Keranjang.-->
-<!--                </div>-->
                 {% else %}
                 <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Ikuti kelas ini</a>
                 {% endif %}

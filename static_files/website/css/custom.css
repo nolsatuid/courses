@@ -92,15 +92,3 @@
 	.text-pipe {
 	    margin-right: 10px;
 	}
-
-	.btn-span {
-        display: block;
-        font-size: inherit;
-        opacity: 1;
-        overflow: hidden;
-        position: relative;
-        text-overflow: ellipsis;
-        top: 0px;
-        transition: opacity 0.3s linear 0s, top 0.3s linear 0s;
-        white-space: nowrap;
-	}

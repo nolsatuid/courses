@@ -2,14 +2,11 @@ import urllib.parse
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.db.models import Q, Sum, F
-from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
+from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 
 from nolsatu_courses.apps.courses.models import Courses
-from nolsatu_courses.apps.products.models import Cart
 
 
 def index(request):
