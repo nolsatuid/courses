@@ -49,6 +49,8 @@ class Order(models.Model):
     discount = models.IntegerField(_("Diskon"), blank=True, null=True)
     grand_total = models.BigIntegerField(_("Grand Total"), blank=True, null=True)
     remote_transaction_id = models.CharField(max_length=220, blank=True, null=True)
+    created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)
+    updated_at = models.DateTimeField(_('Diubah pada'), auto_now=True)
 
     def __str__(self):
         return f"{self.number}-{self.user.username}"
@@ -59,6 +61,8 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, verbose_name=_("Pesanan"), on_delete=models.CASCADE)
     price = models.IntegerField(_("Harga"))
     name = models.CharField(_("Nama"), max_length=220)
+    created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)
+    updated_at = models.DateTimeField(_('Diubah pada'), auto_now=True)
 
     def __str__(self):
         return f"{self.name}-{self.price}"
