@@ -100,7 +100,7 @@ class Courses(models.Model):
         sudah di mulai atau belom
         """
         batch = self.get_last_batch()
-        if not batch:
+        if not batch or not hasattr(batch, 'start_date'):
             return False
 
         now = timezone.now()
