@@ -45,7 +45,7 @@
 									</div>
 									<div class="row justify-content-end mr-2 mb-2">
 										<a href="#" data-toggle="modal" id="trashLink" data-target="#trashAlert" class="float-right"
-										   data-url="{% url 'website:cart_delete' item.id.hex %}" data-info="{{ item.id.hex }}">
+										   data-url="{% url 'website:carts:cart_delete' item.id.hex %}" data-info="{{ item.id.hex }}">
 											<i class="fas fa-trash"></i>
 										</a>
 									</div>

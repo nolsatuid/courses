@@ -72,28 +72,3 @@ def error_404(request):
 
 def error_500(request):
     return render(request, '500.html', {})
-
-
-@login_required
-def cart(request):
-    carts = Cart.objects.filter(user=request.user)
-    context = {
-        'title': _('Keranjang'),
-        'carts': carts,
-        'total': carts.annotate(final_price=F('product__price') - F('product__discount')
-                                ).aggregate(total_price=Sum('final_price'))
-    }
-    return render(request, 'website/user/cart.html', context)
-
-
-@login_required
-@transaction.atomic
-def cart_delete(request, cart_id):
-    cart = get_object_or_404(Cart, id=cart_id, user=request.user)
-    data = dict()
-    if request.method == 'POST':
-        cart.delete()
-        carts = Cart.objects.filter(user=request.user)
-        data['total'] = carts.annotate(final_price=F('product__price') - F('product__discount')
-                                       ).aggregate(price=Sum('final_price'))
-    return JsonResponse(data, status=200)
