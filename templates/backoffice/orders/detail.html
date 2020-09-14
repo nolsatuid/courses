@@ -1,0 +1,111 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:orders:index'%}">Order</a></li>
+        <li class="breadcrumb-item active">Detail Order</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                {{ title }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <div class="tab-content">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td style="width: 200px;">
+                                        <label>Pengguna</label>
+                                    </td>
+                                    <td>
+                                        {{ order.user.get_full_name }} ({{ order.user.username }})
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Nomor Order</label>
+                                    </td>
+                                    <td>
+                                        {{ order.number }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Status</label>
+                                    </td>
+                                    <td>
+                                        {{ order.get_status_display }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Tanggal Order</label>
+                                    </td>
+                                    <td>
+                                        {{ order.created_at }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Pajak</label>
+                                    </td>
+                                    <td>
+                                        Rp. {{ order.tax|intcomma }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Diskon</label>
+                                    </td>
+                                    <td>
+                                        Rp. {{ order.discount|intcomma }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Total</label>
+                                    </td>
+                                    <td>
+                                        Rp. {{ order.grand_total|intcomma }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>ID Remote Transaction</label>
+                                    </td>
+                                    <td>
+                                        {{ order.remote_transaction_id }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Detail Item</label>
+                                    </td>
+                                    <td>
+                                        <table class="table table-borderless table-sm">
+                                            {% for item in order_items %}
+                                                <tr>
+                                                    <td style="width: 200px;">{{ item.name }}</td>
+                                                    <td>Rp. {{ item.price|intcomma }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
