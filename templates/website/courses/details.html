@@ -1,5 +1,12 @@
 {% extends 'website/base-top-nav.html' %}
 {% load tags_courses %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+      <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/sweetalert2/sweetalert2.min.css' %}">
+{% endblock  %}
 
 {% block content %}
 <div class="row">
@@ -45,4 +52,53 @@
     </div>
 </div>
   <!-- /.row -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'adminlte/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $("#addToCart").click(function(){
+            toCart()
+        });
+        $("#buyCourse").click(function(){
+            toCart(redirect=true)
+        });
+    });
+
+function toCart(redirect=false) {
+    $.ajax({
+        type: "POST",
+        headers:{"X-CSRFToken": `{{csrf_token}}` },
+        url: `{% url 'website:carts:add_item' course.product.id %}`,
+        dataType: 'json',
+        success: function (data) {
+            if (redirect){
+                location.href = "{% url 'website:carts:index' %}"
+            }else{
+                if (data.message){
+                    Swal.fire(
+                      'Opps...',
+                      data.message,
+                      'info',
+                    )
+                }else{
+                    Swal.fire(
+                      'Berhasil Ditambahkan!',
+                      'Kursus: {{ course.title }}',
+                      'success'
+                    )
+                }
+            }
+        },
+        error: function (data) {
+            if (data.status == 500) {
+                alert("Terjadi kesalahan, mohon refresh halaman.");
+            }
+        }
+    });
+    return false;
+};
+</script>
 {% endblock %}

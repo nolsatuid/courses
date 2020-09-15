@@ -1,0 +1,149 @@
+{% extends 'base-adinusa.html' %}
+{% load static %}
+{% load l10n %}
+{% load math_extras %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+{% endblock  %}
+
+{% block content %}
+<section class="special_cource padding_top">
+	<div class="container-fluid">
+		<div class="row justify-content-md-center">
+			{% if carts %}
+			<div class="col-md-5 p-1 m-1">
+				<div class="box-custom">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-12">
+								<h5>{{ title }}</h5>
+
+								{% for item in carts %}
+								<div class="post" id="{{ item.id.hex }}">
+									<div class="d-flex media">
+										{% if item.product.course.featured_image %}
+										<img class="mr-3 cart-pic" src="{{ item.product.course.featured_image.url }}">
+										{% else %}
+										<img class="mr-3 cart-pic" src="{% static 'website/images/default_image.png' %}">
+										{% endif %}
+										<div class="media-body mt-3">
+																	  <a class="item-label" href="#">{{ item.product.course.title }}</a>
+																	  {% comment %}
+																	  {% if item.product.course.level %}
+																	  <div class="badge badge-warning">{{ item.product.course.get_level_display }}</div>
+																	  {% endif %}
+																	  {% endcomment %}
+																	  <div class="row pl-3 pt-2">
+																		  {% if item.product.discount %}
+																		  <div class="slashed-price">Rp. {{ item.product.price|localize }}</div>
+																		  <div class="final-price">Rp. {{ item.product.price|subtract:item.product.discount }}</div>
+																		  {% else %}
+																		  <div class="final-price">Rp. {{ item.product.price|localize }}</div>
+																		  {% endif %}
+																	  </div>
+																  </div>
+									</div>
+									<div class="row justify-content-end mr-2 mb-2">
+										<a href="#" data-toggle="modal" id="trashLink" data-target="#trashAlert" class="float-right"
+										   data-url="{% url 'website:carts:cart_delete' item.id.hex %}" data-info="{{ item.id.hex }}">
+											<i class="fas fa-trash"></i>
+										</a>
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 p-1 m-1">
+				<div class="box-custom">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12">
+								<h5>Ringkasan Pembelian</h5>
+								<div class="row justify-content-between p-3">
+									<label class="item-label">Total Harga</label>
+									<div class="final-price" id="total-price">Rp.{{ total.total_price }}</div>
+								</div>
+								<button type="button" class="btn btn-block btn-outline-primary">Beli </button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% else %}
+			<div class="col-md-5 p-1 m-1" style="top:70px;">
+				<div class="container">
+					<h3 class="text-center">Wah, Keranjang Pembelianmu Kosong</h3>
+					<p class="text-center">Daripada dianggurin, mending isi dengan kursus yang bermanfaat untuk masa depanmu. Yuk, cek sekarang!</p>
+					<button type="button" onclick="location.href='{% url 'website:index' %}';" class="button btn-block btn-info col-md-6 mt-2 offset-md-3">Cek Kursus</button>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</section>
+
+<form method="post" id="form-trash" action="">
+	{% csrf_token %}
+<!-- Modal -->
+<div class="modal fade" id="trashAlert" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="border:None">
+      <div class="modal-box">
+		  <h3 class="text-center">Hapus Kursus ?</h3>
+		  <p class="modal-note text-center">Kursus ini akan dihapus dari keranjangmu.</p>
+		  <div class="row justify-content-md-center">
+			<button type="button" class="btn col-md-5 btn-outline-info mr-1" data-dismiss="modal">Kembali</button>
+			<button type="submit" id="trashSubmit" onclick="trashFormSubmit(event)" class="btn col-md-5 btn-info mr-1">Hapus Kursus</button>
+		  </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+	$( "a" ).on("click", function(){
+		 $("#form-trash").attr('action', $(this).data('url'));
+		 $("#form-trash").data('info', $(this).data('info'));
+	});
+
+	$('#trashAlert').on('hidden.bs.modal', function () {
+		 $("#form-trash").attr('action', '');
+		 $("#form-trash").data('info', '');
+	});
+
+    function trashFormSubmit(e) {
+		e.preventDefault();
+    	var form = $('#form-trash');
+    	var remove_item = form.data('info')
+    	console.log(remove_item)
+    	$.ajax({
+			url: form.attr("action"),
+			data: form.serialize(),
+			type: form.attr("method"),
+      		dataType: 'json',
+			success: function (data) {
+				if (data.total.price) {
+					$("#"+remove_item).remove();
+					$("#total-price").html(data.total.price);
+					$("#trashAlert").modal("hide");
+				}else{
+					window.location.reload();
+				}
+			},
+			error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+    	});
+        return false;
+ 	};
+
+</script>
+{% endblock %}

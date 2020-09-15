@@ -1,11 +1,14 @@
+{% load l10n %}
+
 <div class="card position-sticky sticky-top" id="sticky-sidebar">
-    <h5><div class="card-header">Sidebar <i class="float-right fas fa-bookmark"></i></div></h5>
+    <h5><div class="card-header">Informasi Kursu <i class="float-right fas fa-bookmark"></i></div></h5>
     <div class="card-body">
         {% if user.is_superuser %}
             <div class="card">
                 <a class="btn btn-outline-danger" href="{% url 'backoffice:courses:edit' course.id %}">Edit</a>
             </div>
         {% endif %}
+
         <p>Kategori: <strong class="text-info"> {{ course.category_list|capfirst }}</strong></p>
         <p>Level: <strong class="text-info"> {{ course.get_level_display }}</strong></p>
         <p>Angkatan: <strong class="text-info"> {{ batch.batch }}</strong></p>
@@ -27,7 +30,22 @@
             {% endif %}
         {% else %}
             {% if batch and not course.is_started %}
+                {% if course.product.price %}
+
+                <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                        <b class="text-pipe">Harga</b><span class="float-right final-price">Rp. {{ course.product.price|localize }}</span>
+                    </li>
+                </ul>
+                <button type="button" id="buyCourse" class="btn btn-md btn-block btn-outline-info mr-1">
+                    Beli Sekarang
+                </button>
+                <button type="button" id="addToCart" class="btn btn-md btn-block btn-info mr-1">
+                    Tambah Ke Keranjang
+                </button>
+                {% else %}
                 <a href="{% url 'website:courses:enroll' course.slug %}" class="btn btn-info" style="color:white;" >Ikuti kelas ini</a>
+                {% endif %}
             {% elif not course.is_started %}
                 <div class="alert alert-danger" >
                     Maaf, kelas ini belum membuka pendafaran.
@@ -40,3 +58,5 @@
         {% endif %}
     </div>
 </div>
+
+

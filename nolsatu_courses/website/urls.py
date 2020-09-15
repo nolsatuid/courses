@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
     path('login', views.login, name='login'),
     path('courses/', include('nolsatu_courses.website.courses.urls')),
+    path('carts/', include('nolsatu_courses.website.carts.urls')),
     path('modules/', include('nolsatu_courses.website.modules.urls')),
     path('sections/', include('nolsatu_courses.website.sections.urls')),
     path('apps/', include('nolsatu_courses.website.apps.urls')),
