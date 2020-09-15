@@ -4,6 +4,7 @@
 {% load math_extras %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
 {% endblock  %}
 
 {% block content %}
@@ -15,12 +16,18 @@
 				<div class="box-custom">
 					<div class="card-body">
 						<div class="row">
-							<div class="col-12">
+							<div class="col-sm-12">
 								<h5>{{ title }}</h5>
 
 								{% for item in carts %}
 								<div class="post" id="{{ item.id.hex }}">
 									<div class="d-flex media">
+
+										<div class="align-self-center icheck-primary d-inline mr-1">
+												<input type="checkbox" id="checkbox-tem-{{ item.id.hex }}" checked="">
+												<label for="checkbox-tem-{{ item.id.hex }}"></label>
+										</div>
+
 										{% if item.product.course.featured_image %}
 										<img class="mr-3 cart-pic" src="{{ item.product.course.featured_image.url }}">
 										{% else %}
@@ -107,6 +114,7 @@
 
 {% block extra_js %}
 <script>
+
 	$( "a" ).on("click", function(){
 		 $("#form-trash").attr('action', $(this).data('url'));
 		 $("#form-trash").data('info', $(this).data('info'));
@@ -127,6 +135,12 @@
 			data: form.serialize(),
 			type: form.attr("method"),
       		dataType: 'json',
+      		beforeSend: function () {
+			// ... your initialization code here (so show loader) ...
+			},
+			complete: function () {
+				// ... your finalization code here (hide loader) ...
+			},
 			success: function (data) {
 				if (data.total.price) {
 					$("#"+remove_item).remove();
