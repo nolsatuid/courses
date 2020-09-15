@@ -40,9 +40,9 @@ def add_item(request, product_id):
     data = dict()
     if request.method == 'POST':
         try:
-            item_in_cart = Cart.objects.get(product=pick_product, user=request.user)
+            Cart.objects.get(product=pick_product, user=request.user)
             data['message'] = _('Gagal Menambahkan, Kursus Sudah Ada Di Keranjang!')
-        except item_in_cart.DoesNotExist:
+        except Cart.DoesNotExist:
             Cart(product=pick_product, user=request.user).save()
 
     return JsonResponse(data, status=200)
