@@ -1,7 +1,8 @@
+import sweetify
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Prefetch
 
@@ -92,23 +93,31 @@ def enroll(request, slug):
     course = get_object_or_404(Courses, slug=slug)
 
     if course.has_enrolled(request.user):
-        messages.success(request, _(f'Kamu sudah terdaftar di kelas {course.title}'))
+        sweetify.success(
+            request, _(f'Kamu sudah terdaftar di kelas {course.title}'),
+            button='OK', icon='success', timer=10000
+        )
         return redirect('website:courses:details', course.slug)
 
     if not course.get_last_batch():
-        messages.warning(
-            request, _(f'Kelas {course.title} belum membuka pendaftaran')
+        sweetify.warning(
+            request, _(f'Kelas {course.title} belum membuka pendaftaran',
+            button='OK', icon='warning', timer=10000)
         )
         return redirect('website:courses:details', course.slug)
 
     if course.is_started():
-        messages.warning(
-            request, _(f'Gagal mendaftar, kelas {course.title} sudah dimulai')
+        sweetify.warning(
+            request, _(f'Gagal mendaftar, kelas {course.title} sudah dimulai'),
+            button='OK', icon='warning', timer=10000
         )
         return redirect('website:courses:details', course.slug)
 
     course.enrolled.create(course=course, user=request.user, batch=course.batchs.last())
-    messages.success(request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'))
+    sweetify.success(
+        request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'), 
+        button='OK', icon='success', timer=10000
+    )
     utils.send_notification(
         request.user,
         f'Kamu berhasil mendaftar di kelas {course.title}',
@@ -123,7 +132,10 @@ def finish(request, slug):
 
     # cek ketika belom menyelesaikan semua module dan bab.
     if course.progress_percentage(request.user, on_thousand=True) != 100:
-        messages.warning(request, _(f'Kamu belom menyelesaikan semua materi {course.title}'))
+        sweetify.warning(
+            request, _(f'Kamu belom menyelesaikan semua materi {course.title}'), 
+            button='OK', icon='warning', timer=10000
+        )
         return redirect("website:courses:details", course.slug)
 
     enroll = Enrollment.objects.filter(course=course, user=request.user).first()

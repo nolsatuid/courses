@@ -1,7 +1,8 @@
+import sweetify
+
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Prefetch
@@ -29,7 +30,7 @@ def add(request):
     form = FormCourses(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
         course = form.save()
-        messages.success(request, _(f"Berhasil tambah kursus {course.title}"))
+        sweetify.success(request, _(f"Berhasil tambah kursus {course.title}"), button='OK', icon='success')
         return redirect('backoffice:courses:index')
 
     context = {
@@ -52,7 +53,7 @@ def edit(request, id):
     form = FormCourses(data=request.POST or None, files=request.FILES or None, instance=course)
     if form.is_valid():
         course = form.save()
-        messages.success(request, _(f"Berhasil ubah kursus {course.title}"))
+        sweetify.success(request, _(f"Berhasil ubah kursus {course.title}"), button='OK', icon='success')
         return redirect('backoffice:courses:index')
 
     context = {
@@ -73,7 +74,7 @@ def edit(request, id):
 def delete(request, id):
     course = get_object_or_404(Courses, id=id)
     course.delete()
-    messages.success(request, 'Berhasil hapus kursus')
+    sweetify.success(request, 'Berhasil hapus kursus', button='OK', icon='success')
     return redirect('backoffice:courses:index')
 
 
@@ -103,9 +104,10 @@ def registrants(request):
                 enroll = get_object_or_404(Enrollment, id=id)
                 if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] and \
                         not enroll.course.batchs.last().link_group:
-                    messages.error(
+                    sweetify.error(
                         request,
-                        _(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi')
+                        'Gagal', text=_(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi'),
+                        button='OK', timer=10000, icon='error'
                     )
                 else:
                     enroll.allowed_access = True
@@ -119,7 +121,7 @@ def registrants(request):
                     utils.send_notification(
                         enroll.user, f'Akses kelas {enroll.course.title} di berikan', notif_msg)
             
-            messages.success(request, _(f'Berhasil memberikan akses massal'))
+            sweetify.success(request, _(f'Berhasil memberikan akses massal'), button='OK', icon='success')
 
     context = {
         'menu_active': 'registrants',
@@ -208,7 +210,7 @@ def import_data(request):
     form = FormImportCourse(data=request.POST or None, files=request.FILES or None)
     if form.is_valid():
         form.import_course()
-        messages.success(request, _('Berhasil impor data'))
+        sweetify.success(request, _('Berhasil impor data'), button='OK', icon='success')
 
     context = {
         'menu_active': 'course',

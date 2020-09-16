@@ -1,7 +1,8 @@
+import sweetify
+
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 from nolsatu_courses.apps.courses.models import Module, Section, TaskUploadSettings
@@ -30,7 +31,7 @@ def add(request, id):
         section = form.save(commit=False)
         section.module = module
         section.save()
-        messages.success(request, _(f"Berhasil tambah bab {section.title}"))
+        sweetify.success(request, _(f"Berhasil tambah bab {section.title}"), button='OK', icon='success')
         return redirect('backoffice:sections:index', id=id)
 
     context = {
@@ -53,7 +54,7 @@ def edit(request, id):
     form = FormSection(data=request.POST or None, files=request.FILES or None, instance=section)
     if form.is_valid():
         section = form.save()
-        messages.success(request, _(f"Berhasil ubah bab {section.title}"))
+        sweetify.success(request, _(f"Berhasil ubah bab {section.title}"), button='OK', icon='success')
         return redirect('backoffice:sections:index', id=section.module.id)
 
     context = {
@@ -74,7 +75,7 @@ def edit(request, id):
 def delete(request, id):
     section = get_object_or_404(Section, id=id)
     section.delete()
-    messages.success(request, 'Berhasil hapus bab')
+    sweetify.success(request, 'Berhasil hapus bab', button='OK', icon='success')
     return redirect('backoffice:sections:index', id=section.module.id)
 
 
@@ -101,7 +102,7 @@ def task_setting(request, id):
         task_setting.section = section
         task_setting.save()
         form.save_m2m()
-        messages.success(request, _(f"Berhasil ubah pengaturan tugas"))
+        sweetify.success(request, _(f"Berhasil ubah pengaturan tugas"), button='OK', icon='success')
         return redirect('backoffice:sections:index', id=section.module.id)
 
     context = {

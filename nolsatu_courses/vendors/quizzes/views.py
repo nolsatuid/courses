@@ -1,4 +1,5 @@
-from django.contrib import messages
+import sweetify
+
 from django.db import transaction
 from django.forms import modelformset_factory
 from django.http import JsonResponse, HttpResponse
@@ -32,7 +33,7 @@ def create_category(request):
         category.vendor = request.user.vendors.first()
         with transaction.atomic():
             category.save()
-        messages.success(request, _(f"Berhasil tambah Kategori {category.category}"))
+        sweetify.success(request, _(f"Berhasil tambah Kategori {category.category}"), button='OK', icon='success')
         return redirect('vendors:quizzes:category')
 
     context = {
@@ -51,7 +52,7 @@ def edit_category(request, category_id):
     if form.is_valid():
         with transaction.atomic():
             category = form.save()
-        messages.success(request, _(f"Berhasil ubah kategori {category.category}"))
+        sweetify.success(request, _(f"Berhasil ubah kategori {category.category}"), button='OK', icon='success')
         return redirect('vendors:quizzes:category')
 
     context = {
@@ -68,7 +69,7 @@ def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id, vendor__users__email=request.user.email)
     with transaction.atomic():
         category.delete()
-    messages.success(request, 'Berhasil hapus Kategori')
+    sweetify.success(request, 'Berhasil hapus Kategori', button='OK', icon='success')
     return redirect('vendors:quizzes:category')
 
 
@@ -97,7 +98,7 @@ def create_sub_category(request, category_id):
         sub_category.category = category
         with transaction.atomic():
             sub_category.save()
-        messages.success(request, _(f"Berhasil tambah Sub Kategori {sub_category.sub_category}"))
+        sweetify.success(request, _(f"Berhasil tambah Sub Kategori {sub_category.sub_category}"), button='OK', icon='success')
         return redirect('vendors:quizzes:sub_category', category_id=category_id)
 
     context = {
@@ -116,7 +117,7 @@ def delete_sub_category(request, sub_category_id):
     category_id = sub_category.category.id
     with transaction.atomic():
         sub_category.delete()
-    messages.success(request, 'Berhasil hapus Sub Kategori')
+    sweetify.success(request, 'Berhasil hapus Sub Kategori', button='OK', icon='success')
     return redirect('vendors:quizzes:sub_category', category_id=category_id)
 
 
@@ -128,7 +129,7 @@ def edit_sub_category(request, sub_category_id):
     if form.is_valid():
         with transaction.atomic():
             sub_category.save()
-        messages.success(request, _(f"Berhasil Ubah Sub Kategori {sub_category.sub_category}"))
+        sweetify.success(request, _(f"Berhasil Ubah Sub Kategori {sub_category.sub_category}"), button='OK', icon='success')
         return redirect('vendors:quizzes:sub_category', category_id=sub_category.category.id)
 
     context = {
@@ -185,7 +186,7 @@ def create_question(request):
                 for i in instance:
                     i.question = question
                     i.save()
-            messages.success(request, _(f"Berhasil tambah Pertanyaan {question.content}"))
+            sweetify.success(request, _(f"Berhasil tambah Pertanyaan {question.content}"), button='OK', icon='success')
             return redirect('vendors:quizzes:question')
 
     context = {
@@ -205,7 +206,7 @@ def delete_question(request, question_id):
     category = get_object_or_404(MCQuestion, id=question_id, vendor__users__email=request.user.email)
     with transaction.atomic():
         category.delete()
-    messages.success(request, 'Berhasil hapus Pertanyaan')
+    sweetify.success(request, 'Berhasil hapus Pertanyaan', button='OK', icon='success')
     return redirect('vendors:quizzes:question')
 
 
@@ -229,7 +230,7 @@ def edit_question(request, question_id):
                 for i in instance:
                     i.question = question
                     i.save()
-            messages.success(request, _(f"Berhasil Ubah Pertanyaan {question.content}"))
+            sweetify.success(request, _(f"Berhasil Ubah Pertanyaan {question.content}"), button='OK', icon='success')
             return redirect('vendors:quizzes:question')
 
     context = {
@@ -260,7 +261,7 @@ def create_quiz(request):
     form = FormQuizVendor(data=request.POST or None, user_email=request.user.email)
     if form.is_valid():
         quiz = form.save()
-        messages.success(request, _(f"Berhasil tambah kuis {quiz.title}"))
+        sweetify.success(request, _(f"Berhasil tambah kuis {quiz.title}"), button='OK', icon='success')
         return redirect('vendors:quizzes:list_quiz')
 
     context = {
@@ -278,7 +279,7 @@ def edit_quiz(request, quiz_id):
     form = FormQuizVendor(data=request.POST or None, instance=quiz, user_email=request.user.email)
     if form.is_valid():
         quiz = form.save()
-        messages.success(request, _(f"Berhasil ubah kursus {quiz.title}"))
+        sweetify.success(request, _(f"Berhasil ubah kursus {quiz.title}"), button='OK', icon='success')
         return redirect('vendors:quizzes:list_quiz')
 
     context = {

@@ -1,8 +1,9 @@
+import sweetify
+
 from functools import wraps
 
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import available_attrs
-from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
@@ -22,14 +23,16 @@ def quiz_access_required(view_func):
         # apa bila memiliki jadwal
         if quiz.any_schedule():
             if timezone.now() < quiz.start_time:
-                messages.warning(
-                    request, _(f"{quiz.title} hasn't started yet")
+                sweetify.warning(
+                    request, _(f"{quiz.title} hasn't started yet"),
+                    button='OK', icon='warning', timer=10000
                 )
                 return redirect('website:index')
             elif timezone.now() > quiz.end_time:
                 finish_out_time(quiz, request.user)
-                messages.warning(
-                    request, _(f"{quiz.title} is over")
+                sweetify.warning(
+                    request, _(f"{quiz.title} is over"),
+                    button='OK', icon='warning', timer=10000
                 )
                 return redirect('website:index')
 
@@ -38,9 +41,10 @@ def quiz_access_required(view_func):
             course.has_enrolled(request.user)
             return view_func(request, *args, **kwargs)
 
-        messages.warning(
+        sweetify.warning(
             request,
-            _(f"You are not registered on the quiz <strong> {quiz.title} </strong>")
+            _(f"You are not registered on the quiz <strong> {quiz.title} </strong>"),
+            button='OK', icon='warning', timer=10000
         )
         return redirect('website:index')
     return _wrapped_view

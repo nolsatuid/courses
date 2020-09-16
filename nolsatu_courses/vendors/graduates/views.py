@@ -1,5 +1,6 @@
+import sweetify
+
 from django.conf import settings
-from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
@@ -51,9 +52,9 @@ def candidate_to_graduate(request, candidate_id):
             f'Sertifikasi kelulusan pada kelas {enroll.course.title}. ' \
             'Silahkan cek sertifikat Anda dimenu Sertifikat pada halaman akun.'
         )
-        messages.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan')
+        sweetify.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK', icon='success')
     else:
-        messages.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan')
+        sweetify.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK', icon='error')
 
     if request.is_ajax():
         data = {
