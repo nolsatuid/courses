@@ -257,6 +257,10 @@ COURSE_CONFIGS = {
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']
 
+
+# tax for order item
+TAX_VALUE = 0
+
 try:
     from .local_settings import *
 except ImportError:

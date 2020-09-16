@@ -1,0 +1,97 @@
+{% extends 'base-adinusa.html' %}
+{% load static %}
+{% load l10n %}
+{% load math_extras %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+{% endblock  %}
+
+{% block content %}
+<section class="special_cource padding_top">
+	<div class="container-fluid">
+		<div class="row justify-content-md-center">
+			{% if carts %}
+			<div class="col-md-5 p-1 m-1">
+				<div class="box-custom">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<h5>{{ title }}</h5>
+
+								{% for item in carts %}
+								<div class="post" id="{{ item.id.hex }}">
+									<div class="d-flex media">
+										{% if item.product.course.featured_image %}
+										<img class="mr-3 cart-pic" src="{{ item.product.course.featured_image.url }}">
+										{% else %}
+										<img class="mr-3 cart-pic" src="{% static 'website/images/default_image.png' %}">
+										{% endif %}
+										<div class="media-body mt-3">
+											<a class="item-label" href="#">{{ item.product.course.title }}</a>
+											<div class="row pl-3 pt-2 pb-2">
+												{% if item.product.discount %}
+												<div class="slashed-price">Rp. {{ item.product.price|localize }}</div>
+												<div class="final-price">Rp. {{ item.product.price|subtract:item.product.discount }}</div>
+												{% else %}
+												<div class="final-price">Rp. {{ item.product.price|localize }}</div>
+												{% endif %}
+											</div>
+											{% if item.product.course.level %}
+											<div class="badge badge-warning">{{ item.product.course.get_level_display }}</div>
+											<h1>{{ item.product.course.batchs.start_date }}</h1>
+											{% endif %}
+										</div>
+									</div>
+									<div class="row justify-content-end mr-2 mb-2">
+
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 p-1 m-1">
+				<div class="box-custom">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12">
+								<h5>Ringkasan Pembelian</h5>
+								<div class="p-3">
+								<div class="row justify-content-between">
+									<label class="item-label">Jumlah Pembelian</label>
+									<div class="final-price" >{{ carts.count }} Kursus</div>
+								</div>
+								<div class="row justify-content-between">
+									<label class="item-label">Total Harga</label>
+									<div class="final-price" id="total-price">Rp.{{ total.total_price }}</div>
+								</div></div>
+								<form method="post">{% csrf_token %}
+									<button type="submit" class="btn btn-block btn-outline-primary">Bayar </button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% else %}
+			<div class="col-md-5 p-1 m-1" style="top:70px;">
+				<div class="container">
+					<h3 class="text-center">Wah, Checkout Pembelianmu Kosong</h3>
+					<p class="text-center">Daripada dianggurin, mending isi dengan kursus yang bermanfaat untuk masa depanmu. Yuk, cek sekarang!</p>
+					<button type="button" onclick="location.href='{% url 'website:index' %}';" class="button btn-block btn-info col-md-6 mt-2 offset-md-3">Cek Kursus</button>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+
+</script>
+{% endblock %}
