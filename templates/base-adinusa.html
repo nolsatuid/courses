@@ -1,4 +1,4 @@
-{% load static %}
+{% load static sweetify %}
 <!doctype html>
 <html lang="en">
 
@@ -142,6 +142,10 @@
     <script src="{% static 'adinusa/js/waypoints.min.js' %}"></script>
     <!-- custom js -->
     <script src="{% static 'adinusa/js/custom.js' %}"></script>
+    <!-- sweetalert -->
+    <script src="{% static 'website/js/sweetalert2@10.js' %}"></script>
+
+    {% sweetify %}
 
     {% block extra_js %} {% endblock %}
 

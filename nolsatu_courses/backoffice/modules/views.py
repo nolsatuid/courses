@@ -1,7 +1,8 @@
+import sweetify
+
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 from nolsatu_courses.apps.courses.models import Courses, Module
@@ -31,7 +32,7 @@ def add(request, id):
         module = form.save(commit=False)
         module.course = course
         module.save()
-        messages.success(request, _(f"Berhasil tambah modul {module.title}"))
+        sweetify.success(request, _(f"Berhasil tambah modul {module.title}"), button='OK', icon='success')
         return redirect('backoffice:modules:index', id=id)
 
     context = {
@@ -54,7 +55,7 @@ def edit(request, id):
     form = FormModule(data=request.POST or None, files=request.FILES or None, instance=module)
     if form.is_valid():
         module = form.save()
-        messages.success(request, _(f"Berhasil ubah modul {module.title}"))
+        sweetify.success(request, _(f"Berhasil ubah modul {module.title}"), button='OK', icon='success')
         return redirect('backoffice:modules:index', id=module.course.id)
 
     context = {
@@ -75,7 +76,7 @@ def edit(request, id):
 def delete(request, id):
     module = get_object_or_404(Module, id=id)
     module.delete()
-    messages.success(request, 'Berhasil hapus modul')
+    sweetify.success(request, 'Berhasil hapus modul', button='OK', icon='success')
     return redirect('backoffice:modules:index', id=module.course.id)
 
 

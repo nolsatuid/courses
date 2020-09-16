@@ -1,9 +1,10 @@
+import sweetify
+
 from django.conf import settings
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
-from django.contrib import messages
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Enrollment, Batch
@@ -67,9 +68,9 @@ def candidate_to_graduate(request, id):
             f'Sertifikasi kelulusan pada kelas {enroll.course.title}. ' \
             'Silahkan cek sertifikat Anda dimenu Sertifikat pada halaman akun.'
         )
-        messages.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan')
+        sweetify.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK', icon='success')
     else:
-        messages.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan')
+        sweetify.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK', icon='error')
 
     if request.is_ajax():
         data = {
@@ -83,9 +84,9 @@ def candidate_to_graduate(request, id):
 def regenerate_certificate(request, user_id):
     response = call_internal_api('get', url=settings.NOLSATU_HOST + f'/api/internal/regenerate-certificate/{user_id}')
     if response.status_code == 200:
-        messages.success(request, 'Berhasil perbarui sertifikat')
+        sweetify.success(request, 'Berhasil perbarui sertifikat', button='OK', icon='success')
     else:
-        messages.error(request, 'Gagal perbarui sertifikat')
+        sweetify.error(request, 'Gagal perbarui sertifikat', button='OK', icon='error')
 
     return redirect('backoffice:graduates:index')
 

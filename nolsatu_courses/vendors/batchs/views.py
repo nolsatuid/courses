@@ -1,4 +1,5 @@
-from django.contrib import messages
+import sweetify
+
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
@@ -26,7 +27,7 @@ def create(request):
     if form.is_valid():
         with transaction.atomic():
             batch = form.save()
-        messages.success(request, _(f"Berhasil tambah angkatan {batch.batch}"))
+        sweetify.success(request, _(f"Berhasil tambah angkatan {batch.batch}"), button='OK', icon='success')
         return redirect('vendors:batchs:index')
 
     context = {
@@ -56,7 +57,7 @@ def edit(request, id):
     if form.is_valid():
         with transaction.atomic():
             batch = form.save()
-        messages.success(request, _(f"Berhasil ubah angkatan {batch.batch}"))
+        sweetify.success(request, _(f"Berhasil ubah angkatan {batch.batch}"), button='OK', icon='success')
         return redirect('vendors:batchs:index')
 
     context = {
@@ -73,5 +74,5 @@ def delete(request, id):
     batch = get_object_or_404(Batch, id=id, course__vendor__users__email=request.user.email)
     with transaction.atomic():
         batch.delete()
-    messages.success(request, 'Berhasil hapus angkatan')
+    sweetify.success(request, 'Berhasil hapus angkatan', button='OK', icon='success')
     return redirect('vendors:batchs:index')

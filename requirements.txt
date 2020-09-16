@@ -24,3 +24,6 @@ django-markdownx==3.0.1
 Pygments==2.6.1
 pdfkit==0.6.1
 sorl-thumbnail
+
+#alert
+sweetify==2.0.0

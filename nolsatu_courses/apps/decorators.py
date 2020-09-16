@@ -1,8 +1,9 @@
+import sweetify
+
 from functools import wraps
 
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import available_attrs
-from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.http import Http404
 from django.contrib.auth.models import User
@@ -36,18 +37,18 @@ def enroll_required(view_func):
             is_started = obj.module.course.is_started()
 
         if not enroll:
-            messages.warning(
+            sweetify.warning(
                 request,
-                _("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
-                  " dan admin telah menyetujui kamu sebagai peserta.")
+                'Peringatan', text=_("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
+                  " dan admin telah menyetujui kamu sebagai peserta."), icon='warning', button='OK', timer=10000
             )
             return redirect('website:index')
 
         if not is_started or (enroll.date_limit_access < course.get_last_batch().start_date):
-            messages.warning(
+            sweetify.warning(
                 request,
-                _("Maaf ya, kursus belum dimulai, pastikan kamu memulai kelas sesuai"
-                  " dengan tanggal <b>mulai</b> yang tertera.")
+                'Peringatan', text=_("Maaf ya, kursus belum dimulai, pastikan kamu memulai kelas sesuai"
+                  " dengan tanggal <b>mulai</b> yang tertera."), icon='warning', button='OK', timer=10000
             )
             return redirect('website:courses:details', course.slug)
 
@@ -55,10 +56,10 @@ def enroll_required(view_func):
             if enroll.allowed_access:
                 return view_func(request, *args, **kwargs)
 
-        messages.warning(
+        sweetify.warning(
             request,
-            _("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
-              " dan admin telah menyetujui kamu sebagai peserta.")
+            'Peringatan', text=_("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
+              " dan admin telah menyetujui kamu sebagai peserta."), icon='warning', button='OK', timer=10000
         )
         return redirect('website:index')
 
