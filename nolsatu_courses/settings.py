@@ -260,6 +260,8 @@ INTERNAL_IPS = ['127.0.0.1']
 
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 
+# tax for order item
+TAX_VALUE = 0
 
 try:
     from .local_settings import *
