@@ -1,8 +1,9 @@
+import sweetify
+
 from django.conf import settings
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
 
 from nolsatu_courses.apps.decorators import superuser_required
 from nolsatu_courses.apps.vendors.models import Vendor
@@ -26,7 +27,7 @@ def add(request):
     if form.is_valid():
         with transaction.atomic():
             vendor = form.save()
-        messages.success(request, _(f"Berhasil tambah vendor {vendor.name}"))
+        sweetify.success(request, _(f"Berhasil tambah vendor {vendor.name}"), icon='success', button='OK')
         return redirect('backoffice:vendors:index')
 
     context = {
@@ -46,7 +47,7 @@ def edit(request, vendor_id):
     if form.is_valid():
         with transaction.atomic():
             vendor = form.save()
-        messages.success(request, _(f"Berhasil ubah kursus {vendor.name}"))
+        sweetify.success(request, _(f"Berhasil ubah kursus {vendor.name}"), icon='success', button='OK')
         return redirect('backoffice:vendors:index')
 
     context = {
@@ -64,5 +65,5 @@ def delete(request, vendor_id):
     vendor = get_object_or_404(Vendor, id=vendor_id)
     with transaction.atomic():
         vendor.delete()
-    messages.success(request, 'Berhasil hapus vendor')
+    sweetify.success(request, 'Berhasil hapus vendor', icon='success', button='OK')
     return redirect('backoffice:vendors:index')

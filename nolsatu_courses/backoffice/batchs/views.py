@@ -1,6 +1,7 @@
+import sweetify
+
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from nolsatu_courses.apps.decorators import superuser_required
 from nolsatu_courses.apps.courses.models import Batch
@@ -23,7 +24,7 @@ def add(request):
     form = FormBatch(data=request.POST or None)
     if form.is_valid():
         batch = form.save()
-        messages.success(request, _(f"Berhasil tambah angkatan {batch.batch}"))
+        sweetify.success(request, _(f"Berhasil tambah angkatan {batch.batch}"), button='OK', icon='success')
         return redirect('backoffice:batchs:index')
 
     context = {
@@ -41,7 +42,7 @@ def edit(request, id):
     form = FormBatch(data=request.POST or None, instance=batch)
     if form.is_valid():
         batch = form.save()
-        messages.success(request, _(f"Berhasil ubah angkatan {batch.batch}"))
+        sweetify.success(request, _(f"Berhasil ubah angkatan {batch.batch}"), button='OK', icon='success')
         return redirect('backoffice:batchs:index')
 
     context = {
@@ -57,7 +58,7 @@ def edit(request, id):
 def delete(request, id):
     batch = get_object_or_404(Batch, id=id)
     batch.delete()
-    messages.success(request, 'Berhasil hapus angkatan')
+    sweetify.success(request, 'Berhasil hapus angkatan', button='OK', icon='success')
     return redirect('backoffice:batchs:index')
 
 

@@ -59,7 +59,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, verbose_name=_("Produk"), on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, verbose_name=_("Pesanan"), on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, verbose_name=_("Pesanan"), on_delete=models.CASCADE, related_name="orders")
     price = models.IntegerField(_("Harga"))
     name = models.CharField(_("Nama"), max_length=220)
     created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)

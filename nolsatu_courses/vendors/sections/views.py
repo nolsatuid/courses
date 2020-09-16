@@ -1,5 +1,6 @@
+import sweetify
+
 from django.conf import settings
-from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
@@ -31,7 +32,7 @@ def create(request, id):
         section.module = module
         with transaction.atomic():
             section.save()
-        messages.success(request, _(f"Berhasil tambah bab {section.title}"))
+        sweetify.success(request, _(f"Berhasil tambah bab {section.title}"), button='OK', icon='success')
         return redirect('vendors:sections:index', id=id)
 
     context = {
@@ -55,7 +56,7 @@ def edit(request, id):
     if form.is_valid():
         with transaction.atomic():
             section = form.save()
-        messages.success(request, _(f"Berhasil ubah bab {section.title}"))
+        sweetify.success(request, _(f"Berhasil ubah bab {section.title}"), button='OK', icon='success')
         return redirect('vendors:sections:index', id=section.module.id)
 
     context = {
@@ -77,7 +78,7 @@ def delete(request, id):
     section = get_object_or_404(Section, id=id, module__course__vendor__users__email=request.user.email)
     with transaction.atomic():
         section.delete()
-    messages.success(request, 'Berhasil hapus bab')
+    sweetify.success(request, 'Berhasil hapus bab', button='OK', icon='success')
     return redirect('vendors:sections:index', id=section.module.id)
 
 
@@ -105,7 +106,7 @@ def task_setting(request, id):
         with transaction.atomic():
             set_to_task.save()
         form.save_m2m()
-        messages.success(request, _(f"Berhasil ubah pengaturan tugas"))
+        sweetify.success(request, _(f"Berhasil ubah pengaturan tugas"), button='OK', icon='success')
         return redirect('vendors:sections:index', id=section.module.id)
 
     context = {
