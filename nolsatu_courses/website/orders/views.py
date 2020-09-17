@@ -17,7 +17,7 @@ def index(request):
 
 @login_required
 def details(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
+    order = get_object_or_404(Order, user=request.user, id=order_id)
     order_items = order.orders.all()
 
     context = {

@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 from fortuna_client.callback import RemoteTransactionCallback
 from fortuna_client.transaction import RemoteTransaction
@@ -31,5 +31,5 @@ class FortunaCallback(RemoteTransactionCallback):
         # TODO: Send Confirmation Email / Message
 
     def payment_redirect(self, request, transaction_id):
-        # TODO: Update when transaction detail is ready
-        return redirect("website:index")
+        order = get_object_or_404(Order, user=request.user, remote_transaction_id=transaction_id)
+        return redirect("website:orders:details", order_id=order.id)
