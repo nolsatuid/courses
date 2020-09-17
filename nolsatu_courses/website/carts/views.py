@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -6,6 +8,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from fortuna_client.exception import FortunaException
 
 from nolsatu_courses.apps.products.models import Cart, Product, Order, OrderItem
 
@@ -120,4 +123,13 @@ def payment(request):
     OrderItem.objects.bulk_create(order_item)
     carts.delete()
 
+    # Request BPay
+    try:
+        remote_transaction = order.create_transaction()
+        if remote_transaction:
+            return redirect(remote_transaction.snap_redirect_url)
+    except FortunaException:
+        logging.exception("Failed to create transaction")
+
+    # TODO: Create transaction failed, redirect to order detail
     return redirect('website:index')
