@@ -97,6 +97,7 @@
                                         <a class="dropdown-item" href="{% url 'website:courses:user_courses' %}">Daftar materimu</a>
                                         {% if not user.is_superuser or not user.is_staff %}
                                         <a class="dropdown-item" href="{% url 'website:carts:index' %}">Keranjang</a>
+                                        <a class="dropdown-item" href="{% url 'website:orders:index' %}">Pembelian</a>
                                         {% endif %}
                                         {% if user.is_superuser %}
                                         <a class="dropdown-item" href="{% url 'backoffice:index' %}">Backoffice</a>
