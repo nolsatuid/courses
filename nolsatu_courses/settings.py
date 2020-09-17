@@ -263,6 +263,10 @@ SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 # tax for order item
 TAX_VALUE = 0
 
+FORTUNA_SERVER_URL = "http://127.0.0.1:8000"
+FORTUNA_CLIENT_ACCESS_TOKEN = "some_client_secret"
+FORTUNA_REMOTE_CALLBACK = "nolsatu_courses.apps.products.callback.FortunaCallback"
+
 try:
     from .local_settings import *
 except ImportError:

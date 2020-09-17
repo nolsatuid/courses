@@ -1,8 +1,11 @@
+import typing
 import uuid
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from fortuna_client.transaction import RemoteTransaction
+from fortuna_client.utils import create_remote_transaction, get_remote_transaction
 
 from model_utils import Choices
 
@@ -44,6 +47,8 @@ class Order(models.Model):
         (3, 'pending', _("Pending")),
         (4, 'failed', _("Failed")),
         (5, 'expired', _("Expired")),
+        (6, 'refund', _("Refund")),
+        (7, 'other', _("Other"))
     )
     status = models.SmallIntegerField(choices=STATUS, default=STATUS.created)
     tax = models.IntegerField(_("Pajak"), blank=True, null=True)
@@ -55,6 +60,23 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.number}-{self.user.username}"
+
+    def create_transaction(self) -> typing.Optional[RemoteTransaction]:
+        if not self.remote_transaction_id:
+            transaction = create_remote_transaction(self.user.id, self.grand_total)
+            self.remote_transaction_id = transaction.id
+            self.status = Order.STATUS.pending
+            self.save()
+
+            return transaction
+        else:
+            return get_remote_transaction(self.remote_transaction_id)
+
+    def get_transaction(self) -> typing.Optional[RemoteTransaction]:
+        if self.remote_transaction_id:
+            return get_remote_transaction(self.remote_transaction_id)
+
+        return None
 
 
 class OrderItem(models.Model):
