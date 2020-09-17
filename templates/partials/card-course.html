@@ -27,15 +27,17 @@
             <div class="author_info">                
                 <span class="d-flex align-items-center">
                     {% if course.has_enrolled %}
-                        <a href="{% url 'website:courses:details' course.course.slug %}" class="genric-btn info-border radius large">Masuk Kelas</a>
+                        <a href="{% url 'website:modules:details' course.course.get_first_module.slug %}" class="genric-btn info-border radius large">Masuk Kelas</a>
                     {% else %}
                     <h4>
                         {% if course.course.product.price %}IDR {{ course.course.product.price|intcomma }}{% else %}GRATIS{% endif %}<br>
                         <span class="normal-price">{% if course.course.product.discount %}IDR <s>{{ course.course.product.discount|intcomma }}</s>{% endif %}</span>
                     </h4>
                     {% endif %}
-                </span>      
-                <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{% if course.course.vendor.logo %} {{ course.course.vendor.logo.url }} {% endif %}" alt="{{ course.course.vendor.name }}"></a>
+                </span>
+                {% if course.course.vendor.logo %}
+                    <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{{ course.course.vendor.logo.url }}" alt="{{ course.course.vendor.name }}"></a>
+                {% endif %}
             </div>
         </div>
 

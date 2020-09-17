@@ -28,16 +28,27 @@ def index(request):
     return render(request, 'website/index.html', context)
 
 
-@login_required()
 def search(request):
     search_query = request.GET.get("q", "")
+    course_search = Courses.objects.filter(
+        Q(title__contains=search_query) | Q(description__contains=search_query))
+    if request.user and request.user.is_superuser:
+        courses = course_search
+    else:
+        courses = course_search.filter(
+            is_visible=True, status=Courses.STATUS.publish
+        )
 
     context = {
         'title': _(f'Hasil Pencarian untuk "{search_query}"'),
         'search_query': search_query,
-        'courses': Courses.objects.filter(Q(title__contains=search_query) | Q(description__contains=search_query)),
+        'courses': [{
+            'course': course,
+            'has_enrolled': course.has_enrolled(request.user)
+        } for course in courses],
         'progress_bar': False
     }
+
     return render(request, 'website/index.html', context)
 
 
