@@ -131,5 +131,4 @@ def payment(request):
     except FortunaException:
         logging.exception("Failed to create transaction")
 
-    # TODO: Create transaction failed, redirect to order detail
-    return redirect('website:index')
+    return redirect('website:orders:details', order_id=order.id)
