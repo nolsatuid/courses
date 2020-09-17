@@ -67,7 +67,7 @@
 									<label class="item-label">Total Harga</label>
 									<div class="final-price" id="total-price">Rp.{{ total.total_price }}</div>
 								</div></div>
-								<form method="post">{% csrf_token %}
+								<form action="{% url 'website:carts:payment'%}">
 									<button type="submit" class="btn btn-block btn-outline-primary">Bayar </button>
 								</form>
 							</div>

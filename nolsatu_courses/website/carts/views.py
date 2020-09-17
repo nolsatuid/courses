@@ -32,11 +32,10 @@ def cart(request):
 def cart_delete(request, cart_id):
     cart = get_object_or_404(Cart, id=cart_id, user=request.user)
     data = dict()
-    if request.method == 'POST':
-        cart.delete()
-        carts = Cart.objects.filter(user=request.user)
-        data['total'] = carts.annotate(final_price=F('product__price') - F('product__discount')
-                                       ).aggregate(price=Sum('final_price'))
+    cart.delete()
+    carts = Cart.objects.filter(user=request.user)
+    data['total'] = carts.annotate(final_price=F('product__price') - F('product__discount')
+                                   ).aggregate(price=Sum('final_price'))
     return JsonResponse(data, status=200)
 
 
@@ -45,12 +44,11 @@ def cart_delete(request, cart_id):
 def add_item(request, product_id):
     pick_product = get_object_or_404(Product, id=product_id)
     data = dict()
-    if request.method == 'POST':
-        try:
-            Cart.objects.get(product=pick_product, user=request.user)
-            data['message'] = _('Gagal Menambahkan, Kursus Sudah Ada Di Keranjang!')
-        except Cart.DoesNotExist:
-            Cart(product=pick_product, user=request.user).save()
+    try:
+        Cart.objects.get(product=pick_product, user=request.user)
+        data['message'] = _('Gagal Menambahkan, Kursus Sudah Ada Di Keranjang!')
+    except Cart.DoesNotExist:
+        Cart(product=pick_product, user=request.user).save()
 
     return JsonResponse(data, status=200)
 
@@ -58,10 +56,10 @@ def add_item(request, product_id):
 @login_required
 def choose_item(request):
     data = dict()
-    if request.method == 'GET':
-        if request.GET.get('change_item[item]'):
-            Cart.objects.filter(id=request.GET.get('change_item[item]')).update(
-                is_select=request.GET.get('change_item[selected]'))
+    if request.method == 'POST':
+        if request.POST.get('change_item[item]'):
+            Cart.objects.filter(id=request.POST.get('change_item[item]')).update(
+                is_select=request.POST.get('change_item[selected]'))
 
         carts = Cart.objects.filter(user=request.user, is_select=True)
         data['total'] = carts.annotate(final_price=F('product__price') - F('product__discount')
@@ -82,31 +80,6 @@ def checkout(request):
         'carts': carts,
         'total': total
     }
-
-    if request.method == 'POST':
-        tax = total['total_price'] / 100 * settings.TAX_VALUE
-        discount = 0
-        order = Order(
-            user=request.user,
-            number=timezone.now(),
-            tax=tax,
-            discount=discount,
-            grand_total=total['total_price'] + tax - discount,
-        )
-        order.save()
-
-        order_item = [OrderItem(
-            order=order,
-            product=item.product,
-            price=item.product.price - item.product.discount,
-            name=item.product.course.title,
-        ) for item in carts]
-
-        OrderItem.objects.bulk_create(order_item)
-        carts.delete()
-
-        return redirect('website:index')
-
     return render(request, 'website/carts/checkout.html', context)
 
 
@@ -122,3 +95,29 @@ def payment(request):
     if request bpay valid, redirect to bpay snap page
     if request invalid, redirect to order detail.
     """
+    carts = Cart.objects.filter(user=request.user, is_select=True)
+    total = carts.annotate(final_price=F('product__price') - F('product__discount')
+                           ).aggregate(total_price=Sum('final_price'))
+
+    tax = total['total_price'] / 100 * settings.TAX_VALUE
+    discount = 0
+    order = Order(
+        user=request.user,
+        number=timezone.now().timestamp(),
+        tax=tax,
+        discount=discount,
+        grand_total=total['total_price'] + tax - discount,
+    )
+    order.save()
+
+    order_item = [OrderItem(
+        order=order,
+        product=item.product,
+        price=item.product.price - item.product.discount,
+        name=item.product.course.title,
+    ) for item in carts]
+
+    OrderItem.objects.bulk_create(order_item)
+    carts.delete()
+
+    return redirect('website:index')

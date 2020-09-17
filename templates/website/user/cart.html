@@ -93,7 +93,7 @@
 	</div>
 </section>
 
-<form method="post" id="form-trash" action="">
+<form id="form-trash" action="">
 	{% csrf_token %}
 <!-- Modal -->
 <div class="modal fade" id="trashAlert" tabindex="-1" role="dialog" aria-hidden="true">
@@ -167,8 +167,9 @@
  	function chooseItem() {
     	$.ajax({
 			url: '{% url 'website:carts:choose_item' %}',
+			headers:{"X-CSRFToken": `{{csrf_token}}` },
 			data: {'change_item': selected_item},
-			type: 'GET',
+			type: 'POST',
       		dataType: 'json',
 			success: function (data) {
 				if (data.total) $("#total-price").html('Rp.' + data.total.price);
