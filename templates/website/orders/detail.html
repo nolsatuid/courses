@@ -1,0 +1,81 @@
+{% extends 'base-adinusa.html' %}
+{% load static humanize tags_products %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'website/css/invoice.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="special_cource padding_top">
+    <div class="container">
+            <div class="receipt-content" style="background:None;">
+                <div class="container bootstrap snippets bootdey">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="invoice-wrapper">
+                                <div class="intro">
+                                    INVOICE
+                                    <br>
+                                    <h3><strong>#{{ order.number }}</strong></h3>
+                                    <h5>{{ order.user.get_full_name }}</h5>
+                                </div>
+
+                                <div class="payment-info">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <span>Status Order</span>
+                                            <br>
+                                            {{ order.status|order_status_display:'True' }}
+                                        </div>
+                                        <div class="col-sm-6 text-right">
+                                            <span>Tanggal Order</span>
+                                            <strong>{{ order.created_at }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="line-items">
+                                    <div class="headers clearfix">
+                                        <div class="row">
+                                            <div class="col-md-6">Nama</div>
+                                            <div class="col-md-6 text-right">Harga</div>
+                                        </div>
+                                    </div>
+                                    <div class="items">
+                                        {% for item in order_items %}
+                                        <div class="row item">
+                                            <div class="col-md-6 desc">
+                                                {{ item.name|intcomma }}
+                                            </div>
+                                            <div class="col-md-6 amount text-right">
+                                                Rp. {{ item.price|intcomma }}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="total text-right">
+                                        <p class="extra-notes">
+                                            ID Remote Transaction: <br>
+                                            {{ order.remote_transaction_id }}
+                                        </p>
+                                        <div class="field">
+                                            Pajak <span>Rp. {{ order.tax|intcomma }}</span>
+                                        </div>
+                                        <div class="field">
+                                            Diskon <span>Rp. {{ order.discount|intcomma }}</span>
+                                        </div>
+                                        <div class="field">
+                                            Total <span>Rp. {{ order.grand_total|intcomma }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
+{% endblock %}
