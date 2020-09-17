@@ -4,6 +4,7 @@
 {% load math_extras %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
 {% endblock  %}
 
 {% block content %}
@@ -15,12 +16,19 @@
 				<div class="box-custom">
 					<div class="card-body">
 						<div class="row">
-							<div class="col-12">
+							<div class="col-sm-12">
 								<h5>{{ title }}</h5>
 
 								{% for item in carts %}
 								<div class="post" id="{{ item.id.hex }}">
 									<div class="d-flex media">
+
+										<div class="align-self-center icheck-primary d-inline mr-1">
+												<input type="checkbox" name="selected-item" id="checkbox-item-{{ item.id.hex }}"
+													   {% if item.is_select %} checked {% endif %} value="{{ item.id }}">
+												<label for="checkbox-item-{{ item.id.hex }}"></label>
+										</div>
+
 										{% if item.product.course.featured_image %}
 										<img class="mr-3 cart-pic" src="{{ item.product.course.featured_image.url }}">
 										{% else %}
@@ -66,7 +74,7 @@
 									<label class="item-label">Total Harga</label>
 									<div class="final-price" id="total-price">Rp.{{ total.total_price }}</div>
 								</div>
-								<button type="button" class="btn btn-block btn-outline-primary">Beli </button>
+								<button type="button" id="checkoutBtn" class="btn btn-block btn-outline-primary">Beli </button>
 							</div>
 						</div>
 					</div>
@@ -85,7 +93,7 @@
 	</div>
 </section>
 
-<form method="post" id="form-trash" action="">
+<form id="form-trash" action="">
 	{% csrf_token %}
 <!-- Modal -->
 <div class="modal fade" id="trashAlert" tabindex="-1" role="dialog" aria-hidden="true">
@@ -107,9 +115,14 @@
 
 {% block extra_js %}
 <script>
+ 	var selected_item;
+
 	$( "a" ).on("click", function(){
 		 $("#form-trash").attr('action', $(this).data('url'));
 		 $("#form-trash").data('info', $(this).data('info'));
+	});
+	$( "#checkoutBtn" ).on("click", function(){
+		window.location.href='{% url 'website:carts:checkout' %}'
 	});
 
 	$('#trashAlert').on('hidden.bs.modal', function () {
@@ -117,11 +130,17 @@
 		 $("#form-trash").data('info', '');
 	});
 
+	document.querySelectorAll("input[name=selected-item]").forEach(i=>{
+		 i.onclick = function(){
+		 	selected_item = (!this.checked) ? { item: $(this).val(), selected: 0 } : { item: $(this).val(), selected: 1 };
+		 	chooseItem()
+		 }
+	});
+
     function trashFormSubmit(e) {
 		e.preventDefault();
     	var form = $('#form-trash');
     	var remove_item = form.data('info')
-    	console.log(remove_item)
     	$.ajax({
 			url: form.attr("action"),
 			data: form.serialize(),
@@ -135,6 +154,25 @@
 				}else{
 					window.location.reload();
 				}
+			},
+			error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+    	});
+        return false;
+ 	};
+
+ 	function chooseItem() {
+    	$.ajax({
+			url: '{% url 'website:carts:choose_item' %}',
+			headers:{"X-CSRFToken": `{{csrf_token}}` },
+			data: {'change_item': selected_item},
+			type: 'POST',
+      		dataType: 'json',
+			success: function (data) {
+				if (data.total) $("#total-price").html('Rp.' + data.total.price);
 			},
 			error: function (data) {
                 if (data.status == 500) {

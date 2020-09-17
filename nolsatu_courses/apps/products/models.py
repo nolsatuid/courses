@@ -29,6 +29,7 @@ class Cart(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(Product, verbose_name=_("Produk"), on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE)
+    is_select = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.product.course.title}-{self.user.username}"

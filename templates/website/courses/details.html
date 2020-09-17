@@ -66,9 +66,8 @@
 
 function toCart(redirect=false) {
     $.ajax({
-        type: "POST",
-        headers:{"X-CSRFToken": `{{csrf_token}}` },
-        url: `{% url 'website:carts:add_item' course.product.id %}`,
+        type: "GET",
+        url: `{% if course.product.price %}{% url 'website:carts:add_item' course.product.id %}{% endif %}`,
         dataType: 'json',
         success: function (data) {
             if (redirect){
