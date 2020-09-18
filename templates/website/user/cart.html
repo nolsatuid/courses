@@ -1,6 +1,6 @@
 {% extends 'base-adinusa.html' %}
 {% load static %}
-{% load l10n %}
+{% load humanize %}
 {% load math_extras %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
@@ -43,10 +43,10 @@
 																	  {% endcomment %}
 																	  <div class="row pl-3 pt-2">
 																		  {% if item.product.discount %}
-																		  <div class="slashed-price">Rp. {{ item.product.price|localize }}</div>
-																		  <div class="final-price">Rp. {{ item.product.price|subtract:item.product.discount }}</div>
+																		  <div class="slashed-price">Rp. {{ item.product.price|intcomma }}</div>
+																		  <div class="final-price">Rp. {{ item.product.price|subtract:item.product.discount|intcomma }}</div>
 																		  {% else %}
-																		  <div class="final-price">Rp. {{ item.product.price|localize }}</div>
+																		  <div class="final-price">Rp. {{ item.product.price|intcomma }}</div>
 																		  {% endif %}
 																	  </div>
 																  </div>
@@ -72,7 +72,7 @@
 								<h5>Ringkasan Pembelian</h5>
 								<div class="row justify-content-between p-3">
 									<label class="item-label">Total Harga</label>
-									<div class="final-price" id="total-price">Rp.{{ total.total_price }}</div>
+									<div class="final-price" id="total-price">Rp. {{ total.total_price|intcomma }}</div>
 								</div>
 								<button type="button" id="checkoutBtn" class="btn btn-block btn-outline-primary">Beli </button>
 							</div>
