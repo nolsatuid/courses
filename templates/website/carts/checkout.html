@@ -1,6 +1,6 @@
 {% extends 'base-adinusa.html' %}
 {% load static %}
-{% load l10n %}
+{% load humanize %}
 {% load math_extras %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
@@ -29,16 +29,15 @@
 										<div class="media-body mt-3">
 											<a class="item-label" href="#">{{ item.product.course.title }}</a>
 											<div class="row pl-3 pt-2 pb-2">
-												{% if item.product.discount %}
-												<div class="slashed-price">Rp. {{ item.product.price|localize }}</div>
-												<div class="final-price">Rp. {{ item.product.price|subtract:item.product.discount }}</div>
+												{% if item.product.is_discount %}
+												<div class="slashed-price">Rp. {{ item.product.price|intcomma }}</div>
+												<div class="final-price">Rp. {{ item.product.price|subtract:item.product.discount|intcomma }}</div>
 												{% else %}
-												<div class="final-price">Rp. {{ item.product.price|localize }}</div>
+												<div class="final-price">Rp. {{ item.product.price|intcomma }}</div>
 												{% endif %}
 											</div>
 											{% if item.product.course.level %}
 											<div class="badge badge-warning">{{ item.product.course.get_level_display }}</div>
-											<h1>{{ item.product.course.batchs.start_date }}</h1>
 											{% endif %}
 										</div>
 									</div>
@@ -65,7 +64,7 @@
 								</div>
 								<div class="row justify-content-between">
 									<label class="item-label">Total Harga</label>
-									<div class="final-price" id="total-price">Rp.{{ total.total_price }}</div>
+									<div class="final-price" id="total-price">Rp. {{ total.total_price|intcomma }}</div>
 								</div></div>
 								<form action="{% url 'website:carts:payment'%}">
 									<button type="submit" class="btn btn-block btn-outline-primary">Bayar </button>
