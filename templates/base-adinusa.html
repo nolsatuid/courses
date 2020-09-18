@@ -27,7 +27,7 @@
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{% static 'adminlte/plugins/fontawesome-free/css/all.min.css' %}">
-
+    
     {% block extra_css %}{% endblock  %}
 </head>
 
@@ -117,7 +117,9 @@
         </div>
     </header>
     <!-- Header part end-->
-    {% block content %} {% endblock %}    
+    <div style="min-height: 100vh">
+    {% block content %} {% endblock %}   
+    </div> 
     <!-- footer part start-->
     <footer class="footer-simple mt-5">
         <div class="container-fluid">
