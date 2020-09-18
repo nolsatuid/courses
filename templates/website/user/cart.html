@@ -36,13 +36,8 @@
 										{% endif %}
 										<div class="media-body mt-3">
 																	  <a class="item-label" href="#">{{ item.product.course.title }}</a>
-																	  {% comment %}
-																	  {% if item.product.course.level %}
-																	  <div class="badge badge-warning">{{ item.product.course.get_level_display }}</div>
-																	  {% endif %}
-																	  {% endcomment %}
 																	  <div class="row pl-3 pt-2">
-																		  {% if item.product.discount %}
+																		  {% if item.product.is_discount %}
 																		  <div class="slashed-price">Rp. {{ item.product.price|intcomma }}</div>
 																		  <div class="final-price">Rp. {{ item.product.price|subtract:item.product.discount|intcomma }}</div>
 																		  {% else %}

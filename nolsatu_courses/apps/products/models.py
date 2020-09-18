@@ -19,7 +19,10 @@ class Product(models.Model):
     discount_type = models.SmallIntegerField(
         _("Diskon Tipe"), choices=DISC_TYPE, blank=True, null=True)
     discount_value = models.IntegerField(_("Nilai Diskon"), blank=True, null=True)
-    discount = models.IntegerField(_("Diskon"), blank=True, null=True)
+    discount = models.IntegerField(_("Diskon"), default=0)
+
+    def is_discount(self):
+        return True if self.discount_value else False
 
     def __str__(self):
         return f"{self.id}-{self.course.title}"
