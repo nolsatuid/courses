@@ -77,6 +77,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <i class="fas fa-list mr-2"></i> Daftar Materimu
                 <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
+            <a class="dropdown-item" href="{% url 'website:carts:index' %}">
+                <i class="fas fa-shopping-cart mr-2"></i> Keranjang
+                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
+            </a>
+            <a class="dropdown-item" href="{% url 'website:orders:index' %}">
+                <i class="fas fa-tags mr-2"></i> Pembelian
+                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
+            </a>
             {% if user.is_superuser %}
             <div class="dropdown-divider"></div>
             <a href="{% url 'backoffice:index' %}" class="dropdown-item">
