@@ -1,4 +1,4 @@
-{% load l10n %}
+{% load l10n math_extras humanize %}
 
 <div class="card position-sticky sticky-top" id="sticky-sidebar">
     <h5><div class="card-header">Informasi Kursu <i class="float-right fas fa-bookmark"></i></div></h5>
@@ -34,7 +34,16 @@
 
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                        <b class="text-pipe">Harga</b><span class="float-right final-price">Rp. {{ course.product.price|localize }}</span>
+                        <b class="text-pipe">Harga</b>
+                        {% if course.product.discount %}                        
+                        <b class="float-right" style="font-size: 9pt; color: #888888;">
+                            {% if course.product.discount_type == 1 %}<span class="badge badge-discount">{{ course.product.discount_value }}%</span>{% endif %}
+                            <s>Rp {{ course.product.price|localize|intcomma }}</s>
+                        </b><br>
+                        <div class="final-price float-right">Rp {{ course.product.price|subtract:course.product.discount|intcomma }}</div>
+                        {% else %}
+                        <div class="final-price float-right">Rp {{ course.product.price|localize|intcomma }}</div>
+                        {% endif %}
                     </li>
                 </ul>
                 <button type="button" id="buyCourse" class="btn btn-md btn-block btn-outline-info mr-1">
