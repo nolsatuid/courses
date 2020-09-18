@@ -1,4 +1,4 @@
-{% load static tags_courses humanize thumbnail %}
+{% load static tags_courses humanize thumbnail math_extras %}
 
 {% block extra_css %}
 <style>
@@ -10,6 +10,7 @@
         {% if course.course.status == 1 %}
             <span class="badge badge-pill badge-danger float-right" style="position: absolute; top: 10px; left: 25px;">{{ course.course.get_status_display }}</span>
         {% endif %}
+        
         <div class="special_img special_img_card">        
             <a href="{% url 'website:courses:details' course.course.slug %}">
                 {% if course.course.featured_image %}    
@@ -23,17 +24,26 @@
         </div>
         <div class="special_cource_text">      
             <a href="{% url 'website:courses:details' course.course.slug %}"><h3>{{ course.course.title }}</h3></a>
-            <div class="badge badge-warning">{{ course.course.get_level_display }}</div>
-            <div class="author_info">                
-                <span class="d-flex align-items-center">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="badge badge-warning">{{ course.course.get_level_display }}</div>
+                </div>
+                <div class="col-md-6">
                     {% if course.has_enrolled %}
-                        <a href="{% url 'website:courses:details' course.course.slug %}" class="genric-btn info-border radius large">Masuk Kelas</a>
-                    {% else %}
-                    <h4>
-                        {% if course.course.product.price %}IDR {{ course.course.product.price|intcomma }}{% else %}GRATIS{% endif %}<br>
-                        <span class="normal-price">{% if course.course.product.discount %}IDR <s>{{ course.course.product.discount|intcomma }}</s>{% endif %}</span>
-                    </h4>
+                        <a href="{% url 'website:modules:details' course.course.get_first_module.slug %}" class="btn btn-outline-primary btn-sm btn-block">Masuk Kelas</a>
                     {% endif %}
+                </div>
+            </div>           
+            
+            <div class="author_info">                
+                <span class="d-flex align-items-center">                    
+                    <h4>                        
+                        <span class="normal-price">
+                            {% if course.course.product.discount_type == 1 %}<span class="badge badge-discount">{{ course.course.product.discount_value }}%</span>{% endif %}
+                            {% if course.course.product.discount %}<s>Rp {{ course.course.product.price|intcomma }}</s>{% endif %}
+                        </span><br>
+                        {% if course.course.product.price %}Rp {{ course.course.product.price|subtract:course.course.product.discount|intcomma }}{% else %}GRATIS{% endif %}
+                    </h4>
                 </span>      
                 <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{% if course.course.vendor.logo %} {{ course.course.vendor.logo.url }} {% endif %}" alt="{{ course.course.vendor.name }}"></a>
             </div>
