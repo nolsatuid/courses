@@ -1,0 +1,47 @@
+{% extends 'vendors/index.html' %}
+{% load tags_products %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            <table id="datatable" class="table table-striped">
+                <thead>
+                    <th>Nomor Order</th>
+                    <th>Status</th>
+                    <th>Item</th>
+                    <th>Harga</th>
+                    <th>Tanggal Order</th>
+                    <th>User</th>
+                </thead>
+                <tbody>
+                    {% for item in order_item %}
+                        <tr>
+                            <td>{{ item.order.number }}</td>
+                            <td>{{ item.order.status|order_status_display:'True' }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.price }}</td>
+                            <td>{{ item.created_at }}</td>
+                            <td>{{ item.order.user.get_full_name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable();
+    })
+</script>
+{% endblock %}

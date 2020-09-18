@@ -1,4 +1,4 @@
-{% load static %}
+{% load static sweetify %}
 <!doctype html>
 <html lang="en">
 
@@ -38,7 +38,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="{% url 'website:index' %}"> <img src="http://127.0.0.1:8000/media/images/settings/adinusa-landscape-color_ejTCOqS.png" alt="logo" style="width:150px;"> </a>
+                        <a class="navbar-brand" href="{% url 'website:index' %}"> <img src="{{ brand_logo }}" alt="{{ site_name }}" style="width:150px;"> </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -95,9 +95,8 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ nolsatu_profile_page_url }}">Profil</a>
                                         <a class="dropdown-item" href="{% url 'website:courses:user_courses' %}">Daftar materimu</a>
-                                        {% if not user.is_superuser or not user.is_staff %}
                                         <a class="dropdown-item" href="{% url 'website:carts:index' %}">Keranjang</a>
-                                        {% endif %}
+                                        <a class="dropdown-item" href="{% url 'website:orders:index' %}">Pembelian</a>
                                         {% if user.is_superuser %}
                                         <a class="dropdown-item" href="{% url 'backoffice:index' %}">Backoffice</a>
                                         {% endif %}
@@ -118,7 +117,7 @@
         </div>
     </header>
     <!-- Header part end-->
-    {% block content %} {% endblock %}
+    {% block content %} {% endblock %}    
     <!-- footer part start-->
     <footer class="footer-simple mt-5">
         <div class="container-fluid">
@@ -128,8 +127,8 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <p class="footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-    Copyright &copy;<script>document.write(new Date().getFullYear());</script> <strong><a href="https://btech.id">PT. Boer Technology (Btech)</a></strong> | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> <strong><a href="https://btech.id">PT. Boer Technology (Btech)</a></strong> | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
                             </div>
                         </div>
                     </div>
@@ -160,6 +159,10 @@
     <script src="{% static 'adinusa/js/waypoints.min.js' %}"></script>
     <!-- custom js -->
     <script src="{% static 'adinusa/js/custom.js' %}"></script>
+    <!-- sweetalert -->
+    <script src="{% static 'website/js/sweetalert2@10.js' %}"></script>
+
+    {% sweetify %}
 
     {% block extra_js %} {% endblock %}
 

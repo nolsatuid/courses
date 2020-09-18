@@ -1,8 +1,11 @@
+import typing
 import uuid
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from fortuna_client.transaction import RemoteTransaction
+from fortuna_client.utils import create_remote_transaction, get_remote_transaction
 
 from model_utils import Choices
 
@@ -19,7 +22,10 @@ class Product(models.Model):
     discount_type = models.SmallIntegerField(
         _("Diskon Tipe"), choices=DISC_TYPE, blank=True, null=True)
     discount_value = models.IntegerField(_("Nilai Diskon"), blank=True, null=True)
-    discount = models.IntegerField(_("Diskon"), blank=True, null=True)
+    discount = models.IntegerField(_("Diskon"), default=0)
+
+    def is_discount(self):
+        return True if self.discount_value else False
 
     def __str__(self):
         return f"{self.id}-{self.course.title}"
@@ -29,6 +35,7 @@ class Cart(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(Product, verbose_name=_("Produk"), on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE)
+    is_select = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.product.course.title}-{self.user.username}"
@@ -43,6 +50,8 @@ class Order(models.Model):
         (3, 'pending', _("Pending")),
         (4, 'failed', _("Failed")),
         (5, 'expired', _("Expired")),
+        (6, 'refund', _("Refund")),
+        (7, 'other', _("Other"))
     )
     status = models.SmallIntegerField(choices=STATUS, default=STATUS.created)
     tax = models.IntegerField(_("Pajak"), blank=True, null=True)
@@ -55,10 +64,27 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.number}-{self.user.username}"
 
+    def create_transaction(self) -> typing.Optional[RemoteTransaction]:
+        if not self.remote_transaction_id:
+            transaction = create_remote_transaction(self.user.id, self.grand_total)
+            self.remote_transaction_id = transaction.id
+            self.status = Order.STATUS.pending
+            self.save()
+
+            return transaction
+        else:
+            return get_remote_transaction(self.remote_transaction_id)
+
+    def get_transaction(self) -> typing.Optional[RemoteTransaction]:
+        if self.remote_transaction_id:
+            return get_remote_transaction(self.remote_transaction_id)
+
+        return None
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, verbose_name=_("Produk"), on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, verbose_name=_("Pesanan"), on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, verbose_name=_("Pesanan"), on_delete=models.CASCADE, related_name="orders")
     price = models.IntegerField(_("Harga"))
     name = models.CharField(_("Nama"), max_length=220)
     created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)

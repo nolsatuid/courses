@@ -13,4 +13,5 @@ urlpatterns = [
     path('quizzes/', include('nolsatu_courses.backoffice.quizzes.urls')),
     path('vendors/', include('nolsatu_courses.backoffice.vendors.urls')),
     path('products/', include('nolsatu_courses.backoffice.products.urls')),
+    path('orders/', include('nolsatu_courses.backoffice.orders.urls')),
 ]

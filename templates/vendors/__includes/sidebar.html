@@ -66,6 +66,12 @@
                     <p>Angkatan</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{% url 'vendors:orders:index' %}" class="nav-link {% if menu_active == 'order' %}active{% endif %}">
+                    <i class="nav-icon fas fa-shopping-cart"></i>
+                    <p>Order</p>
+                </a>
+            </li>
             <li class="nav-item {% if menu_active == 'registrants' %}has-treeview menu-open{% endif %}">
                 <a href="#" class="nav-link {% if menu_active == 'registrants' %}active{% endif %}">
                     <i class="nav-icon fas fa-users"></i>

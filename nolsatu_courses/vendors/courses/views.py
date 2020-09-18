@@ -1,5 +1,6 @@
+import sweetify
+
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import JsonResponse
@@ -46,7 +47,7 @@ def create(request):
         with transaction.atomic():
             course = form.save(author)
             form.save_m2m()
-            messages.success(request, _(f"Berhasil tambah kursus {course.title}"))
+            sweetify.success(request, _(f"Berhasil tambah kursus {course.title}"), button='OK', icon='success')
         return redirect('vendors:courses:index')
 
     context = {
@@ -66,7 +67,7 @@ def create(request):
 def delete(request, id):
     course = get_object_or_404(Courses, id=id, vendor__users__email=request.user.email)
     course.delete()
-    messages.success(request, 'Berhasil hapus kursus')
+    sweetify.success(request, 'Berhasil hapus kursus', button='OK', icon='success')
     return redirect('vendors:courses:index')
 
 
@@ -81,7 +82,7 @@ def edit(request, id):
         with transaction.atomic():
             change_course = form.save(author)
             form.save_m2m()
-        messages.success(request, _(f"Berhasil ubah kursus {change_course.title}"))
+        sweetify.success(request, _(f"Berhasil ubah kursus {change_course.title}"), button='OK', icon='success')
         return redirect('vendors:courses:index')
 
     context = {
@@ -113,10 +114,11 @@ def registrants(request):
                 enroll = get_object_or_404(Enrollment, id=id, course__vendor__users__email=request.user.email)
                 if settings.COURSE_CONFIGS['REQUIRED_LINK_GROUP'] and \
                         not enroll.course.batchs.last().link_group:
-                    messages.error(
+                    sweetify.error(
                         request,
-                        _(
-                            f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi')
+                        'Oops',
+                        text=_(f'Gagal mengubah status <strong>{enroll}</strong>, karena link grup pada batch {enroll.batch} belum diisi'),
+                        button='OK', icon='error', timer=10000
                     )
                 else:
                     if enroll.batch != enroll.course.batchs.last():
@@ -133,7 +135,7 @@ def registrants(request):
                     utils.send_notification(
                         enroll.user, f'Akses kelas {enroll.course.title} di berikan', notif_msg)
 
-            messages.success(request, _(f'Berhasil memberikan akses massal'))
+            sweetify.success(request, _(f'Berhasil memberikan akses massal'), button='OK', icon='success')
 
     context = {
         'menu_active': 'registrants',

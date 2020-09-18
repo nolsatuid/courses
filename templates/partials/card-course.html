@@ -45,7 +45,9 @@
                         {% if course.course.product.price %}Rp {{ course.course.product.price|subtract:course.course.product.discount|intcomma }}{% else %}GRATIS{% endif %}
                     </h4>
                 </span>      
-                <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{% if course.course.vendor.logo %} {{ course.course.vendor.logo.url }} {% endif %}" alt="{{ course.course.vendor.name }}"></a>
+                {% if course.course.vendor.logo %}
+                    <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{{ course.course.vendor.logo.url }}" alt="{{ course.course.vendor.name }}"></a>
+                {% endif %}
             </div>
         </div>
 

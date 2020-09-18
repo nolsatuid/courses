@@ -1,7 +1,8 @@
+import sweetify
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.db.models import Prefetch
 from django.http import Http404
 
@@ -34,8 +35,9 @@ def details(request, slug):
     # jika page_type adalah section dan section memiliki tugas
     if prev_type == 'section' and prev.is_task:
         if not request.user.collect_tasks.filter(section=prev):
-            messages.warning(
-                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}")
+            sweetify.warning(
+                request, _(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}"),
+                button='OK', icon='warning', timer=10000
             )
             return redirect("website:sections:details", prev.slug)
 
