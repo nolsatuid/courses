@@ -1,11 +1,13 @@
 import sweetify
+import json
 
 from functools import wraps
 
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import available_attrs
 from django.utils.translation import ugettext_lazy as _
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.contrib.auth.models import User
 
 from nolsatu_courses.apps.courses.models import Courses, Module, Section
@@ -40,7 +42,8 @@ def enroll_required(view_func):
             sweetify.warning(
                 request,
                 'Peringatan', text=_("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
-                  " dan admin telah menyetujui kamu sebagai peserta."), icon='warning', button='OK', timer=10000
+                                     " dan admin telah menyetujui kamu sebagai peserta."), icon='warning', button='OK',
+                timer=10000
             )
             return redirect('website:index')
 
@@ -48,7 +51,8 @@ def enroll_required(view_func):
             sweetify.warning(
                 request,
                 'Peringatan', text=_("Maaf ya, kursus belum dimulai, pastikan kamu memulai kelas sesuai"
-                  " dengan tanggal <b>mulai</b> yang tertera."), icon='warning', button='OK', timer=10000
+                                     " dengan tanggal <b>mulai</b> yang tertera."), icon='warning', button='OK',
+                timer=10000
             )
             return redirect('website:courses:details', course.slug)
 
@@ -59,7 +63,8 @@ def enroll_required(view_func):
         sweetify.warning(
             request,
             'Peringatan', text=_("Maaf ya, kamu belum memiliki akses. Pastikan kamu sudah mendaftar"
-              " dan admin telah menyetujui kamu sebagai peserta."), icon='warning', button='OK', timer=10000
+                                 " dan admin telah menyetujui kamu sebagai peserta."), icon='warning', button='OK',
+            timer=10000
         )
         return redirect('website:index')
 
@@ -96,3 +101,15 @@ def vendor_member_required(a_func):
         return a_func(request, *args, **kwargs)
 
     return _wrapped_view
+
+
+def ajax_login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return view_func(request, *args, **kwargs)
+        response = json.dumps({'not_authenticated': True,
+                               'message': 'Silakan Mendaftar Terlebih Dahulu atau Masuk Jika Telah Memiliki Akun'})
+        return HttpResponse(response)
+
+    return wrapper
