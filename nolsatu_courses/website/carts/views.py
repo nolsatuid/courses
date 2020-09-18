@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from nolsatu_courses.apps.decorators import ajax_login_required
 from django.db import transaction
 from django.db.models import Sum, F
 from django.http import JsonResponse
@@ -42,7 +43,7 @@ def cart_delete(request, cart_id):
     return JsonResponse(data, status=200)
 
 
-@login_required
+@ajax_login_required
 @transaction.atomic
 def add_item(request, product_id):
     pick_product = get_object_or_404(Product, id=product_id)
@@ -52,7 +53,6 @@ def add_item(request, product_id):
         data['message'] = _('Gagal Menambahkan, Kursus Sudah Ada Di Keranjang!')
     except Cart.DoesNotExist:
         Cart(product=pick_product, user=request.user).save()
-
     return JsonResponse(data, status=200)
 
 

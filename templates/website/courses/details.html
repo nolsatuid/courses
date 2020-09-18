@@ -73,18 +73,26 @@ function toCart(redirect=false) {
             if (redirect){
                 location.href = "{% url 'website:carts:index' %}"
             }else{
-                if (data.message){
+                if (data.not_authenticated){
                     Swal.fire(
-                      'Opps...',
+                      'Opps Maaf...',
                       data.message,
-                      'info',
+                      'error',
                     )
                 }else{
-                    Swal.fire(
-                      'Berhasil Ditambahkan!',
-                      'Kursus: {{ course.title }}',
-                      'success'
-                    )
+                    if (data.message){
+                        Swal.fire(
+                          'Opps...',
+                          data.message,
+                          'info',
+                        )
+                    }else{
+                        Swal.fire(
+                          'Berhasil Ditambahkan!',
+                          'Kursus: {{ course.title }}',
+                          'success'
+                        )
+                    }
                 }
             }
         },
