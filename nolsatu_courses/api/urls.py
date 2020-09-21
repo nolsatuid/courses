@@ -25,4 +25,5 @@ urlpatterns = [
     path('docs', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('demo', include('nolsatu_courses.api.demo.urls')),
     path('', include('nolsatu_courses.api.courses.urls')),
+    path('vendor', include('nolsatu_courses.api.vendors.urls')),
 ]
