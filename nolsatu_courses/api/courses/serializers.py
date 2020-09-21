@@ -4,6 +4,7 @@ from rest_framework import serializers
 from nolsatu_courses.api.courses.utils import prepare_markdown
 from nolsatu_courses.apps.courses.models import ( Courses, Batch, Enrollment,
                                                   Section, Module, TaskUploadSettings)
+from nolsatu_courses.apps.products.models import Product
 
 
 class BatchDetailSerializer(serializers.ModelSerializer):
@@ -12,12 +13,19 @@ class BatchDetailSerializer(serializers.ModelSerializer):
         fields = ('batch', 'start_date', 'end_date')
 
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = "__all__"
+
+
 class CourseSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author_name')
     featured_image = serializers.CharField(source='featured_image_with_host')
     level = serializers.CharField(source='get_level_display')
     categories = serializers.CharField(source='category_list')
     short_description = serializers.SerializerMethodField()
+    product = ProductSerializer(required=False)
 
     def get_short_description(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
@@ -28,7 +36,7 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories', 'short_description', 'is_allowed',
-                  'quizzes']
+                  'quizzes', 'product']
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
