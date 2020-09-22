@@ -17,6 +17,7 @@ def nolsatu_context(request):
     return {
         'nolsatu_profile_page_url': settings.NOLSATU_PROFILE_PAGE_URL,
         'nolsatu_home_page_url': settings.NOLSATU_HOST,
+        'academy_home_page_url': settings.NOLSATU_HOST,
         'brand_logo': settings.NOLSATU_HOST + appearance.get('logo', ''),
         'brand_logo_light': settings.NOLSATU_HOST + appearance.get('logo_light', ''),
         'brand_logo_dark': settings.NOLSATU_HOST + appearance.get('logo_dark', ''),
