@@ -14,7 +14,7 @@
         <div class="special_img special_img_card">        
             <a href="{% url 'website:courses:details' course.course.slug %}">
                 {% if course.course.featured_image %}    
-                    {% thumbnail course.course.featured_image "350x350" crop="center" as course_thumb %}
+                    {% thumbnail course.course.featured_image "360x360" crop="center" as course_thumb %}
                         <img src="{{ course_thumb.url }}" alt="{{ course_thumb.name}}" width="{{ course_thumb.width }}" height="{{ course_thumb.height }}">
                     {% endthumbnail %}                
                 {% else %}
@@ -46,7 +46,7 @@
                     </h4>
                 </span>      
                 {% if course.course.vendor.logo %}
-                    <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="mt-2" src="{{ course.course.vendor.logo.url }}" alt="{{ course.course.vendor.name }}"></a>
+                    <a href="{{ course.course.vendor.website }}" style="height: 100%;"><img class="d-flex align-items-center" src="{{ course.course.vendor.logo.url }}" alt="{{ course.course.vendor.name }}" style="width: 130px;"></a>
                 {% endif %}
             </div>
         </div>
