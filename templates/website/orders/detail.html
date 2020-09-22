@@ -3,6 +3,27 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'website/css/invoice.css' %}">
+<style>
+    .payment-card-ticker{
+        background-color: #f8f8f8;
+        font-size: 13px;
+        padding: 8px 16px;
+        flex: 1 1;
+        text-align: left;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 8px;
+        color: rgba(0,0,0,.7);
+    }
+    .icon-light-payment{
+        width: 16px;
+        height: 16px;
+        -o-object-fit: contain;
+        object-fit: contain;
+        padding-right: 8px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -12,15 +33,28 @@
                 <div class="container bootstrap snippets bootdey">
                     <div class="row">
                         <div class="col-md-12">
+                            {% if order %}
                             <div class="invoice-wrapper">
-                                <div class="intro">
-                                    INVOICE
-                                    <br>
-                                    <h3><strong>#{{ order.number }}</strong></h3>
-                                    <h5>{{ order.user.get_full_name }}</h5>
+                                <div class="row justify-content-between m-1">
+                                    <div class="intro">
+                                        INVOICE
+                                        <br>
+                                        <h3><strong>#{{ order.number }}</strong></h3>
+                                        <h5>{{ order.user.get_full_name }}</h5>
+                                    </div>
+                                    <div class="intro">
+                                        <div class="payment-card-ticker mb-2">
+                                            {% if exp_payment %}
+                                                <i class="far fa-lightbulb icon-light-payment" style="color: Tomato;"></i>
+                                                Bayar Sebelum: {{ exp_payment|date:"d F Y H i" }} WIB
+                                            {% elif message %}
+                                               <i class="far fa-times-circle icon-light-payment" style="color:red"></i>
+                                                Maaf Pembayaran Belum Bisa Dilakukan, {{ message }}.
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <div class="payment-info">
+                                <div class="payment-info mt-1">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <span>Status Order</span>
@@ -32,9 +66,16 @@
                                             <strong>{{ order.created_at }}</strong>
                                         </div>
                                     </div>
+                                    {% if url_finishing_payment %}
+                                    <form class="float-left " action="{{ url_finishing_payment }}">
+                                        <button type="submit" class="btn btn-success float-right">
+                                             Selesaikan Pembayaran
+                                        </button>
+                                    </form>
+                                    {% endif %}
                                 </div>
 
-                                <div class="line-items">
+                                <div class="line-items pt-4">
                                     <div class="headers clearfix">
                                         <div class="row">
                                             <div class="col-md-6">Nama</div>
@@ -58,20 +99,36 @@
                                             ID Remote Transaction: <br>
                                             {{ order.remote_transaction_id }}
                                         </p>
-                                        <div class="field">
-                                            Pajak <span>Rp. {{ order.tax|intcomma }}</span>
-                                        </div>
-                                        <div class="field">
-                                            Diskon <span>Rp. {{ order.discount|intcomma }}</span>
-                                        </div>
-                                        <div class="field">
-                                            Total <span>Rp. {{ order.grand_total|intcomma }}</span>
+                                        <div class="p-2">
+                                            <div class="field">
+                                                <span>Pajak</span>
+                                                <span>Rp. {{ order.tax|intcomma }}</span>
+                                            </div>
+                                            <div class="field">
+                                                <span>Diskon</span>
+                                                <span>Rp. {{ order.discount|intcomma }}</span>
+                                            </div>
+                                            <div class="field">
+                                                <span>Total</span>
+                                                <span>Rp. {{ order.grand_total|intcomma }}</span>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="footer">
                             </div>
+                            {% else %}
+                            <div class="col-md-5 p-1 m-1" style="top:70px;">
+                                <div class="container">
+                                    <h3 class="text-center">Wah, Order Pembelianmu Kosong</h3>
+                                    <p class="text-center">Pastikan kamu sudah melakukan order sebelum melakuakn pembayaran. Yuk, cek sekarang!</p>
+                                    <button type="button" onclick="location.href='{% url 'website:index' %}';" class="button btn-block btn-info col-md-4 mt-2 offset-md-4 text-center">Cek Kursus</button>
+                                </div>
+                            </div>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
