@@ -2,8 +2,17 @@
 {% load tags_courses %}
 {% load static %}
 
+{% load meta %}
+
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+    <style>
+        .icon-social {
+            font-size:1.3em;
+            padding: 1.8px;
+            color:#3295ff;
+        }
+    </style>
 {% endblock  %}
 
 {% block content %}
@@ -15,7 +24,7 @@
             <div class="card-body">
                 <h1>{{ course.title }}</h1>
                 <small><i class="fas fa-user-edit"></i> {{ course.author_name|capfirst }}</small>
-
+                <div class="addthis_inline_share_toolbox float-right"></div>
                 <nav class="mt-5">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                       <a class="nav-item nav-link active" id="nav-description-tab" data-toggle="tab" href="#nav-description" role="tab" aria-controls="nav-description" aria-selected="true">Deskripsi</a>
@@ -54,6 +63,8 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f58478352521809"></script>
+
 <script>
     $(document).ready(function(){
         $("#addToCart").click(function(){

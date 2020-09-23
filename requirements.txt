@@ -29,3 +29,5 @@ git+ssh://git@go.btech.id/dev/fortuna-client.git@0.0.1
 
 #alert
 sweetify==2.0.0
+
+django-meta ~= 1.7.0

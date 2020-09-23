@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'markdownx',
     'sorl.thumbnail',
     'sweetify',
+    'meta',
 ]
 
 MIDDLEWARE = [
@@ -266,6 +267,11 @@ TAX_VALUE = 0
 FORTUNA_SERVER_URL = "http://127.0.0.1:8000"
 FORTUNA_CLIENT_ACCESS_TOKEN = "some_client_secret"
 FORTUNA_REMOTE_CALLBACK = "nolsatu_courses.apps.products.callback.FortunaCallback"
+
+# django-meta setting
+META_SITE_PROTOCOL = 'http'
+META_SITE_DOMAIN = 'localhost:8000'
+META_USE_OG_PROPERTIES = True
 
 try:
     from .local_settings import *
