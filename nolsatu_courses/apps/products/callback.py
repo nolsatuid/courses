@@ -32,13 +32,14 @@ class FortunaCallback(RemoteTransactionCallback):
         current_order.status = remote_status_map[transaction.status]
         current_order.save()
 
-        # Enroll User
-        order_item: OrderItem
-        for order_item in current_order.orders.all():
-            course: Courses = order_item.product.course
-            if not course.has_enrolled(current_order.user):
-                course.enrolled.create(course=course, user=current_order.user,
-                                       batch=course.batchs.last(), allowed_access=True)
+        if current_order.status == Order.STATUS.success:
+            # Enroll User
+            order_item: OrderItem
+            for order_item in current_order.orders.all():
+                course: Courses = order_item.product.course
+                if not course.has_enrolled(current_order.user):
+                    course.enrolled.create(course=course, user=current_order.user,
+                                           batch=course.batchs.last(), allowed_access=True)
 
         # TODO: Send Confirmation Email / Message
 
