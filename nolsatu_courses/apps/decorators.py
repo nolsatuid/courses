@@ -51,7 +51,7 @@ def enroll_required(view_func):
             sweetify.warning(
                 request,
                 'Peringatan', text=_("Maaf ya, kursus belum dimulai, pastikan kamu memulai kelas sesuai"
-                                     " dengan tanggal <b>mulai</b> yang tertera."), icon='warning', button='OK',
+                                     " dengan tanggal mulai yang tertera."), icon='warning', button='OK',
                 timer=10000
             )
             return redirect('website:courses:details', course.slug)

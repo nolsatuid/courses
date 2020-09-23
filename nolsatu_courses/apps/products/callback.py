@@ -5,7 +5,7 @@ from django.shortcuts import redirect, get_object_or_404
 from fortuna_client.callback import RemoteTransactionCallback
 from fortuna_client.transaction import RemoteTransaction
 
-from nolsatu_courses.apps.courses.models import Courses
+from nolsatu_courses.apps.courses.models import Courses, Enrollment
 from nolsatu_courses.apps.products.models import Order, OrderItem
 
 
@@ -38,8 +38,11 @@ class FortunaCallback(RemoteTransactionCallback):
             for order_item in current_order.orders.all():
                 course: Courses = order_item.product.course
                 if not course.has_enrolled(current_order.user):
-                    course.enrolled.create(course=course, user=current_order.user,
-                                           batch=course.batchs.last(), allowed_access=True)
+                    course.enrolled.create(
+                        course=course, user=current_order.user,
+                        batch=course.batchs.last(), allowed_access=True,
+                        status=Enrollment.STATUS.begin
+                    )
 
         # TODO: Send Confirmation Email / Message
 
