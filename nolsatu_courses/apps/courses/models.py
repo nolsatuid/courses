@@ -16,6 +16,7 @@ from django.http import HttpResponse
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from markdownx.models import MarkdownxField
+from meta.models import ModelMeta
 from model_utils import Choices
 from model_utils.managers import InheritanceManager
 from taggit.managers import TaggableManager
@@ -23,7 +24,7 @@ from taggit.managers import TaggableManager
 from nolsatu_courses.apps.utils import generate_unique_slug
 
 
-class Courses(models.Model):
+class Courses(ModelMeta, models.Model):
     title = models.CharField(_("Judul"), max_length=220)
     slug = models.SlugField(max_length=200, blank=True, help_text=_("Generate otomatis jika dikosongkan"))
     short_description = RichTextField(_("Deskripsi Singkat"), config_name='basic_ckeditor', default="")
@@ -230,6 +231,19 @@ class Courses(models.Model):
         return CollectTask.objects.filter(
             section_id__in=section_ids, user=user
         ).count()
+
+    _metadata = {
+        'title': 'title',
+        'description': 'short_description',
+        'image': 'get_meta_image',
+        'use_og': True,
+        'use_facebook': True,
+        'use_twitter': True,
+    }
+
+    def get_meta_image(self):
+        if self.featured_image:
+            return settings.HOST + self.featured_image.url
 
 
 class ModuleManager(models.Manager):

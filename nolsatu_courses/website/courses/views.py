@@ -34,8 +34,10 @@ def details(request, slug):
         'course': course,
         'batch': course.get_last_batch(),
         'has_enrolled': course.has_enrolled(request.user),
-        'enroll': course.get_enroll(request.user)
+        'enroll': course.get_enroll(request.user),
+        'meta': course.as_meta()
     }
+
     return render(request, 'website/courses/details.html', context)
 
 
