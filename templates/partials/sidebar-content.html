@@ -35,7 +35,7 @@
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
                         <b class="text-pipe">Harga</b>
-                        {% if course.product.discount %}                        
+                        {% if course.product.is_discount %}                        
                         <b class="float-right" style="font-size: 9pt; color: #888888;">
                             {% if course.product.discount_type == 1 %}<span class="badge badge-discount">{{ course.product.discount_value }}%</span>{% endif %}
                             <s>Rp {{ course.product.price|localize|intcomma }}</s>
