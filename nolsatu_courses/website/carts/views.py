@@ -1,7 +1,9 @@
 import logging
+import requests
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from nolsatu_courses.apps.decorators import ajax_login_required
 from django.db import transaction
 from django.db.models import Sum, F
@@ -48,9 +50,17 @@ def cart_delete(request, cart_id):
 def add_item(request, product_id):
     pick_product = get_object_or_404(Product, id=product_id)
     data = dict()
+    status_check = [Order.STATUS.created, Order.STATUS.pending, Order.STATUS.success]
+    product_in_order_item = pick_product.orderitem_set.first() if pick_product.orderitem_set.first() else False
+
     try:
-        Cart.objects.get(product=pick_product, user=request.user)
-        data['message'] = _('Gagal Menambahkan, Kursus Sudah Ada Di Keranjang!')
+        if pick_product.course.has_enrolled(user=request.user):
+            data['message'] = _('Gagal Menambahkan, Anda Telah terdaftar di dalam kursus!')
+        elif product_in_order_item and product_in_order_item.order.status in status_check:
+            data['message'] = _('Gagal Menambahkan, Anda Telah Melakukan Pembelian Pada Kursus ini!')
+        else:
+            Cart.objects.get(product=pick_product, user=request.user)
+            data['message'] = _('Gagal Menambahkan, Kursus Sudah Ada Di Keranjang!')
     except Cart.DoesNotExist:
         Cart(product=pick_product, user=request.user).save()
     return JsonResponse(data, status=200)
@@ -86,6 +96,7 @@ def checkout(request):
     return render(request, 'website/carts/checkout.html', context)
 
 
+@ajax_login_required
 @login_required
 @transaction.atomic
 def payment(request):
@@ -102,8 +113,23 @@ def payment(request):
     total = carts.annotate(final_price=F('product__price') - F('product__discount')
                            ).aggregate(total_price=Sum('final_price'))
 
+    data = dict()
+    status_check = [Order.STATUS.created, Order.STATUS.pending, Order.STATUS.success]
+
+    for item in carts:
+        product_in_order_item = item.product.orderitem_set.first() if item.product.orderitem_set.first() else False
+
+        if item.product.course.has_enrolled(user=request.user):
+            data['message'] = _(f'Gagal Menambahkan, Anda Telah Terdaftar Di Dalam Kursus {item.product.course.title}!')
+            return JsonResponse(data, status=200)
+        elif product_in_order_item and product_in_order_item.order.status in status_check:
+            data['message'] = _(f'Gagal Menambahkan, Anda Telah Melakukan Pembelian Pada Kursus '
+                                f'{item.product.course.title}!')
+            return JsonResponse(data, status=200)
+
     tax = total['total_price'] / 100 * settings.TAX_VALUE
     discount = 0
+
     order = Order(
         user=request.user,
         number=timezone.now().timestamp(),
@@ -130,5 +156,11 @@ def payment(request):
             return redirect(remote_transaction.snap_redirect_url)
     except FortunaException:
         logging.exception("Failed to create transaction")
+        return JsonResponse(data, status=200)
+    except requests.ConnectionError:
+        data['message'] = 'Server Sedang Mengalami Masalah'
+        logging.exception("Failed to create transaction")
+        return JsonResponse(data, status=200)
 
-    return redirect('website:orders:details', order_id=order.id)
+    data['redirect_url'] = reverse('website:orders:details', args=(order.id,))
+    return JsonResponse(data, status=200)

@@ -66,8 +66,8 @@
 									<label class="item-label">Total Harga</label>
 									<div class="final-price" id="total-price">Rp. {{ total.total_price|intcomma }}</div>
 								</div></div>
-								<form action="{% url 'website:carts:payment'%}">
-									<button type="submit" class="btn btn-block btn-outline-primary">Bayar </button>
+								<form action="{% url 'website:carts:payment'%}" id="form-payment">
+									<button type="button" class="btn btn-block btn-outline-primary" id="btn-pay">Bayar </button>
 								</form>
 							</div>
 						</div>
@@ -90,7 +90,45 @@
 
 {% block extra_js %}
 <script>
+    $(document).ready(function(){
+        $("#btn-pay").click(function(){
+            toPayment()
+        });
+    });
 
+function toPayment() {
+    var form = $('#form-payment');
+    $.ajax({
+		url: form.attr("action"),
+		data: form.serialize(),
+		type: form.attr("method"),
+      	dataType: 'json',
+        success: function (data) {
+                if (data.not_authenticated){
+                    Swal.fire(
+                      'Opps Maaf...',
+                      data.message,
+                      'error',
+                    )
+                }else{
+                    if (data.message){
+                        Swal.fire(
+                          'Opps...',
+                          data.message,
+                          'info',
+                        )
+                    }else{
+						location.href = data.redirect_url
+                    }
+                }
+        },
+        error: function (data) {
+            if (data.status == 500) {
+                alert("Terjadi kesalahan, mohon refresh halaman.");
+            }
+        }
+    });
+};
 
 </script>
 {% endblock %}
