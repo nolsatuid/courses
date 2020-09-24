@@ -45,7 +45,7 @@ def details(request, order_id):
         context['message'] = 'Server Sedang Mengalami Masalah'
         logging.exception("Failed to create transaction")
 
-    context['title'] = 'Detail Order',
+    context['title'] = 'Detail Order'
     context['order'] = order
     context['order_items'] = order_items
 
