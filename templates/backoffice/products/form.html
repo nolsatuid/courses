@@ -100,30 +100,30 @@
 {% block extra_js %}
 <script>
     var disc_type = $( "#id_discount_type option:selected" ).val();
-    var value = $( "#id_discount_value" ).val();
 
     $(document).ready(function() {
-        setDiscount();
+        setDiscount($( "#id_discount_value" ).val());
     })
 
     $( "#id_discount_type" ).change(function() {
         disc_type = $( "#id_discount_type option:selected" ).val();
         $( "#id_discount_value" ).val('');
-        $( "#id_discount" ).val('');
+        $( "#id_discount" ).val(0);
         $( "#text-discount" ).html('');
     });
 
     $( "#id_discount_value" ).keyup(function() {
-        setDiscount();
+        setDiscount($( "#id_discount_value" ).val());
     });
 
     $( "#id_price" ).keyup(function() {
-        setDiscount();
+        setDiscount($( "#id_discount_value" ).val());
     });
 
-    function setDiscount(){
+    function setDiscount(value){
+        console.log(disc_type);
         if(disc_type == 1){
-            if(value > 100) 
+            if(parseInt(value) > 100) 
                 $( "#id_discount_value" ).val('100');
 
             if($( "#id_price" ).val() != "")            
@@ -131,7 +131,7 @@
                 $( "#id_discount" ).val($( "#id_price" ).val() * $( "#id_discount_value" ).val() / 100);
         }
         else if(disc_type == 2){
-            if(value > $( "#id_price" ).val()) 
+            if(parseInt(value) > parseInt($( "#id_price" ).val()))
                 $( "#id_discount_value" ).val($( "#id_price" ).val());
 
             $( "#text-discount" ).html($( "#id_discount_value" ).val().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."));
