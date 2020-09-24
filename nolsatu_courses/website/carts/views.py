@@ -153,7 +153,8 @@ def payment(request):
     try:
         remote_transaction = order.create_transaction()
         if remote_transaction:
-            return redirect(remote_transaction.snap_redirect_url)
+            data['redirect_url'] = remote_transaction.snap_redirect_url
+            return JsonResponse(data, status=200)
     except FortunaException:
         logging.exception("Failed to create transaction")
         return JsonResponse(data, status=200)
