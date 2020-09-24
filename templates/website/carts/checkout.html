@@ -21,7 +21,6 @@
 
 {% block content %}
 <section class="special_cource padding_top">
-
 	<div class="container-fluid">
 		<div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
 			<div class="modal-dialog modal-sm">
@@ -140,7 +139,7 @@ function toPayment() {
                         )
                     }else{
 						modal();
-						//location.href = data.redirect_url
+						location.href = data.redirect_url
                     }
                 }
         },
@@ -151,7 +150,6 @@ function toPayment() {
         }
     });
 };
-
 		function modal(){
 		   $('.modal').modal('show');
 		}
