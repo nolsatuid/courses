@@ -8,7 +8,7 @@ from nolsatu_courses.apps.decorators import ajax_login_required
 from django.db import transaction
 from django.db.models import Sum, F
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from fortuna_client.exception import FortunaException
@@ -121,6 +121,7 @@ def payment(request):
 
         if item.product.course.has_enrolled(user=request.user):
             data['message'] = _(f'Gagal Menambahkan, Anda Telah Terdaftar Di Dalam Kursus {item.product.course.title}!')
+            data['redirect_url'] = reverse('website:courses:details', args=(item.product.course.id, ))
             return JsonResponse(data, status=200)
         elif product_in_order_item and product_in_order_item.order.status in status_check:
             data['message'] = _(f'Gagal Menambahkan, Anda Telah Melakukan Pembelian Pada Kursus '
