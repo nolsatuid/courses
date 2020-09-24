@@ -129,9 +129,7 @@ function toPayment() {
                       'Opps Maaf...',
                       data.message,
                       'error',
-                    ).then(function() {
-							location.href = {% url 'website:index' %}
-            		});
+                    )
                 }else{
                     if (data.message){
                         Swal.fire(
