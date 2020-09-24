@@ -3,13 +3,33 @@
 {% load humanize %}
 {% load math_extras %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+	<link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+	<style>
+		.bd-example-modal-lg .modal-dialog{
+		display: table;
+		position: relative;
+		margin: 0 auto;
+		top: calc(50% - 24px);
+	  }
+
+	  .bd-example-modal-lg .modal-dialog .modal-content{
+		background-color: transparent;
+		border: none;
+	  }
+	</style>
 {% endblock  %}
 
 {% block content %}
 <section class="special_cource padding_top">
 	<div class="container-fluid">
-		<div class="row justify-content-md-center">
+		<div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content" style="width: 48px">
+					<span class="fa fa-spinner fa-spin fa-3x"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-md-center" id="main-page">
 			{% if carts %}
 			<div class="col-md-5 p-1 m-1">
 				<div class="box-custom">
@@ -116,8 +136,11 @@ function toPayment() {
                           'Opps...',
                           data.message,
                           'info',
-                        )
+                        ).then(function() {
+							location.href = {% url 'website:carts:index' %}
+            			});
                     }else{
+						modal();
 						location.href = data.redirect_url
                     }
                 }
@@ -129,6 +152,8 @@ function toPayment() {
         }
     });
 };
-
+		function modal(){
+		   $('.modal').modal('show');
+		}
 </script>
 {% endblock %}

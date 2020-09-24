@@ -81,7 +81,7 @@ function toCart(redirect=false) {
         url: `{% if course.product.price %}{% url 'website:carts:add_item' course.product.id %}{% endif %}`,
         dataType: 'json',
         success: function (data) {
-            if (redirect){
+            if (redirect && !data.message){
                 location.href = "{% url 'website:carts:index' %}"
             }else{
                 if (data.not_authenticated){
