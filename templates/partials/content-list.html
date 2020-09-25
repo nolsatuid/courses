@@ -9,11 +9,11 @@
                     <div class="card-tools row">
                         {% if mod.sections.all %}
                         <!-- Collapse Button -->
-                        <button type="button" class="btn btn-tool btn-sm col-md-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
+                        <button type="button" class="btn btn-tool btn-sm col-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
                         {% else %}
-                        <div class="offset-md-1"></div>
+                        <div class="offset-1"></div>
                         {% endif %}
-                        <div class="col-md-11">
+                        <div class="col-11">
                             {% if mod|on_activity:user %}
                                 <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
                                     <a href="{% url 'website:modules:details' mod.slug %}" class="{%if mod.slug == module.slug and not section %}text-white{% else %}text-info{% endif %}">{{ mod.title }}</a>
@@ -33,16 +33,16 @@
                         <div class="card-body">
                             {% if sect|on_activity:user %}
                                 <div class="row">
-                                    <span class="offset-md-2"></span>
-                                    <h6 class="col-md-9" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}>
+                                    <span class="offset-2"></span>
+                                    <h6 class="col-9" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}>
                                         <a href="{% url 'website:sections:details' sect.slug %}" class="{%if sect.slug == section.slug and section %}text-white{% else %}text-info{% endif %}">{{ sect.title }}</a>
                                     </h6>
-                                    <h5 class="col-md-1 float-right"><i class="{%if sect.slug == section.slug and section %}text-white{% else %}text-success{% endif %} float-right fa fa-xs fa-check"></i></h5>
+                                    <h5 class="col-1 float-right"><i class="{%if sect.slug == section.slug and section %}text-white{% else %}text-success{% endif %} float-right fa fa-xs fa-check"></i></h5>
                                 </div>
                             {% else %}
                                 <div class="row">
                                     <span class="offset-md-2"></span>
-                                    <h6 class="col-md-10 text-muted">{{ sect.title }}</h6>
+                                    <h6 class="col-10 text-muted">{{ sect.title }}</h6>
                                 </div>
                             {% endif %}
                         </div>
