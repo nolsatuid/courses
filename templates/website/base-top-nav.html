@@ -72,33 +72,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="dropdown-divider"></div>
             <a href="{{ nolsatu_profile_page_url }}" class="dropdown-item">
                 <i class="fas fa-user mr-2"></i> Profil
-                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
-            <div class="dropdown-divider"></div>
             <a href="{% url 'website:courses:user_courses' %}" class="dropdown-item">
                 <i class="fas fa-list mr-2"></i> Daftar Materimu
-                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'website:carts:index' %}">
                 <i class="fas fa-shopping-cart mr-2"></i> Keranjang
-                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
             <a class="dropdown-item" href="{% url 'website:orders:index' %}">
                 <i class="fas fa-tags mr-2"></i> Pembelian
-                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
             {% if user.is_superuser %}
             <div class="dropdown-divider"></div>
             <a href="{% url 'backoffice:index' %}" class="dropdown-item">
                 <i class="fas fa-user-cog mr-2"></i> Backoffice
-                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
             {% endif %}
             {% if user.is_staff %}
-            <div class="dropdown-divider"></div>
             <a href="{% url 'vendors:index' %}" class="dropdown-item">
                 <i class="fas fa-user-cog mr-2"></i> Vendors
-                <span class="float-right text-muted text-sm"><i class="right fas fa-angle-right"></i></span>
             </a>
             {% endif %}
             <div class="dropdown-divider"></div>
