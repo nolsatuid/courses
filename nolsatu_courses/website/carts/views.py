@@ -51,12 +51,13 @@ def add_item(request, product_id):
     pick_product = get_object_or_404(Product, id=product_id)
     data = dict()
     status_check = [Order.STATUS.created, Order.STATUS.pending, Order.STATUS.success]
-    product_in_order_item = pick_product.orderitem_set.first() if pick_product.orderitem_set.first() else False
+
+    user_order_item = pick_product.orderitem_set.filter(order__user=request.user).first()
 
     try:
         if pick_product.course.has_enrolled(user=request.user):
             data['message'] = _('Gagal Menambahkan, Anda Telah terdaftar di dalam kursus!')
-        elif product_in_order_item and product_in_order_item.order.status in status_check:
+        elif user_order_item and user_order_item.order.status in status_check:
             data['message'] = _('Gagal Menambahkan, Anda Telah Melakukan Pembelian Pada Kursus ini!')
         else:
             Cart.objects.get(product=pick_product, user=request.user)
@@ -117,13 +118,13 @@ def payment(request):
     status_check = [Order.STATUS.created, Order.STATUS.pending, Order.STATUS.success]
 
     for item in carts:
-        product_in_order_item = item.product.orderitem_set.first() if item.product.orderitem_set.first() else False
+        user_order_item = item.product.orderitem_set.filter(order__user=request.user).first()
 
         if item.product.course.has_enrolled(user=request.user):
             data['message'] = _(f'Gagal Menambahkan, Anda Telah Terdaftar Di Dalam Kursus {item.product.course.title}!')
-            data['redirect_url'] = reverse('website:courses:details', args=(item.product.course.id, ))
+            data['redirect_url'] = reverse('website:courses:details', args=(item.product.course.id,))
             return JsonResponse(data, status=200)
-        elif product_in_order_item and product_in_order_item.order.status in status_check:
+        elif user_order_item and user_order_item.order.status in status_check:
             data['message'] = _(f'Gagal Menambahkan, Anda Telah Melakukan Pembelian Pada Kursus '
                                 f'{item.product.course.title}!')
             return JsonResponse(data, status=200)
