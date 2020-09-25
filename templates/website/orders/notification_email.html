@@ -1,0 +1,39 @@
+{% load static humanize tags_products %}
+
+Berikut ini detail pesananmu
+<table class="table-bordered">
+    <tr>
+        <td>No. Order</td>
+        <td><b>#{{ order.number }}</b></td>
+    </tr>
+    <tr>
+        <td>Status</td>
+        <td><b>{{ order.status|order_status_display:'True' }}</b></td>
+    </tr>
+    <tr>
+        <td>Pembelian</td>
+        <td>
+            <ul>
+                {% for item in order.orders.all %}
+                    <li><b>{{ item.name|intcomma }}</b></li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>Harga</td>
+        <td><b>Rp. {{ order.grand_total|intcomma }}</b></td>
+    </tr>
+    {% if order.get_status_display == "Pending" %}
+        <tr>
+            <td>Bayar Sebelum</td>
+            <td><b>{{ expired_at | date:"d F Y H:i" }} WIB</b></td>
+        </tr>
+    {% endif %}
+</table>
+<br>
+<a href="{{ detail_url }}" class="btn btn-primary">Lihat detail</a>
+{% if order.get_status_display == "Pending" %}
+    <a href="{{ payment_url }}" class="btn btn-primary">Selesaikan Pembayaran</a>
+{% endif %}
+<hr>

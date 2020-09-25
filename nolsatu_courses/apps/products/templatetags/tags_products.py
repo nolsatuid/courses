@@ -26,6 +26,12 @@ def order_status_to_display(status, styling=False):
     elif status == Order.STATUS.expired:
         status_display = _('Kadaluarsa')
         class_bagde = 'dark'
+    elif status == Order.STATUS.refund:
+        status_display = _('Refund')
+        class_bagde = 'dark'
+    elif status == Order.STATUS.other:
+        status_display = _('Terjadi Keasalah, Hubungi Customer Service')
+        class_bagde = 'dark'
     else:
         return '-'
 
