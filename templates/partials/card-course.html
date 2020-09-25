@@ -38,11 +38,15 @@
             <div class="author_info">                
                 <span class="d-flex align-items-center">                    
                     <h4>                        
-                        <span class="normal-price">
-                            {% if course.course.product.discount_type == 1 %}<span class="badge badge-discount">{{ course.course.product.discount_value }}%</span>{% endif %}
-                            {% if course.course.product.discount %}<s>Rp {{ course.course.product.price|intcomma }}</s>{% endif %}
-                        </span><br>
-                        {% if course.course.product.price %}Rp {{ course.course.product.price|subtract:course.course.product.discount|intcomma }}{% else %}GRATIS{% endif %}
+                        {% if course.course.product.price %}                                                  
+                            <span class="normal-price">
+                                {% if course.course.product.discount_type == 1 %}<span class="badge badge-discount">{{ course.course.product.discount_value }}%</span>{% endif %}
+                                {% if course.course.product.discount %}<s>Rp {{ course.course.product.price|intcomma }}</s>{% endif %}
+                            </span><br>
+                            Rp {{ course.course.product.price|subtract:course.course.product.discount|intcomma }}
+                        {% else %}
+                            GRATIS
+                        {% endif %}
                     </h4>
                 </span>      
                 {% if course.course.vendor.logo %}

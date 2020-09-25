@@ -2,7 +2,7 @@
 
 {% if user.is_authenticated %}   
     {% if pagination.prev %}
-        <a {% if pagination.prev_type == 'module' %} href="{% url 'website:modules:details' pagination.prev.slug %}" {% else %} href="{% url 'website:sections:details' pagination.prev.slug %}" {% endif %} class="btn bg-maroon"><i class="fas fa-arrow-circle-left"></i>Sebelumnya</a>  
+        <a {% if pagination.prev_type == 'module' %} href="{% url 'website:modules:details' pagination.prev.slug %}" {% else %} href="{% url 'website:sections:details' pagination.prev.slug %}" {% endif %} class="btn bg-maroon"><i class="fas fa-arrow-circle-left"></i> Sebelumnya</a>  
     {% endif %}
     {% if pagination.next %}
         <a {% if pagination.next_type == 'module' %} href="{% url 'website:modules:details' pagination.next.slug %}" {% else %} href="{% url 'website:sections:details' pagination.next.slug %}" {% endif %} class="btn bg-maroon float-right {% if section.is_task and not task %} disabled {% endif %}">Selanjutnya <i class="fas fa-arrow-circle-right"></i></a> 

@@ -1,59 +1,54 @@
 {% load static %}
 
-<div class="col-md-4">
-    <!-- DIRECT CHAT -->
-    <div class="card position-sticky sticky-top direct-chat direct-chat-warning" id="accordion">
-
-        <!-- Conversations are loaded here -->
-        <div style="height:auto;">
-            <ul class="products-list product-list-in-card">
-                {% for mod in module_all %}
-                    <li class="item p-3 {%if mod.slug == module.slug and not section %}bg-maroon text-white{% endif %}" id="heading_{{mod.id}}">
-                        <div class="card-tools row">
-                            <!-- Collapse Button -->
-                            <button type="button" class="btn btn-tool btn-sm col-md-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas  {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
-
-                            <div class="col-md-11">
-                                {% if mod.is_visible or user.is_superuser %}
-                                <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
-                                    <a href="{% url 'website:modules:preview' mod.slug %}" class="{%if mod.slug == module.slug and not section %}text-white{% else %}text-info{% endif %}">{{ mod.title }}</a>
-                                    <i class="float-right fa fa-xs fa-eye"></i>
-                                </h5>                            
-                                {% else %}
-                                <h5 class="text-muted">{{ mod.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h5>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </li>
-                    {% if mod.sections.all %}
-                        <div id="collapse_{{mod.id}}" class="collapse {%if section.module.slug == mod.slug or mod.slug == module.slug %}show{% endif %}" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">                        
-                        {% for sect in mod.sections.all %}
-                        <li class="item p-3 {%if sect.slug == section.slug %}bg-maroon text-white{% endif %}">                            
-                            {% if sect.is_visible or user.is_supseruser or user.is_superuser %}
-                            <div class="row">
-                                <span class="offset-md-2"></span>
-                                <h6 class="col-md-9" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}>
-                                    <a href="{% url 'website:sections:preview' sect.slug %}" class="{%if sect.slug == section.slug and section %}text-white{% else %}text-info{% endif %}">{{ sect.title }}</a>
-                                </h6>
-                                <h5 class="col-md-1"><i class="float-right fa fa-xs fa-eye"></i></h5>
-                            </div>
+<div class="card position-sticky sticky-top direct-chat direct-chat-warning card-content-list" id="accordion">
+    <div style="height:auto;">
+        <ul class="products-list product-list-in-card">
+            {% for mod in module_all %}
+                <li class="item p-3 {%if mod.slug == module.slug and not section %}bg-blue-adinusa text-white{% endif %}" id="heading_{{mod.id}}">
+                    <div class="card-tools row">
+                        {% if mod.sections.all %}
+                        <!-- Collapse Button -->
+                        <button type="button" class="btn btn-tool btn-sm col-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas  {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
+                        {% else %}
+                        <div class="offset-1"></div>
+                        {% endif %}
+                        <div class="col-11">
+                            {% if mod.is_visible or user.is_superuser %}
+                            <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
+                                <a href="{% url 'website:modules:preview' mod.slug %}" class="{%if mod.slug == module.slug and not section %}text-white{% else %}text-info{% endif %}">{{ mod.title }}</a>
+                                <i class="float-right fa fa-xs fa-eye"></i>
+                            </h5>                            
                             {% else %}
-                            <div class="row">
-                                <span class="offset-md-2"></span>
-                                <h6 class="col-md-9 text-muted">{{ sect.title }}</h6>
-                                <h5 class="col-md-1"><i class="float-right fa fa-xs fa-eye-slash"></i></h5>
-                            </div>
+                            <h5 class="text-muted">{{ mod.title }}<i class="float-right fa fa-xs fa-eye-slash"></i></h5>
                             {% endif %}
-                        </li>
-                        {% endfor %}                    
+                        </div>
                     </div>
-                    {% endif %}
-                {% endfor %}
-                <li></li>
-            </ul>
-        </div>
-        <!--/.direct-chat-messages-->
-
+                </li>
+                {% if mod.sections.all %}
+                    <div id="collapse_{{mod.id}}" class="collapse {%if section.module.slug == mod.slug or mod.slug == module.slug %}show{% endif %}" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">                        
+                    {% for sect in mod.sections.all %}
+                    <li class="item p-3 {%if sect.slug == section.slug %}bg-blue-adinusa text-white{% endif %}">                            
+                        {% if sect.is_visible or user.is_supseruser or user.is_superuser %}
+                        <div class="row">
+                            <span class="offset-2"></span>
+                            <h6 class="col-9" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}>
+                                <a href="{% url 'website:sections:preview' sect.slug %}" class="{%if sect.slug == section.slug and section %}text-white{% else %}text-info{% endif %}">{{ sect.title }}</a>
+                            </h6>
+                            <h5 class="col-1"><i class="float-right fa fa-xs fa-eye"></i></h5>
+                        </div>
+                        {% else %}
+                        <div class="row">
+                            <span class="offset-2"></span>
+                            <h6 class="col-9 text-muted">{{ sect.title }}</h6>
+                            <h5 class="col-1"><i class="float-right fa fa-xs fa-eye-slash"></i></h5>
+                        </div>
+                        {% endif %}
+                    </li>
+                    {% endfor %}                    
+                </div>
+                {% endif %}
+            {% endfor %}
+            <li></li>
+        </ul>
     </div>
-    <!--/.direct-chat -->
 </div>

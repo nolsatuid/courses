@@ -3,8 +3,10 @@
 
 {% block content %}
 <div class="row">    
-    {% include 'partials/preview-content-list.html' with module_all=module_all %}    
-    <div class="col-md-8">
+    <div class="col-lg-4 d-wide-screen">
+        {% include 'partials/preview-content-list.html' with module_all=module_all %}    
+    </div>
+    <div class="col-md-12 col-lg-8">
         <div class="card">
             <div class="card-header">
                 <h1>Modul {{ module.title }}
@@ -28,5 +30,8 @@
         </div>
     </div>
 </div>
-  <!-- /.row -->
+<!-- /.row -->
+
+{% include 'partials/popout-preview-content-list.html' with module_all=module_all %} 
+
 {% endblock %}
