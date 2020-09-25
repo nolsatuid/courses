@@ -1,6 +1,6 @@
 {% load static tags_courses %}
 
-<div class="card position-sticky sticky-top direct-chat direct-chat-warning" id="accordion">
+<div class="card position-sticky sticky-top direct-chat direct-chat-warning card-content-list" id="accordion">
     <!-- Conversations are loaded here -->
     <div style="height:auto;">
         <ul class="products-list product-list-in-card">
@@ -9,7 +9,7 @@
                     <div class="card-tools row">
                         {% if mod.sections.all %}
                         <!-- Collapse Button -->
-                        <button type="button" class="btn btn-tool btn-sm col-1 btn-collapse {%if mod.slug == module.slug and not section %}active{% endif %}"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas {%if section.module.slug == mod.slug or mod.slug == module.slug %}text-white fa-minus{%else%}fa-plus{% endif %}"></i></button>
+                        <button type="button" class="btn btn-tool btn-sm col-1 btn-collapse {%if mod.slug == module.slug and not section %}active{% endif %}"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
                         {% else %}
                         <div class="offset-1"></div>
                         {% endif %}
