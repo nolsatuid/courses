@@ -1,0 +1,20 @@
+{% load static tags_courses %}
+
+<div class="popout d-mobile">
+    <div class="popout-btn">
+        <i class="fas fa-list"></i>
+    </div>
+    <div class="panel">
+        <div class="panel-header">
+            <div class="row">
+                <h5 class="col-10"><strong>Daftar Materi</strong></h5>            
+                <button class="close col-2">
+                    <span class="text-white">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="panel-body">
+            {% include 'partials/content-list.html' with module_all=module_all %}   
+        </div>
+    </div>
+</div>

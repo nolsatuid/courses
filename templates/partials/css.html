@@ -28,6 +28,8 @@
 
 <!-- codehilite -->
 <link rel="stylesheet" href="{% static 'website/css/codehilite.css' %}">
+<!-- popout to float button -->
+<link rel="stylesheet" href="{% static 'website/css/popout.css' %}">
 
 <style>
     #course-content, .lead {
@@ -58,6 +60,28 @@
         background-color: rgb(255, 234, 239);
         color: rgb(255, 92, 132);
         font-size: 90%;
+    }
+
+    .bg-blue-adinusa {
+        background-color: #4D94FF !important;
+    }
+
+    @media (max-width: 991px) {
+    .d-mobile {
+        display: inline;
+    }
+    .d-wide-screen {
+        display: none;
+    }
+    }
+
+    @media (min-width: 992px) {
+        .d-mobile {
+            display: none;
+        }
+        .d-wide-screen {
+            display: inline;
+        }
     }
 
 </style>

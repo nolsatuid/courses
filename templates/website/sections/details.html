@@ -10,10 +10,10 @@
             <li class="breadcrumb-item active">Section</li>
         </ol>
     </div>
-    <div class="col-md-4">
+    <div class="col-lg-4 d-wide-screen">
         {% include 'partials/content-list.html' with module=section.module %}  
     </div> 
-    <div class="col-md-8">
+    <div class="col-md-12 col-lg-8">
         <div class="card">
             <div class="card-header">
                 <h1>{{ section.title }}</h1>
@@ -49,5 +49,8 @@
         </div>
     </div> 
 </div>
-  <!-- /.row -->
+<!-- /.row -->
+
+{% include 'partials/popout-content-list.html' with module_all=module_all %} 
+
 {% endblock %}
