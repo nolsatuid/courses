@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.templatetags.static import static
 from model_utils import Choices
 
 
@@ -19,3 +21,11 @@ class MemberNolsatu(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.id_nolsatu}"
+
+    def get_avatar(self):
+        if self.avatar:
+            avatar = self.avatar
+        else:
+            avatar = settings.HOST + static('website/images/avatar_placeholder.png')
+
+        return avatar
