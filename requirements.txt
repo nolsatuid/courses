@@ -25,7 +25,7 @@ Pygments==2.6.1
 pdfkit==0.6.1
 sorl-thumbnail
 
-git+ssh://git@go.btech.id/dev/fortuna-client.git@0.0.1
+git+ssh://git@go.btech.id/dev/fortuna-client.git@0.0.2
 
 #alert
 sweetify==2.0.0

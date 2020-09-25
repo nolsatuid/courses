@@ -152,18 +152,19 @@ def payment(request):
     carts.delete()
 
     # Request BPay
+    remote_transaction = None
     try:
         remote_transaction = order.create_transaction()
-        if remote_transaction:
-            data['redirect_url'] = remote_transaction.snap_redirect_url
-            return JsonResponse(data, status=200)
     except FortunaException:
-        logging.exception("Failed to create transaction")
-        return JsonResponse(data, status=200)
+        logging.exception("Failed to create transaction, BPay Error")
     except requests.ConnectionError:
-        data['message'] = 'Server Sedang Mengalami Masalah'
-        logging.exception("Failed to create transaction")
-        return JsonResponse(data, status=200)
+        logging.exception("Failed to create transaction, Connection Error")
 
-    data['redirect_url'] = reverse('website:orders:details', args=(order.id,))
+    order.notify_user(remote_transaction)
+
+    if remote_transaction:
+        data['redirect_url'] = remote_transaction.snap_redirect_url
+    else:
+        data['redirect_url'] = reverse('website:orders:details', args=(order.id,))
+
     return JsonResponse(data, status=200)

@@ -46,7 +46,7 @@
                                         <div class="payment-card-ticker mb-2">
                                             {% if exp_payment %}
                                                 <i class="far fa-lightbulb icon-light-payment" style="color: Tomato;"></i>
-                                                Bayar Sebelum: {{ exp_payment|date:"d F Y H i" }} WIB
+                                                Bayar Sebelum: {{ exp_payment|date:"d F Y H:i" }} WIB
                                             {% elif message %}
                                                <i class="far fa-times-circle icon-light-payment" style="color:red"></i>
                                                 Maaf Pembayaran Belum Bisa Dilakukan, {{ message }}.

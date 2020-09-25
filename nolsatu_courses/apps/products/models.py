@@ -1,13 +1,18 @@
 import typing
 import uuid
 
+from django.conf import settings
 from django.db import models
+from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from fortuna_client.transaction import RemoteTransaction
 from fortuna_client.utils import create_remote_transaction, get_remote_transaction
 
 from model_utils import Choices
+
+from nolsatu_courses.apps import utils
 
 
 class Product(models.Model):
@@ -80,6 +85,22 @@ class Order(models.Model):
             return get_remote_transaction(self.remote_transaction_id)
 
         return None
+
+    def notify_user(self, remote_transaction: typing.Optional[RemoteTransaction] = None):
+        context = {
+            "order": self,
+            "detail_url": settings.HOST + reverse('website:orders:details', args=(self.id,))
+        }
+
+        if not remote_transaction:
+            remote_transaction = self.get_transaction()
+
+        if remote_transaction:
+            context['payment_url'] = remote_transaction.snap_redirect_url
+            context['expired_at'] = remote_transaction.expired_at
+
+        content_string = render_to_string("website/orders/notification_email.html", context)
+        utils.send_notification(self.user, "Notifikasi Pembayaran Adinusa", content_string)
 
 
 class OrderItem(models.Model):
