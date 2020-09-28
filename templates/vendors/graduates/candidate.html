@@ -98,6 +98,10 @@
                         <textarea class="form-control" width="100%" id="note" placeholder="Tulis catatan disini.."></textarea>
                     </div>
                 </div>
+                <div class="icheck-primary d-inline mr-1">
+                    <input type="checkbox" name="print-certificate" id="id-print-certificate">
+                    <label for="id-print-certificate">Cetak Sertifikat</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
@@ -167,6 +171,10 @@
         var note = $('#note').val();
         var url = $('#url').val();
 
+        if ($('#id-print-certificate').is(":checked")){
+            var print_certificate = true
+        }
+
         if( finalScore == "" || finalScore == 0) {
             $('#final_score').after('<small class="form-text text-danger"> This field is required </small>');
             return
@@ -181,7 +189,8 @@
             url: url,
             data: {
                 'final_score': finalScore,
-                'note': note
+                'note': note,
+                'print_certificate': print_certificate,
             },
             dataType: 'json',
             success: function (data) {
