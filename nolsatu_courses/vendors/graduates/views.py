@@ -1,6 +1,7 @@
 import sweetify
 
 from django.conf import settings
+from django.db import transaction, DatabaseError
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
@@ -39,22 +40,33 @@ def candidate_to_graduate(request, candidate_id):
                                course__vendor__users__email=request.user.email)
     enroll.note = request.GET.get('note', "")
     enroll.final_score = request.GET.get('final_score', 0)
+    enroll.status = Enrollment.STATUS.graduate
 
-    data = enroll.get_cert_data()
-    response = utils.call_internal_api('post', url=settings.NOLSATU_HOST + '/api/internal/generate-certificate/',
-                                       data=data)
-    if response.status_code == 200:
-        enroll.status = Enrollment.STATUS.graduate
-        enroll.save()
-        utils.send_notification(
-            enroll.user, 'Selamat! Anda lulus',
-            'Selamat, Anda telah berhasil menyelesaikan persyaratan yang diperlukan untuk mendapatkan ' \
-            f'Sertifikasi kelulusan pada kelas {enroll.course.title}. ' \
-            'Silahkan cek sertifikat Anda dimenu Sertifikat pada halaman akun.'
-        )
-        sweetify.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK', icon='success')
-    else:
-        sweetify.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK', icon='error')
+    msg = ('Selamat, Anda telah berhasil menyelesaikan persyaratan yang diperlukan untuk mendapatkan '
+           f'Sertifikasi kelulusan pada kelas {enroll.course.title}. ')
+
+    if request.GET.get('print_certificate'):
+        data = enroll.get_cert_data()
+        response = utils.call_internal_api('post', url=settings.NOLSATU_HOST + '/api/internal/generate-certificate/',
+                                           data=data)
+        if response.status_code == 200:
+            msg = ('Selamat, Anda telah berhasil menyelesaikan persyaratan yang diperlukan untuk mendapatkan '
+                   f'Sertifikasi kelulusan pada kelas {enroll.course.title}. '
+                   'Silahkan cek sertifikat Anda dimenu Sertifikat pada halaman akun.')
+        else:
+            sweetify.error(request, f'Gagal cetak sertifikat milik {enroll.user.get_full_name()}', button='OK',
+                           icon='error')
+
+    try:
+        with transaction.atomic():
+            enroll.save()
+    except DatabaseError:
+        return redirect('backoffice:graduates:candidate')
+
+    utils.send_notification(enroll.user, 'Selamat! Anda lulus', msg)
+
+    sweetify.success(request, f'Berhasil mengubah status {enroll.user.get_full_name()} menjadi lulusan',
+                     button='OK', icon='success')
 
     if request.is_ajax():
         data = {
