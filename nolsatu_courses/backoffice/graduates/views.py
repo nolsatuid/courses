@@ -71,15 +71,14 @@ def candidate_to_graduate(request, id):
                    f'Sertifikasi kelulusan pada kelas {enroll.course.title}. '
                    'Silahkan cek sertifikat Anda dimenu Sertifikat pada halaman akun.')
         else:
-            sweetify.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK',
+            sweetify.error(request, f'Gagal cetak sertifikat milik {enroll.user.get_full_name()}', button='OK',
                            icon='error')
 
     try:
         with transaction.atomic():
             enroll.save()
     except DatabaseError:
-        sweetify.error(request, f'Gagal mengubah status {enroll.user.get_full_name()} menjadi lulusan', button='OK',
-                       icon='error')
+        return redirect('backoffice:graduates:candidate')
 
     utils.send_notification(enroll.user, 'Selamat! Anda lulus', msg)
 

@@ -173,7 +173,10 @@
 
         if ($('#id-print-certificate').is(":checked")){
             var print_certificate = true
+        }else {
+            var print_certificate = false
         }
+
 
         if( finalScore == "" || finalScore == 0) {
             $('#final_score').after('<small class="form-text text-danger"> This field is required </small>');
