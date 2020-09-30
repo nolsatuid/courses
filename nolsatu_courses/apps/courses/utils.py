@@ -106,7 +106,7 @@ class ExportCourse:
             for section in module.sections.all():
                 # get image from model Section
                 imgs += md_extract_img(section.content_md)
-                if section.is_task:
+                if section.is_task and hasattr(section, 'task_setting'):
                     imgs += md_extract_img(
                         section.task_setting.instruction_md)
 
