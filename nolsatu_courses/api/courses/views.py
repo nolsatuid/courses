@@ -32,7 +32,12 @@ class CourseListView(APIView):
         200: CourseSerializer(many=True)
     })
     def get(self, request):
-        courses = Courses.objects.filter(is_visible=True, status=Courses.STATUS.publish).all()
+        courses = (Courses.objects.all()
+                   if self.request.user.is_authenticated else
+                   Courses.objects.filter(is_visible=True, status=Courses.STATUS.publish))
+
+        if self.request.query_params.get('search'):
+            courses = courses.filter(title__startswith=self.request.query_params.get('search'))
 
         serializer = CourseSerializer(courses, many=True)
         return Response(serializer.data)
