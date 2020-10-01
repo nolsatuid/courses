@@ -26,4 +26,5 @@ urlpatterns = [
     path('demo', include('nolsatu_courses.api.demo.urls')),
     path('', include('nolsatu_courses.api.courses.urls')),
     path('vendor', include('nolsatu_courses.api.vendors.urls')),
+    path('carts', include('nolsatu_courses.api.carts.urls')),
 ]
