@@ -42,7 +42,6 @@ class AddToCartView(UserAuthAPIView):
                                                          'di Keranjang!'))
             except Cart.DoesNotExist:
                 Cart(product=pick_product, user=self.request.user).save()
+                return Response({'message': _('Berhasil Menambahkan Kursus ke Keranjang')})
         else:
             return ErrorResponse(error_message=_('Gagal Menambahkan Kursus ke Keranjang'))
-
-        return Response({'message': _('Berhasil Menambahkan Kursus ke Keranjang')})
