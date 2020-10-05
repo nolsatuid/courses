@@ -12,7 +12,7 @@ from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.apps.products.models import Product, Order, Cart
 
-from .serializers import AddCartSerializer, CartSerializer
+from .serializers import AddCartSerializer, CartIDSerializer
 
 
 class AddToCartView(UserAuthAPIView):
@@ -50,14 +50,16 @@ class AddToCartView(UserAuthAPIView):
 
 class DeleteItemCartView(UserAuthAPIView):
     @swagger_auto_schema(tags=['Carts'], operation_description="Delete Item in Carts",
-                         responses={status.HTTP_200_OK: CartSerializer()},
-                         request_body=CartSerializer)
+                         responses={status.HTTP_200_OK: CartIDSerializer()},
+                         request_body=CartIDSerializer)
     def post(self, request):
         data = request.data
-        serializer = CartSerializer(data=data)
+        serializer = CartIDSerializer(data=data)
 
         if serializer.is_valid():
-            carts = Cart.objects.filter(id__in=serializer.data['cart_ids'], user=self.request.user)
+            validated_data = serializer.validated_data
+
+            carts = Cart.objects.filter(id__in=validated_data['cart_ids'], user=self.request.user)
 
             if not carts:
                 return Response({'message': _('Kursus tidak ada dalam keranjang')})

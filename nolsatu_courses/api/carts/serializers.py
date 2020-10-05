@@ -7,7 +7,7 @@ class AddCartSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
 
 
-class CartSerializer(serializers.Serializer):
+class CartIDSerializer(serializers.Serializer):
     cart_ids = serializers.ListField(
         child=serializers.UUIDField()
     )

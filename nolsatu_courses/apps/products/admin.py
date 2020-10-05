@@ -10,7 +10,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Cart, site=admin.site)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user',)
+    list_display = ('id', 'product', 'user',)
     search_fields = ('product__course__title', 'user__username',)
 
 
