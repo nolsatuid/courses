@@ -129,8 +129,8 @@ class ModuleDetailView(UserAuthAPIView):
 
         # save activities user to module
         if module.has_enrolled(request.user):
-            module.activities_module.get_or_create(
-                user=request.user, course=module.course)
+            module.get_or_create_activity(user=request.user, course=module.course)
+            module.delete_cache(request.user)
 
         data = {
             'is_complete_tasks': module.course.is_complete_tasks(request.user),
@@ -174,8 +174,9 @@ class SectionDetailView(UserAuthAPIView):
 
         # save activities user to module
         if section.has_enrolled(request.user):
-            section.activities_section.get_or_create(
-                user=request.user, course=section.module.course)
+            section.get_or_create_activity(user=request.user,
+                                           course=section.module.course)
+            section.delete_cache(request.user)
 
         data = {
             'is_complete_tasks': section.module.course.is_complete_tasks(request.user),
