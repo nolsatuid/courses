@@ -1,3 +1,4 @@
+from django.db import transaction, DatabaseError
 from django.utils.translation import ugettext_lazy as _
 
 from drf_yasg.utils import swagger_auto_schema
@@ -11,7 +12,7 @@ from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.apps.products.models import Product, Order, Cart
 
-from .serializers import AddCartSerializer
+from .serializers import AddCartSerializer, CartSerializer
 
 
 class AddToCartView(UserAuthAPIView):
@@ -45,3 +46,26 @@ class AddToCartView(UserAuthAPIView):
                 return Response({'message': _('Berhasil Menambahkan Kursus ke Keranjang')})
         else:
             return ErrorResponse(error_message=_('Gagal Menambahkan Kursus ke Keranjang'))
+
+
+class DeleteItemCartView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['Carts'], operation_description="Delete Item in Carts",
+                         responses={status.HTTP_200_OK: CartSerializer()},
+                         request_body=CartSerializer)
+    def post(self, request):
+        data = request.data
+        serializer = CartSerializer(data=data)
+
+        if serializer.is_valid():
+            carts = Cart.objects.filter(id__in=serializer.data['cart_ids'], user=self.request.user)
+
+            if not carts:
+                return Response({'message': _('Kursus tidak ada dalam keranjang')})
+
+            try:
+                with transaction.atomic():
+                    carts.delete()
+            except DatabaseError:
+                return Response({'message': _('Gagal menghapus kursus dalam keranjang')})
+
+            return Response({'message': _('Berhasil menghapus kursus pada keranjang')})
