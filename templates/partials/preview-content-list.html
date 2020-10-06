@@ -8,6 +8,7 @@
             {% for mod in module_all %}
                 <li class="item p-3 {%if mod.slug == module.slug and not section %}bg-blue-adinusa text-white{% endif %}" id="heading_{{mod.id}}">
                     <div class="card-tools row">
+                        <p style="display: none;">{{ mod.title }}</p>
                         {% if mod.sections.all %}
                         <!-- Collapse Button -->
                         <button type="button" class="btn btn-tool btn-sm col-1 btn-collapse"  data-toggle="collapse" data-target="#collapse_{{mod.id}}" aria-expanded="true" aria-controls="collapse_{{mod.id}}"><i class="fas  {%if section.module.slug == mod.slug or mod.slug == module.slug %}fa-minus{%else%}fa-plus{% endif %}"></i></button>
@@ -29,7 +30,8 @@
                 {% if mod.sections.all %}
                     <div id="collapse_{{mod.id}}" class="collapse {%if section.module.slug == mod.slug or mod.slug == module.slug %}show{% endif %}" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">                        
                     {% for sect in mod.sections.all %}
-                    <li class="item p-3 {%if sect.slug == section.slug %}bg-blue-adinusa text-white{% endif %}">                            
+                    <li class="item p-3 {%if sect.slug == section.slug %}bg-blue-adinusa text-white{% endif %}">   
+                        <p style="display: none;">{{ sect.title }}</p>                         
                         {% if sect.is_visible or user.is_supseruser or user.is_superuser %}
                         <div class="row">
                             <span class="offset-2"></span>

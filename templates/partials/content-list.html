@@ -16,6 +16,7 @@
                         <div class="offset-1"></div>
                         {% endif %}
                         <div class="col-11">
+                            <p style="display: none;">{{ mod.title }}</p>
                             {% if mod|on_activity:user %}
                                 <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
                                     <a href="{% url 'website:modules:details' mod.slug %}" class="{%if mod.slug == module.slug and not section %}text-white{% else %}text-info{% endif %}">{{ mod.title }}</a>
@@ -33,6 +34,7 @@
                     {% for sect in mod.sections.all %}
                     <li class="item p-3 {%if sect.slug == section.slug %}bg-blue-adinusa text-white{% endif %}"> 
                         <div class="card-body">
+                            <p style="display: none;">{{ sect.title }}</p>
                             {% if sect|on_activity:user %}
                                 <div class="row">
                                     <span class="offset-2"></span>
