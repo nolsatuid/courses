@@ -4,7 +4,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.css' %}">
 <link rel="stylesheet" href="{% static 'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.css' %}">
-<{% endblock  %}
+{% endblock  %}
 
 {% block content %}
 <div class="col-md-12">
@@ -26,31 +26,31 @@
                                         <div class="col-md-8">
                                         {{ form.media }}
                                         {{ form.non_field_errors }}
-                                                {% for field in form %}
-                                                    {% if code == 'question' %}
-                                                        {% if field.name == "content" or field.name == "explanation" %}
-                                                        <div class="form-group col-md-12">
-                                                        <label class="col-md-12"> {{ field.label }} </label>
-                                                        <div class="col-md-12">
-                                                            {% render_field field|add_class:"form-control"%}
-                                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                                            <small class="form-text text-danger">{{ field.errors }}</small>
-                                                        </div>
+                                        {% for field in form %}
+                                            {% if code == 'question' %}
+                                                {% if field.name == "content" or field.name == "explanation" %}
+                                                <div class="form-group col-md-12">
+                                                    <label class="col-md-12"> {{ field.label }} </label>
+                                                    <div class="col-md-12">
+                                                        {% render_field field|add_class:"form-control"%}
+                                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                        <small class="form-text text-danger">{{ field.errors }}</small>
                                                     </div>
-                                                        {% endif %}
-                                                    {% else %}
-                                                        {% if field.name == "sub_category" or field.name == "category" or field.name == "vendor" or field.name == "title" or field.name == "description" or field.name == "short_description" or field.name == "content" or field.name == "instruction" %}
-                                                        <div class="form-group col-md-12">
-                                                            <label class="col-md-12"> {{ field.label }} </label>
-                                                            <div class="col-md-12">
-                                                                {% render_field field|add_class:"form-control"%}
-                                                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                                                                <small class="form-text text-danger">{{ field.errors }}</small>
-                                                            </div>
-                                                        </div>
-                                                        {% endif %}
-                                                    {% endif %}
-                                                {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if field.name == "sub_category" or field.name == "category" or field.name == "vendor" or field.name == "title" or field.name == "description" or field.name == "short_description" or field.name == "content" or field.name == "instruction" %}
+                                                <div class="form-group col-md-12">
+                                                    <label class="col-md-12"> {{ field.label }} </label>
+                                                    <div class="col-md-12">
+                                                        {% render_field field|add_class:"form-control"%}
+                                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                                        <small class="form-text text-danger">{{ field.errors }}</small>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
                                         </div>
                                         <div class="col-md-4">
                                             {{ form.media }}
