@@ -85,20 +85,22 @@ class CartListView(UserAuthAPIView):
 
         data = [{"id": c.id,
                  "product": {'id': c.product.id,
-                             'course': c.product.course.id,
                              'price': c.product.price,
                              'code': c.product.code,
                              'discount_type': c.product.discount_type,
                              'discount_value': c.product.discount_value,
-                             'discount': c.product.discount
+                             'discount': c.product.discount,
+                             'course': c.product.course.id,
                              }
                  } for c in carts]
 
         serializer = CartSerializer(data=data, many=True)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             resp = {
                 "carts": serializer.data,
                 "total": total['total_price']
             }
             return Response(resp)
+        else:
+            return Response(serializer.errors)

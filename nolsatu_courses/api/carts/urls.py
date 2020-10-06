@@ -5,5 +5,5 @@ app_name = "carts"
 urlpatterns = [
     path('add-item', views.AddToCartView.as_view(), name='add_item'),
     path('delete-item', views.DeleteItemCartView.as_view(), name='delete_item'),
-    path('get-list', views.CartListView.as_view(), name='list_item'),
+    path('get-items', views.CartListView.as_view(), name='get_items'),
 ]

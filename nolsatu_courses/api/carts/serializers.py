@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from nolsatu_courses.apps.products.models import Cart, Product
+from nolsatu_courses.apps.products.models import Product
 
 
 # Here add your serializer
@@ -15,14 +15,12 @@ class CartIDSerializer(serializers.Serializer):
     )
 
 
-class ProductSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    course = serializers.CharField()
-    price = serializers.IntegerField()
-    code = serializers.CharField()
-    discount_type = serializers.IntegerField()
-    discount_value = serializers.IntegerField()
-    discount = serializers.IntegerField()
+class ProductSerializer(serializers.ModelSerializer):
+    course = serializers.IntegerField()
+
+    class Meta:
+        model = Product
+        fields = "__all__"
 
 
 class CartSerializer(serializers.Serializer):
