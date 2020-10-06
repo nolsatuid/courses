@@ -15,6 +15,8 @@ class BatchDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    course = serializers.IntegerField()
+
     class Meta:
         model = Product
         fields = "__all__"
