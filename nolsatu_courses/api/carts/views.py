@@ -90,7 +90,7 @@ class CartListView(UserAuthAPIView):
                              'discount_type': c.product.discount_type,
                              'discount_value': c.product.discount_value,
                              'discount': c.product.discount,
-                             'course': c.product.course.id,
+                             'course': {'id': c.product.course.id, 'course_title': c.product.course.title},
                              }
                  } for c in carts]
 
