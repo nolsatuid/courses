@@ -18,7 +18,7 @@ class CartIDSerializer(serializers.Serializer):
 
 class CourseSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    course_title = serializers.CharField()
+    title = serializers.CharField()
 
 
 class ProductCourseSerializer(serializers.ModelSerializer):
