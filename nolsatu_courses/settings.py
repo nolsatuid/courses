@@ -192,7 +192,7 @@ CKEDITOR_CONFIGS = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': []
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
 }
 
 # Setup support for proxy headers
