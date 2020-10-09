@@ -20,6 +20,9 @@ class CourseSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
 
+    class Meta:
+        ref_name = 'CourseSerializer'
+
 
 class ProductCourseSerializer(serializers.ModelSerializer):
     course = CourseSerializer()

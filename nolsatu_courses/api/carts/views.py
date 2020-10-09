@@ -80,8 +80,40 @@ class CartListView(UserAuthAPIView):
     def get(self, request):
         carts = Cart.objects.filter(user=self.request.user)
 
-        total = carts.filter(is_select=True).annotate(final_price=F('product__price') - F('product__discount')
-                                                      ).aggregate(total_price=Sum('final_price'))
+        total = carts.annotate(final_price=F('product__price') - F('product__discount')
+                               ).aggregate(total_price=Sum('final_price'))
+
+        data = [{"id": c.id,
+                 "product": {'id': c.product.id,
+                             'price': c.product.price,
+                             'code': c.product.code,
+                             'discount_type': c.product.discount_type,
+                             'discount_value': c.product.discount_value,
+                             'discount': c.product.discount,
+                             'course': {'id': c.product.course.id, 'title': c.product.course.title},
+                             }
+                 } for c in carts]
+
+        serializer = CartSerializer(data=data, many=True)
+
+        if serializer.is_valid(raise_exception=True):
+            resp = {
+                "carts": serializer.data,
+                "total": total['total_price']
+            }
+            return Response(resp)
+        else:
+            return Response(serializer.errors)
+
+
+class CheckoutView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['Carts'], operation_description="Checkout",
+                         responses={status.HTTP_200_OK: CartSerializer(many=True)})
+    def get(self, request):
+        carts = Cart.objects.filter(user=self.request.user, is_select=True)
+
+        total = carts.annotate(final_price=F('product__price') - F('product__discount')
+                               ).aggregate(total_price=Sum('final_price'))
 
         data = [{"id": c.id,
                  "product": {'id': c.product.id,
