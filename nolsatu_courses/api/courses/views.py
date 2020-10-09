@@ -118,7 +118,7 @@ class ModuleDetailView(UserAuthAPIView):
     })
     def get(self, request, id):
         module = get_object_or_404(Module, id=id)
-        pagination = get_pagination_module(request, module)
+        pagination = get_pagination_module(request, module, set_session=True)
 
         # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
         # jika page_type adalah section dan section memiliki tugas
@@ -163,14 +163,18 @@ class SectionDetailView(UserAuthAPIView):
     })
     def get(self, request, id):
         section = get_object_or_404(Section, id=id)
+
+        # dapatkan pagination
         pagination = get_pagination_section(request, section)
+        prev_type = pagination['prev_type']
+        prev = pagination['prev']
 
         # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
         # jika page_type adalah section dan section memiliki tugas
-        if pagination['prev_type'] == 'section' and pagination['prev'].is_task:
-            if not pagination['prev'].collect_task.all():
+        if prev_type == 'section' and prev.is_task:
+            if not request.user.collect_tasks.filter(section=prev):
                 return ErrorResponse(
-                    error_message=_(f"Kamu harus mengumpulkan tugas pada sesi {pagination['prev'].title}"))
+                    error_message=_(f"Kamu harus mengumpulkan tugas pada sesi {prev.title}"))
 
         # save activities user to module
         if section.has_enrolled(request.user):
