@@ -15,19 +15,8 @@ class OrderListView(UserAuthAPIView):
                          responses={status.HTTP_200_OK: OrderSerializer(many=True)}, )
     def get(self, request):
         orders = Order.objects.filter(user=self.request.user)
-
-        data = [{"id": x.id,
-                 "number": x.number,
-                 "status": x.get_status_display(),
-                 "created_at": x.created_at,
-                 } for x in orders]
-
-        serializer = OrderSerializer(data=data, many=True)
-
-        if serializer.is_valid(raise_exception=True):
-            resp = {
-                "orders": serializer.data,
-            }
-            return Response(resp)
-        else:
-            return Response(serializer.errors)
+        serializer = OrderSerializer(orders, many=True)
+        resp = {
+             "orders": serializer.data,
+        }
+        return Response(resp)

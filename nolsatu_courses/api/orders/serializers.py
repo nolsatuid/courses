@@ -3,14 +3,12 @@ from rest_framework import serializers
 from nolsatu_courses.apps.products.models import Order
 
 
-# Here add your serializer
-
-
 class OrderSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
-    number = serializers.CharField(max_length=50)
-    status = serializers.CharField(max_length=50)
+    status = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    def get_status(self, obj) -> str:
+        return obj.get_status_display()
 
     class Meta:
         model = Order
