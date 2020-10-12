@@ -107,6 +107,9 @@ class UserAPIServiceAuthentication(InternalAPIAuthentication):
         except KeyError:
             raise InvalidToken(_('Token contained no recognizable user identification'))
 
+        if not user_id:
+            return AnonymousUser()
+
         user = User.objects.filter(nolsatu__id_nolsatu=user_id).first()
         if not user:
             try:
