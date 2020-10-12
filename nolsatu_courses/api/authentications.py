@@ -9,7 +9,7 @@ from jwt import InvalidTokenError
 from requests import RequestException
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
 from rest_framework.authentication import BaseAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
 
@@ -24,10 +24,11 @@ class InternalAPIAuthentication(BaseAuthentication):
     def validate_token(self, request):
         header = self.get_header(request)
         if header is None:
-            return None
+            raise InvalidToken(_('Authentication Require Authorization Header'))
+
         raw_token = self.get_raw_token(header)
         if raw_token is None:
-            return None
+            raise InvalidToken(_('Invalid Authorization Header'))
 
         validated_token = self.get_validated_token(raw_token)
 
@@ -131,6 +132,9 @@ class BasicNolSatuAuthentication(BasicAuthentication):
             'password': password
         }
 
+        if not userid and not password:
+            return AnonymousUser(), None
+
         response = requests.post(f'{settings.NOLSATU_HOST}/api/auth/login', data=credentials)
         if response.status_code == 200:
             user_id = response.json()['user']['id']
@@ -154,6 +158,10 @@ class BasicApiDocAuthentication(BasicAuthentication):
             raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
 
 
-class UserAuthAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
+class InternalAPIView(APIView):
+    permission_classes = (AllowAny, )
     authentication_classes = (BasicNolSatuAuthentication, UserAPIServiceAuthentication,)
+
+
+class UserAuthAPIView(InternalAPIView):
+    permission_classes = (IsAuthenticated,)
