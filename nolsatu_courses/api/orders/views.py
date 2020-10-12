@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.apps.products.models import Order
 
-from .serializers import OrderSerializer, OrderAllFieldsSerializer, OrderItemSerializer
+from .serializers import OrderSerializer, OrderDetailSerializer, OrderItemSerializer
 
 
 class OrderListView(UserAuthAPIView):
@@ -30,11 +30,12 @@ class DetailOrderView(UserAuthAPIView):
         order = get_object_or_404(Order, user=self.request.user, id=id)
         order_items = order.orders.all()
 
-        serializer_order = OrderAllFieldsSerializer(order)
+        serializer_order = OrderDetailSerializer(order)
         serializer_order_items = OrderItemSerializer(order_items, many=True)
 
-        data = {"order": serializer_order.data,
-                "order_items": serializer_order_items.data
-                }
+        data = {
+            "order": serializer_order.data,
+            "order_items": serializer_order_items.data
+        }
 
         return Response(data)

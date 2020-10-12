@@ -16,7 +16,7 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'number', 'status', 'created_at']
 
 
-class OrderAllFieldsSerializer(serializers.ModelSerializer):
+class OrderDetailSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
@@ -26,10 +26,8 @@ class OrderAllFieldsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('id', 'user', 'number', 'status', 'tax', 'discount',
-                  'grand_total', 'remote_transaction_id',
-                  'created_at', 'updated_at')
-        read_only_fields = ('id', 'user', 'number')
+        exclude = ('user', )
+        read_only_fields = ('id', 'user', 'number', 'remote_transaction_id', 'grand_total')
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
