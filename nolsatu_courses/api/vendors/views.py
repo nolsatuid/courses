@@ -1,14 +1,14 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from nolsatu_courses.api.vendors.serializers import (
     VendorListSerializer,
 )
 from nolsatu_courses.apps.vendors.models import Vendor
+from nolsatu_courses.api.authentications import InternalAPIView
 
 
-class VendorListView(APIView):
+class VendorListView(InternalAPIView):
 
     @swagger_auto_schema(tags=['Vendors'], operation_description="Get Vendor List", responses={
         200: VendorListSerializer(many=True)
