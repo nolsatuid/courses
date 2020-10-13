@@ -1,40 +1,37 @@
-from django.http import JsonResponse
+from django.conf import settings
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
-
+from nolsatu_courses.api.authentications import UserAuthAPIView, InternalAPIView
 from nolsatu_courses.api.courses.serializers import (
     CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
     ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
     CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer, MyQuizSerializer,
     MyCourseSerializer,
 )
-from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
-from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
-from nolsatu_courses.apps.courses.models import Courses, Module, Section, Enrollment, CollectTask
+from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
 from nolsatu_courses.apps import utils
+from nolsatu_courses.apps.courses.models import Courses, Module, Section, Enrollment, CollectTask
 from nolsatu_courses.website.modules.views import get_pagination as get_pagination_module
 from nolsatu_courses.website.sections.views import get_pagination as get_pagination_section
 from quiz.models import Sitting
 
 
-class CourseListView(APIView):
+class CourseListView(InternalAPIView):
 
     @swagger_auto_schema(tags=['Courses'], operation_description="Get Course List", responses={
         200: CourseSerializer(many=True)
     })
     def get(self, request):
-        courses = (Courses.objects.all()
-                   if self.request.user.is_authenticated else
-                   Courses.objects.filter(is_visible=True, status=Courses.STATUS.publish))
+        if self.request.user.is_authenticated and self.request.user.is_superuser:
+            courses = Courses.objects.all()
+        else:
+            courses = Courses.objects.filter(is_visible=True, status=Courses.STATUS.publish)
 
         if self.request.query_params.get('search'):
             courses = courses.filter(title__startswith=self.request.query_params.get('search'))
@@ -72,7 +69,7 @@ class MyTaskListView(UserAuthAPIView):
         return Response(serializer.data)
 
 
-class CourseDetailView(APIView):
+class CourseDetailView(InternalAPIView):
 
     @swagger_auto_schema(tags=['Courses'], operation_description="Get Course Detail", responses={
         200: CourseDetailMergeSerializer()
@@ -89,7 +86,7 @@ class CourseDetailView(APIView):
         return Response(serializer.data)
 
 
-class CoursePreviewListView(APIView):
+class CoursePreviewListView(InternalAPIView):
 
     @swagger_auto_schema(tags=['Courses'], operation_description="Get Course Preview List", responses={
         200: CoursePreviewListSerializer()
@@ -100,7 +97,7 @@ class CoursePreviewListView(APIView):
         return Response(serializer.data)
 
 
-class ModulePreviewView(APIView):
+class ModulePreviewView(InternalAPIView):
 
     @swagger_auto_schema(tags=['Module'], operation_description="Get Module Preview", responses={
         200: ModulePreviewSerializer()
@@ -145,7 +142,7 @@ class ModuleDetailView(UserAuthAPIView):
         return Response(ModuleDetailSerializer(data).data)
 
 
-class SectionPreviewView(APIView):
+class SectionPreviewView(InternalAPIView):
 
     @swagger_auto_schema(tags=['Section'], operation_description="Get Section Preview", responses={
         200: SectionPreviewSerializer()
