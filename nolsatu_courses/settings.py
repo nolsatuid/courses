@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'nolsatu_courses.apps.accounts',
     'nolsatu_courses.apps.vendors',
     'nolsatu_courses.apps.products',
+    'nolsatu_courses.apps.vouchers',
 
     # quiz
     'quiz',
