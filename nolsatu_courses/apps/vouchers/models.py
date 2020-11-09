@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 from ckeditor_uploader.fields import RichTextUploadingField
 
@@ -28,6 +29,9 @@ class Voucher(models.Model):
     end_date = models.DateTimeField(_('Tanggal Voucher Berakhir'), auto_now_add=True)
     created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Diubah pada'), auto_now=True)
+
+    def is_expired(self):
+        return True if self.end_date >= timezone.now() else False
 
     class Meta:
         verbose_name = _("Voucher")
