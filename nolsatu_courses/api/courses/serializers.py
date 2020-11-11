@@ -30,6 +30,7 @@ class CourseSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author_name')
     featured_image = serializers.CharField(source='featured_image_with_host')
     level = serializers.CharField(source='get_level_display')
+    status = serializers.CharField(source='get_status_display')
     categories = serializers.CharField(source='category_list')
     short_description = serializers.SerializerMethodField()
     product = ProductSerializer(required=False)
@@ -43,8 +44,8 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Courses
-        fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories', 'short_description', 'is_allowed',
-                  'quizzes', 'product', 'slug', 'level', 'vendor']
+        fields = ['id', 'title', 'author', 'featured_image', 'level', 'status', 'categories', 
+                  'short_description', 'is_allowed', 'quizzes', 'product', 'slug', 'level', 'vendor']
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
