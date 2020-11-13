@@ -261,8 +261,29 @@ class MyQuizSerializer(serializers.Serializer):
     score = serializers.FloatField(max_value=100, min_value=0)
 
 
-class MyCourseSerializer(serializers.Serializer):
-    course_title = serializers.CharField()
-    progress = serializers.FloatField(max_value=100, min_value=0)
-    status = serializers.CharField()
+class MyCourseSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source='author_name')
+    featured_image = serializers.CharField(source='featured_image_with_host')
+    level = serializers.CharField(source='get_level_display')
+    categories = serializers.CharField(source='category_list')
+    short_description = serializers.SerializerMethodField()
+    enroll_status = serializers.SerializerMethodField()
+    progress = serializers.SerializerMethodField()
+
+    def get_progress(self, obj: Courses) -> float:
+        return obj.progress_percentage(self.context['request'].user)
+
+    def get_enroll_status(self, obj: Courses) -> str:
+        return obj.get_enroll(self.context['request'].user).get_status_display()
+
+    def get_short_description(self, obj: Courses) -> str:
+        if settings.FEATURE.get("MARKDOWN_CONTENT"):
+            return prepare_markdown(obj.short_description_md)
+        else:
+            return obj.short_description
+
+    class Meta:
+        model = Courses
+        fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories',
+                  'short_description', 'slug', 'enroll_status', 'progress']
 
