@@ -18,7 +18,7 @@
 							<th>Progress</th>
 							<th>Status</th>
 							<th>Nilai Akhir</th>
-							<th>Aksi</th>
+							<th style="width: 300px;">Aksi</th>
 						</tr>
 					</thead>
 
@@ -37,8 +37,9 @@
 							<td>{{ course.status_enroll|enrollment_status_display:'True' }}</td>
 							<td> {% if course.final_score %} {{ course.final_score }} {% else %} - {% endif %}</td>
 							<td style="width: fit-content;">
-								<a href="{% url 'website:courses:user_quizzes' course.course.id %}" class="btn btn-outline-info">Nilai Kuis</a>
-                				<a href="{% url 'website:courses:user_tasks' course.course.id %}" class="btn btn-outline-info">Nilai Tugas</a>
+								<a href="{% url 'website:courses:user_quizzes' course.course.id %}" class="btn btn-outline-info btn-sm">Nilai Kuis</a>
+								<a href="{% url 'website:courses:user_tasks' course.course.id %}" class="btn btn-outline-info btn-sm">Nilai Tugas</a>
+								<a href="{% url 'website:modules:details' course.course.get_first_module.slug %}" target="_blank" class="btn btn-outline-primary btn-sm">Masuk Kelas</a>
 							</td>
 						</tr>
 
