@@ -52,10 +52,10 @@
                 {% if vouchers %}
                 <div class="row">
                     {% for v in vouchers %}
-                    <div class="col-md-4">
+                    <div class="col-md-4" onclick="location.href ='{% url 'website:vouchers:detail' v.voucher.id %}';" style="cursor:pointer">
                         <div class="card card-widget widget-user">
                             {% if v.voucher.img %}
-                            <div class="widget-user-header text-white" style="background: url('{{ v.voucher.img.url }}') center center;background-size: 200px 120px;">
+                            <div class="widget-user-header text-white" style="background: url('{{ v.voucher.img.url }}') center center ;background-size: 360px 135px;">
                             </div>
                             {% else %}
                             <div class="widget-user-header text-white" style="background: url('{% static 'website/images/default_image.png' %}') center center;">

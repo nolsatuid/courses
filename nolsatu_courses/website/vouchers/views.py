@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from nolsatu_courses.apps.vouchers.models import UserVoucher
+from nolsatu_courses.apps.vouchers.models import UserVoucher, Voucher
 
 
 def index(request):
@@ -13,3 +13,9 @@ def index(request):
     return render(request, 'website/vouchers/index.html', context)
 
 
+def detail(request, id):
+    vouchers = get_object_or_404(Voucher, id=id)
+    context = {
+        'voucher': vouchers
+    }
+    return render(request, 'website/vouchers/detail.html', context)
