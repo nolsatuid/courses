@@ -15,6 +15,7 @@ urlpatterns = [
     path('modules/', include('nolsatu_courses.website.modules.urls')),
     path('sections/', include('nolsatu_courses.website.sections.urls')),
     path('apps/', include('nolsatu_courses.website.apps.urls')),
+    path('vouchers/', include('nolsatu_courses.website.vouchers.urls')),
     path('error404/', views.error_404, name='error404'),
     path('error500/', views.error_500, name='error500'),
 ]

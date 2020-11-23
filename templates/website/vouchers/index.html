@@ -1,0 +1,88 @@
+{% extends 'base-adinusa.html' %}
+{% load static %}
+{% load tags_products %}
+
+{% block extra_css %}
+<style>
+    .card {
+        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        margin-bottom: 1rem;
+    }
+    .card-widget {
+        border: 0;
+        position: relative;
+    }
+    .widget-user .widget-user-header {
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        height: 135px;
+        padding: 1rem;
+        text-align: center;
+    }
+    .small-icon{
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+        width: 24px;
+    }
+    .description-block{
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 8px;
+        margin-right: -4px;
+    }
+    .description-text{
+        font-size: 10px;
+        font-weight: normal;
+        white-space: normal;
+        color: rgba(0, 0, 0, 0.38);
+        margin-bottom: 2px;
+        width: 90px;
+    }
+</style>
+{% endblock  %}
+
+{% block content %}
+<section class="special_cource padding_top">
+    <div class="container">
+		<div class="card">
+			<div class="card-header">
+				<h3>{{ title }}</h3>
+			</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card card-widget widget-user">
+                            {% if img %}
+                            <div class="widget-user-header text-white" style="background: url('') center center;">
+                            </div>
+                            {% else %}
+                            <div class="widget-user-header text-white" style="background: url('{% static 'website/images/default_image.png' %}') center center;">
+                            </div>
+                            {% endif %}
+                            <div class="card-footer">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                  <i class="fas fa-hourglass-half" style="color: blue;"></i>
+                                  <div class="description-block">
+                                    <span class="description-text">Berlaku Hingga</span>
+                                    <h5 class="description-header">28 Des 2020</h5>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                  <i class="fas fa-user-tag" style="color: blue;"></i>
+                                  <div class="description-block">
+                                    <span class="description-text">Limit User</span>
+                                    <h5 class="description-header">35</h5>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+</section>
+{% endblock %}
