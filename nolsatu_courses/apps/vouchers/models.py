@@ -7,6 +7,8 @@ from markdownx.models import MarkdownxField
 
 from model_utils import Choices
 
+from nolsatu_courses.apps.utils import image_upload_path
+
 
 class Voucher(models.Model):
     PROMO_TYPE = Choices(
@@ -14,15 +16,16 @@ class Voucher(models.Model):
         (2, 'value', _("Nilai")),
     )
 
-    code = models.CharField(_("Kode Voucher"), max_length=50)
+    code = models.CharField(_("Kode Kupon"), max_length=50)
+    img = models.ImageField(_("Gambar Kupon"), upload_to=image_upload_path('vouchers'), blank=True, null=True)
     discount_type = models.SmallIntegerField(_("Voucher Promo Tipe"), choices=PROMO_TYPE, blank=True, null=True)
     discount_value = models.IntegerField(_("Diskon yang Diberikan"), blank=True, null=True)
     discount = models.IntegerField(_("Nominal Diskon"), default=0)
-    description = MarkdownxField(_("Deskripsi Voucher Promo"), default="")
-    qty = models.PositiveIntegerField(_("Jumlah"), default=0)
+    description = MarkdownxField(_("Deskripsi Kupon Promo"), default="")
+    qty = models.PositiveIntegerField(_("Jumlah Kupon"), default=0)
     product = models.ManyToManyField('products.Product')
-    start_date = models.DateTimeField(_('Tanggal Voucher Berlaku'), auto_now_add=True)
-    end_date = models.DateTimeField(_('Tanggal Voucher Berakhir'), auto_now_add=True)
+    start_date = models.DateTimeField(_('Tanggal Kupon Berlaku'), auto_now_add=True)
+    end_date = models.DateTimeField(_('Tanggal Kupon Berakhir'), auto_now_add=True)
     created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Diubah pada'), auto_now=True)
 
@@ -45,7 +48,7 @@ class UserVoucher(models.Model):
 
     user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE)
     voucher = models.ForeignKey(Voucher, verbose_name=_("Voucher"), on_delete=models.CASCADE)
-    status = models.SmallIntegerField(choices=STATUS, default=STATUS)
+    status = models.SmallIntegerField(_("Status Penggunaan Kupon"), choices=STATUS, default=STATUS.Unused)
     created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Diubah pada'), auto_now=True)
 

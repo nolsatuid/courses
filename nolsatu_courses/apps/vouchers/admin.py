@@ -1,3 +1,13 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+
+@admin.register(Voucher)
+class VoucherAdmin(admin.ModelAdmin):
+    list_display = ('code',)
+
+
+@admin.register(UserVoucher)
+class UserVoucherAdmin(admin.ModelAdmin):
+    list_display = ('voucher',)
