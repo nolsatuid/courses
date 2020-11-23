@@ -18,14 +18,13 @@ class Voucher(models.Model):
 
     code = models.CharField(_("Kode Kupon"), max_length=50)
     img = models.ImageField(_("Gambar Kupon"), upload_to=image_upload_path('vouchers'), blank=True, null=True)
-    discount_type = models.SmallIntegerField(_("Voucher Promo Tipe"), choices=PROMO_TYPE, blank=True, null=True)
+    discount_type = models.SmallIntegerField(_("Tipe Kupon"), choices=PROMO_TYPE, blank=True, null=True)
     discount_value = models.IntegerField(_("Diskon yang Diberikan"), blank=True, null=True)
-    discount = models.IntegerField(_("Nominal Diskon"), default=0)
-    description = MarkdownxField(_("Deskripsi Kupon Promo"), default="")
+    description = MarkdownxField(_("Deskripsi Kupon"), default="")
     qty = models.PositiveIntegerField(_("Jumlah Kupon"), default=0)
     product = models.ManyToManyField('products.Product')
-    start_date = models.DateTimeField(_('Tanggal Kupon Berlaku'), auto_now_add=True)
-    end_date = models.DateTimeField(_('Tanggal Kupon Berakhir'), auto_now_add=True)
+    start_date = models.DateTimeField(_('Tanggal Kupon Berlaku'))
+    end_date = models.DateTimeField(_('Tanggal Kupon Berakhir'))
     created_at = models.DateTimeField(_('Dibuat pada'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Diubah pada'), auto_now=True)
 
