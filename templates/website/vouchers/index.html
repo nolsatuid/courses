@@ -1,6 +1,5 @@
 {% extends 'base-adinusa.html' %}
-{% load static %}
-{% load tags_products %}
+{% load static humanize tags_products %}
 
 {% block extra_css %}
 <style>
@@ -51,10 +50,11 @@
 			</div>
             <div class="card-body">
                 <div class="row">
+                    {% for v in vouchers %}
                     <div class="col-md-4">
                         <div class="card card-widget widget-user">
-                            {% if img %}
-                            <div class="widget-user-header text-white" style="background: url('') center center;">
+                            {% if v.voucher.img %}
+                            <div class="widget-user-header text-white" style="background: url('{{ v.voucher.img.url }}') center center;background-size: 200px 120px;">
                             </div>
                             {% else %}
                             <div class="widget-user-header text-white" style="background: url('{% static 'website/images/default_image.png' %}') center center;">
@@ -66,20 +66,25 @@
                                   <i class="fas fa-hourglass-half" style="color: blue;"></i>
                                   <div class="description-block">
                                     <span class="description-text">Berlaku Hingga</span>
-                                    <h5 class="description-header">28 Des 2020</h5>
+                                    <h5 class="description-header">{{ v.voucher.end_date|date:'d M Y' }}</h5>
                                 </div>
                               </div>
                               <div class="col-sm-6">
-                                  <i class="fas fa-user-tag" style="color: blue;"></i>
+                                  <i class="fas fa-tags" style="color:blue;"></i>
                                   <div class="description-block">
-                                    <span class="description-text">Limit User</span>
-                                    <h5 class="description-header">35</h5>
+                                    <span class="description-text">Diskon Sebesar</span>
+                                      {% if v.voucher.get_discount_type_display == "Nilai"  %}
+                                        <h5 class="description-header">Rp. {{ v.voucher.discount_value|intcomma }}</h5>
+                                      {% else %}
+                                        <h5 class="description-header">{{ v.voucher.discount_value }} %</h5>
+                                      {% endif %}
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
 		</div>

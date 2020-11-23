@@ -57,4 +57,4 @@ class UserVoucher(models.Model):
         verbose_name_plural = _("User Vouchers")
 
     def __str__(self):
-        return self.id
+        return str(self.id)
