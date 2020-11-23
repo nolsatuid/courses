@@ -49,6 +49,7 @@
 				<h3>{{ title }}</h3>
 			</div>
             <div class="card-body">
+                {% if vouchers %}
                 <div class="row">
                     {% for v in vouchers %}
                     <div class="col-md-4">
@@ -86,6 +87,10 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                    <h3 class="text-center">Anda Tidak Memiliki Kupon</h3>
+					<p class="text-center">Ikuti terus update di NolSatu Course untuk mendapatkan kupon terbaru !</p>
+                {% endif %}
             </div>
 		</div>
 	</div>

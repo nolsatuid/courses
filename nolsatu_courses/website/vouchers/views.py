@@ -11,3 +11,5 @@ def index(request):
         'vouchers': vouchers
     }
     return render(request, 'website/vouchers/index.html', context)
+
+
