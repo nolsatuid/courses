@@ -30,8 +30,8 @@
                                 <a class="btn btn-sm btn-pill btn-secondary" href="">
                                     <i class="fas fa-edit"></i> Edit</a>
                                 <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
-                                   data-target="#confirmDeleteModal" data-delete-url=""
-                                   data-name="{{ vendor.name }}"> <i class="fas fa-trash"></i> Hapus</a>
+                                   data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:vouchers:delete' v.id %}"
+                                   data-name="{{ v.code }}"> <i class="fas fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -53,7 +53,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Yakin ingin menghapus <strong id="confirmDeleteName"></strong>
+                Yakin ingin menghapus kupon <strong id="confirmDeleteName"></strong>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
