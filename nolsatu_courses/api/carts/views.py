@@ -136,3 +136,13 @@ class CheckoutView(UserAuthAPIView):
             return Response(resp)
         else:
             return Response(serializer.errors)
+
+
+class CartCountView(UserAuthAPIView):
+    @swagger_auto_schema(tags=['Carts'], operation_description="Cart Count",
+                         responses={status.HTTP_200_OK}, )
+    def get(self, request):
+        resp = {
+            "count": Cart.objects.filter(user=self.request.user).count(),
+        }
+        return Response(resp)
