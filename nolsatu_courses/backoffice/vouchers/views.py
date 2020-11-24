@@ -17,3 +17,15 @@ def index(request):
         'vouchers': vouchers,
     }
     return render(request, 'backoffice/vouchers/index.html', context)
+
+
+@superuser_required
+def detail(request, id):
+    voucher = get_object_or_404(Voucher, id=id)
+
+    context = {
+        'menu_active': 'vouchers',
+        'title': _('Detail Kupon'),
+        'voucher': voucher,
+    }
+    return render(request, 'backoffice/vouchers/detail.html', context)

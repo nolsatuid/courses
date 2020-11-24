@@ -21,11 +21,11 @@
                 <tbody>
                     {% for v in vouchers %}
                         <tr>
-                            <td>{{ v.code }}</td>
+                            <td><a href="{% url 'backoffice:vouchers:detail' v.id %}" >{{ v.code }}</a></td>
                             <td>{{ v.qty }}</td>
                             <td>{{ v.get_products }}</td>
-                            <td>{{ v.start_date }}</td>
-                            <td>{{ v.end_date }}</td>
+                            <td>{{ v.start_date|date:'d M Y' }}</td>
+                            <td>{{ v.end_date|date:'d M Y' }}</td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-pill btn-secondary" href="">
                                     <i class="fas fa-edit"></i> Edit</a>
