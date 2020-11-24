@@ -1,0 +1,76 @@
+{% extends 'base-adinusa.html' %}
+{% load static %}
+{% load humanize %}
+{% load math_extras %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+<style>
+	.v-bg{
+	    border-top-left-radius: .25rem;
+    	border-top-right-radius: .25rem;
+    	height: 130px;
+    	padding: 1rem;
+    	text-align: center;
+    }
+</style>
+{% endblock  %}
+
+{% block content %}
+<section class="special_cource padding_top">
+	<div class="container-fluid">
+		<div class="row justify-content-md-center">
+			<div class="col-md-5 p-1 m-1">
+				<div class="box-custom">
+					<div class="card-header v-bg" style="background: url('{{ voucher.img.url }}') center center;background-size: cover;" ></div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3>Diskon {% if voucher.get_discount_type_display == "Nilai"  %} Rp.{{ voucher.discount_value|intcomma }} {% else %} {{ voucher.discount_value }} % {% endif %}</h3>
+
+								<div class="post">
+									{{ voucher.description|safe }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 p-1 m-1">
+				<div class="box-custom">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12">
+								<h3>Detail Kupon</h3>
+								<div class="p-3">
+									<div class="row justify-content-between">
+										<label class="item-label"><i class="fas fa-hourglass-half mr-2 mt-2" style="color: blue;"></i>Berlaku Hingga</label>
+										<div class="final-price" >{{ voucher.end_date|date:'d M Y' }}</div>
+									</div>
+									<div class="row justify-content-between">
+										<label class="item-label"><i class="fas fa-tags mr-2 mt-2" style="color:blue;"></i>Diskon Sebesar</label>
+										  {% if voucher.get_discount_type_display == "Nilai"  %}
+											<div class="final-price">Rp. {{ voucher.discount_value|intcomma }}</div>
+										  {% else %}
+											<div class="final-price">{{ voucher.discount_value }} %</div>
+										  {% endif %}
+									</div>
+								</div>
+
+								<h3 class="pb-2">Kupon Berlaku Untuk Produk</h3>
+								{% for p in voucher.product.all %}
+									<div class="row justify-content-between pl-3 pr-3">
+										<label class="item-label"><i class="far fa-dot-circle mr-2 mt-2" style="color:blue"></i>{{ p.course.title }}</label>
+										<a class="final-price" href="{% url 'website:courses:details' p.course.slug %}">Lihat Detail</a>
+									</div>
+								{% endfor %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

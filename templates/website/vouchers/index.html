@@ -1,0 +1,98 @@
+{% extends 'base-adinusa.html' %}
+{% load static humanize tags_products %}
+
+{% block extra_css %}
+<style>
+    .card {
+        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        margin-bottom: 1rem;
+    }
+    .card-widget {
+        border: 0;
+        position: relative;
+    }
+    .widget-user .widget-user-header {
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        height: 135px;
+        padding: 1rem;
+        text-align: center;
+    }
+    .small-icon{
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+        width: 24px;
+    }
+    .description-block{
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 8px;
+        margin-right: -4px;
+    }
+    .description-text{
+        font-size: 10px;
+        font-weight: normal;
+        white-space: normal;
+        color: rgba(0, 0, 0, 0.38);
+        margin-bottom: 2px;
+        width: 90px;
+    }
+</style>
+{% endblock  %}
+
+{% block content %}
+<section class="special_cource padding_top">
+    <div class="container">
+		<div class="card">
+			<div class="card-header">
+				<h3>{{ title }}</h3>
+			</div>
+            <div class="card-body">
+                {% if vouchers %}
+                <div class="row">
+                    {% for v in vouchers %}
+                    <div class="col-md-4" onclick="location.href ='{% url 'website:vouchers:detail' v.voucher.id %}';" style="cursor:pointer">
+                        <div class="card card-widget widget-user">
+                            {% if v.voucher.img %}
+                            <div class="widget-user-header text-white" style="background: url('{{ v.voucher.img.url }}') center center ;background-size: 360px 135px;">
+                            </div>
+                            {% else %}
+                            <div class="widget-user-header text-white" style="background: url('{% static 'website/images/default_image.png' %}') center center;">
+                            </div>
+                            {% endif %}
+                            <div class="card-footer">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                  <i class="fas fa-hourglass-half" style="color: blue;"></i>
+                                  <div class="description-block">
+                                    <span class="description-text">Berlaku Hingga</span>
+                                    <h5 class="description-header">{{ v.voucher.end_date|date:'d M Y' }}</h5>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                  <i class="fas fa-tags" style="color:blue;"></i>
+                                  <div class="description-block">
+                                    <span class="description-text">Diskon Sebesar</span>
+                                      {% if v.voucher.get_discount_type_display == "Nilai"  %}
+                                        <h5 class="description-header">Rp. {{ v.voucher.discount_value|intcomma }}</h5>
+                                      {% else %}
+                                        <h5 class="description-header">{{ v.voucher.discount_value }} %</h5>
+                                      {% endif %}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <h3 class="text-center">Anda Tidak Memiliki Kupon</h3>
+					<p class="text-center">Ikuti terus update di NolSatu Course untuk mendapatkan kupon terbaru !</p>
+                {% endif %}
+            </div>
+		</div>
+	</div>
+</section>
+{% endblock %}

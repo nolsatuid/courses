@@ -76,6 +76,7 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ nolsatu_profile_page_url }}">Profil</a>
                                         <a class="dropdown-item" href="{% url 'website:courses:user_courses' %}">Daftar materimu</a>
+                                        <a class="dropdown-item" href="{% url 'website:vouchers:index' %}">Daftar Kuponmu</a>
                                         <a class="dropdown-item" href="{% url 'website:carts:index' %}">Keranjang</a>
                                         <a class="dropdown-item" href="{% url 'website:orders:index' %}">Pembelian</a>
                                         {% if user.is_superuser %}

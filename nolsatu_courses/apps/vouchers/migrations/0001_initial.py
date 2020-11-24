@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
             name='UserVoucher',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.SmallIntegerField(choices=[(1, 'Used'), (2, 'Unused')], default=((1, 'Used'), (2, 'Unused')))),
+                ('status', models.SmallIntegerField(choices=[(1, 'Used'), (2, 'Unused')], default=2)),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Dibuat pada')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Diubah pada')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
