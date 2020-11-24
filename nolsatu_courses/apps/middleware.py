@@ -1,8 +1,10 @@
 from functools import partial
 from json import JSONDecodeError
 
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
+from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 from requests import RequestException
@@ -10,6 +12,7 @@ from requests import RequestException
 from nolsatu_courses.apps.utils import update_user
 
 SESSION_USER_ID = '_auth_user_id'
+JWT_AUTH_HEADER_KEY = "X-User-Token"
 
 
 def get_user(request):
@@ -40,3 +43,13 @@ class NolSatuAuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if not hasattr(request, "user") or request.user.is_anonymous:
             request.user = SimpleLazyObject(partial(get_user, request))
+
+
+class JWTAuthCredentialsMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        if (not hasattr(request, "user") or request.user.is_anonymous) and JWT_AUTH_HEADER_KEY in request.headers:
+            redirect_response = redirect(
+                settings.LOGIN_URL + f"?next={request.build_absolute_uri()}"
+            )
+            redirect_response[JWT_AUTH_HEADER_KEY] = request.headers[JWT_AUTH_HEADER_KEY]
+            return redirect_response
