@@ -101,6 +101,26 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item {% if menu_active == 'vouchers' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'vouchers' %}active{% endif %}">
+                    <i class="fas fa-hand-scissors"></i>
+                    <p>Kupon<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:vouchers:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Daftar Kupon</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:products:add' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Tambah Kupon</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item">
                 <a href="{% url 'backoffice:orders:index' %}" class="nav-link {% if menu_active == 'order' %}active{% endif %}">
                     <i class="nav-icon fas fa-shopping-cart"></i>
