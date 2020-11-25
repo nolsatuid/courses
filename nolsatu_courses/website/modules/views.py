@@ -47,7 +47,7 @@ def details(request, slug):
     course_finish_slug = ""
     if not next_slug:
         is_complete_tasks = module.course.is_complete_tasks(request.user)
-        ourse_finish_slug = module.course.slug
+        course_finish_slug = module.course.slug
 
     module_all = module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish())
