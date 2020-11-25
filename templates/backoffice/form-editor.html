@@ -152,6 +152,22 @@
 {% block extra_js %}
 <script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+
+        startDate = $("#id_start_date").val();
+        endDate = $("#id_end_date").val();
+
+        flatpickr("#id_start_date", {
+            dateFormat: "d-m-Y",
+            defaultDate: startDate
+        });
+
+        flatpickr("#id_end_date", {
+            dateFormat: "d-m-Y",
+            defaultDate: endDate
+        });
+	});
+
     $('#id_users').select2({
         theme: 'bootstrap4'
     })
