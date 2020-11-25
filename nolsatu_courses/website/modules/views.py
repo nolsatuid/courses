@@ -30,6 +30,7 @@ def details(request, slug):
     pagination = get_pagination(request, module, set_session=True)
     prev_type = pagination['prev_type']
     prev = pagination['prev']
+    next_slug = pagination['next']
 
     # handle ketika user belum mengumpulkan tugas pada sesi sebelumnya
     # jika page_type adalah section dan section memiliki tugas
@@ -41,6 +42,11 @@ def details(request, slug):
             )
             return redirect("website:sections:details", prev.slug)
 
+    # jika next kosong berarti berada pada sesi terakhir
+    is_complete_tasks = None
+    if not next_slug:
+        is_complete_tasks = module.course.is_complete_tasks(request.user)
+
     module_all = module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish())
     )
@@ -49,7 +55,8 @@ def details(request, slug):
         'title': module.title,
         'module': module,
         'pagination': pagination,
-        'module_all': module_all
+        'module_all': module_all,
+        'is_complete_tasks': is_complete_tasks,
     }
 
     # save activities user to module
