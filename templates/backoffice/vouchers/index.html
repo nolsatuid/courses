@@ -27,8 +27,8 @@
                             <td>{{ v.start_date|date:'d M Y' }}</td>
                             <td>{{ v.end_date|date:'d M Y' }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-pill btn-secondary" href="">
-                                    <i class="fas fa-edit"></i> Edit</a>
+                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'backoffice:vouchers:edit' v.id %}">
+                                    <i class="fas fa-edit"></i> Ubah</a>
                                 <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
                                    data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:vouchers:delete' v.id %}"
                                    data-name="{{ v.code }}"> <i class="fas fa-trash"></i> Hapus</a>

@@ -65,3 +65,27 @@ def add(request):
         template = 'backoffice/form-editor-markdown.html'
 
     return render(request, template, context)
+
+
+@superuser_required
+@transaction.atomic
+def edit(request, id):
+    voucher = get_object_or_404(Voucher, id=id)
+    form = FormVoucher(data=request.POST or None, files=request.FILES or None,  instance=voucher)
+    if form.is_valid():
+        post = form.save()
+        sweetify.success(request, _(f"Berhasil mengubah voucher {post.code}"), button='OK', icon='success')
+        return redirect('backoffice:vouchers:index')
+
+    context = {
+        'menu_active': 'vouchers',
+        'title': _('Ubah Kupon'),
+        'form': form,
+        'title_submit': 'Simpan'
+    }
+
+    template = 'backoffice/form-editor.html'
+    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
+        template = 'backoffice/form-editor-markdown.html'
+
+    return render(request, template, context)
