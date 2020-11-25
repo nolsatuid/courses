@@ -74,8 +74,10 @@ def details(request, slug):
 
     # jika next kosong berarti berada pada sesi terakhir
     is_complete_tasks = None
+    course_finish_slug = ""
     if not next_slug:
         is_complete_tasks = section.module.course.is_complete_tasks(request.user)
+        course_finish_slug = section.module.course.slug
 
     module_all = section.module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish()),
@@ -90,7 +92,8 @@ def details(request, slug):
         'task': collect_task,
         'is_complete_tasks': is_complete_tasks,
         'file_not_found': file_not_found,
-        'module_all': module_all
+        'module_all': module_all,
+        'course_finish_slug': course_finish_slug
     }
 
     # save activities user to section

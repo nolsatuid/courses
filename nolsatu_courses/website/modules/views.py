@@ -44,8 +44,10 @@ def details(request, slug):
 
     # jika next kosong berarti berada pada sesi terakhir
     is_complete_tasks = None
+    course_finish_slug = ""
     if not next_slug:
         is_complete_tasks = module.course.is_complete_tasks(request.user)
+        ourse_finish_slug = module.course.slug
 
     module_all = module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish())
@@ -57,6 +59,7 @@ def details(request, slug):
         'pagination': pagination,
         'module_all': module_all,
         'is_complete_tasks': is_complete_tasks,
+        "course_finish_slug": course_finish_slug
     }
 
     # save activities user to module
