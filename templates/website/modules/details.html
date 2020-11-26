@@ -4,11 +4,13 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-12">
+        {% if not mobile_layout %}
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'website:index' %}">Beranda</a></li>
             <li class="breadcrumb-item"><a href="{% url 'website:courses:details' module.course.slug %}">Kursus</a></li>
             <li class="breadcrumb-item active">Modul</li>
         </ol>
+        {% endif %}
     </div>
     <div class="col-lg-4 d-wide-screen">
         {% include 'partials/content-list.html' with module_all=module_all %}   

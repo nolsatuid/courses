@@ -7,10 +7,12 @@
 {% block content %}
 <div class="row">
   <div class="col-sm-12">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'quiz_index' %}">{% trans "List of quizzes" %}</a></li>
-        <li class="breadcrumb-item active">{% trans "Quiz Detail" %}</li>
-    </ol>
+    {% if not mobile_layout %}
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'quiz_index' %}">{% trans "List of quizzes" %}</a></li>
+          <li class="breadcrumb-item active">{% trans "Quiz Detail" %}</li>
+      </ol>
+    {% endif %}    
 
     <div class="card">
       <div class="card-body">

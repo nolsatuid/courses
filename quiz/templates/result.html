@@ -9,10 +9,12 @@
 {% block content %}
 <div class="row">
   <div class="col-sm-12">
+    {% if not mobile_layout %}
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'quiz_index' %}">{% trans "List of quizzes" %}</a></li>
       <li class="breadcrumb-item active">{% trans "Quiz result" %}</li>
     </ol>
+    {% endif %}
 
     {% if max_score %}
       <div class="card">
