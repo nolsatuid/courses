@@ -60,9 +60,7 @@ def add(request):
         'title_submit': 'Simpan'
     }
 
-    template = 'backoffice/form-editor.html'
-    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
-        template = 'backoffice/form-editor-markdown.html'
+    template = 'backoffice/form-editor-markdown.html'
 
     return render(request, template, context)
 
@@ -84,8 +82,6 @@ def edit(request, id):
         'title_submit': 'Simpan'
     }
 
-    template = 'backoffice/form-editor.html'
-    if settings.FEATURE["MARKDOWN_BACKOFFICE_EDITOR"]:
-        template = 'backoffice/form-editor-markdown.html'
+    template = 'backoffice/form-editor-markdown.html'
 
     return render(request, template, context)

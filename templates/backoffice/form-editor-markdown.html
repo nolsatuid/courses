@@ -22,7 +22,7 @@
                                         {{ form.media }}
                                         {{ form.non_field_errors }}
                                         {% for field in form %}
-                                            {% if field.name == "title" or field.name == "description_md" or field.name == "short_description_md" or field.name == "content_md" or field.name == "instruction_md" %}
+                                            {% if field.name == "title" or field.name == "description_md" or field.name == "short_description_md" or field.name == "content_md" or field.name == "instruction_md" or field.name == "description"%}
                                             <div class="form-group col-md-12">
                                                 <label class="col-md-12"> {{ field.label }} </label>
                                                 <div class="col-md-12">
@@ -38,7 +38,7 @@
                                             {{ form.media }}
                                             {{ form.non_field_errors }}
                                             {% for field in form %}
-                                                {% if field.name != "title" and field.name != "description_md" and field.name != "short_description_md" and field.name != "content_md" and field.name != "instruction_md" %}
+                                                {% if field.name != "title" and field.name != "description_md" and field.name != "short_description_md" and field.name != "content_md" and field.name != "instruction_md" and field.name != "description"%}
                                                 <div class="form-group col-md-12">
                                                     <label class="col-md-12"> {{ field.label }} </label>
                                                     <div class="col-md-12">
@@ -68,4 +68,24 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        startDate = $("#id_start_date").val();
+        endDate = $("#id_end_date").val();
+
+        flatpickr("#id_start_date", {
+            dateFormat: "d-m-Y",
+            defaultDate: startDate
+        });
+
+        flatpickr("#id_end_date", {
+            dateFormat: "d-m-Y",
+            defaultDate: endDate
+        });
+	});
+</script>
 {% endblock %}
