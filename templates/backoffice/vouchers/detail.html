@@ -1,0 +1,108 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load tags_courses humanize%}
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:vouchers:index'%}">Kupon</a></li>
+        <li class="breadcrumb-item active">Detail Kupon</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="float-left">
+                {{ title }}
+            </h4>
+            <span class="float-right">
+                <a href="{% url 'backoffice:vouchers:edit' voucher.id %}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Ubah</a>
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="row-fluid">
+                <div class="row">
+                    <div class=" col-md-12 col-lg-12 ">
+                        <div class="tab-content">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td width="200px">
+                                        <label>Gambar</label>
+                                    </td>
+                                    <td>
+                                         <img width="360px" src="{{ voucher.img.url }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="200px">
+                                        <label>Kode</label>
+                                    </td>
+                                    <td>
+                                        {{ voucher.code }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Jumlah</label>
+                                    </td>
+                                    <td>
+                                        {{ voucher.qty }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Diskon Tipe</label>
+                                    </td>
+                                    <td>
+                                        {{ voucher.get_discount_type_display }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Besar Diskon</label>
+                                    </td>
+                                    <td>
+                                        {% if voucher.get_discount_type_display == "Nilai"  %}
+                                            <label>Rp. {{ voucher.discount_value|intcomma }}</label>
+                                        {% else %}
+                                            <label>{{ voucher.discount_value }} %</label>
+                                      {% endif %}
+                                    </td>
+
+
+                                <tr>
+                                    <td>
+                                        <label>Deskripsi</label>
+                                    </td>
+                                    <td>
+                                            {{ voucher.description|safe }}
+                                    </td>
+                                </tr>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Berlaku</label>
+                                    </td>
+                                    <td>
+                                        {{ voucher.start_date|date:'d F Y' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Berakhir</label>
+                                    </td>
+                                    <td>
+                                        {{ voucher.end_date|date:'d F Y' }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'backoffice:vouchers:index' %}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kupon</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

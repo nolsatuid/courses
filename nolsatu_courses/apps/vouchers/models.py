@@ -31,6 +31,9 @@ class Voucher(models.Model):
     def is_expired(self):
         return True if self.end_date >= timezone.now() else False
 
+    def get_products(self):
+        return ", ".join([p.course.title for p in self.product.all()])
+
     class Meta:
         verbose_name = _("Voucher")
         verbose_name_plural = _("Vouchers")
