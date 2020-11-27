@@ -3,10 +3,12 @@
 {% block content %}
 <div class="row">
 	<div class="col-sm-12">
+		{% if not mobile_layout %}
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="{% url 'website:courses:user_courses' %}">Daftar Materimu</a></li>
 			<li class="breadcrumb-item active">Hasil Kuis</li>
 		</ol>
+		{% endif %}
 	</div>
   	<div class="col-sm-12">
 		<div class="card">
