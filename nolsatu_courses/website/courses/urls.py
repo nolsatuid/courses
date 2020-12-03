@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from . import views
 
 app_name = 'courses'
@@ -7,6 +7,8 @@ urlpatterns = [
     path('<slug:slug>', views.details, name='details'),
     path('enroll/<slug:slug>', views.enroll, name='enroll'),
     path('finish/<slug:slug>', views.finish, name='finish'),
-    path('quizzes/<int:course_id>', views.user_quizzes, name='user_quizzes'),
+    path('quizzes/<int:course_id>/', views.user_quizzes, name='user_quizzes'),
     path('tasks/<int:course_id>', views.user_tasks, name='user_tasks'),
+    # re_path(r'^quizzes/(?P<course_id>[0-9]{4})/$', views.user_quizzes,  name='user_quizzes'),
+
 ]
