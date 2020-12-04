@@ -21,6 +21,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class VendorSerializer(serializers.ModelSerializer):
+    logo = serializers.CharField(source="get_logo_with_host")
+
     class Meta:
         model = Vendor
         fields = "__all__"
