@@ -13,7 +13,7 @@ from nolsatu_courses.api.authentications import UserAuthAPIView
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.apps.products.models import Product, Order, Cart
 
-from .serializers import AddCartSerializer, CartIDSerializer, CartSerializer
+from .serializers import AddCartSerializer, CartIDSerializer, CartSerializer, CartCountSerializer, FullCartSerializer
 
 
 class AddToCartView(UserAuthAPIView):
@@ -76,32 +76,37 @@ class DeleteItemCartView(UserAuthAPIView):
 
 class CartListView(UserAuthAPIView):
     @swagger_auto_schema(tags=['Carts'], operation_description="My Carts",
-                         responses={status.HTTP_200_OK: CartSerializer(many=True)}, )
+                         responses={status.HTTP_200_OK: FullCartSerializer()}, )
     def get(self, request):
         carts = Cart.objects.filter(user=self.request.user)
 
         total = carts.annotate(final_price=F('product__price') - F('product__discount')
                                ).aggregate(total_price=Sum('final_price'))
 
-        data = [{"id": c.id,
-                 "product": {'id': c.product.id,
-                             'price': c.product.price,
-                             'code': c.product.code,
-                             'discount_type': c.product.discount_type,
-                             'discount_value': c.product.discount_value,
-                             'discount': c.product.discount,
-                             'course': {'id': c.product.course.id, 'title': c.product.course.title},
-                             }
-                 } for c in carts]
+        carts = [
+            {
+                "id": c.id,
+                "product": {
+                    'id': c.product.id,
+                    'price': c.product.price,
+                    'code': c.product.code,
+                    'discount_type': c.product.discount_type,
+                    'discount_value': c.product.discount_value,
+                    'discount': c.product.discount,
+                    'course': {'id': c.product.course.id, 'title': c.product.course.title},
+                }
+            } for c in carts
+        ]
 
-        serializer = CartSerializer(data=data, many=True)
+        data = {
+            "carts": carts,
+            "total": total['total_price'] or 0
+        }
 
-        if serializer.is_valid(raise_exception=True):
-            resp = {
-                "carts": serializer.data,
-                "total": total['total_price']
-            }
-            return Response(resp)
+        serializer = FullCartSerializer(data=data)
+
+        if serializer.is_valid():
+            return Response(serializer.data)
         else:
             return Response(serializer.errors)
 
@@ -139,10 +144,20 @@ class CheckoutView(UserAuthAPIView):
 
 
 class CartCountView(UserAuthAPIView):
-    @swagger_auto_schema(tags=['Carts'], operation_description="Cart Count",
-                         responses={status.HTTP_200_OK}, )
+    @swagger_auto_schema(
+        tags=['Carts'],
+        operation_description="Cart Count",
+        responses={
+            status.HTTP_200_OK: CartCountSerializer()
+        }
+    )
     def get(self, request):
-        resp = {
+        data = {
             "count": Cart.objects.filter(user=self.request.user).count(),
         }
-        return Response(resp)
+
+        serializer = CartCountSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
