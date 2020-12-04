@@ -1,50 +1,63 @@
-{% extends 'website/base-top-nav.html' %}
+{% extends 'base-adinusa.html' %}
+
+{% block extra_css %}
+<style>
+	.blog_item_img {
+		position: static;
+	}
+
+	.blog_item_img .blog_item_date {
+		position: static;
+		bottom: 0px;
+		left: 0px;
+		display: block;
+		color: #fff;
+		background-color: #4D94FF;
+		padding: 8px 15px;
+		border-radius: 5px;
+	}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row">
-	<div class="col-sm-12">
-		{% if not mobile_layout %}
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="{% url 'website:courses:user_courses' %}">Daftar Materimu</a></li>
-			<li class="breadcrumb-item active">Hasil Kuis</li>
-		</ol>
-		{% endif %}
-	</div>
-  	<div class="col-sm-12">
-		<div class="card">
-			<div class="card-header">
-				<h2>{{ title }}</h2>
-			</div>
-			<div class="card-body">
-				{% if sittings %}
-					<table class="table table-bordered table-striped">
-
-					<thead>
-						<tr>
-							<th>Kuis</th>
-							<th>Nilai</th>
-						</tr>
-					</thead>
-
-					<tbody>
-
-					{% for sitting in sittings %}
-
-						<tr>
-							<td>{{ sitting.quiz.title }}</td>
-							<td>{{ sitting.get_percent_correct }}</td>
-						</tr>
-
-					{% endfor %}
-					</tbody>
-
-					</table>
-
-				{% else %}
-					<p>Tidak ada kuis yang diikuti.</p>
-				{% endif %}
-			</div>
+<section class="special_cource padding_top">
+    <div class="container">
+		<div class="row justify-content-center">
+            <div class="col-xl-5">
+                <div class="section_tittle text-center">
+                    <h3>{{ title }}</h3>
+                </div>
+            </div>
+        </div>
+		<div class="row">
+			{% if sittings %}
+				{% for sitting in sittings %}
+					<div class="col-sm-4 mb-4">
+						<div class="card">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-5">
+										<div class="blog_item_img mb-0">
+											<h1 class="text-center blog_item_date">{{ sitting.get_percent_correct }}</h1>
+										</div>
+									</div>
+									<div class="col-md-7">
+										<div class="card-title">{{ sitting.quiz.title }}</div>
+										{% if sitting.check_if_passed %}
+										<span class="badge badge-success">Lulus</span>
+										{% else %}
+										<span class="badge badge-danger">Tidak Lulus</span>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<p>Tidak ada kuis yang diikuti.</p>
+			{% endif %}
 		</div>
 	</div>
-</div>
+</section>
 {% endblock %}
