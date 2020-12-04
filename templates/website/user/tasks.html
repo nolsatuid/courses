@@ -1,58 +1,90 @@
-{% extends 'website/base-top-nav.html' %}
+{% extends 'base-adinusa.html' %}
+
+{% block extra_css %}
+<style>
+	.blog_item_img {
+		position: static;
+	}
+
+	.blog_item_img .blog_item_date {
+		position: static;
+		bottom: 0px;
+		left: 0px;
+		display: block;
+		color: #fff;
+		background-color: #4D94FF;
+		padding: 8px 15px;
+		border-radius: 5px;
+	}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row">
-	<div class="col-sm-12">
-		{% if not mobile_layout %}
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="{% url 'website:courses:user_courses' %}">Daftar Materimu</a></li>
-			<li class="breadcrumb-item active">Nilai Tugas</li>
-		</ol>
-		{% endif %}
-	</div>
-  	<div class="col-sm-12">
-		<div class="card">
-			<div class="card-header">
-				<h2>{{ title }}</h2>
-			</div>
-			<div class="card-body">
-				{% if tasks %}
-					<table class="table table-bordered table-striped">
+<section class="special_cource padding_top">
+    <div class="container">
+		<div class="row justify-content-center">
+            <div class="col-xl-5">
+                <div class="section_tittle text-center">
+					<h2>Nilai Tugas</h2>
+                    <h4 class="mt-5">{{ title }}</h4>
+                </div>
+            </div>
+        </div>
+		<div class="row">
+			{% if tasks %}
+				{% for task in tasks %}
+					<div class="col-sm-4 mb-4">
+						<div class="card">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-5">
+										<div class="blog_item_img mb-0">
+											<h1 class="text-center blog_item_date">{{ task.score|default:'0' }}</h1>
+										</div>
+									</div>
+									<div class="col-md-7">
+										<div class="card-title">{{ task.section.title }}</div>
+									</div>
+								</div>
+								<div class="dropdown-divider"></div>
+								<div class="row">
+									<div class="col-1">
+										<i class="fas fa-calendar-alt text-primary"></i>
+									</div>
+									<div class="col-10">
+										{{ task.update_at }}
+									</div>
 
-					<thead>
-						<tr>
-							<th>Bab</th>
-							<th>File</th>
-							<th>Nilai</th>
-							<th>Catatan</th>
-							<th>Tanggal</th>
-						</tr>
-					</thead>
+									<div class="col-1">
+										<i class="fas fa-comment-alt text-primary"></i>
+									</div>
+									<div class="col-10">
+										{% if task.note %}
+											<span id="note-{{task.id}}">
+												<a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ task.note }}">{{ task.note|default:'-'|truncatechars:40 }}</a>
+											</span>
+										{% else %}
+											<p>Tidak ada catatan</p>
+										{% endif %}
+									</div>
 
-					<tbody>
-
-					{% for task in tasks %}
-
-						<tr>
-							<td>{{ task.section.title }}</td>
-							<td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>
-							<td id="score-{{task.id}}">{{ task.score|default:'0' }}</td>       
-							<td id="note-{{task.id}}"><a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ task.note }}">{{ task.note|default:'-'|truncatewords:2 }}</a></td>     
-							<td>{{ task.update_at }}</td>
-						</tr>
-
-					{% endfor %}
-					</tbody>
-
-					</table>
-
-				{% else %}
-					<p>Tidak ada tugas.</p>
-				{% endif %}
-			</div>
+									<div class="col-1">
+										<i class="fas fa-file-alt text-primary"></i>
+									</div>
+									<div class="col-10">
+										<a href="{{ task.file.file.url }}" download> Unduh Tugas</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<p>Tidak ada tugas.</p>
+			{% endif %}
 		</div>
 	</div>
-</div>
+</section>
 <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
