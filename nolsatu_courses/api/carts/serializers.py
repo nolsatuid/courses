@@ -4,8 +4,6 @@ from nolsatu_courses.api.courses.serializers import ProductSerializer
 from nolsatu_courses.apps.products.models import Product, Order, Cart
 
 
-# Here add your serializer
-
 class AddCartSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
 
@@ -35,3 +33,12 @@ class ProductCourseSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     product = ProductCourseSerializer()
+
+
+class FullCartSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    carts = CartSerializer(many=True)
+
+
+class CartCountSerializer(serializers.Serializer):
+    count = serializers.IntegerField()
