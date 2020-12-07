@@ -28,7 +28,10 @@ class VendorSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class SimpleCourseSerializer(serializers.ModelSerializer):
+    """
+    Course Serializer that provide short_description
+    """
     author = serializers.CharField(source='author_name')
     featured_image = serializers.CharField(source='featured_image_with_host')
     level = serializers.CharField(source='get_level_display')
@@ -47,7 +50,7 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         fields = ['id', 'title', 'author', 'featured_image', 'level', 'status', 'categories', 
-                  'short_description', 'is_allowed', 'quizzes', 'product', 'slug', 'level', 'vendor']
+                  'short_description', 'is_allowed', 'quizzes', 'product', 'level', 'vendor']
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
@@ -56,6 +59,8 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     level = serializers.CharField(source='get_level_display')
     categories = serializers.CharField(source='category_list')
     description = serializers.SerializerMethodField()
+    product = ProductSerializer(required=False)
+    vendor = VendorSerializer(required=False)
 
     def get_description(self, obj) -> str:
         if settings.FEATURE.get("MARKDOWN_CONTENT"):
@@ -66,7 +71,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories', 'description', 'is_allowed',
-                  'status', 'quizzes']
+                  'status', 'quizzes', 'product', 'vendor']
 
 
 class EnrollDetailSerializer(serializers.ModelSerializer):
@@ -77,9 +82,12 @@ class EnrollDetailSerializer(serializers.ModelSerializer):
         exclude = ("batch", "course", "user", "id")
 
 
-class CourseDetailMergeSerializer(serializers.Serializer):
+class CourseDetailBatchSerializer(serializers.Serializer):
     course = CourseDetailSerializer()
     batch = BatchDetailSerializer(required=False)
+    can_register = serializers.BooleanField()
+    has_enrolled = serializers.BooleanField()
+    enroll = EnrollDetailSerializer(required=False)
 
 
 class CourseEnrollSerializer(serializers.Serializer):
@@ -263,12 +271,7 @@ class MyQuizSerializer(serializers.Serializer):
     score = serializers.FloatField(max_value=100, min_value=0)
 
 
-class MyCourseSerializer(serializers.ModelSerializer):
-    author = serializers.CharField(source='author_name')
-    featured_image = serializers.CharField(source='featured_image_with_host')
-    level = serializers.CharField(source='get_level_display')
-    categories = serializers.CharField(source='category_list')
-    short_description = serializers.SerializerMethodField()
+class SimpleCourseProgress(SimpleCourseSerializer):
     enroll_status = serializers.SerializerMethodField()
     progress = serializers.SerializerMethodField()
 
@@ -277,12 +280,6 @@ class MyCourseSerializer(serializers.ModelSerializer):
 
     def get_enroll_status(self, obj: Courses) -> str:
         return obj.get_enroll(self.context['request'].user).get_status_display()
-
-    def get_short_description(self, obj: Courses) -> str:
-        if settings.FEATURE.get("MARKDOWN_CONTENT"):
-            return prepare_markdown(obj.short_description_md)
-        else:
-            return obj.short_description
 
     class Meta:
         model = Courses

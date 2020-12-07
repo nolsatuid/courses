@@ -158,10 +158,18 @@ class BasicApiDocAuthentication(BasicAuthentication):
             raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
 
 
-class InternalAPIView(APIView):
-    permission_classes = (AllowAny, )
+class InternalAPIMixin:
+    permission_classes = (AllowAny,)
     authentication_classes = (BasicNolSatuAuthentication, UserAPIServiceAuthentication,)
 
 
-class UserAuthAPIView(InternalAPIView):
+class UserAuthMixin(InternalAPIMixin):
     permission_classes = (IsAuthenticated,)
+
+
+class InternalAPIView(InternalAPIMixin, APIView):
+    pass
+
+
+class UserAuthAPIView(UserAuthMixin, InternalAPIView):
+    pass

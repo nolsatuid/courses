@@ -1,17 +1,19 @@
 from django.conf import settings
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from nolsatu_courses.api.authentications import UserAuthAPIView, InternalAPIView
+from nolsatu_courses.api.authentications import UserAuthAPIView, InternalAPIView, InternalAPIMixin, UserAuthMixin
 from nolsatu_courses.api.courses.serializers import (
-    CourseSerializer, CourseDetailMergeSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
+    SimpleCourseSerializer, CourseDetailBatchSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
     ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
     CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer, MyQuizSerializer,
-    MyCourseSerializer,
+    SimpleCourseProgress,
 )
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
@@ -22,12 +24,13 @@ from nolsatu_courses.website.sections.views import get_pagination as get_paginat
 from quiz.models import Sitting
 
 
-class CourseListView(InternalAPIView):
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    tags=['Courses'], operation_description="Get Course List"
+))
+class CourseListView(InternalAPIMixin, ListAPIView):
+    serializer_class = SimpleCourseSerializer
 
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Course List", responses={
-        200: CourseSerializer(many=True)
-    })
-    def get(self, request):
+    def get_queryset(self):
         if self.request.user.is_authenticated and self.request.user.is_superuser:
             courses = Courses.objects.all()
         else:
@@ -36,23 +39,53 @@ class CourseListView(InternalAPIView):
         if self.request.query_params.get('search'):
             courses = courses.filter(title__startswith=self.request.query_params.get('search'))
 
-        serializer = CourseSerializer(courses, many=True)
-        return Response(serializer.data)
+        return courses
 
 
-class MyCourseView(UserAuthAPIView):
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get My Course", responses={
-        200: MyCourseSerializer(many=True)
-    })
-    def get(self, request):
-        courses = Courses.objects.filter(enrolled__user=request.user).all()
-        serializer = MyCourseSerializer(courses, many=True, context={'request': request})
-        return Response(serializer.data)
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    tags=['Courses'], operation_description="Get My Course"
+))
+class MyCourseView(UserAuthMixin, ListAPIView):
+    serializer_class = SimpleCourseProgress
+
+    def get_queryset(self):
+        return Courses.objects.filter(enrolled__user=self.request.user).all()
 
 
-class MyTaskListView(UserAuthAPIView):
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    tags=['Courses'], operation_description="Get Course Detail"
+))
+class CourseDetailView(InternalAPIMixin, RetrieveAPIView):
+    serializer_class = CourseDetailBatchSerializer
+    lookup_field = 'id'
+    queryset = Courses.objects
+
+    def get_object(self):
+        obj = super().get_object()
+        return {
+            "course": obj,
+            "batch": obj.get_last_batch(),
+            'can_register': obj.can_register(self.request.user),
+            'has_enrolled': obj.has_enrolled(self.request.user),
+            'enroll': obj.get_enroll(self.request.user)
+        }
+
+
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    tags=['Courses'], operation_description="Get Course Preview List"
+))
+class CoursePreviewListView(InternalAPIMixin, RetrieveAPIView):
+    serializer_class = CoursePreviewListSerializer
+    lookup_field = 'id'
+    queryset = Courses.objects
+
+
+
+# TODO: Refactor, move to separate package
+
+class MyTaskListView(UserAuthMixin, APIView):
     @swagger_auto_schema(tags=['Task'], operation_description="Get My Grade", responses={
-        200: CourseSerializer(many=True)
+        200: UserReportTaskSerializer(many=True)
     })
     def get(self, request, course_id):
         my_tasks = CollectTask.objects.filter(
@@ -63,37 +96,7 @@ class MyTaskListView(UserAuthAPIView):
         serializer = UserReportTaskSerializer(data, many=True)
         return Response(serializer.data)
 
-
-class CourseDetailView(InternalAPIView):
-
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Course Detail", responses={
-        200: CourseDetailMergeSerializer()
-    })
-    def get(self, request, id):
-        course = get_object_or_404(Courses, id=id)
-        data = {
-            'course': course,
-            'batch': course.get_last_batch(),
-            'has_enrolled': course.has_enrolled(request.user),
-            'enroll': course.get_enroll(request.user)
-        }
-        serializer = CourseDetailMergeSerializer(data)
-        return Response(serializer.data)
-
-
-class CoursePreviewListView(InternalAPIView):
-
-    @swagger_auto_schema(tags=['Courses'], operation_description="Get Course Preview List", responses={
-        200: CoursePreviewListSerializer()
-    })
-    def get(self, request, id):
-        course = get_object_or_404(Courses, id=id)
-        serializer = CoursePreviewListSerializer(course)
-        return Response(serializer.data)
-
-
 class ModulePreviewView(InternalAPIView):
-
     @swagger_auto_schema(tags=['Module'], operation_description="Get Module Preview", responses={
         200: ModulePreviewSerializer()
     })
