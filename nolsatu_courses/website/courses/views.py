@@ -94,6 +94,13 @@ def user_tasks(request, course_id):
 def enroll(request, slug):
     course = get_object_or_404(Courses, slug=slug)
 
+    if course.product and course.product.price > 0:
+        sweetify.error(
+            request, _(f'Kamu harus melakukan pembelian kursus "{course.title}" terlebih dahulu !'),
+            button='OK', icon='error', timer=10000
+        )
+        return redirect('website:courses:details', course.slug)
+
     if course.has_enrolled(request.user):
         sweetify.success(
             request, _(f'Kamu sudah terdaftar di kelas {course.title}'),

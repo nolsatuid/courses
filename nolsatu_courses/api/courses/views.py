@@ -255,6 +255,10 @@ class EnrollCourseView(UserAuthAPIView):
     def get(self, request, id):
         course = get_object_or_404(Courses, id=id)
 
+        if course.product and course.product.price > 0:
+            return ErrorResponse(error_message=_(f'Kamu harus melakuakn pembelian kursus'
+                                                 f' {course.title} terlebih dahulu !'))
+
         if course.has_enrolled(request.user):
             return ErrorResponse(error_message=_(f'Kamu sudah terdaftar di kelas {course.title}'))
 
