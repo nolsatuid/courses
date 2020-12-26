@@ -48,8 +48,10 @@ class NolSatuAuthMiddleware(MiddlewareMixin):
 class JWTAuthCredentialsMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if (not hasattr(request, "user") or request.user.is_anonymous) and JWT_AUTH_HEADER_KEY in request.headers:
+            # LOGIN_URL yang di atur harus memiliki minimal 1 query param.
+            # Dikarenakan saat menambah query next disini menggunakan &
             redirect_response = redirect(
-                settings.LOGIN_URL + f"?next={request.build_absolute_uri()}"
+                settings.LOGIN_URL + f"&next={request.build_absolute_uri()}"
             )
             redirect_response[JWT_AUTH_HEADER_KEY] = request.headers[JWT_AUTH_HEADER_KEY]
             return redirect_response
