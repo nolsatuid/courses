@@ -97,6 +97,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'nolsatu_courses.apps.middleware.NolSatuAuthMiddleware',
     'nolsatu_courses.apps.middleware.JWTAuthCredentialsMiddleware',
+    'nolsatu_courses.apps.middleware.MobileCheckMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',

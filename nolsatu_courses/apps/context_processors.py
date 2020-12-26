@@ -15,7 +15,7 @@ def nolsatu_context(request):
         color_text_top_nav = "dark"
 
     mobile_layout = False
-    if request.GET.get('navbar') == "hidden":
+    if request.GET.get('navbar') == "hidden" or request.is_mobile:
         mobile_layout = True
 
     return {
