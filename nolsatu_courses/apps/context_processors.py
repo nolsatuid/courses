@@ -14,9 +14,7 @@ def nolsatu_context(request):
     else:
         color_text_top_nav = "dark"
 
-    mobile_layout = False
-    if request.GET.get('navbar') == "hidden":
-        mobile_layout = True
+    mobile_layout = request.GET.get('navbar') == "hidden" or request.is_mobile
 
     return {
         'nolsatu_profile_page_url': settings.NOLSATU_PROFILE_PAGE_URL,
