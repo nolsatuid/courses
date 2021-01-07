@@ -4,33 +4,36 @@
 {% block content %}
 <section class="special_cource padding_top">
     <div class="container">
-		<div class="card">
-			<div class="card-header">
-				<h3>{{ title }}</h3>
-			</div>
-            <div class="card-body">
-                <table id="datatable" class="table table-striped">
-                    <thead>
-                        <th>Nomor Order</th>
-                        <th>Status</th>
-                        <th>Tanggal Order</th>
-                        <th>Aksi</th>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                            <tr>
-                                <td>{{ order.number }}</td>
-                                <td>{{ order.status|order_status_display:'True' }}</td>
-                                <td>{{ order.created_at }}</td>
-                                <td>
-                                    <a class="btn btn-sm btn-pill btn-info" href="{% url 'website:orders:details' order.id %}">Detail</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ title }}</h3>
             </div>
-		</div>
-	</div>
+            <div class="card-body">
+                {% for order in orders %}
+
+                <div class="col-sm-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Nomor Order : {{ order.number }}</h5>
+                            <div class="row">
+                                <div class="col-10">
+                                    <a>Status</a> {{ order.status|order_status_display:"True"}}<br>
+                                    <a>Tanggal Order</a> : {{ order.created_at }} <br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+
+                            <a class="btn btn-primary btn-block btn-sm"
+                                href="{% url 'website:orders:details' order.id %}">Detail</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </div>
 </section>
 {% endblock %}
