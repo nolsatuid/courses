@@ -95,7 +95,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'nolsatu_courses.apps.middleware.NolSatuAuthMiddleware',
+    'nolsatu_courses.apps.middleware.SharedSessionAuthMiddleware',
     'nolsatu_courses.apps.middleware.JWTAuthCredentialsMiddleware',
     'nolsatu_courses.apps.middleware.MobileCheckMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
