@@ -71,7 +71,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories', 'description', 'is_allowed',
-                  'status', 'quizzes', 'product', 'vendor']
+                  'status', 'quizzes', 'product', 'vendor', 'slug']
 
 
 class EnrollDetailSerializer(serializers.ModelSerializer):
