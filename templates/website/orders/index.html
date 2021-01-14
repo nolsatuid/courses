@@ -4,35 +4,36 @@
 {% block content %}
 <section class="special_cource padding_top">
     <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <h3>{{ title }}</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    {% for order in orders %}
-                    <div class="col-sm-12 col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Nomor Order : {{ order.number }}</h5>
-                                <div class="row">
-                                    <div class="col-10">
-                                        <a>Status</a>
-                                        <p class="text-mute">{{ order.status|order_status_display:"True"}}</p><br>
-                                        <a>Tanggal Order</a> : <p class="text-muted">{{ order.created_at }}</p> <br>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
 
-                                <a class="btn btn-primary btn-block btn-sm"
-                                    href="{% url 'website:orders:details' order.id %}">Detail</a>
+        <div class="row justify-content-center">
+            <div class="col-xl-5">
+                <div class="section_tittle text-center">
+                    <h2>{{ title }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for order in orders %}
+
+            <div class="col-sm-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Nomor Order : {{ order.number }}</h5>
+                        <div class="row">
+                            <div class="col-10">
+                                <a>Status</a> {{ order.status|order_status_display:"True"}}<br>
+                                <a>Tanggal Order</a> : {{ order.created_at }} <br>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
+                    <div class="card-footer">
+
+                        <a class="btn btn-primary btn-block btn-sm"
+                            href="{% url 'website:orders:details' order.id %}">Detail</a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
 
 
