@@ -286,3 +286,8 @@ class SimpleCourseProgress(SimpleCourseSerializer):
         fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories',
                   'short_description', 'slug', 'enroll_status', 'progress']
 
+
+class CoursesIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Courses
+        fields = ['id']
