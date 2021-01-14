@@ -13,7 +13,7 @@ from nolsatu_courses.api.courses.serializers import (
     SimpleCourseSerializer, CourseDetailBatchSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
     ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
     CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer, MyQuizSerializer,
-    SimpleCourseProgress,
+    SimpleCourseProgress, CoursesIdSerializer,
 )
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
@@ -77,6 +77,15 @@ class CourseDetailView(InternalAPIMixin, RetrieveAPIView):
 class CoursePreviewListView(InternalAPIMixin, RetrieveAPIView):
     serializer_class = CoursePreviewListSerializer
     lookup_field = 'id'
+    queryset = Courses.objects
+
+
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    tags=['Courses'], operation_description="Get Course ID by Slug"
+))
+class CourseIdView(InternalAPIMixin, RetrieveAPIView):
+    serializer_class = CoursesIdSerializer
+    lookup_field = 'slug'
     queryset = Courses.objects
 
 
@@ -304,9 +313,11 @@ class FinishCourseView(UserAuthAPIView):
         if course.progress_percentage(request.user, on_thousand=True) != 100:
             return ErrorResponse(error_message=_(f'Kamu belom menyelesaikan semua materi {course.title}'))
 
-        enroll.status = Enrollment.STATUS.finish
-        if not enroll.finishing_date:
+        if enroll.status != Enrollment.STATUS.finish:
+            enroll.status = Enrollment.STATUS.finish
             enroll.finishing_date = timezone.now().date()
+            enroll.save()
+
             utils.send_notification(request.user, f'Selamat!',
                                     f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
 
