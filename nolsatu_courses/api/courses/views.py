@@ -13,7 +13,7 @@ from nolsatu_courses.api.courses.serializers import (
     SimpleCourseSerializer, CourseDetailBatchSerializer, CourseEnrollSerializer, CoursePreviewListSerializer,
     ModulePreviewSerializer, SectionPreviewSerializer, ModuleDetailSerializer, SectionDetailSerializer,
     CollectTaskSerializer, CourseTrackingListSerializer, UserReportTaskSerializer, MyQuizSerializer,
-    SimpleCourseProgress,
+    SimpleCourseProgress, CoursesIdSerializer,
 )
 from nolsatu_courses.api.response import ErrorResponse
 from nolsatu_courses.api.serializers import MessageSuccesSerializer, ErrorMessageSerializer
@@ -77,6 +77,15 @@ class CourseDetailView(InternalAPIMixin, RetrieveAPIView):
 class CoursePreviewListView(InternalAPIMixin, RetrieveAPIView):
     serializer_class = CoursePreviewListSerializer
     lookup_field = 'id'
+    queryset = Courses.objects
+
+
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    tags=['Courses'], operation_description="Get Course ID by Slug"
+))
+class CourseIdView(InternalAPIMixin, RetrieveAPIView):
+    serializer_class = CoursesIdSerializer
+    lookup_field = 'slug'
     queryset = Courses.objects
 
 

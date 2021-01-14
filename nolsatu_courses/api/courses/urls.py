@@ -18,4 +18,5 @@ urlpatterns = [
     path('my-courses/', views.MyCourseView.as_view(), name='my_courses'),
     path('my-tasks/<int:course_id>', views.MyTaskListView.as_view(), name='my_tasks'),
     path('my-quiz/<int:course_id>', views.MyQuizListView.as_view(), name='my_quiz'),
+    path('course-id/<slug:slug>', views.CourseIdView.as_view(), name='course_id'),
 ]
