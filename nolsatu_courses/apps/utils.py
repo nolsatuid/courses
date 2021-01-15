@@ -90,6 +90,10 @@ def update_user(identificator, type_identificator='id', user=None):
 
 
 def call_internal_api(method, url, **kwargs):
+    if getattr(settings, "ENABLE_MOCK_USER", False):
+        print("User is Mocked, No call internal API")
+        return
+
     method_map = {
         'get': requests.get,
         'post': requests.post,

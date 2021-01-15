@@ -1,50 +1,16 @@
-from functools import partial
-from json import JSONDecodeError
-
 from django.conf import settings
-from django.contrib.auth import SESSION_KEY as AUTH_SESSION_KEY
-from django.contrib.auth.models import AnonymousUser
-from django.core.cache import cache
 from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
-from requests import RequestException
 
-from nolsatu_courses.apps.utils import update_user
+from nolsatu_courses.auth import auth_provider
 
 JWT_AUTH_HEADER_KEY = "X-User-Token"
 
 
-def get_user(request):
-    try:
-        auth_session_user_id = request.session.get(AUTH_SESSION_KEY, None)
-        cache_key = f"USER_CACHE_{auth_session_user_id}" if auth_session_user_id else None
-
-        # No Auth Session
-        if not auth_session_user_id:
-            return AnonymousUser()
-
-        user_cache = cache.get(cache_key)
-
-        # Cache hit
-        if user_cache:
-            return user_cache
-
-        # Get user from other service
-        user = update_user(auth_session_user_id)
-
-        # cache user data
-        cache.set(cache_key, user, 10 * 60)
-
-        return user
-    except (RequestException, JSONDecodeError):
-        return AnonymousUser()
-
-
 class SharedSessionAuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if not hasattr(request, "user") or request.user.is_anonymous:
-            request.user = SimpleLazyObject(partial(get_user, request))
+        request.user = SimpleLazyObject(lambda: auth_provider.get_session_user(request))
 
 
 class JWTAuthCredentialsMiddleware(MiddlewareMixin):
