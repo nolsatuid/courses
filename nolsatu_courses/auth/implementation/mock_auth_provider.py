@@ -52,7 +52,7 @@ class MockAuthProvider(BaseAuthProvider):
     def get_session_user(self, request) -> Union[AnonymousUser, User]:
         return self.get_mock_user(getattr(settings, "MOCK_USER", None))
 
-    def get_credentials_user(self, username, password) -> Union[AnonymousUser, User]:
+    def get_credentials_user(self, username, password) -> User:
         user = self.get_mock_user(username)
         if isinstance(user, AnonymousUser):
             raise AuthException("invalid user")

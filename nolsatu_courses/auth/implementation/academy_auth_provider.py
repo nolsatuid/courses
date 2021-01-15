@@ -40,7 +40,7 @@ class AcademyAuthProvider(BaseAuthProvider):
         except (RequestException, JSONDecodeError):
             return AnonymousUser()
 
-    def get_credentials_user(self, username, password) -> Union[AnonymousUser, User]:
+    def get_credentials_user(self, username, password) -> User:
         credentials = {
             'username': username,
             'password': password
