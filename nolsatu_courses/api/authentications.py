@@ -1,7 +1,6 @@
 from json import JSONDecodeError
 
 import jwt
-import requests
 from django.conf import settings
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils.translation import ugettext_lazy as _
@@ -14,6 +13,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken
 
 from nolsatu_courses.apps.utils import update_user
+from nolsatu_courses.auth import auth_provider
+from nolsatu_courses.auth.base.auth_provider import AuthException
 
 
 class InternalAPIAuthentication(BaseAuthentication):
@@ -127,27 +128,13 @@ class BasicNolSatuAuthentication(BasicAuthentication):
     """
 
     def authenticate_credentials(self, userid, password, request=None):
-        credentials = {
-            'username': userid,
-            'password': password
-        }
-
         if not userid and not password:
             return AnonymousUser(), None
 
-        response = requests.post(f'{settings.NOLSATU_HOST}/api/auth/login', data=credentials)
-        if response.status_code == 200:
-            user_id = response.json()['user']['id']
-
-            user = User.objects.filter(nolsatu__id_nolsatu=user_id).first()
-            if not user:
-                try:
-                    return update_user(user_id), None
-                except (RequestException, JSONDecodeError):
-                    raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
-            return user, None
-        else:
-            raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
+        try:
+            return auth_provider.get_credentials_user(userid, password), None
+        except AuthException as e:
+            raise exceptions.AuthenticationFailed(e.message)
 
 
 class BasicApiDocAuthentication(BasicAuthentication):
