@@ -56,7 +56,8 @@ class Order(models.Model):
         (4, 'failed', _("Failed")),
         (5, 'expired', _("Expired")),
         (6, 'refund', _("Refund")),
-        (7, 'other', _("Other"))
+        (7, 'other', _("Other")),
+        (8, 'canceled', _("Canceled"))
     )
     status = models.SmallIntegerField(choices=STATUS, default=STATUS.created)
     tax = models.IntegerField(_("Pajak"), blank=True, null=True)
