@@ -23,6 +23,22 @@
         object-fit: contain;
         padding-right: 8px;
     }
+
+    .tanggal-order{
+        text-align: right;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .tanggal-order{
+            margin-top: 2%;
+            text-align: left;
+        }
+    }
+    @media only screen and (min-width: 1200px) {
+        .tanggal-order{
+            text-align: right;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -55,13 +71,13 @@
                                     </div>
                                 </div>
                                 <div class="payment-info mt-1">
-                                    <div class="row">
-                                        <div class="col-sm-6">
+                                    <div class="row justify-content-center">
+                                        <div class="col-12 col-sm-6 status-order">
                                             <span>Status Order</span>
                                             <br>
                                             {{ order.status|order_status_display:'True' }}
                                         </div>
-                                        <div class="col-sm-6 text-right">
+                                        <div class="col-12 col-sm-6 tanggal-order">
                                             <span>Tanggal Order</span>
                                             <strong>{{ order.created_at }}</strong>
                                         </div>
@@ -78,17 +94,17 @@
                                 <div class="line-items pt-4">
                                     <div class="headers clearfix">
                                         <div class="row">
-                                            <div class="col-md-6">Nama</div>
-                                            <div class="col-md-6 text-right">Harga</div>
+                                            <div class="col-6">Nama</div>
+                                            <div class="col-6 text-right">Harga</div>
                                         </div>
                                     </div>
                                     <div class="items">
                                         {% for item in order_items %}
                                         <div class="row item">
-                                            <div class="col-md-6 desc">
+                                            <div class="col-6 desc">
                                                 {{ item.name|intcomma }}
                                             </div>
-                                            <div class="col-md-6 amount text-right">
+                                            <div class="col-6 amount text-right">
                                                 Rp. {{ item.price|intcomma }}
                                             </div>
                                         </div>
@@ -101,15 +117,15 @@
                                         </p>
                                         <div class="p-2">
                                             <div class="field">
-                                                <span>Pajak</span>
+                                                <span><h5>Pajak</h5></span>
                                                 <span>Rp. {{ order.tax|intcomma }}</span>
                                             </div>
                                             <div class="field">
-                                                <span>Diskon</span>
+                                                <span><h5>Diskon</h5></span>
                                                 <span>Rp. {{ order.discount|intcomma }}</span>
                                             </div>
                                             <div class="field">
-                                                <span>Total</span>
+                                                <span><h5>Total</h5></span>
                                                 <span>Rp. {{ order.grand_total|intcomma }}</span>
                                             </div>
                                         </div>
