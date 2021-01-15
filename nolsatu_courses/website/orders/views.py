@@ -28,12 +28,10 @@ def details(request, order_id):
 
     # read status
     try:
-        billing = None
+        billing = order.get_transaction()
 
-        if order.status == Order.STATUS.created:
+        if not billing:
             billing = order.create_transaction()
-        elif order.status == Order.STATUS.pending:
-            billing = order.get_transaction()
 
         if billing:
             context['url_finishing_payment'] = billing.snap_redirect_url
