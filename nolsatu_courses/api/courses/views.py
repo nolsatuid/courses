@@ -313,14 +313,14 @@ class FinishCourseView(UserAuthAPIView):
         if course.progress_percentage(request.user, on_thousand=True) != 100:
             return ErrorResponse(error_message=_(f'Kamu belom menyelesaikan semua materi {course.title}'))
 
-        if enroll.status != Enrollment.STATUS.graduate:
-            if enroll.status != Enrollment.STATUS.finish:
-                enroll.status = Enrollment.STATUS.finish
-                enroll.finishing_date = timezone.now().date()
-                enroll.save()
+        if enroll.status != Enrollment.STATUS.graduate and enroll.status != Enrollment.STATUS.finish:
+            
+            enroll.status = Enrollment.STATUS.finish
+            enroll.finishing_date = timezone.now().date()
+            enroll.save()
 
-                utils.send_notification(request.user, f'Selamat!',
-                                        f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
+            utils.send_notification(request.user, f'Selamat!',
+                                    f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
 
             return Response({'message': _(f'Kamu berhasil menyelesaikan kelas {enroll.course.title}')})
         else:
