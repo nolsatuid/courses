@@ -22,3 +22,6 @@ sentry_sdk.init(
 
 FORTUNA_SERVER_URL = "http://127.0.0.1:8000"
 FORTUNA_CLIENT_ACCESS_TOKEN = "some_client_secret"
+
+ENABLE_MOCK_USER=True
+MOCK_USER="admin1"

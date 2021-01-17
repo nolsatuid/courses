@@ -265,7 +265,7 @@ class EnrollCourseView(UserAuthAPIView):
         course = get_object_or_404(Courses, id=id)
 
         if course.product and course.product.price > 0:
-            return ErrorResponse(error_message=_(f'Kamu harus melakuakn pembelian kursus'
+            return ErrorResponse(error_message=_(f'Kamu harus melakukan pembelian kursus'
                                                  f' {course.title} terlebih dahulu !'))
 
         if course.has_enrolled(request.user):
@@ -313,7 +313,8 @@ class FinishCourseView(UserAuthAPIView):
         if course.progress_percentage(request.user, on_thousand=True) != 100:
             return ErrorResponse(error_message=_(f'Kamu belom menyelesaikan semua materi {course.title}'))
 
-        if enroll.status != Enrollment.STATUS.finish:
+        if enroll.status != Enrollment.STATUS.graduate and enroll.status != Enrollment.STATUS.finish:
+            
             enroll.status = Enrollment.STATUS.finish
             enroll.finishing_date = timezone.now().date()
             enroll.save()
@@ -321,7 +322,9 @@ class FinishCourseView(UserAuthAPIView):
             utils.send_notification(request.user, f'Selamat!',
                                     f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
 
-        return Response({'message': _(f'Kamu berhasil menyelesaikan kelas {enroll.course.title}')})
+            return Response({'message': _(f'Kamu berhasil menyelesaikan kelas {enroll.course.title}')})
+        else:
+            return Response({'message': _(f'Kamu Telah Lulus dari kelas {enroll.course.title}')})
 
 
 class MyQuizListView(UserAuthAPIView):

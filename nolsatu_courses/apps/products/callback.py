@@ -25,7 +25,7 @@ class FortunaCallback(RemoteTransactionCallback):
         if not current_order:
             return
 
-        if current_order.status != Order.STATUS.pending:
+        if current_order.status not in (Order.STATUS.pending, Order.STATUS.created):
             return
 
         current_order.status = remote_status_map[transaction.status]

@@ -74,7 +74,7 @@ class Order(models.Model):
         if not self.remote_transaction_id:
             transaction = create_remote_transaction(self.user.id, self.grand_total)
             self.remote_transaction_id = transaction.id
-            self.status = Order.STATUS.pending
+            self.status = Order.STATUS.created
             self.save()
 
             return transaction
