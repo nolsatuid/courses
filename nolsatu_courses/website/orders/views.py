@@ -3,6 +3,7 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from fortuna_client.exception import FortunaException
@@ -57,13 +58,15 @@ def details(request, order_id):
 @transaction.atomic
 def cancel(request, order_id):
     order = get_object_or_404(Order, user=request.user, id=order_id)
-
+    context = dict()
     # canceling transaction
     try:
         order.cancel_transaction()
     except FortunaException:
         logging.exception("Failed to cancel transaction")
+        context['message'] = 'Server Sedang Mengalami Masalah'
     except requests.ConnectionError:
-        logging.exception("Failed to cancel transaction")
+        logging.exception("Failed to cancel transaction, Connection Error")
+        context['message'] = 'Koneksi Jaringan Error'
 
-    return redirect('website:orders:index')
+    return JsonResponse(context, status=200)

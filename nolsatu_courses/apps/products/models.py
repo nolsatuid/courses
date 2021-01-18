@@ -104,7 +104,7 @@ class Order(models.Model):
         utils.send_notification(self.user, "Notifikasi Pembayaran Adinusa", content_string)
 
     def cancel_transaction(self) -> None:
-        if self.remote_transaction_id and self.status == Order.STATUS.pending or self.status == Order.STATUS.created:
+        if self.remote_transaction_id and self.status in (Order.STATUS.created, Order.STATUS.pending):
             return cancel_remote_transaction(self.remote_transaction_id)
 
         return None
