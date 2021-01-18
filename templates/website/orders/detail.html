@@ -134,9 +134,11 @@
                                 </div>
                             </div>
                             <div class="footer">
+                                {% if order.get_status_display == 'Pending' or order.get_status_display == 'Created' %}
                                 <button type="button" class="button btn-primary" onclick="confirmCancelTransaction('{% url 'website:orders:cancel' order.id %}', '{% url 'website:orders:index' %}')">
                                     Batalkan Order
                                 </button>
+                                {% endif %}
                             </div>
                             {% else %}
                             <div class="col-md-5 p-1 m-1" style="top:70px;">
