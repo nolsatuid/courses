@@ -67,6 +67,6 @@ def cancel(request, order_id):
         context['message'] = 'Server Sedang Mengalami Masalah'
     except requests.ConnectionError:
         logging.exception("Failed to cancel transaction, Connection Error")
-        context['message'] = 'Koneksi Jaringan Error'
+        context['message'] = 'Sedang Mengalami Gangguan'
 
     return JsonResponse(context, status=200)
