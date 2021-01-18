@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from fortuna_client.transaction import RemoteTransaction
-from fortuna_client.utils import create_remote_transaction, get_remote_transaction
+from fortuna_client.utils import create_remote_transaction, get_remote_transaction, cancel_remote_transaction
 
 from model_utils import Choices
 
@@ -56,7 +56,8 @@ class Order(models.Model):
         (4, 'failed', _("Failed")),
         (5, 'expired', _("Expired")),
         (6, 'refund', _("Refund")),
-        (7, 'other', _("Other"))
+        (7, 'other', _("Other")),
+        (8, 'canceled', _("Canceled"))
     )
     status = models.SmallIntegerField(choices=STATUS, default=STATUS.created)
     tax = models.IntegerField(_("Pajak"), blank=True, null=True)
@@ -101,6 +102,12 @@ class Order(models.Model):
 
         content_string = render_to_string("website/orders/notification_email.html", context)
         utils.send_notification(self.user, "Notifikasi Pembayaran Adinusa", content_string)
+
+    def cancel_transaction(self) -> None:
+        if self.remote_transaction_id and self.status in (Order.STATUS.created, Order.STATUS.pending):
+            return cancel_remote_transaction(self.remote_transaction_id)
+
+        return None
 
 
 class OrderItem(models.Model):

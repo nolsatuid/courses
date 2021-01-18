@@ -134,6 +134,11 @@
                                 </div>
                             </div>
                             <div class="footer">
+                                {% if order.get_status_display == 'Pending' or order.get_status_display == 'Created' %}
+                                <button type="button" class="button btn-primary" onclick="confirmCancelTransaction('{% url 'website:orders:cancel' order.id %}', '{% url 'website:orders:index' %}')">
+                                    Batalkan Order
+                                </button>
+                                {% endif %}
                             </div>
                             {% else %}
                             <div class="col-md-5 p-1 m-1" style="top:70px;">
@@ -151,4 +156,43 @@
             </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+         function confirmCancelTransaction(url, redirect=null) {
+            let params = {
+               title: "Konfirmasi Pembatalan!",
+               text: "Apakah Anda yakin akan membatalkan order kursus anda?",
+               icon: 'question',
+               showCancelButton: true,
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: 'Ya, Batalkan'
+            }
+
+            Swal.fire(params).then((result) => {
+               if (result.value) {
+                   $.ajax({
+                       method: 'GET',
+                       url: url,
+                       success: function(data) {
+                           if (data.message){
+                               Swal.fire(data.message, 'Coba Beberapa Saat Lagi !', 'error');
+                           }else{
+                               Swal.fire('Berhasil membatalkan order');
+                               if (redirect){
+                                  location.href = redirect
+                               }else{
+                                  location.reload();
+                               }
+                           }
+                       }
+                   });
+               } else {
+                   Swal.fire('Gagal membatalkan order');
+               }
+            });
+         };
+</script>
 {% endblock %}
