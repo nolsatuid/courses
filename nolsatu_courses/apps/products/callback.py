@@ -18,6 +18,7 @@ class FortunaCallback(RemoteTransactionCallback):
             RemoteTransaction.Status.EXPIRED: Order.STATUS.expired,
             RemoteTransaction.Status.REFUND: Order.STATUS.refund,
             RemoteTransaction.Status.OTHER: Order.STATUS.other,
+            RemoteTransaction.Status.CANCELED: Order.STATUS.canceled,
         }
 
         current_order: typing.Optional[Order] = Order.objects.filter(remote_transaction_id=transaction.id).first()
