@@ -124,7 +124,7 @@ def teacher_required(a_func):
     @wraps(a_func, assigned=available_attrs(a_func))
     def _wrapped_view(request, *args, **kwargs):
         user = get_object_or_404(User, username=request.user, is_active=True)
-        if not user and user.nolsatu.role != MemberNolsatu.ROLE.trainer:
+        if not user or user.nolsatu.role != MemberNolsatu.ROLE.trainer:
             raise Http404()
         return a_func(request, *args, **kwargs)
 
