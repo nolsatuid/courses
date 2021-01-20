@@ -9,35 +9,42 @@
             </a>
         </div>
         <div class="card-body">
-            <table id="datatable" class="table table-striped">
-                <thead>
-                    <th>Kategori</th>
-                    <th class="text-center">Aksi</th>
-                </thead>
-                <tbody>
-                    {% for x in categories %}
+
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Kategori</th>
+                        <th class="text-center">Aksi</th>
+                    </thead>
+                    <tbody>
+                        {% for x in categories %}
                         <tr>
-                            <td >{{ x.category }}</td>
+                            <td>{{ x.category }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'vendors:quizzes:edit_category' x.id %}">
+                                <a class="btn btn-sm btn-pill btn-secondary"
+                                    href="{% url 'vendors:quizzes:edit_category' x.id %}">
                                     <i class="fas fa-edit"></i> Edit</a>
-                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'vendors:quizzes:sub_category' x.id %}">
+                                <a class="btn btn-sm btn-pill btn-secondary"
+                                    href="{% url 'vendors:quizzes:sub_category' x.id %}">
                                     <i class="fas fa-eye"></i> Lihat Sub Kategori</a>
                                 <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
-                                   data-target="#confirmDeleteModal" data-delete-url="{% url 'vendors:quizzes:delete_category' x.id %}"
-                                   data-name="{{ x.category}}"> <i class="fas fa-trash"></i> Hapus</a>
+                                    data-target="#confirmDeleteModal"
+                                    data-delete-url="{% url 'vendors:quizzes:delete_category' x.id %}"
+                                    data-name="{{ x.category}}"> <i class="fas fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
 
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="border-bottom:none;">
@@ -51,7 +58,7 @@
             </div>
             <div class="modal-footer" style="border-top:none;">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+                <a id="confirmDeleteButton" class="btn btn-success">Ya</a>
             </div>
         </div>
     </div>
@@ -60,7 +67,7 @@
 
 {% block extra_js %}
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#datatable').DataTable();
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);

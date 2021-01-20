@@ -14,6 +14,7 @@
             <a href="{% url 'vendors:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
         </div>
         <div class="card-body">
+            <div class="table-responsive">
             <table id="datatable" class="table table-striped">
                 <thead>
                     <th>Judul</th>
@@ -50,6 +51,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
         <div class="card-footer">
             <a href="{% url 'vendors:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>

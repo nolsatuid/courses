@@ -3,12 +3,12 @@
 {% load static widget_tweaks %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}" />
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <style>
-thead input {
-    width: 100%;
-}
+    thead input {
+        width: 100%;
+    }
 </style>
 {% endblock  %}
 
@@ -17,15 +17,15 @@ thead input {
     <div class="card">
         <div class="card-header">
             <!-- Filter form -->
-            <form method="GET" >
+            <form method="GET">
                 <div class="form-group row">
                     {% for field in form %}
-                        <div class="form-group col-md-3">
-                            {% render_field field|add_class:"form-control"%}
-                            <span class="help_text">
-                                {{ field.errors }}
-                            </span>
-                        </div>
+                    <div class="form-group col-md-3">
+                        {% render_field field|add_class:"form-control"%}
+                        <span class="help_text">
+                            {{ field.errors }}
+                        </span>
+                    </div>
                     {% endfor %}
                 </div>
                 <div class="form-group row">
@@ -36,9 +36,11 @@ thead input {
             </form>
             <!-- end filter form -->
         </div>
-        <div class="card-body">            
+        <div class="card-body">
             {% if tasks %}
-                <h5 class="mb-5"><strong>Kursus : </strong> {{ course }}</h5>
+            <h5 class="mb-5"><strong>Kursus : </strong> {{ course }}</h5>
+
+            <div class="table-responsive">
                 <table id="datatable" class="table table-striped">
                     <thead>
                         <th>Nama</th>
@@ -53,36 +55,55 @@ thead input {
                     </thead>
                     <tbody>
                         {% for task in tasks %}
-                            <tr>
-                                <td>{{ task.user.get_full_name }}</td>
-                                <td>{{ task.user.username }}</td> 
-                                <td>{{ task.section.title }}</td>
-                                <td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>
-                                <td id="score-{{task.id}}">{{ task.score|default:'0' }}</td>       
-                                <td id="note-{{task.id}}"><a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ task.note }}">{{ task.note|default:'-'|truncatewords:2 }}</a></td>     
-                                <td>{{ task.create_at }}</td>
-                                <td id="update_at-{{task.id}}">{{ task.update_at }}</td>
-                                <td width="10px">
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons" id="btn-status-{{task.id}}">
-                                        <label class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </label>
-                                        <label class="btn {% if task.status == 2 %} btn-warning {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">
-                                            <i class="fas fa-redo"></i>
-                                        </label>
-                                        <label class="btn {% if task.status == 4 %} bg-maroon {% else %} btn-secondary {% endif %}" data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">
-                                            <i class="fas fa-times-circle"></i>
-                                        </label>
-                                        <label class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}"  data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">
-                                            <i class="fas fa-check-circle"></i>
-                                        </label>
-                                    </div>
-                                </td>  
-                            </tr>
+                        <tr>
+                            <td>{{ task.user.get_full_name }}</td>
+                            <td>{{ task.user.username }}</td>
+                            <td>{{ task.section.title }}</td>
+                            <td><a href="{{ task.file.file.url }}" download> Unduh Tugas</td>
+                            <td id="score-{{task.id}}">{{ task.score|default:'0' }}</td>
+                            <td id="note-{{task.id}}"><a href="#" data-toggle="modal" data-target="#noteModal"
+                                    data-note="{{ task.note }}">{{ task.note|default:'-'|truncatewords:2 }}</a></td>
+                            <td>{{ task.create_at }}</td>
+                            <td id="update_at-{{task.id}}">{{ task.update_at }}</td>
+                            <td width="10px">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                    id="btn-status-{{task.id}}">
+                                    <label
+                                        class="btn {% if task.status == 1 %} btn-info {% else %} btn-secondary {% endif %}"
+                                        data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}"
+                                        data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip"
+                                        title="Diperiksa">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </label>
+                                    <label
+                                        class="btn {% if task.status == 2 %} btn-warning {% else %} btn-secondary {% endif %}"
+                                        data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}"
+                                        data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip"
+                                        title="Mengulang">
+                                        <i class="fas fa-redo"></i>
+                                    </label>
+                                    <label
+                                        class="btn {% if task.status == 4 %} bg-maroon {% else %} btn-secondary {% endif %}"
+                                        data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}"
+                                        data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip"
+                                        title="Tidak Lulus">
+                                        <i class="fas fa-times-circle"></i>
+                                    </label>
+                                    <label
+                                        class="btn {% if task.status == 3 %} bg-olive {% else %} btn-secondary {% endif %}"
+                                        data-toggle="modal" data-target="#confirmStatus" data-id="{{ task.id }}"
+                                        data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip"
+                                        title="Lulus">
+                                        <i class="fas fa-check-circle"></i>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-            {% endif %}            
+            </div>
+            {% endif %}
         </div>
         <div class="card-footer">
 
@@ -96,7 +117,7 @@ thead input {
             <div class="modal-header">
                 <h4 class="modal-title">Apakah Anda yakin?</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
+                    <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -106,14 +127,15 @@ thead input {
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nilai</label>
                     <div class="col-sm-10">
-                      <input type="number" min="0" max="100" class="form-control" id="score" placeholder="0 - 100">
+                        <input type="number" min="0" max="100" class="form-control" id="score" placeholder="0 - 100">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Catatan</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control" width="100%" id="note" placeholder="Tulis catatan disini.."></textarea>
+                        <textarea class="form-control" width="100%" id="note"
+                            placeholder="Tulis catatan disini.."></textarea>
                     </div>
                 </div>
             </div>
@@ -125,7 +147,8 @@ thead input {
     </div>
 </div>
 
-<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -149,8 +172,8 @@ thead input {
 <script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('[data-tooltip="tooltip"]').tooltip();  
+    $(document).ready(function () {
+        $('[data-tooltip="tooltip"]').tooltip();
 
         $('#datatable').DataTable();
         filterSection();
@@ -179,12 +202,12 @@ thead input {
         })
     })
 
-    $('#id_course').on('change', function() {
-        filterSection();  
-        filterBatch();    
+    $('#id_course').on('change', function () {
+        filterSection();
+        filterBatch();
     });
 
-    function filterSection(){
+    function filterSection() {
         var id_section = $('#id_section').val();
         var list_section = $('#id_section');
         var course = $('#id_course').val();
@@ -195,28 +218,29 @@ thead input {
             },
             dataType: 'json',
             success: function (data) {
-                list_section.html("'<option value=''>Pilih Bab</option>'");  
-                $.each(data.section, function(key,value) {
-                    if(id_section == value.id){
+                list_section.html("'<option value=''>Pilih Bab</option>'");
+                $.each(data.section, function (key, value) {
+                    if (id_section == value.id) {
                         list_section.append(
-                            '<option value="'+value.id+'" selected>'+value.name+'</option>'
-                        ); 
-                    }else{
+                            '<option value="' + value.id + '" selected>' + value.name +
+                            '</option>'
+                        );
+                    } else {
                         list_section.append(
-                            '<option value="'+value.id+'">'+value.name+'</option>'
-                        ); 
-                    }                      
-                });                      
+                            '<option value="' + value.id + '">' + value.name + '</option>'
+                        );
+                    }
+                });
             },
             error: function (data) {
                 if (data.status == 500) {
                     alert("Terjadi kesalahan, mohon refresh halaman.");
                 }
             }
-        }); 
+        });
     }
 
-    function filterBatch(){
+    function filterBatch() {
         var id_batch = $('#id_batch').val();
         var list_batch = $('#id_batch');
         var course = $('#id_course').val();
@@ -227,40 +251,42 @@ thead input {
             },
             dataType: 'json',
             success: function (data) {
-                list_batch.html("'<option value=''>Pilih Angkatan</option>'");  
-                $.each(data.batch, function(key,value) {
-                    if(id_batch == value.id){
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");
+                $.each(data.batch, function (key, value) {
+                    if (id_batch == value.id) {
                         list_batch.append(
-                            '<option value="'+value.id+'" selected>Angkatan '+value.name+'</option>'
-                        ); 
-                    }else{
+                            '<option value="' + value.id + '" selected>Angkatan ' + value.name +
+                            '</option>'
+                        );
+                    } else {
                         list_batch.append(
-                            '<option value="'+value.id+'">Angkatan '+value.name+'</option>'
-                        ); 
-                    }                      
-                });                      
+                            '<option value="' + value.id + '">Angkatan ' + value.name +
+                            '</option>'
+                        );
+                    }
+                });
             },
             error: function (data) {
                 if (data.status == 500) {
                     alert("Terjadi kesalahan, mohon refresh halaman.");
                 }
             }
-        }); 
+        });
     }
 
-    function changeStatus(){
+    function changeStatus() {
         $('#confirmStatus').modal('hide');
         var task_id = $('#task_id').val();
         var status_id = $('#status_id').val();
-        var btn_status = $('#btn-status-'+task_id);
-        var note = $('#note-'+task_id);
-        var score = $('#score-'+task_id);
-        var update_at = $('#update_at-'+task_id);
+        var btn_status = $('#btn-status-' + task_id);
+        var note = $('#note-' + task_id);
+        var score = $('#score-' + task_id);
+        var update_at = $('#update_at-' + task_id);
         var nilai = 0;
-        if(document.getElementById("score").value != ""){
+        if (document.getElementById("score").value != "") {
             nilai = document.getElementById("score").value;
         }
-        
+
         $.ajax({
             url: "{% url 'backoffice:tasks:ajax_change_status' %}",
             data: {
@@ -271,72 +297,106 @@ thead input {
             },
             dataType: 'json',
             success: function (data) {
-                btn_status.html("");  
-                note.html('<a href="#" data-toggle="modal" data-target="#noteModal" data-note="'+document.getElementById("note").value+'">'+document.getElementById("note").value.split(" ").splice(0,2).join(" ")+' ...</a>');
-                document.getElementById("note").value = "" 
+                btn_status.html("");
+                note.html('<a href="#" data-toggle="modal" data-target="#noteModal" data-note="' + document
+                    .getElementById("note").value + '">' + document.getElementById("note").value.split(
+                        " ").splice(0, 2).join(" ") + ' ...</a>');
+                document.getElementById("note").value = ""
                 score.html(nilai);
-                document.getElementById("score").value = "" 
+                document.getElementById("score").value = ""
                 update_at.html(data.update_at)
-                if(status_id == 1){
+                if (status_id == 1) {
                     btn_status.append(
-                        '<label class="btn btn-info" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">'+
-                            '<i class="fas fa-pencil-alt"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">'+
-                            '<i class="fas fa-redo"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">'+
-                            '<i class="fas fa-times-circle"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">'+
-                            '<i class="fas fa-check-circle"></i>'+
+                        '<label class="btn btn-info" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">' +
+                        '<i class="fas fa-pencil-alt"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">' +
+                        '<i class="fas fa-redo"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">' +
+                        '<i class="fas fa-times-circle"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">' +
+                        '<i class="fas fa-check-circle"></i>' +
                         '</label>'
-                    ); 
-                }else if(status_id == 2){
+                    );
+                } else if (status_id == 2) {
                     btn_status.append(
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">'+
-                            '<i class="fas fa-pencil-alt"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-warning" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">'+
-                            '<i class="fas fa-redo"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">'+
-                            '<i class="fas fa-times-circle"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">'+
-                            '<i class="fas fa-check-circle"></i>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">' +
+                        '<i class="fas fa-pencil-alt"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-warning" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">' +
+                        '<i class="fas fa-redo"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">' +
+                        '<i class="fas fa-times-circle"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">' +
+                        '<i class="fas fa-check-circle"></i>' +
                         '</label>'
-                    ); 
-                }else if(status_id == 3){
+                    );
+                } else if (status_id == 3) {
                     btn_status.append(
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">'+
-                            '<i class="fas fa-pencil-alt"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">'+
-                            '<i class="fas fa-redo"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">'+
-                            '<i class="fas fa-times-circle"></i>'+
-                        '</label>'+
-                        '<label class="btn bg-olive" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">'+
-                            '<i class="fas fa-check-circle"></i>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">' +
+                        '<i class="fas fa-pencil-alt"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">' +
+                        '<i class="fas fa-redo"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">' +
+                        '<i class="fas fa-times-circle"></i>' +
+                        '</label>' +
+                        '<label class="btn bg-olive" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">' +
+                        '<i class="fas fa-check-circle"></i>' +
                         '</label>'
-                    ); 
-                }else if(status_id == 4){
+                    );
+                } else if (status_id == 4) {
                     btn_status.append(
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">'+
-                            '<i class="fas fa-pencil-alt"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">'+
-                            '<i class="fas fa-redo"></i>'+
-                        '</label>'+
-                        '<label class="btn bg-maroon" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">'+
-                            '<i class="fas fa-times-circle"></i>'+
-                        '</label>'+
-                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="'+task_id+'" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">'+
-                            '<i class="fas fa-check-circle"></i>'+
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="1" data-url="" data-name="Diperiksa" data-tooltip="tooltip" title="Diperiksa">' +
+                        '<i class="fas fa-pencil-alt"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="2" data-url="" data-name="Mengulang" data-tooltip="tooltip" title="Mengulang">' +
+                        '<i class="fas fa-redo"></i>' +
+                        '</label>' +
+                        '<label class="btn bg-maroon" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="4" data-url="" data-name="Tidak Lulus" data-tooltip="tooltip" title="Tidak Lulus">' +
+                        '<i class="fas fa-times-circle"></i>' +
+                        '</label>' +
+                        '<label class="btn btn-secondary" data-toggle="modal" data-target="#confirmStatus" data-id="' +
+                        task_id +
+                        '" data-status="3" data-url="" data-name="Lulus" data-tooltip="tooltip" title="Lulus">' +
+                        '<i class="fas fa-check-circle"></i>' +
                         '</label>'
-                    ); 
+                    );
                 }
             },
             error: function (data) {
@@ -344,10 +404,10 @@ thead input {
                     alert("Terjadi kesalahan, mohon refresh halaman.");
                 }
             }
-        }); 
+        });
     }
 
-    $( "#score" ).on("keypress keyup blur",function (event) {    
+    $("#score").on("keypress keyup blur", function (event) {
         $(this).val($(this).val().replace(/[^\d].+/, ""));
         if ((event.which < 48 || event.which > 57)) {
             event.preventDefault();

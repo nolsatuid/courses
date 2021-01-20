@@ -11,52 +11,69 @@
     <div class="card">
         <div class="card-header">
             <h4 class="float-left">Modul pada Kursus {{ course.title }}</h4>
-            <a href="{% url 'backoffice:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Modul</a>
+            <a href="{% url 'backoffice:modules:add' course.id%}" class="btn btn-sm btn-info float-right"><i
+                    class="fas fa-plus"></i> Tambah Modul</a>
         </div>
         <div class="card-body">
-            <table id="datatable" class="table table-striped">
-                <thead>
-                    <th>Judul</th>
-                    <th>Urutan</th>
-                    <th>Terlihat</th>
-                    <th>Draf</th>
-                    <th>Aksi</th>
-                </thead>
-                <tbody>
-                    {% for module in modules %}
+
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Judul</th>
+                        <th>Urutan</th>
+                        <th>Terlihat</th>
+                        <th>Draf</th>
+                        <th>Aksi</th>
+                    </thead>
+                    <tbody>
+                        {% for module in modules %}
                         <tr>
-                            <td><a href="{% url 'backoffice:modules:details' module.id %}" >{{ module.title }}</a></td>
+                            <td><a href="{% url 'backoffice:modules:details' module.id %}">{{ module.title }}</a></td>
                             <td>{{ module.order }}</td>
-                            <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ module.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ module.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                            </td>
+                            <td>{{ module.draft|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                            </td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Aksi
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Aksi
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{% url 'website:modules:preview' module.slug %}" >Pratayang</a>
-                                        <a class="dropdown-item" href="{% url 'backoffice:modules:edit' module.id %}" >Ubah</a>
-                                        <button class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:modules:delete' module.id %}" data-name="{{ module.title}}" >Hapus</button>
+                                        <a class="dropdown-item"
+                                            href="{% url 'website:modules:preview' module.slug %}">Pratayang</a>
+                                        <a class="dropdown-item"
+                                            href="{% url 'backoffice:modules:edit' module.id %}">Ubah</a>
+                                        <button class="dropdown-item" data-toggle="modal"
+                                            data-target="#confirmDeleteModal"
+                                            data-delete-url="{% url 'backoffice:modules:delete' module.id %}"
+                                            data-name="{{ module.title}}">Hapus</button>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
+                                        <a class="dropdown-item"
+                                            href="{% url 'backoffice:sections:index' module.id %}">Lihat Bab</a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="{% url 'backoffice:modules:preview' module.id %}?download=true" class="dropdown-item">Ekspor PDF</a>
-                                        <a href="{% url 'backoffice:modules:preview' module.id %}" class="dropdown-item">Preview PDF</a>
+                                        <a href="{% url 'backoffice:modules:preview' module.id %}?download=true"
+                                            class="dropdown-item">Ekspor PDF</a>
+                                        <a href="{% url 'backoffice:modules:preview' module.id %}"
+                                            class="dropdown-item">Preview PDF</a>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
-            <a href="{% url 'backoffice:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
+            <a href="{% url 'backoffice:courses:index'%}"
+                class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -70,7 +87,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+                <a id="confirmDeleteButton" class="btn btn-success">Ya</a>
             </div>
         </div>
     </div>
