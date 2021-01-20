@@ -6,57 +6,71 @@
         <div class="card-header">
             <h4 class="float-left">{{ title }}</h4>
             <span class="float-right">
-                <a href="{% url 'backoffice:courses:import_data' %}" class="btn btn-sm btn-secondary"><i class="fas fa-plus"></i> Impor Kursus</a>
-                <a href="{% url 'backoffice:courses:add' %}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Tambah Kursus</a>
+                <a href="{% url 'backoffice:courses:import_data' %}" class="btn btn-sm btn-secondary"><i
+                        class="fas fa-plus"></i> Impor Kursus</a>
+                <a href="{% url 'backoffice:courses:add' %}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i>
+                    Tambah Kursus</a>
             </span>
         </div>
         <div class="card-body">
-            <table id="datatable" class="table table-striped">
-                <thead>
-                    <th>Judul</th>
-                    <th>Level</th>
-                    <th>Terlihat</th>
-                    <th>Diperbolehkan</th>
-                    <th>Status</th>
-                    <th>Author</th>
-                    <th>Aksi</th>
-                </thead>
-                <tbody>
-                    {% for courses in courses %}
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Judul</th>
+                        <th>Level</th>
+                        <th>Terlihat</th>
+                        <th>Diperbolehkan</th>
+                        <th>Status</th>
+                        <th>Author</th>
+                        <th>Aksi</th>
+                    </thead>
+                    <tbody>
+                        {% for courses in courses %}
                         <tr>
                             <td><a href="{% url 'backoffice:courses:details' courses.id %}">{{ courses.title }}</a></td>
                             <td>{{ courses.get_level_display }}</td>
-                            <td>{{ courses.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
-                            <td>{{ courses.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}</td>
+                            <td>{{ courses.is_visible|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                            </td>
+                            <td>{{ courses.is_allowed|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
+                            </td>
                             <td>{{ courses.get_status_display }}</td>
                             <td>{{ courses.author }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn bg-gray-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Aksi
+                                    <button type="button" class="btn bg-gray-dark dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Aksi
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{% url 'website:courses:details' courses.slug %}">Pratayang</a>
-                                        <a class="dropdown-item" href="{% url 'backoffice:courses:edit' courses.id %}">Ubah</a>
-                                        <a class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:courses:delete' courses.id %}" data-name="{{ courses.title}}">Hapus</a>
+                                        <a class="dropdown-item"
+                                            href="{% url 'website:courses:details' courses.slug %}">Pratayang</a>
+                                        <a class="dropdown-item"
+                                            href="{% url 'backoffice:courses:edit' courses.id %}">Ubah</a>
+                                        <a class="dropdown-item" data-toggle="modal" data-target="#confirmDeleteModal"
+                                            data-delete-url="{% url 'backoffice:courses:delete' courses.id %}"
+                                            data-name="{{ courses.title}}">Hapus</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{% url 'backoffice:modules:index' courses.id %}">Lihat Modul</a>
+                                        <a class="dropdown-item"
+                                            href="{% url 'backoffice:modules:index' courses.id %}">Lihat Modul</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{% url 'backoffice:courses:export_data' courses.id %}">Ekspor data</a>
+                                        <a class="dropdown-item"
+                                            href="{% url 'backoffice:courses:export_data' courses.id %}">Ekspor data</a>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
 
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -70,7 +84,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+                <a id="confirmDeleteButton" class="btn btn-success">Ya</a>
             </div>
         </div>
     </div>
@@ -79,7 +93,7 @@
 
 {% block extra_js %}
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#datatable').DataTable();
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);

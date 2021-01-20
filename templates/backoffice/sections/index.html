@@ -15,6 +15,8 @@
             <a href="{% url 'backoffice:sections:add' module.id%}" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Bab</a>
         </div>
         <div class="card-body">
+
+            <div class="table-responsive">
             <table id="datatable" class="table table-striped">
                 <thead>
                     <th>Judul</th>
@@ -52,6 +54,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
         <div class="card-footer">
             <a href="{% url 'backoffice:courses:index'%}" class="btn btn-sm btn-outline-primary float-right ml-2">Kembali ke Kursus</a>

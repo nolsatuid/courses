@@ -5,45 +5,51 @@
     <div class="card">
         <div class="card-header">
             <span class="float-right">
-                <a href="{% url 'backoffice:vouchers:add' %}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Tambah Kupon</a>
+                <a href="{% url 'backoffice:vouchers:add' %}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i>
+                    Tambah Kupon</a>
             </span>
         </div>
         <div class="card-body">
-            <table id="datatable" class="table table-striped">
-                <thead>
-                    <th>Kode Kupon</th>
-                    <th>Jumlah</th>
-                    <th>Produk</th>
-                    <th>Berlaku</th>
-                    <th>Berakhir</th>
-                    <th class="text-center">Aksi</th>
-                </thead>
-                <tbody>
-                    {% for v in vouchers %}
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Kode Kupon</th>
+                        <th>Jumlah</th>
+                        <th>Produk</th>
+                        <th>Berlaku</th>
+                        <th>Berakhir</th>
+                        <th class="text-center">Aksi</th>
+                    </thead>
+                    <tbody>
+                        {% for v in vouchers %}
                         <tr>
-                            <td><a href="{% url 'backoffice:vouchers:detail' v.id %}" >{{ v.code }}</a></td>
+                            <td><a href="{% url 'backoffice:vouchers:detail' v.id %}">{{ v.code }}</a></td>
                             <td>{{ v.qty }}</td>
                             <td>{{ v.get_products }}</td>
                             <td>{{ v.start_date|date:'d M Y' }}</td>
                             <td>{{ v.end_date|date:'d M Y' }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-pill btn-secondary" href="{% url 'backoffice:vouchers:edit' v.id %}">
+                                <a class="btn btn-sm btn-pill btn-secondary"
+                                    href="{% url 'backoffice:vouchers:edit' v.id %}">
                                     <i class="fas fa-edit"></i> Ubah</a>
                                 <a href="#" class="btn btn-sm btn-pill btn-secondary" data-toggle="modal"
-                                   data-target="#confirmDeleteModal" data-delete-url="{% url 'backoffice:vouchers:delete' v.id %}"
-                                   data-name="{{ v.code }}"> <i class="fas fa-trash"></i> Hapus</a>
+                                    data-target="#confirmDeleteModal"
+                                    data-delete-url="{% url 'backoffice:vouchers:delete' v.id %}"
+                                    data-name="{{ v.code }}"> <i class="fas fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
 
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -57,7 +63,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                <a id="confirmDeleteButton" class="btn btn-success" >Ya</a>
+                <a id="confirmDeleteButton" class="btn btn-success">Ya</a>
             </div>
         </div>
     </div>
@@ -66,7 +72,7 @@
 
 {% block extra_js %}
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#datatable').DataTable();
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
