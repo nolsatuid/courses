@@ -33,7 +33,8 @@ urlpatterns = [
     path('quiz/', include('quiz.urls')),
     path('markdownx/', include('markdownx.urls')),
     path('vendors/', include('nolsatu_courses.vendors.urls')),
-    path('fortuna/', include('fortuna_client.urls'))
+    path('fortuna/', include('fortuna_client.urls')),
+    path('teachersroom/', include('nolsatu_courses.teachersroom.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

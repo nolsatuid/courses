@@ -659,3 +659,11 @@ class CertSetting(models.Model):
 
     def __str__(self):
         return self.course.title
+
+
+class Teach(models.Model):
+    user = models.ForeignKey(User, related_name='teaches', on_delete=models.CASCADE)
+    batch = models.ForeignKey(Batch, related_name='teaches', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id)
