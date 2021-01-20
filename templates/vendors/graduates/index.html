@@ -4,7 +4,7 @@
 {% load static widget_tweaks %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}" />
 {% endblock  %}
 
 {% block content %}
@@ -12,15 +12,15 @@
     <div class="card">
         <div class="card-header">
             <!-- Filter form -->
-            <form method="GET" >
+            <form method="GET">
                 <div class="form-group row">
                     {% for field in form %}
-                        <div class="form-group col-md-3">
-                            {% render_field field|add_class:"form-control"%}
-                            <span class="help_text">
-                                {{ field.errors }}
-                            </span>
-                        </div>
+                    <div class="form-group col-md-3">
+                        {% render_field field|add_class:"form-control"%}
+                        <span class="help_text">
+                            {{ field.errors }}
+                        </span>
+                    </div>
                     {% endfor %}
                 </div>
                 <div class="form-group row">
@@ -32,32 +32,38 @@
             <!-- end filter form -->
         </div>
         <div class="card-body">
-            <table id="datatable" class="table table-striped">
-                <thead>
-                    <th>Nama</th>
-                    <th>Username</th>
-                    <th>Tanggal Mendaftar</th>
-                    <th>Tanggal Menyelesaikan</th>
-                    <th>Nilai Akhir</th>
-                    <th>Catatan</th>
-                    <th>Aksi</th>
-                </thead>
-                <tbody>
-                    {% for graduate in graduates %}
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Nama</th>
+                        <th>Username</th>
+                        <th>Tanggal Mendaftar</th>
+                        <th>Tanggal Menyelesaikan</th>
+                        <th>Nilai Akhir</th>
+                        <th>Catatan</th>
+                        <th>Aksi</th>
+                    </thead>
+                    <tbody>
+                        {% for graduate in graduates %}
                         <tr>
                             <td>{{ graduate.user.get_full_name }}</td>
                             <td>{{ graduate.user.username }}</td>
                             <td>{{ graduate.date_enrollment }}</td>
                             <td>{{ graduate.finishing_date }}</td>
                             <td>{{ graduate.final_score }}</td>
-                            <td id="note-{{graduate.id}}"><a href="#" data-toggle="modal" data-target="#noteModal" data-note="{{ graduate.note }}">{{ graduate.note|default:'-'|truncatewords:2 }}</a></td>
+                            <td id="note-{{graduate.id}}"><a href="#" data-toggle="modal" data-target="#noteModal"
+                                    data-note="{{ graduate.note }}">{{ graduate.note|default:'-'|truncatewords:2 }}</a>
+                            </td>
                             <td>
-                                <a class="btn btn-sm btn-pill bg-navy" href="{% url 'backoffice:graduates:regenerate_certificate' graduate.user.nolsatu.id_nolsatu %}">Perbarui Sertifikat</a>
+                                <a class="btn btn-sm btn-pill bg-navy"
+                                    href="{% url 'backoffice:graduates:regenerate_certificate' graduate.user.nolsatu.id_nolsatu %}">Perbarui
+                                    Sertifikat</a>
                             </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
 
@@ -65,7 +71,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -88,7 +95,7 @@
 {% block extra_js %}
 <script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#datatable').DataTable();
 
         $('#noteModal').on('show.bs.modal', function (event) {
@@ -101,11 +108,11 @@
         filterBatch();
     })
 
-    $('#id_course').on('change', function() {
+    $('#id_course').on('change', function () {
         filterBatch();
     });
 
-    function filterBatch(){
+    function filterBatch() {
         var id_batch = $('#id_batch').val();
         var list_batch = $('#id_batch');
         var course = $('#id_course').val();
@@ -117,14 +124,16 @@
             dataType: 'json',
             success: function (data) {
                 list_batch.html("'<option value=''>Pilih Angkatan</option>'");
-                $.each(data.batch, function(key,value) {
-                    if(id_batch == value.id){
+                $.each(data.batch, function (key, value) {
+                    if (id_batch == value.id) {
                         list_batch.append(
-                            '<option value="'+value.id+'" selected>Angkatan '+value.batch+'</option>'
+                            '<option value="' + value.id + '" selected>Angkatan ' + value
+                            .batch + '</option>'
                         );
-                    }else{
+                    } else {
                         list_batch.append(
-                            '<option value="'+value.id+'">Angkatan '+value.batch+'</option>'
+                            '<option value="' + value.id + '">Angkatan ' + value.batch +
+                            '</option>'
                         );
                     }
                 });

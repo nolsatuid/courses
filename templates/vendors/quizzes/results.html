@@ -2,7 +2,7 @@
 {% load static widget_tweaks%}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}" />
 {% endblock  %}
 
 {% block content %}
@@ -10,15 +10,15 @@
     <div class="card">
         <div class="card-header">
             <!-- Filter form -->
-            <form method="GET" >
+            <form method="GET">
                 <div class="form-group row">
                     {% for field in form %}
-                        <div class="form-group col-md-3">
-                            {% render_field field|add_class:"form-control"%}
-                            <span class="help_text">
-                                {{ field.errors }}
-                            </span>
-                        </div>
+                    <div class="form-group col-md-3">
+                        {% render_field field|add_class:"form-control"%}
+                        <span class="help_text">
+                            {{ field.errors }}
+                        </span>
+                    </div>
                     {% endfor %}
                 </div>
                 <div class="form-group row">
@@ -31,22 +31,26 @@
             <!-- end filter form -->
         </div>
         <div class="card-body">
-            <table id="datatable" class="table table-striped">
-                <thead>
-                    <th>Kursus</th>
-                    <th style="width:10%">Aksi</th>
-                </thead>
-                <tbody>
-                    {% for quiz in quizzes %}
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Kursus</th>
+                        <th style="width:10%">Aksi</th>
+                    </thead>
+                    <tbody>
+                        {% for quiz in quizzes %}
                         <tr>
-                            <td>{{ quiz.title }}</td> 
+                            <td>{{ quiz.title }}</td>
                             <td>
-                                <a class="btn btn-sm btn-pill btn-info" href="{% url 'vendors:quizzes:detail_result' quiz.id batch %}"><i class="fas fa-eye"></i> Lihat Hasil</a>
-                            </td>  
+                                <a class="btn btn-sm btn-pill btn-info"
+                                    href="{% url 'vendors:quizzes:detail_result' quiz.id batch %}"><i
+                                        class="fas fa-eye"></i> Lihat Hasil</a>
+                            </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
 
@@ -58,16 +62,16 @@
 {% block extra_js %}
 <script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#datatable').DataTable();               
-        filterBatch();    
+    $(document).ready(function () {
+        $('#datatable').DataTable();
+        filterBatch();
     })
 
-    $('#id_course').on('change', function() {
-        filterBatch();      
+    $('#id_course').on('change', function () {
+        filterBatch();
     });
 
-    function filterBatch(){
+    function filterBatch() {
         var id_batch = $('#id_batch').val();
         var list_batch = $('#id_batch');
         var course = $('#id_course').val();
@@ -78,25 +82,27 @@
             },
             dataType: 'json',
             success: function (data) {
-                list_batch.html("'<option value=''>Pilih Angkatan</option>'");  
-                $.each(data.batch, function(key,value) {
-                    if(id_batch == value.id){
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");
+                $.each(data.batch, function (key, value) {
+                    if (id_batch == value.id) {
                         list_batch.append(
-                            '<option value="'+value.id+'" selected>Angkatan '+value.batch+'</option>'
-                        ); 
-                    }else{
+                            '<option value="' + value.id + '" selected>Angkatan ' + value
+                            .batch + '</option>'
+                        );
+                    } else {
                         list_batch.append(
-                            '<option value="'+value.id+'">Angkatan '+value.batch+'</option>'
-                        ); 
-                    }                      
-                });                      
+                            '<option value="' + value.id + '">Angkatan ' + value.batch +
+                            '</option>'
+                        );
+                    }
+                });
             },
             error: function (data) {
                 if (data.status == 500) {
                     alert("Terjadi kesalahan, mohon refresh halaman.");
                 }
             }
-        }); 
+        });
     }
 </script>
 {% endblock %}
