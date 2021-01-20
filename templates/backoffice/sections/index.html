@@ -86,7 +86,9 @@
 {% block extra_js %}
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#datatable').DataTable();
+        $('#datatable').DataTable( {
+            "order": [[ 1, "asc" ]]
+        } );
         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var url = button.data('delete-url');

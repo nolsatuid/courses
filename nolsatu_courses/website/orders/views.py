@@ -37,7 +37,8 @@ def details(request, order_id):
             billing = order.create_transaction()
 
         if billing:
-            context['url_finishing_payment'] = billing.snap_redirect_url
+            if order.status in (Order.STATUS.created, Order.STATUS.pending):
+                context['url_finishing_payment'] = billing.snap_redirect_url
             context['exp_payment'] = billing.expired_at
     except FortunaException:
         context['message'] = 'Server Sedang Mengalami Masalah'

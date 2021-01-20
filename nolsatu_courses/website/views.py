@@ -31,7 +31,7 @@ def index(request):
 def search(request):
     search_query = request.GET.get("q", "")
     course_search = Courses.objects.filter(
-        Q(title__contains=search_query) | Q(description__contains=search_query))
+        Q(title__icontains=search_query) | Q(description__icontains=search_query))
     if request.user and request.user.is_superuser:
         courses = course_search
     else:
