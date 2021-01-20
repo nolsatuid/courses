@@ -10,7 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.http import Http404, HttpResponse
 from django.contrib.auth.models import User
 
-from nolsatu_courses.apps.courses.models import Courses, Module, Section
+from nolsatu_courses.apps.courses.models import Module, Section
+from nolsatu_courses.apps.accounts.models import MemberNolsatu
 
 
 def enroll_required(view_func):
@@ -113,3 +114,18 @@ def ajax_login_required(view_func):
         return HttpResponse(response)
 
     return wrapper
+
+
+def teacher_required(a_func):
+    """
+    Decorator for views, that checks the user on nolsatu
+    """
+
+    @wraps(a_func, assigned=available_attrs(a_func))
+    def _wrapped_view(request, *args, **kwargs):
+        user = get_object_or_404(User, username=request.user, is_active=True)
+        if not user and user.nolsatu.role != MemberNolsatu.ROLE.trainer:
+            raise Http404()
+        return a_func(request, *args, **kwargs)
+
+    return _wrapped_view
