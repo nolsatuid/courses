@@ -17,6 +17,7 @@ class FormFilter(FormFilterStudent):
         self.fields['course'].required = True
         
         self.fields['batch'].choices = self.get_batch_choice()
+        self.fields['course'].choices = self.get_courses_choice()
 
     def get_data(self):
         self.enrolls = Enrollment.objects.select_related('course', 'user').filter(
@@ -45,11 +46,15 @@ class FormFilter(FormFilterStudent):
         choice_batchs.insert(0, (None, 'Pilih Batch'))
         return choice_batchs
 
-    def get_courses(self):
+    def get_courses_choice(self):
         user = get_object_or_404(User, id=self.user.id, nolsatu__role=MemberNolsatu.ROLE.trainer)
-        courses = Courses.objects.all()
-        choice_courses = [(course.id, course.courses) for course in courses]
-        choice_courses.insert(0, ())
+        batch_id = Teach.objects.filter(user=user).values_list('batch')
+        courses_id = Batch.objects.values_list('course', flat=True).filter(pk__in=batch_id).distinct()
+        courses = Courses.objects.filter(pk__in=courses_id)
+        choice_courses = [(course.id, course.title) for course in courses]
+        choice_courses.insert(0, (None, 'Pilih Kursus'))
+
+        return choice_courses
 
     def global_progress(self):
         try:

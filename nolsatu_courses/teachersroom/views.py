@@ -22,7 +22,7 @@ def index(request):
             'global_progress': form.global_progress()
         }
         quiz_stats = form.get_quiz_stats()
-
+        
     context = {
         'menu_active': 'dashboard',
         'title': _('Dashboard'),
