@@ -104,20 +104,6 @@ def detail_result(request, id, batch):
 
 
 @superuser_required
-def participant_result(request, id, batch):
-    sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
-
-    context = {
-        'menu_active': 'quiz',
-        'title': _('Detail Hasil Partisipan'),
-        'sitting': sitting,
-        'questions': sitting.get_questions(with_answers=True),
-        'batch': batch
-    }
-    return render(request, 'backoffice/quizzes/participant-results.html', context)
-
-
-@superuser_required
 def ajax_filter_sub_category(request):
     category = request.GET.get('category', None)
     data = {
