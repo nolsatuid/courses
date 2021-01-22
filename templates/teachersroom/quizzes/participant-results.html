@@ -1,0 +1,60 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load static i18n quiz_tags tags_courses %}
+
+{% block content %}
+<div class="col-sm-12">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:quizzes:results'%}">Hasil Kuis</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'backoffice:quizzes:detail_result' sitting.quiz.id batch %}">Detail</a></li>
+        <li class="breadcrumb-item active">Hasil Kuis Partisipan</li>
+    </ol>
+</div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-1">Partisipan</dt>
+                <dd class="col-sm-11">{{ sitting.user.get_full_name }} ({{ sitting.user }})</dd>
+                <dt class="col-sm-1">Mulai</dt>
+                <dd class="col-sm-11">{{ sitting.start }}</dd>
+                <dt class="col-sm-1">Selesai</dt>
+                <dd class="col-sm-11">{{ sitting.end }}</dd>
+                <dt class="col-sm-1">Durasi</dt>
+                <dd class="col-sm-11">{{ sitting.get_duration|sectoduration }}</dd>
+                <dt class="col-sm-1">{% trans "Score" %}</dt>
+                <dd class="col-sm-11">{{ sitting.get_percent_correct }}%</dd>
+            </dl>
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>{% trans "Question" %}</th>
+                    <th>{% trans "User answer" %}</th>
+                    <th>{% trans "Status" %}</th>
+                  </tr>
+                </thead>				  
+                <tbody>
+              {% for question in questions %}				  
+                  <tr>
+                    <td>
+                      {{ question.content }}
+                      {% if question.figure %}
+                      <div style="max-width: 100px;"><img src="{{ question.figure.url }}" alt="{{ question.figure }}"/></div>
+                      {% endif %}
+                    </td>
+                    <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
+                    <td>
+                      {% if question.id in sitting.get_incorrect_questions %}
+                        <p class="text-danger">{% trans "incorrect" %}</p>
+                      {% else %}
+                        <p class="text-success">{% trans "Correct" %}</p>
+                      {% endif %}
+                    </td>
+                  </tr>				  
+              {% endfor %}				  
+                </tbody>				  
+              </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

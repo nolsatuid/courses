@@ -12,6 +12,7 @@ from nolsatu_courses.apps.courses.models import Enrollment, Batch
 from nolsatu_courses.apps.decorators import superuser_required
 from nolsatu_courses.apps.utils import call_internal_api
 from .forms import FormFilterStudent
+from ...apps.accounts.models import MemberNolsatu
 
 
 @superuser_required
@@ -107,12 +108,29 @@ def regenerate_certificate(request, user_id):
 
 @superuser_required
 def ajax_filter_batch(request):
+    """ a view ajax filter used to filtering batch by course
+    ...
+    Ajax Filter batch by condition user role
+    ----------------------------------------
+        - backoffice: all batch
+        - vendor: batch in course filter by vendor
+        - trainer: batch have assigned to teachers
+    """
+
     course = request.GET.get('course', None)
+
     data = {
         'batch': []
     }
+
     if course:
-        batch = Batch.objects.filter(course=course)
+        if request.user.nolsatu.role == MemberNolsatu.ROLE.vendor:
+            batch = Batch.objects.filter(course=course, course__vendor__user__email=request.user.email)
+        elif request.user.nolsatu.role == MemberNolsatu.ROLE.trainer:
+            batch = Batch.objects.filter(course=course, teaches__user__email=request.user.email)
+        else:
+            batch = Batch.objects.filter(course=course)
+
         data['batch'] = [
             {
                 'id': b.id,
