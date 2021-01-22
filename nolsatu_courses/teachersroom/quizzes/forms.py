@@ -7,13 +7,6 @@ from nolsatu_courses.apps.courses.models import Courses, Batch
 
 
 class TrainerFormFilterQuizzes(FormFilterQuizzes):
-    course = forms.ModelChoiceField(
-        queryset=Courses.objects.all(), empty_label=_("Pilih Kursus")
-    )
-    batch = forms.ModelChoiceField(
-        queryset=Batch.objects.all(), empty_label=_("Pilih Angkatan")
-    )
-
     def get_data(self):
         quizzes = Quiz.objects.filter(courses=self.cleaned_data['course'])
 

@@ -1,4 +1,4 @@
-{% extends 'backoffice/base-adminlte.html' %}
+{% extends 'teachersroom/base-adminlte.html' %}
 {% load static tags_courses %}
 
 {% block extra_css %}
@@ -8,7 +8,7 @@
 {% block content %}
 <div class="col-sm-12">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'backoffice:quizzes:results'%}">Hasil Kuis</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'teachersroom:quizzes:results'%}">Hasil Kuis</a></li>
         <li class="breadcrumb-item active">Detail Hasil Kuis</li>
     </ol>
 </div>
@@ -41,7 +41,7 @@
                             <td>{{ result.get_status_display }}</td>
                             <td>
                                 <a class="btn btn-sm btn-pill btn-info"
-                                    href="{% url 'backoffice:quizzes:participant_result' result.id batch %}"><i
+                                    href="#"><i
                                         class="fas fa-eye"></i> Lihat Detail</a>
                             </td>
                         </tr>
