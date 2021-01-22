@@ -1,15 +1,22 @@
+from nolsatu_courses.apps.accounts.models import MemberNolsatu
 from operator import itemgetter, attrgetter
 
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
 from nolsatu_courses.backoffice.graduates.forms import FormFilterStudent
-from nolsatu_courses.apps.courses.models import Enrollment
+from nolsatu_courses.apps.courses.models import Batch, Courses, Enrollment, Teach
 
 
 class FormFilter(FormFilterStudent):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         self.progresses = []
+        self.user = user
         super().__init__(*args, **kwargs)
         self.fields['batch'].required = True
         self.fields['course'].required = True
+        
+        self.fields['batch'].choices = self.get_batch_choice()
 
     def get_data(self):
         self.enrolls = Enrollment.objects.select_related('course', 'user').filter(
@@ -29,6 +36,20 @@ class FormFilter(FormFilterStudent):
             })
 
         return sorted(data, key=lambda value: value['progress'], reverse=True)
+
+    def get_batch_choice(self):
+        user = get_object_or_404(User, id=self.user.id, nolsatu__role=MemberNolsatu.ROLE.trainer)
+        batch_id = Teach.objects.filter(user=user).values_list('batch')
+        batchs = Batch.objects.filter(pk__in=batch_id)
+        choice_batchs = [(batch.id, batch.batch) for batch in batchs]
+        choice_batchs.insert(0, (None, 'Pilih Batch'))
+        return choice_batchs
+
+    def get_courses(self):
+        user = get_object_or_404(User, id=self.user.id, nolsatu__role=MemberNolsatu.ROLE.trainer)
+        courses = Courses.objects.all()
+        choice_courses = [(course.id, course.courses) for course in courses]
+        choice_courses.insert(0, ())
 
     def global_progress(self):
         try:
