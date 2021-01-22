@@ -43,3 +43,18 @@ def detail_result(request, id, batch):
         'batch': batch_trainer
     }
     return render(request, 'teachersroom/quizzes/detail-results.html', context)
+
+
+@teacher_required
+def participant_result(request, id, batch):
+    sitting = get_object_or_404(Sitting.objects.select_related('user', 'quiz'), id=id)
+    batch_trainer = get_object_or_404(Batch, id=batch, teaches__user__email=request.user.email)
+
+    context = {
+        'menu_active': 'quiz',
+        'title': _('Detail Hasil Partisipan'),
+        'sitting': sitting,
+        'questions': sitting.get_questions(with_answers=True),
+        'batch': batch_trainer
+    }
+    return render(request, 'teachersroom/quizzes/participant-results.html', context)

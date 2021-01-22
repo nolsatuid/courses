@@ -1,11 +1,11 @@
-{% extends 'backoffice/base-adminlte.html' %}
+{% extends 'teachersroom/base-adminlte.html' %}
 {% load static i18n quiz_tags tags_courses %}
 
 {% block content %}
 <div class="col-sm-12">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'backoffice:quizzes:results'%}">Hasil Kuis</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'backoffice:quizzes:detail_result' sitting.quiz.id batch %}">Detail</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'teachersroom:quizzes:results'%}">Hasil Kuis</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'teachersroom:quizzes:detail_result' sitting.quiz.id batch.id %}">Detail</a></li>
         <li class="breadcrumb-item active">Hasil Kuis Partisipan</li>
     </ol>
 </div>
