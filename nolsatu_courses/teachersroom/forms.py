@@ -40,7 +40,7 @@ class FormFilter(FormFilterStudent):
 
     def get_batch_choice(self):
         user = get_object_or_404(User, id=self.user.id, nolsatu__role=MemberNolsatu.ROLE.trainer)
-        batch_id = Teach.objects.filter(user=user).values_list('batch')
+        batch_id = Teach.objects.filter(user=user).values_list('batch', flat=True)
         batchs = Batch.objects.filter(pk__in=batch_id)
         choice_batchs = [(batch.id, batch.batch) for batch in batchs]
         choice_batchs.insert(0, (None, 'Pilih Batch'))
@@ -48,7 +48,7 @@ class FormFilter(FormFilterStudent):
 
     def get_courses_choice(self):
         user = get_object_or_404(User, id=self.user.id, nolsatu__role=MemberNolsatu.ROLE.trainer)
-        batch_id = Teach.objects.filter(user=user).values_list('batch')
+        batch_id = Teach.objects.filter(user=user).values_list('batch', flat=True)
         courses_id = Batch.objects.values_list('course', flat=True).filter(pk__in=batch_id).distinct()
         courses = Courses.objects.filter(pk__in=courses_id)
         choice_courses = [(course.id, course.title) for course in courses]

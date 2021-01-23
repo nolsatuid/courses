@@ -168,31 +168,41 @@ class Courses(ModelMeta, models.Model):
         """
         untuk mendapatkan jumlah step dari suatu course
         """
-        modules_count = self.modules.all().count()
-        sections_count = self.modules.aggregate(Count('sections'))['sections__count']
-        count = modules_count + sections_count
-        return count
+        try:
+            modules_count = self.modules.all().count()
+            sections_count = self.modules.aggregate(Count('sections'))['sections__count']
+            count = modules_count + sections_count
+            return count
+        except ZeroDivisionError:
+            return 0
 
     def number_of_activity_step(self, user):
         """
         untuk mendapatkan jumlah step course dari activity user
         """
-        if user == AnonymousUser():
+        try:
+            if user == AnonymousUser():
+                return 0
+            count = self.activities_course.filter(user=user).count()
+            return count
+        except ZeroDivisionError:
             return 0
-        count = self.activities_course.filter(user=user).count()
-        return count
 
     def progress_percentage(self, user, on_thousand=True):
         """
         mendapatkan progres persentase pengerjaan dan penyelesaian tugas
         """
         # persetase dari jumlah step
-        step_activity = self.number_of_activity_step(user)
-        step_course = self.number_of_step()
-        progress_on_decimal = step_activity / step_course
+        try:
 
-        # persentasi dari pengerjaan tugas
-        collect_tasks_on_decimal = self.progress_tasks(user)
+            step_activity = self.number_of_activity_step(user)
+            step_course = self.number_of_step()
+            progress_on_decimal = step_activity / step_course
+
+            # persentasi dari pengerjaan tugas
+            collect_tasks_on_decimal = self.progress_tasks(user)
+        except ZeroDivisionError:
+            return 0
 
         # progress dari semuanya
         if collect_tasks_on_decimal <= 0:

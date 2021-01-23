@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Enrollment, Batch
 from nolsatu_courses.apps.decorators import superuser_required
+from django.contrib.auth.decorators import login_required
 from nolsatu_courses.apps.utils import call_internal_api
 from .forms import FormFilterStudent
 
@@ -105,7 +106,7 @@ def regenerate_certificate(request, user_id):
     return redirect('backoffice:graduates:index')
 
 
-@superuser_required
+@login_required
 def ajax_filter_batch(request):
     course = request.GET.get('course', None)
     data = {
