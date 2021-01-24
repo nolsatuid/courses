@@ -1,0 +1,116 @@
+{% extends 'teachersroom/base-adminlte.html' %}
+{% load static %}
+{% load tags_courses %}
+{% load static widget_tweaks %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'adminlte/plugins/datatables/datatables.min.css' %}" />
+{% endblock  %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <!-- Filter form -->
+            <form method="GET">
+                <div class="form-group row">
+                    {% for field in form %}
+                    <div class="form-group col-md-3">
+                        {% render_field field|add_class:"form-control"%}
+                        <span class="help_text">
+                            {{ field.errors }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary btn-pill">Menyaring</button>
+                    </div>
+                </div>
+            </form>
+            <!-- end filter form -->
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped">
+                    <thead>
+                        <th>Nama</th>
+                        <th>Username</th>
+                        <th>Mendaftar</th>
+                        <th>Menyelesaikan</th>
+                        <th>Task Lulus</th>
+                        <th>Task Mengulang</th>
+                        <th>Task Diperiksa</th>
+                    </thead>
+                    <tbody>
+                        {% for candidate in candidate %}
+                        <tr>
+                            <td>{{ candidate.enroll.user.get_full_name }}</td>
+                            <td>{{ candidate.enroll.user.username }}</td>
+                            <td>{{ candidate.enroll.date_enrollment }}</td>
+                            <td>{{ candidate.enroll.finishing_date }}</td>
+                            <td>{{ candidate.task.graduated }}</td>
+                            <td>{{ candidate.task.repeat }}</td>
+                            <td>{{ candidate.task.review }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datatable').DataTable();
+        filterBatch();
+    })
+
+    $('#id_course').on('change', function () {
+        filterBatch();
+    });
+
+    function filterBatch() {
+        var id_batch = $('#id_batch').val();
+        var list_batch = $('#id_batch');
+        var course = $('#id_course').val();
+        $.ajax({
+            url: '{% url "backoffice:graduates:ajax_filter_batch" %}',
+            data: {
+                'course': course
+            },
+            dataType: 'json',
+            success: function (data) {
+                list_batch.html("'<option value=''>Pilih Angkatan</option>'");
+                $.each(data.batch, function (key, value) {
+                    if (id_batch == value.id) {
+                        list_batch.append(
+                            '<option value="' + value.id + '" selected>Angkatan ' + value
+                            .batch + '</option>'
+                        );
+                    } else {
+                        list_batch.append(
+                            '<option value="' + value.id + '">Angkatan ' + value.batch +
+                            '</option>'
+                        );
+                    }
+                });
+            },
+            error: function (data) {
+                if (data.status == 500) {
+                    alert("Terjadi kesalahan, mohon refresh halaman.");
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
