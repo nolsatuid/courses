@@ -1,4 +1,4 @@
-{% extends 'backoffice/base-adminlte.html' %}
+{% extends 'teachersroom/base-adminlte.html' %}
 {% load static %}
 {% load tags_courses %}
 {% load static widget_tweaks %}
@@ -37,28 +37,22 @@
                     <thead>
                         <th>Nama</th>
                         <th>Username</th>
-                        <th>Tanggal Mendaftar</th>
-                        <th>Tanggal Menyelesaikan</th>
-                        <th>Nilai Akhir</th>
-                        <th>Catatan</th>
-                        <th>Aksi</th>
+                        <th>Mendaftar</th>
+                        <th>Menyelesaikan</th>
+                        <th>Task Lulus</th>
+                        <th>Task Mengulang</th>
+                        <th>Task Diperiksa</th>
                     </thead>
                     <tbody>
-                        {% for graduate in graduates %}
+                        {% for candidate in candidate %}
                         <tr>
-                            <td>{{ graduate.user.get_full_name }}</td>
-                            <td>{{ graduate.user.username }}</td>
-                            <td>{{ graduate.date_enrollment }}</td>
-                            <td>{{ graduate.finishing_date }}</td>
-                            <td>{{ graduate.final_score }}</td>
-                            <td id="note-{{graduate.id}}"><a href="#" data-toggle="modal" data-target="#noteModal"
-                                    data-note="{{ graduate.note }}">{{ graduate.note|default:'-'|truncatewords:2 }}</a>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-pill bg-navy"
-                                    href="{% url 'backoffice:graduates:regenerate_certificate' graduate.user.nolsatu.id_nolsatu %}">Perbarui
-                                    Sertifikat</a>
-                            </td>
+                            <td>{{ candidate.enroll.user.get_full_name }}</td>
+                            <td>{{ candidate.enroll.user.username }}</td>
+                            <td>{{ candidate.enroll.date_enrollment }}</td>
+                            <td>{{ candidate.enroll.finishing_date }}</td>
+                            <td>{{ candidate.task.graduated }}</td>
+                            <td>{{ candidate.task.repeat }}</td>
+                            <td>{{ candidate.task.review }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -71,25 +65,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Catatan Tugas</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p id="noteMessage"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -98,15 +73,6 @@
     $(document).ready(function () {
         $('#datatable').DataTable();
         filterBatch();
-
-        $('#noteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var note = button.data('note');
-
-            var modal = $(this);
-            modal.find('#noteMessage').html(note);
-        })
-
     })
 
     $('#id_course').on('change', function () {

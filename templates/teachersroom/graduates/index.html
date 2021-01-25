@@ -1,4 +1,4 @@
-{% extends 'backoffice/base-adminlte.html' %}
+{% extends 'teachersroom/base-adminlte.html' %}
 {% load static %}
 {% load tags_courses %}
 {% load static widget_tweaks %}
@@ -41,7 +41,6 @@
                         <th>Tanggal Menyelesaikan</th>
                         <th>Nilai Akhir</th>
                         <th>Catatan</th>
-                        <th>Aksi</th>
                     </thead>
                     <tbody>
                         {% for graduate in graduates %}
@@ -53,11 +52,6 @@
                             <td>{{ graduate.final_score }}</td>
                             <td id="note-{{graduate.id}}"><a href="#" data-toggle="modal" data-target="#noteModal"
                                     data-note="{{ graduate.note }}">{{ graduate.note|default:'-'|truncatewords:2 }}</a>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-pill bg-navy"
-                                    href="{% url 'backoffice:graduates:regenerate_certificate' graduate.user.nolsatu.id_nolsatu %}">Perbarui
-                                    Sertifikat</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -106,7 +100,6 @@
             var modal = $(this);
             modal.find('#noteMessage').html(note);
         })
-
     })
 
     $('#id_course').on('change', function () {
