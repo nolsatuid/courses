@@ -12,7 +12,11 @@
               alt="{{ course.featured_image.name}}"
             />
             <div class="card-header">
-              <h3 class="card-title">{{ course.title }}</h3>
+              <h3 class="card-title">
+              <a href="{% url 'website:courses:details' course.slug %}">
+              {{ course.title }}
+              </a>
+              </h3>
               <div class="card-tools">
                 <span class="badge badge-primary">{{ course.enrolled.count }} Peserta</span>
               </div>
