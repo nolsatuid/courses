@@ -81,6 +81,12 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item">
+                <a href="{% url 'backoffice:batchs:index' %}" class="nav-link {% if menu_active == 'batch' %}active{% endif %}">
+                    <i class="nav-icon fas fa-bookmark"></i>
+                    <p>Kelas</p>
+                </a>
+            </li>
             <li class="nav-item {% if menu_active == 'products' %}has-treeview menu-open{% endif %}">
                 <a href="#" class="nav-link {% if menu_active == 'products' %}active{% endif %}">
                     <i class="nav-icon fas fa-tags"></i>
@@ -103,7 +109,7 @@
             </li>
             <li class="nav-item {% if menu_active == 'vouchers' %}has-treeview menu-open{% endif %}">
                 <a href="#" class="nav-link {% if menu_active == 'vouchers' %}active{% endif %}">
-                    <i class="fas fa-hand-scissors"></i>
+                    <i class="nav-icon fas fa-hand-scissors"></i>
                     <p>Kupon<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
@@ -218,12 +224,6 @@
                         </a>
                     </li>
                 </ul>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'backoffice:batchs:index' %}" class="nav-link {% if menu_active == 'batch' %}active{% endif %}">
-                    <i class="nav-icon fas fa-bookmark"></i>
-                    <p>Angkatan</p>
-                </a>
             </li>
             <li class="nav-item">
                 <a href="{% url 'website:logout' %}" class="nav-link {% if menu_active == '' %}active{% endif %}">

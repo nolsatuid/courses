@@ -507,6 +507,9 @@ class Batch(models.Model):
         super().save(*args, **kwargs)
         cache.delete(f'last-batch-{self.course.id}')
 
+    def instructor_list(self):
+        return ", ".join(teach.user.first_name for teach in self.teaches.all())
+
 
 class Enrollment(models.Model):
     user = models.ForeignKey(User, related_name='enroll', on_delete=models.CASCADE)
