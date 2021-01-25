@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from nolsatu_courses.apps.accounts.models import MemberNolsatu
 from django.conf import settings
 from django.core.cache import cache
 
@@ -15,6 +17,7 @@ def nolsatu_context(request):
         color_text_top_nav = "dark"
 
     mobile_layout = request.GET.get('navbar') == "hidden" or request.is_mobile
+    member = MemberNolsatu.objects.filter(user=request.user).first()
 
     return {
         'nolsatu_profile_page_url': settings.NOLSATU_PROFILE_PAGE_URL,
@@ -34,5 +37,6 @@ def nolsatu_context(request):
         'hide_site_name': appearance.get('hide_site_name', False),
         'color_text_top_nav': color_text_top_nav,
         'bg_top_nav': bg_top_nav,
-        'mobile_layout': mobile_layout
+        'mobile_layout': mobile_layout,
+        'member': member
     }
