@@ -6,16 +6,16 @@
         <div class="card-header">
             <h4 class="float-left">{{ title }}</h4>
             <a href="{% url 'backoffice:batchs:add' %}" class="btn btn-sm btn-info float-right"><i
-                    class="fas fa-plus"></i> Tambah Angkatan</a>
+                    class="fas fa-plus"></i> Tambah Kelas</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table id="datatable" class="table table-striped">
                     <thead>
-                        <th>Angkatan</th>
-                        <th>Kursus</th>
+                        <th>Kelas</th>
                         <th>Tanggal Mulai</th>
                         <th>Tanggal Selesai</th>
+                        <th>Instruktur</th>
                         <th>Status Aktif</th>
                         <th>Link Grup</th>
                         <th>Aksi</th>
@@ -23,11 +23,10 @@
                     <tbody>
                         {% for batch in batchs %}
                         <tr>
-                            <td><a href="{% url 'backoffice:batchs:details' batch.id %}">Angkatan {{ batch.batch }}</a>
-                            </td>
-                            <td>{{ batch.course.title }}</td>
+                            <td><a href="{% url 'backoffice:batchs:details' batch.id %}"><strong>{{ batch.course.title }}</strong> ({{ batch.batch }})</a></td>
                             <td>{{ batch.start_date }}</td>
                             <td>{{ batch.end_date }}</td>
+                            <td>{{ batch.instructor_list }}</td>
                             <td>{{ batch.is_active|yesno:"<span class='badge badge-success'><i class='fa fa-check'></i></span>, <span class='badge badge-danger'><i class='fa fa-times'></i></span>"|safe }}
                             </td>
                             <td><a href="{{ batch.link_group }}">{{ batch.link_group }}</a></td>
@@ -45,7 +44,11 @@
                                         <button class="dropdown-item" data-toggle="modal"
                                             data-target="#confirmDeleteModal"
                                             data-delete-url="{% url 'backoffice:batchs:delete' batch.id %}"
-                                            data-name="Angkatan {{ batch.batch}}">Hapus</button>
+                                            data-name="{{ batch.batch}}">Hapus</button>
+                                        
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item"
+                                            href="{% url 'backoffice:batchs:assign_instructor' batch.id %}">Instruktur</a>
                                     </div>
                                 </div>
                             </td>
