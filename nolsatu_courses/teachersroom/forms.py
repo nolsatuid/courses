@@ -16,8 +16,8 @@ class FormFilter(FormFilterStudent):
         self.fields['batch'].required = True
         self.fields['course'].required = True
         
-        self.fields['batch'].choices = self.get_batch_choice()
-        self.fields['course'].choices = self.get_courses_choice()
+        self.fields['batch'].queryset = self.get_batch_choice()
+        self.fields['course'].queryset = self.get_courses_choice()
 
     def get_data(self):
         self.enrolls = Enrollment.objects.select_related('course', 'user').filter(
@@ -39,22 +39,15 @@ class FormFilter(FormFilterStudent):
         return sorted(data, key=lambda value: value['progress'], reverse=True)
 
     def get_batch_choice(self):
-        user = get_object_or_404(User, id=self.user.id, nolsatu__role=MemberNolsatu.ROLE.trainer)
-        batch_id = Teach.objects.filter(user=user).values_list('batch', flat=True)
-        batchs = Batch.objects.filter(pk__in=batch_id)
-        choice_batchs = [(batch.id, batch.batch) for batch in batchs]
-        choice_batchs.insert(0, (None, 'Pilih Batch'))
-        return choice_batchs
+        if self.user and self.user.nolsatu.role == MemberNolsatu.ROLE.trainer:
+            batch_ids = Teach.objects.filter(user=self.user).values_list('batch', flat=True)
+            return Batch.objects.filter(pk__in=batch_ids)
 
     def get_courses_choice(self):
-        user = get_object_or_404(User, id=self.user.id, nolsatu__role=MemberNolsatu.ROLE.trainer)
-        batch_id = Teach.objects.filter(user=user).values_list('batch', flat=True)
-        courses_id = Batch.objects.values_list('course', flat=True).filter(pk__in=batch_id).distinct()
-        courses = Courses.objects.filter(pk__in=courses_id)
-        choice_courses = [(course.id, course.title) for course in courses]
-        choice_courses.insert(0, (None, 'Pilih Kursus'))
-
-        return choice_courses
+        if self.user and self.user.nolsatu.role == MemberNolsatu.ROLE.trainer:
+            batch_ids = Teach.objects.filter(user=self.user).values_list('batch', flat=True)
+            courses_ids = Batch.objects.values_list('course', flat=True).filter(pk__in=batch_ids).distinct()
+            return Courses.objects.filter(pk__in=courses_ids)
 
     def global_progress(self):
         try:

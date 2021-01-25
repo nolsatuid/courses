@@ -168,25 +168,22 @@ class Courses(ModelMeta, models.Model):
         """
         untuk mendapatkan jumlah step dari suatu course
         """
-        try:
-            modules_count = self.modules.all().count()
-            sections_count = self.modules.aggregate(Count('sections'))['sections__count']
-            count = modules_count + sections_count
-            return count
-        except ZeroDivisionError:
-            return 0
+        modules_count = self.modules.all().count()
+        sections_count = self.modules.aggregate(Count('sections'))['sections__count']
+        count = modules_count + sections_count
+        return count
 
     def number_of_activity_step(self, user):
         """
         untuk mendapatkan jumlah step course dari activity user
         """
-        try:
-            if user == AnonymousUser():
-                return 0
+        
+        if user == AnonymousUser():
+            count = 0
+        else:
             count = self.activities_course.filter(user=user).count()
-            return count
-        except ZeroDivisionError:
-            return 0
+        return count
+        
 
     def progress_percentage(self, user, on_thousand=True):
         """
