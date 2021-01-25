@@ -1,3 +1,4 @@
+from django.db.models.expressions import Subquery
 from nolsatu_courses.apps.accounts.models import MemberNolsatu
 from operator import itemgetter, attrgetter
 
@@ -16,8 +17,8 @@ class FormFilter(FormFilterStudent):
         self.fields['batch'].required = True
         self.fields['course'].required = True
         
-        self.fields['batch'].queryset = self.get_batch_choice()
         self.fields['course'].queryset = self.get_courses_choice()
+        self.fields['batch'].queryset = self.get_batch_choice()
 
     def get_data(self):
         self.enrolls = Enrollment.objects.select_related('course', 'user').filter(
@@ -39,15 +40,18 @@ class FormFilter(FormFilterStudent):
         return sorted(data, key=lambda value: value['progress'], reverse=True)
 
     def get_batch_choice(self):
-        if self.user and self.user.nolsatu.role == MemberNolsatu.ROLE.trainer:
-            batch_ids = Teach.objects.filter(user=self.user).values_list('batch', flat=True)
-            return Batch.objects.filter(pk__in=batch_ids)
+        batch_ids = Teach.objects.filter(user=self.user).values_list('batch', flat=True)
+        return Batch.objects.filter(pk__in=batch_ids)
 
-    def get_courses_choice(self):
-        if self.user and self.user.nolsatu.role == MemberNolsatu.ROLE.trainer:
-            batch_ids = Teach.objects.filter(user=self.user).values_list('batch', flat=True)
-            courses_ids = Batch.objects.values_list('course', flat=True).filter(pk__in=batch_ids).distinct()
-            return Courses.objects.filter(pk__in=courses_ids)
+    def get_courses_choice(self): 
+        courses_ids = Batch.objects.values_list('course', flat=True) \
+                        .filter(
+                            pk__in=Subquery(
+                                Teach.objects.filter(user=self.user)
+                                .values_list('batch', flat=True)
+                            )
+                        ).distinct()
+        return Courses.objects.filter(pk__in=courses_ids)
 
     def global_progress(self):
         try:
