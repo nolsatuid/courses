@@ -35,7 +35,7 @@
         <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-                <a href="{% url 'backoffice:index' %}" class="nav-link {% if menu_active == 'dashboard' %}active{% endif %}">
+                <a href="{% url 'teachersroom:index' %}" class="nav-link {% if menu_active == 'dashboard' %}active{% endif %}">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
                 </a>
@@ -70,18 +70,33 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="nav-link {% if menu_active == 'quiz' %}active{% endif %}">
+                <a href="{% url 'teachersroom:quizzes:results' %}" class="nav-link {% if menu_active == 'quiz' %}active{% endif %}">
                     <i class="nav-icon fas fa-tasks"></i>
                     <p>Hasil Kuis</p>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="#" class="nav-link {% if menu_active == 'quiz' %}active{% endif %}">
+            <li class="nav-item {% if menu_active == 'graduate' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'graduate' %}active{% endif %}">
                     <i class="nav-icon fas fa-user-graduate"></i>
-                    <p>Kandidat Lulusan</p>
+                    <p>Lulusan<i class="right right fas fa-angle-left"></i></p>
                 </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'teachersroom:graduates:candidate' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Kandidat Lulusan</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'teachersroom:graduates:index' %}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Data Lulusan</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
+
 
             <li class="nav-item">
                 <a href="{% url 'website:logout' %}" class="nav-link {% if menu_active == '' %}active{% endif %}">

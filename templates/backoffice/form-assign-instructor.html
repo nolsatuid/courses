@@ -1,0 +1,81 @@
+{% extends 'backoffice/base-adminlte.html' %}
+{% load static widget_tweaks %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.css' %}">
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.css' %}">
+{% endblock  %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="pull-left">
+                {{ title }}
+            </h4>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card-body">
+                <div class="row-fluid">
+                    <div class="row">
+                        <div class=" col-md-12 col-lg-12 ">
+                            <h5>{{ title_extra }}</h5>
+                        </div>
+                        <div class=" col-md-12 col-lg-12 ">
+                            <div class="tab-content">
+                                <div class="form-group row">
+                                    <label class="col-md-2"> Kelas</label>
+                                    <div class="col-md-10"> {{ batch.course.title }}</div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2"> Angkatan</label>
+                                    <div class="col-md-10"> {{ batch.batch }}</div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2"> Jadwal</label>
+                                    <div class="col-md-10"> {{ batch.start_date }} - {{ batch.end_date }}</div>
+                                </div>
+                                {{ form.media }}
+                                {{ form.non_field_errors }}
+                                {% for field in form %}
+                                    <div class="form-group row">
+                                        <label class="col-md-2"> {{ field.label }}</label>
+                                        <div class="col-md-10">
+                                            {% if field.field.widget.input_type == 'checkbox' %}
+                                                {% render_field field %}
+                                            {% elif  field.field.widget.input_type == 'file' %}
+                                                {% render_field field %}
+                                            {% else %}
+                                                {% render_field field|add_class:"form-control" %}
+                                            {% endif %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                            <small class="form-text text-danger">{{ field.errors }}</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success btn-user float-right">
+                    {% if title_submit %} {{ title_submit }} {% else %} Submit {% endif %}
+                </button>
+            </div>
+    </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#id_user').select2({
+            theme: 'bootstrap4'
+        });
+	});
+</script>
+{% endblock %}
