@@ -13,16 +13,19 @@
             />
             <div class="card-header">
               <h3 class="card-title">{{ course.title }}</h3>
+              <div class="card-tools">
+                <span class="badge badge-primary">{{ course.enrolled.count }} Peserta</span>
+              </div>
             </div>
             <div class="card-body">
               <p> {{ course.short_description|safe }} </p>
 
               <div id="accordion">
                 {% for batch in course.batchs.all %}
-                <div class="card card-secondary">
+                <div class="card bg-teal">
                   <div class="card-header">
                     <h4 class="card-title">
-                      <a
+                      <a class="text-white"
                         data-toggle="collapse"
                         data-parent="#accordion"
                         href="#batch-{{ batch.id }}"
@@ -32,7 +35,7 @@
                     </h4>
                       <div class="card-tools">
                       
-                        <span class="right badge badge-danger">{{batch.enrollments.count}}</span>
+                        
                       </div>
                   </div>
                   <div id="batch-{{ batch.id }}" class="panel-collapse collapse in">
@@ -44,12 +47,7 @@
                             <span>{{batch.start_date|date:"d-M-Y"}}</span> - 
                             <span>{{batch.end_date|date:"d-M-Y"}}</span>
                         </dd>
-                        <dt>Peserta</dt>
-                        <dd>{{ batch.enrollments.count }}</dd>
                     </dl>
-                      
-
-
                     </div>
                   </div>
                 </div>
