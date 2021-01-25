@@ -9,7 +9,8 @@ def index(request):
     statistics = None
     quiz_stats = None
     batch = None
-    form = FormFilter(request.GET or None)
+    
+    form = FormFilter(user=request.user, data=request.POST or None)
     if form.is_valid():
         data = form.get_data()
         course = form.cleaned_data['course']
@@ -21,7 +22,7 @@ def index(request):
             'global_progress': form.global_progress()
         }
         quiz_stats = form.get_quiz_stats()
-
+        
     context = {
         'menu_active': 'dashboard',
         'title': _('Dashboard'),

@@ -5,8 +5,10 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <form method="GET" >
+            <form method="POST" >
+                {% csrf_token %}
                 <div class="form-group row">
+                    {{ form.errors }}
                     {% for field in form %}
                         <div class="form-group col-md-3">
                             {% render_field field|add_class:"form-control"%}

@@ -53,7 +53,6 @@ def update_user(identificator, type_identificator='id', user=None):
         data = resp.json()
 
     profile = data['profile'] if data['profile'] else {}
-
     defaults = {
         'first_name': data['first_name'],
         'last_name': data['last_name'],
