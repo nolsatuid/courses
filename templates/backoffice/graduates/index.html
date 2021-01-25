@@ -52,7 +52,7 @@
                             <td>{{ graduate.finishing_date }}</td>
                             <td>{{ graduate.final_score }}</td>
                             <td id="note-{{graduate.id}}"><a href="#" data-toggle="modal" data-target="#noteModal"
-                                    data-note="{{ graduate.note }}">{{ gradute.note|default:'-'|truncatewords:2 }}</a>
+                                    data-note="{{ graduate.note }}">{{ graduate.note|default:'-'|truncatewords:2 }}</a>
                             </td>
                             <td>
                                 <a class="btn btn-sm btn-pill bg-navy"
@@ -98,6 +98,15 @@
     $(document).ready(function () {
         $('#datatable').DataTable();
         filterBatch();
+
+        $('#noteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var note = button.data('note');
+
+            var modal = $(this);
+            modal.find('#noteMessage').html(note);
+        })
+
     })
 
     $('#id_course').on('change', function () {
