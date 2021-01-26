@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -7,7 +8,7 @@ from django.utils.timezone import localtime
 
 from nolsatu_courses.apps import utils
 from nolsatu_courses.apps.courses.models import Section, CollectTask, Batch, Courses
-from nolsatu_courses.apps.decorators import superuser_required
+from nolsatu_courses.apps.decorators import superuser_required, staff_required
 from .forms import FormFilterTask, FormFilterTaskReport
 
 
@@ -31,8 +32,15 @@ def index(request):
     return render(request, 'backoffice/tasks/index.html', context)
 
 
-@superuser_required
+@login_required
 def ajax_filter_section(request):
+    """ a view ajax filter used to filtering section by course
+    ...
+    Ajax Filter Section has no condition
+    ------------------------------------
+    this meaning is, if the user has a different role it has no effect in that section
+    """
+
     course = request.GET.get('course', None)
     data = {
         'section': []
@@ -49,7 +57,7 @@ def ajax_filter_section(request):
     return JsonResponse(data, status=200)
 
 
-@superuser_required
+@staff_required
 def ajax_change_status(request):
     id = request.GET.get('task_id', None)
     status_id = request.GET.get('status_id', None)
