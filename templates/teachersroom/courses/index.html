@@ -1,71 +1,74 @@
 {% extends 'teachersroom/base-adminlte.html' %} {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <div class="row">
-        {% for course in courses %}
-        <div class="col-6">
-          <div class="card">
-            <img
-              class="card-img-top"
-              src="{{ course.get_featured_image_url }}"
-              alt="{{ course.featured_image.name}}"
-            />
-            <div class="card-header">
-              <h3 class="card-title">
-              <a href="{% url 'website:courses:details' course.slug %}">
-              {{ course.title }}
-              </a>
-              </h3>
-              <div class="card-tools">
-                <span class="badge badge-primary">{{ course.enrolled.count }} Peserta</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <p> {{ course.short_description|safe }} </p>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
 
-              <div id="accordion">
-                {% for batch in course.batchs.all %}
-                <div class="card bg-teal">
-                  <div class="card-header">
-                    <h4 class="card-title">
-                      <a class="text-white"
-                        data-toggle="collapse"
-                        data-parent="#accordion"
-                        href="#batch-{{ batch.id }}"
-                      >
-                        {{batch.batch}}
-                      </a>
-                    </h4>
-                      <div class="card-tools">
-                      
-                        
-                      </div>
-                  </div>
-                  <div id="batch-{{ batch.id }}" class="panel-collapse collapse in">
-                    <div class="card-body">
+                    {% for course in courses %}
+                        <div class="col-6">
+                            <div class="card">
+                                <img
+                                        class="card-img-top"
+                                        src="{{ course.get_featured_image_url }}"
+                                        alt="{{ course.featured_image.name }}"
+                                />
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <a href="{% url 'website:courses:details' course.slug %}">
+                                            {{ course.title }}
+                                        </a>
+                                    </h3>
+                                    <div class="card-tools">
+                                        <span class="badge badge-primary">{{ course.enrolled.count }} Peserta</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p> {{ course.short_description|safe }} </p>
+                                    <div id="accordion">
+                                        {% for batch in course.batchs.all %}
+                                            {% if batch in batchs %}
+                                                <div class="card bg-teal">
+                                                    <div class="card-header">
+                                                        <h4 class="card-title">
+                                                            <a class="text-white"
+                                                               data-toggle="collapse"
+                                                               data-parent="#accordion"
+                                                               href="#batch-{{ batch.id }}"
+                                                            >
+                                                                {{ batch.batch }}
+                                                            </a>
+                                                        </h4>
+                                                        <div class="card-tools">
 
-                    <dl>
-                        <dt>Waktu</dt>
-                        <dd>
-                            <span>{{batch.start_date|date:"d-M-Y"}}</span> - 
-                            <span>{{batch.end_date|date:"d-M-Y"}}</span>
-                        </dd>
-                    </dl>
-                    </div>
-                  </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div id="batch-{{ batch.id }}" class="panel-collapse collapse in">
+                                                        <div class="card-body">
+
+                                                            <dl>
+                                                                <dt>Waktu</dt>
+                                                                <dd>
+                                                                    <span>{{ batch.start_date|date:"d-M-Y" }}</span> -
+                                                                    <span>{{ batch.end_date|date:"d-M-Y"}}</span>
+                                                                </dd>
+                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'website:courses:details' course.slug %}"
+                                       class="btn btn-primary btn-block">Detil Kursus</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-              </div>
             </div>
-            <div class="card-footer">
-                <a href="{% url 'website:courses:details' course.slug %}" class="btn btn-primary btn-block">Detil Kursus</a>
-            </div>
-          </div>
         </div>
-        {% endfor %}
-      </div>
     </div>
-  </div>
-</div>
 {% endblock content %}

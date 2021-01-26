@@ -18,8 +18,11 @@ def index(request):
                 ).distinct()
         )
     )
+    batchs = Batch.objects.filter(teaches__user=request.user)
+
     context = {
         'title': _('Kursus Anda'),
-        'courses': courses
+        'courses': courses,
+        'batchs': batchs
     }
     return render(request, 'teachersroom/courses/index.html', context)
