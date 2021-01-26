@@ -129,3 +129,26 @@ def teacher_required(a_func):
         return a_func(request, *args, **kwargs)
 
     return _wrapped_view
+
+
+def staff_required(view_func):
+    """ Decorator for views, that checks the user on nolsatu
+    ...
+    can be access by category user:
+    ----------------------------------------
+        - superadmin: when `is_superuser` is True
+        - vendor: when user have role vendor
+        - trainer: when user have role vendor
+    """
+
+    @wraps(view_func, assigned=available_attrs(view_func))
+    def _wrapped_view(request, *args, **kwargs):
+        user = get_object_or_404(User, username=request.user, is_active=True)
+
+        if (not user or not user.is_superuser and
+                user.nolsatu.role not in (MemberNolsatu.ROLE.trainer, MemberNolsatu.ROLE.vendor)):
+            raise Http404()
+
+        return view_func(request, *args, **kwargs)
+
+    return _wrapped_view
