@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from nolsatu_courses.apps.accounts.models import MemberNolsatu
 from django.conf import settings
 from django.core.cache import cache
 
@@ -34,5 +36,5 @@ def nolsatu_context(request):
         'hide_site_name': appearance.get('hide_site_name', False),
         'color_text_top_nav': color_text_top_nav,
         'bg_top_nav': bg_top_nav,
-        'mobile_layout': mobile_layout
+        'mobile_layout': mobile_layout,
     }

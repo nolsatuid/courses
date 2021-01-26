@@ -42,7 +42,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="nav-link {% if menu_active == 'course' %}active{% endif %}">
+                <a href="{% url 'teachersroom:courses:index' %}" class="nav-link {% if menu_active == 'course' %}active{% endif %}">
                     <i class="nav-icon fas fa-chalkboard-teacher"></i>
                     <p>Kelas</p>
                 </a>
