@@ -17,7 +17,6 @@ def nolsatu_context(request):
         color_text_top_nav = "dark"
 
     mobile_layout = request.GET.get('navbar') == "hidden" or request.is_mobile
-    member = MemberNolsatu.objects.filter(user=request.user).first()
 
     return {
         'nolsatu_profile_page_url': settings.NOLSATU_PROFILE_PAGE_URL,
@@ -38,5 +37,4 @@ def nolsatu_context(request):
         'color_text_top_nav': color_text_top_nav,
         'bg_top_nav': bg_top_nav,
         'mobile_layout': mobile_layout,
-        'member': member
     }
