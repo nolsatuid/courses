@@ -1,25 +1,16 @@
-from django.db.models.expressions import Subquery
 from nolsatu_courses.apps.decorators import teacher_required
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
-from nolsatu_courses.apps.courses.models import Batch, Courses, Teach
+from nolsatu_courses.apps.courses.models import Teach
 
 
 @teacher_required
 def index(request):
-    courses = Courses.objects.filter(
-        pk__in=Subquery(
-            Batch.objects.values_list('course', flat=True)
-                .filter(
-                    pk__in=Subquery(
-                        Teach.objects.filter(user=request.user)
-                        .values_list('batch', flat=True)
-                    )
-                ).distinct()
-        )
-    )
+    teaches = Teach.objects.select_related('batch__course')\
+        .order_by('batch')\
+        .filter(user=request.user)
     context = {
         'title': _('Kursus Anda'),
-        'courses': courses
+        'teaches': teaches
     }
     return render(request, 'teachersroom/courses/index.html', context)
