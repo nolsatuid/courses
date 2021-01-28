@@ -50,7 +50,7 @@ class SimpleCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         fields = ['id', 'title', 'author', 'featured_image', 'level', 'status', 'categories', 
-                  'short_description', 'is_allowed', 'quizzes', 'product', 'level', 'vendor']
+                  'short_description', 'is_allowed', 'quizzes', 'product', 'level', 'vendor', 'slug']
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
