@@ -159,6 +159,14 @@
 
     {% block extra_js %} {% endblock %}
 
+    <script>
+        $(document).ready(function(){
+            if(!($( "table" ).attr("class"))){
+                $( "table" ).addClass( "table table-bordered" );
+            }
+        });
+    </script>
+
 </body>
 
 </html>
