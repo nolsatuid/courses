@@ -10,7 +10,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>{{ title }} | {{ brand }} </title>
+
+  <title>{{ title }}{% if not mobile_layout %}| {{ brand }} {% endif %}</title>
+
   <link rel="shortcut icon" href="{{brand_favicon}}">
   {% include 'partials/css.html' %}
   <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
@@ -20,6 +22,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <div class="wrapper">
 
   <!-- Navbar -->
+    {% if not mobile_layout %}
+
   <nav class="main-header navbar navbar-expand navbar-{{ color_text_top_nav }} bg-{{ bg_top_nav }} border-bottom-0">
     <div class="container">
       <a href="{{ nolsatu_home_page_url }}" class="navbar-brand">
@@ -34,6 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             {% endif %}
           </span>
       </a>
+
 
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
@@ -76,6 +81,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
   </nav>
   <!-- /.navbar -->
+    {% endif %}
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
