@@ -10,7 +10,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    {% if mobile_layout %}
+    {% if not mobile_layout %}
 
   <title>{{ title }} | {{ brand }} </title>
     {% endif %}
@@ -23,7 +23,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <div class="wrapper">
 
   <!-- Navbar -->
-    {% if mobile_layout %}
+    {% if not mobile_layout %}
 
   <nav class="main-header navbar navbar-expand navbar-{{ color_text_top_nav }} bg-{{ bg_top_nav }} border-bottom-0">
     <div class="container">
