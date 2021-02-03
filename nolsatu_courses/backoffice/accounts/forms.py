@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from nolsatu_courses.apps import utils
+from django.core.exceptions import ValidationError\
 
 
 class FormSyncUser(forms.Form):
@@ -33,7 +34,11 @@ class FormSyncUser(forms.Form):
     def sync_users(self):
         for user in self.users:
             identificator = user.strip("")
-            utils.update_user(identificator, self.cleaned_data['identificator'])
+            try:
+                utils.update_user(identificator, self.cleaned_data['identificator'])
+            except ValidationError:
+                self.reject_user.append(identificator)
+                continue
 
     def get_identificator(self, identificator):
         if self.cleaned_data['identificator'] == 'email':

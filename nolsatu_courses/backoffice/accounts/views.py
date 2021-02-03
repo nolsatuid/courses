@@ -11,7 +11,11 @@ def sync_users(request):
     form = FormSyncUser(request.POST or None)
     if form.is_valid():
         form.sync_users()
-        sweetify.sweetalert(request, "Berhasil Sync data")
+        if len(form.reject_user) == 0:
+            sweetify.sweetalert(request, "Berhasil Sync data", button=True, time=5000)
+        else:
+            reject_users = ", ".join(form.reject_user)
+            sweetify.sweetalert(request, f"User {reject_users} tidak berhasil sync", button=True, time=10000)
 
     context = {
         'menu_active': 'accounts',

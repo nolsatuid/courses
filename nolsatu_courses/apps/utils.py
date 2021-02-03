@@ -6,6 +6,7 @@ import markdown
 from markdown.treeprocessors import Treeprocessor
 from markdown.extensions import Extension
 
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -50,7 +51,10 @@ def update_user(identificator, type_identificator='id', user=None):
         data = user
     else:
         resp = get_user_academy(type_identificator, identificator)
-        data = resp.json()
+        if resp.ok:
+            data = resp.json()
+        else:
+            raise ValidationError(resp.reason, code=resp.status_code)
 
     profile = data['profile'] if data['profile'] else {}
     defaults = {
