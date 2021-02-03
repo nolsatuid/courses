@@ -225,6 +225,23 @@
                     </li>
                 </ul>
             </li>
+
+            <li class="nav-header">Data Master</li>
+            <li class="nav-item {% if menu_active == 'campus' %}has-treeview menu-open{% endif %}">
+                <a href="#" class="nav-link {% if menu_active == 'campus' %}active{% endif %}">
+                    <i class="nav-icon fas fa-list"></i>
+                    <p>Data<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'backoffice:accounts:sync_users' %}" class="nav-link {% if menu_active == 'batch' %}active{% endif %}">
+                            <i class="nav-icon fas fa-certificate"></i>
+                            <p>Sync User</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="nav-item">
                 <a href="{% url 'website:logout' %}" class="nav-link {% if menu_active == '' %}active{% endif %}">
                     <i class="nav-icon fas fa-sign-out-alt"></i>
