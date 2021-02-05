@@ -94,4 +94,10 @@
     {% endif %}
   </div>
 </div>
+
+{% if from_apps %}
+    <script type="text/javascript">
+        clearWebViewHistory()
+    </script>
+{% endif %}
 {% endblock %}

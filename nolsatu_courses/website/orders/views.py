@@ -24,6 +24,7 @@ def index(request):
 
 @login_required
 def details(request, order_id):
+    referrer_query = request.GET.get("referrer")
     order = get_object_or_404(Order, user=request.user, id=order_id)
     order_items = order.orders.all()
 
@@ -50,6 +51,7 @@ def details(request, order_id):
     context['title'] = 'Detail Order'
     context['order'] = order
     context['order_items'] = order_items
+    context['referrer'] = referrer_query
 
     return render(request, 'website/orders/detail.html', context)
 
