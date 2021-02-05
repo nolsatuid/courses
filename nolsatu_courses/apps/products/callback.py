@@ -51,4 +51,6 @@ class FortunaCallback(RemoteTransactionCallback):
 
     def payment_redirect(self, request, transaction_id, order_id):
         order = get_object_or_404(Order, user=request.user, remote_transaction_id=transaction_id)
-        return redirect("website:orders:details", order_id=order.id)
+        response = redirect("website:orders:details", order_id=order.id)
+        response['Location'] += '?referrer=payment'
+        return response

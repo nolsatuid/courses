@@ -156,6 +156,13 @@
             </div>
     </div>
 </section>
+
+{% if from_apps and referrer == "payment" %}
+    <script type="text/javascript">
+        clearWebViewHistory()
+    </script>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_js %}

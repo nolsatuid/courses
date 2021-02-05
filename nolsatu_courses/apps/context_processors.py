@@ -36,5 +36,6 @@ def nolsatu_context(request):
         'hide_site_name': appearance.get('hide_site_name', False),
         'color_text_top_nav': color_text_top_nav,
         'bg_top_nav': bg_top_nav,
+        'from_apps': request.is_mobile,
         'mobile_layout': mobile_layout,
     }
