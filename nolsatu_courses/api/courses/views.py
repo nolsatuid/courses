@@ -37,7 +37,7 @@ class CourseListView(InternalAPIMixin, ListAPIView):
             courses = Courses.objects.filter(is_visible=True, status=Courses.STATUS.publish)
 
         if self.request.query_params.get('search'):
-            courses = courses.filter(title__contains=self.request.query_params.get('search'))
+            courses = courses.filter(title__icontains=self.request.query_params.get('search'))
 
         return courses
 
