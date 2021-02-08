@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.http import Http404
 
+from nolsatu_courses.apps.accounts.models import MemberNolsatu
 from nolsatu_courses.apps.courses.models import Module, Section
 from nolsatu_courses.apps.decorators import enroll_required
 from nolsatu_courses.apps.utils import check_on_activity
@@ -71,15 +72,18 @@ def details(request, slug):
 
 
 def preview(request, slug):
-    if request.user.is_superuser:
+    if request.user.is_superuser or request.user.nolsatu.role == MemberNolsatu.ROLE.trainer:
         module = get_object_or_404(Module, slug=slug)
-    else:
-        module = get_object_or_404(Module, slug=slug, is_visible=True)
-
-    if request.user.is_superuser:
         pagination = get_pagination(request, module)
     else:
+        module = get_object_or_404(Module, slug=slug, is_visible=True)
         pagination = None
+
+    trainer_have_course = request.user.teaches.filter(batch__course=module.course).exists()
+    if request.user.nolsatu.role == MemberNolsatu.ROLE.trainer and not trainer_have_course:
+        raise Http404()
+
+    is_show_all_materi = request.user.is_superuser or trainer_have_course
 
     module_all = module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish())
@@ -89,7 +93,8 @@ def preview(request, slug):
         'title': module.title,
         'module': module,
         'pagination': pagination,
-        'module_all': module_all
+        'module_all': module_all,
+        'is_show_all_materi': is_show_all_materi
     }
     return render(request, 'website/modules/preview.html', context)
 
