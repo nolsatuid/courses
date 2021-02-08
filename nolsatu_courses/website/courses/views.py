@@ -1,5 +1,5 @@
 import sweetify
-from django.contrib import messages
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
@@ -29,13 +29,17 @@ def details(request, slug):
             slug=slug, status=Courses.STATUS.publish
         )
 
+    is_show_all_materi = request.user.is_superuser or \
+        request.user.teaches.filter(batch__course=course).exists()
+
     context = {
         'title': course.title,
         'course': course,
         'batch': course.get_last_batch(),
         'has_enrolled': course.has_enrolled(request.user),
         'enroll': course.get_enroll(request.user),
-        'meta': course.as_meta()
+        'meta': course.as_meta(),
+        'is_show_all_materi': is_show_all_materi
     }
 
     return render(request, 'website/courses/details.html', context)

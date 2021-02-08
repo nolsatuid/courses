@@ -28,7 +28,7 @@
                                     <div class="offset-1"></div>
                                     {% endif %}
                                     <div class="col-11">
-                                        {% if mod.is_visible or user.is_superuser %}
+                                        {% if mod.is_visible or is_show_all_materi %}
                                         <h5 {%if mod.slug == module.slug %}style="font-weight: bold;"{% endif %}>
                                             <a href="{% url 'website:modules:preview' mod.slug %}" class="{%if mod.slug == module.slug and not section %}text-white{% else %}text-info{% endif %}">{{ mod.title }}</a>
                                             <i class="float-right fa fa-xs fa-eye"></i>
@@ -43,7 +43,7 @@
                                 <div id="collapse_{{mod.id}}" class="collapse {%if section.module.slug == mod.slug or mod.slug == module.slug %}show{% endif %}" aria-labelledby="heading_{{mod.id}}" data-parent="#accordion">                        
                                 {% for sect in mod.sections.all %}
                                 <li class="item p-3 {%if sect.slug == section.slug %}bg-blue-adinusa text-white{% endif %}">                            
-                                    {% if sect.is_visible or user.is_supseruser or user.is_superuser %}
+                                    {% if sect.is_visible or is_show_all_materi %}
                                     <div class="row">
                                         <span class="offset-2"></span>
                                         <h6 class="col-9" {%if sect.slug == section.slug %}style="font-weight: bold;"{% endif %}>
