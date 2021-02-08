@@ -159,6 +159,7 @@
 
 {% if from_apps and referrer == "payment" %}
     <script type="text/javascript">
+        var clearWebViewHistory = true;
         Apps.clearWebViewHistory()
     </script>
 {% endif %}
