@@ -44,7 +44,7 @@
                         <div class="">
                             {% include 'partials/module-section-list.html' %}
 
-                            {% if user.is_superuser %}
+                            {% if user.is_superuser or user.nolsatu.role == '2' %}
                                 {% include 'partials/module-section-list.html' %}
                             {% endif %}
                           </div>
