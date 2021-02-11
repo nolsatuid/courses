@@ -7,12 +7,17 @@ from django.utils import timezone
 from django.db.models import Prefetch
 
 from nolsatu_courses.apps import utils
+from nolsatu_courses.apps.accounts.models import MemberNolsatu
 from nolsatu_courses.apps.courses.models import Courses, Enrollment, Module, Section, CollectTask
 from quiz.models import Quiz, Sitting
 
 
 def details(request, slug):
-    if request.user.is_superuser:
+    is_auth = request.user.is_authenticated
+    is_superuser = request.user.is_superuser
+    is_trainer = is_auth and request.user.nolsatu.role == MemberNolsatu.ROLE.trainer
+
+    if is_superuser:
         course = get_object_or_404(
             Courses.objects.prefetch_related(
                 Prefetch('modules', queryset=Module.objects.publish()),
@@ -29,8 +34,7 @@ def details(request, slug):
             slug=slug, status=Courses.STATUS.publish
         )
 
-    is_show_all_materi = request.user.is_superuser or \
-        request.user.teaches.filter(batch__course=course).exists()
+    is_show_all_materi = is_superuser or (is_trainer and request.user.teaches.filter(batch__course=course).exists())
 
     context = {
         'title': course.title,
@@ -115,7 +119,7 @@ def enroll(request, slug):
     if not course.get_last_batch():
         sweetify.warning(
             request, _(f'Kelas {course.title} belum membuka pendaftaran',
-            button='OK', icon='warning', timer=10000)
+                       button='OK', icon='warning', timer=10000)
         )
         return redirect('website:courses:details', course.slug)
 
@@ -128,7 +132,7 @@ def enroll(request, slug):
 
     course.enrolled.create(course=course, user=request.user, batch=course.batchs.last())
     sweetify.success(
-        request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'), 
+        request, _(f'Kamu berhasil mendaftar pada kelas {course.title}'),
         button='OK', icon='success', timer=10000
     )
     utils.send_notification(
@@ -146,7 +150,7 @@ def finish(request, slug):
     # cek ketika belom menyelesaikan semua module dan bab.
     if course.progress_percentage(request.user, on_thousand=True) != 100:
         sweetify.warning(
-            request, _(f'Kamu belom menyelesaikan semua materi {course.title}'), 
+            request, _(f'Kamu belom menyelesaikan semua materi {course.title}'),
             button='OK', icon='warning', timer=10000
         )
         return redirect("website:courses:details", course.slug)
@@ -156,7 +160,7 @@ def finish(request, slug):
     if not enroll.finishing_date:
         enroll.finishing_date = timezone.now().date()
         utils.send_notification(request.user, f'Selamat!',
-                         f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
+                                f'Selamat!, anda berhasil menyelesaikan kelas {enroll.course.title}')
 
     enroll.save()
 

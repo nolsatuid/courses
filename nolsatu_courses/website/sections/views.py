@@ -106,18 +106,22 @@ def details(request, slug):
 
 
 def preview(request, slug):
-    if request.user.is_superuser or request.user.nolsatu.role == MemberNolsatu.ROLE.trainer:
+    is_auth = request.user.is_authenticated
+    is_superuser = request.user.is_superuser
+    is_trainer = is_auth and request.user.nolsatu.role == MemberNolsatu.ROLE.trainer
+
+    if is_superuser or is_trainer:
         section = get_object_or_404(Section, slug=slug)
         pagination = get_pagination(request, section)
     else:
         section = get_object_or_404(Section, slug=slug, is_visible=True)
         pagination = None
 
-    trainer_have_course = request.user.teaches.filter(batch__course=section.module.course).exists()
-    if request.user.nolsatu.role == MemberNolsatu.ROLE.trainer and not trainer_have_course:
+    trainer_have_course = is_trainer and request.user.teaches.filter(batch__course=section.module.course).exists()
+    if is_trainer and not trainer_have_course:
         raise Http404()
 
-    is_show_all_materi = request.user.is_superuser or trainer_have_course
+    is_show_all_materi = is_superuser or trainer_have_course
 
     module_all = section.module.course.modules.publish().prefetch_related(
         Prefetch('sections', queryset=Section.objects.publish())
