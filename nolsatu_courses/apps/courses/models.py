@@ -603,6 +603,14 @@ class Enrollment(models.Model):
         else:
             return self.finishing_date.strftime("%d-%m-%Y")
 
+    @staticmethod
+    def user_courses_id_set(user):
+        if user == AnonymousUser():
+            return set()
+
+        courses = Enrollment.objects.filter(user=user).values_list('course_id', flat=True)
+        return set(courses)
+
     @property
     def date_limit_access(self):
         return self.batch.start_date + timedelta(days=365)

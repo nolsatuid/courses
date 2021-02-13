@@ -15,7 +15,7 @@ class SharedSessionAuthMiddleware(MiddlewareMixin):
 
 class JWTAuthCredentialsMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if (not hasattr(request, "user") or request.user.is_anonymous) and JWT_AUTH_HEADER_KEY in request.headers:
+        if JWT_AUTH_HEADER_KEY in request.headers and (not hasattr(request, "user") or request.user.is_anonymous):
             # LOGIN_URL yang di atur harus memiliki minimal 1 query param.
             # Dikarenakan saat menambah query next disini menggunakan &
             redirect_response = redirect(
