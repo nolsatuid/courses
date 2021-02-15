@@ -6,22 +6,22 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 
-from nolsatu_courses.apps.courses.models import Courses
+from nolsatu_courses.apps.courses.models import Courses, Enrollment
 
 
 def index(request):
-    if request.user and request.user.is_superuser:
-        courses = Courses.objects.all()
-    else:
-        courses = Courses.objects.filter(
-            is_visible=True, status=Courses.STATUS.publish
-        )
+    courses = Courses.objects
+    if not request.user.is_superuser:
+        courses = courses.filter(is_visible=True, status=Courses.STATUS.publish)
+
+    courses = courses.select_related('product').select_related('vendor')
+    user_courses_id = Enrollment.user_courses_id_set(request.user)
 
     context = {
         'title': _('Daftar Materi'),
         'courses': [{
             'course': course,
-            'has_enrolled': course.has_enrolled(request.user)
+            'has_enrolled': course.id in user_courses_id
         } for course in courses],
         'user_page': False
     }
