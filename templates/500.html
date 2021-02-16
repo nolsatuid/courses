@@ -1,13 +1,44 @@
-{% extends 'website/base-top-nav.html' %}
+{% load static meta %}
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
+<head {% meta_namespaces %}>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+    {% include 'meta/meta.html' %}
 
-{% block content %}
-<section style="position:fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="container text-center">
-        <h1 style="font-size: 104pt;">500</h2>
-        <strong style="font-size: 21pt;">Oops, telah terjadi kesalahan</strong>
-        <p class="guide">Kesalahan terjadi saat memproses permintaan ini. Silahkan refresh kembali atau hubungi kami.</p>
-        <br><br>
-        <a class="btn btn-{{color_theme}}" href="{% url 'website:index' %}">Kembali ke Kursus</a>
+  <title>Error Page </title>
+  {% include 'partials/css.html' %}
+  <link rel="stylesheet" href="{% static 'website/css/custom.css' %}">
+</head>
+<body class="hold-transition layout-top-nav">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content">
+      <div class="container">
+        <section style="position:fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="container text-center">
+                <h1 style="font-size: 104pt;">500</h2>
+                <strong style="font-size: 21pt;">Oops, telah terjadi kesalahan</strong>
+                <p class="guide">Kesalahan terjadi saat memproses permintaan ini. Silahkan refresh kembali atau hubungi kami.</p>
+                <br><br>
+                <a class="btn btn-primary" href="{% url 'website:index' %}">Kembali ke Kursus</a>
+            </div>
+        </section>
+      </div><!-- /.container-fluid -->
     </div>
-</section>
-{% endblock %}
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+</body>
+</html>
