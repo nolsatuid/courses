@@ -52,7 +52,7 @@ def search(request):
     return render(request, 'website/index.html', context)
 
 
-@login_required()
+@login_required
 def logout(request):
     params = urllib.parse.urlencode({
         'next': settings.LOGOUT_REDIRECT_URL

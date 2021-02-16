@@ -65,7 +65,7 @@ class QuizAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'category', )
     list_filter = ('category',)
-    search_fields = ('description', 'category', )
+    search_fields = ('title', 'description', 'category__category')
 
 
 class CategoryAdmin(admin.ModelAdmin):
