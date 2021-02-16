@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
-
+from django.db.models import Q
 from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
@@ -31,6 +31,7 @@ class SittingFilterTitleMixin(object):
 
 class QuizListView(ListView):
     model = Quiz
+    paginate_by = 30
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -39,7 +40,10 @@ class QuizListView(ListView):
         return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
+        q = self.request.GET.get('q')
         queryset = super(QuizListView, self).get_queryset()
+        if(q):
+            queryset = queryset.filter(Q(title__icontains=q) | Q(courses__title__icontains=q))
         return queryset.filter(draft=False)
 
 
