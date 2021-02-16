@@ -7,11 +7,24 @@
   <div class="col-sm-12">
 		<div class="card">
 			<div class="card-header">
-				<h2>{% trans "List of quizzes" %}</h2>
+				<h3 class="card-title">{% trans "List of quizzes" %}</h3>
+
+				<div class="card-tools">
+					<form action="" method="get">
+						<div class="form-group">
+							<div class="input-group">
+								<input name="q" type="text" class="form-control form-control-sm" value="{{ request.GET.q}}">
+								<div class="input-group-addon">
+									<button class="btn btn-primary btn-sm" type="submit">{% trans "Find" %}</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
 			</div>
 			<div class="card-body">
 				{% if quiz_list %}
-					<table class="table table-bordered table-striped">
+					<table id="table_quiz" class="table table-bordered table-striped table-quiz">
 
 					<thead>
 						<tr>
@@ -44,6 +57,27 @@
 					</tbody>
 
 					</table>
+					<div class="pagination">
+						<ul class="pagination pagination-sm float-right">
+							{% if page_obj.has_previous %}
+								<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i></a></li>
+							{% endif %}
+							{% for i in paginator.page_range %}
+							{% if page_obj.number == i %}
+								<li class="page-item active"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
+							{% else %}
+								<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+							{% endif %}
+							{% endfor %}
+							
+							{% if page_obj.has_next %}
+								
+								<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-angle-right"></i></a></li>
+								<li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a></li>
+							{% endif %}
+						</ul>
+						{% comment %} Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}. {% endcomment %}
+					</div>
 
 				{% else %}
 					<p>{% trans "There are no available quizzes" %}.</p>
@@ -53,3 +87,18 @@
 	</div>
 </div>
 {% endblock %}
+
+
+{% block extra_js %}
+<script>
+	{% comment %} $(function(){
+		$(document).ready(function() {
+			$('#table_quiz').DataTable({
+				"iDisplayLength": 30
+			});
+		} );
+	}) {% endcomment %}
+</script>
+{% endblock extra_js %}
+
+
