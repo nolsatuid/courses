@@ -22,7 +22,7 @@
 
                 <table id="datatable" class="table table-striped">
                     <thead>
-                        <th>Username</th>
+                        <th>User</th>
                         <th>Mulai</th>
                         <th>Selesai</th>
                         <th>Durasi</th>
@@ -33,7 +33,7 @@
                     <tbody>
                         {% for result in results %}
                         <tr>
-                            <td>{{ result.user.username }}</td>
+                            <td>{{ result.user.first_name }} {{ result.user.last_name }}<br>{{ result.user.username }}</td>
                             <td>{{ result.start }}</td>
                             <td>{{ result.end }}</td>
                             <td>{{ result.get_duration|sectoduration }}</td>
