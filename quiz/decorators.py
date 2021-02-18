@@ -38,8 +38,8 @@ def quiz_access_required(view_func):
 
         courses = quiz.courses_set.all()
         for course in courses:
-            course.has_enrolled(request.user)
-            return view_func(request, *args, **kwargs)
+            if course.has_enrolled(request.user):
+                return view_func(request, *args, **kwargs)
 
         sweetify.warning(
             request,
