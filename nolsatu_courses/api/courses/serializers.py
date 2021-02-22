@@ -2,8 +2,8 @@ from django.conf import settings
 from rest_framework import serializers
 
 from nolsatu_courses.api.courses.utils import prepare_markdown
-from nolsatu_courses.apps.courses.models import ( Courses, Batch, Enrollment,
-                                                  Section, Module, TaskUploadSettings)
+from nolsatu_courses.apps.courses.models import (Courses, Batch, Enrollment,
+                                                 Section, Module, TaskUploadSettings)
 from nolsatu_courses.apps.products.models import Product
 from nolsatu_courses.apps.vendors.models import Vendor
 
@@ -76,6 +76,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
 class EnrollDetailSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source='get_status_display')
+    allowed_enter = serializers.BooleanField(source='get_allowed_enter')
 
     class Meta:
         model = Enrollment
@@ -274,6 +275,7 @@ class MyQuizSerializer(serializers.Serializer):
 class SimpleCourseProgress(SimpleCourseSerializer):
     enroll_status = serializers.SerializerMethodField()
     progress = serializers.SerializerMethodField()
+    enroll = serializers.SerializerMethodField()
 
     def get_progress(self, obj: Courses) -> float:
         return obj.progress_percentage(self.context['request'].user)
@@ -281,10 +283,13 @@ class SimpleCourseProgress(SimpleCourseSerializer):
     def get_enroll_status(self, obj: Courses) -> str:
         return obj.get_enroll(self.context['request'].user).get_status_display()
 
+    def get_enroll(self, obj: Courses) -> EnrollDetailSerializer:
+        return EnrollDetailSerializer(obj.get_enroll(self.context['request'].user), read_only=True).data
+
     class Meta:
         model = Courses
         fields = ['id', 'title', 'author', 'featured_image', 'level', 'categories',
-                  'short_description', 'slug', 'enroll_status', 'progress']
+                  'short_description', 'slug', 'enroll_status', 'progress', 'enroll']
 
 
 class CoursesIdSerializer(serializers.ModelSerializer):
