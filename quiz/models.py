@@ -518,6 +518,7 @@ class Sitting(models.Model):
         self.end = now()
         if out_time:
             self.status = self.STATUS[1][0]
+        self.current_score = self.calculate_current_score()
         self.save()
 
     def add_incorrect_question(self, question):
@@ -606,6 +607,9 @@ class Sitting(models.Model):
             return 0
         delta = self.end - self.start
         return delta.total_seconds()
+
+    def calculate_current_score(self):
+        return len(self._question_ids()) - len(self.get_incorrect_questions)
 
 
 @python_2_unicode_compatible
