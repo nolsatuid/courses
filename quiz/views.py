@@ -63,6 +63,7 @@ class QuizDetailView(DetailView):
             raise PermissionDenied
 
         context = self.get_context_data(object=self.object)
+        context['title'] = "Quiz"
         return self.render_to_response(context)
 
 
@@ -285,6 +286,8 @@ class QuizTake(FormView):
 
         if self.quiz.exam_paper is False:
             self.sitting.delete()
+        
+        results['title'] = 'Quiz'
 
         return render(self.request, self.result_template_name, results)
 
