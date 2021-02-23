@@ -16,7 +16,7 @@ from nolsatu_courses.apps.products.models import Cart, Product, Order, OrderItem
 def index(request):
     context = {
         'title': _('Daftar Order'),
-        'orders': Order.objects.select_related('user').filter(user=request.user),
+        'orders': Order.objects.select_related('user').filter(user=request.user).order_by('-created_at'),
     }
 
     return render(request, 'website/orders/index.html', context)
