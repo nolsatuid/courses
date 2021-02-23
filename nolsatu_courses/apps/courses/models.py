@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import pdfkit
 
@@ -7,7 +7,6 @@ from django.core.cache import cache
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User, AnonymousUser
-from django.urls import reverse
 from django.utils import timezone
 from django.db.models import When, Case, Count, IntegerField
 from django.template.loader import get_template
@@ -614,6 +613,12 @@ class Enrollment(models.Model):
     @property
     def date_limit_access(self):
         return self.batch.start_date + timedelta(days=365)
+
+    @property
+    def get_allowed_enter(self):
+        if datetime.now().date() >= self.batch.start_date:
+            return True
+        return False
 
 
 class CollectTask(models.Model):
