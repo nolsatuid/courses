@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="col-10">
                                 <a>Status</a> {{ order.status|order_status_display:"True"}}<br>
-                                <a>Tanggal Order</a> : {{ order.created_at }} <br>
+                                <a>Tanggal Order</a> : {{ order.created_at|date:"d M Y" }} {{ order.created_at|time:"H:i" }} <br>
                             </div>
                         </div>
                     </div>
