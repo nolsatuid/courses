@@ -2,6 +2,8 @@
 {% load tags_courses %}
 
 {% block content %}
+{% include 'partials/script-can-not-copy.html' with can_not_copy=module.course.can_not_copy %}  
+
 <div class="row">    
     <div class="col-lg-4 d-wide-screen">
         {% include 'partials/preview-content-list.html' with module_all=module_all %}    

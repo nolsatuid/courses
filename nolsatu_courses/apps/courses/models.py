@@ -55,6 +55,7 @@ class Courses(ModelMeta, models.Model):
         "vendors.Vendor", verbose_name=_("Vendor"),
         on_delete=models.CASCADE, blank=True, null=True
     )
+    can_not_copy =  models.BooleanField(_("Tidak bisa salin konten"), default=False, help_text=_('Aktifkan untuk membuat konten dalam kursus ini tidak dapat disalin'))
 
     objects = InheritanceManager()
 

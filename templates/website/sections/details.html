@@ -1,6 +1,9 @@
 {% extends 'website/base-top-nav.html' %}
 {% load tags_courses %}
+
 {% block content %}
+{% include 'partials/script-can-not-copy.html' with can_not_copy=section.module.course.can_not_copy %}  
+
 <div class="row">
     <div class="col-sm-12">
         {% if not mobile_layout %}
