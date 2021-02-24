@@ -101,7 +101,7 @@ class Order(models.Model):
             context['expired_at'] = remote_transaction.expired_at
 
         content_string = render_to_string("website/orders/notification_email.html", context)
-        utils.send_notification(self.user, "Notifikasi Pembayaran Adinusa", content_string)
+        utils.send_notification(self.user, "Notifikasi Pembayaran Adinusa", raw_content=content_string)
 
     def cancel_transaction(self) -> None:
         if self.remote_transaction_id and self.status in (Order.STATUS.created, Order.STATUS.pending):

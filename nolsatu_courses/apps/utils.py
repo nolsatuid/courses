@@ -31,12 +31,13 @@ def generate_unique_slug(klass, field, id):
     return unique_slug
 
 
-def send_notification(user, subject, content):
+def send_notification(user, subject, content="", raw_content=""):
     url = f'{settings.NOLSATU_HOST}/api/internal/notification'
     data = {
         'user': user.nolsatu.id_nolsatu,
         'subject': subject,
         'content': content,
+        'raw_content': raw_content,
     }
     return call_internal_api('post', url, data=data)
 
