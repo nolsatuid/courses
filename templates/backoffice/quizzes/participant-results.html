@@ -42,9 +42,14 @@
                       <div style="max-width: 100px;"><img src="{{ question.figure.url }}" alt="{{ question.figure }}"/></div>
                       {% endif %}
                     </td>
-                    <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
                     <td>
-                      {% if question.id in sitting.get_incorrect_questions %}
+                      {% if not question.user_answer %}
+                        <p>-</p>
+                      {% else %}
+                        {{ question|answer_choice_to_string:question.user_answer }}</td>
+                      {% endif %}
+                    <td>
+                      {% if question.id in sitting.get_incorrect_questions or not question.user_answer %}
                         <p class="text-danger">{% trans "incorrect" %}</p>
                       {% else %}
                         <p class="text-success">{% trans "Correct" %}</p>
